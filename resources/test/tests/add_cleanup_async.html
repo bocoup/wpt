@@ -1,0 +1,85 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<title>Test#add_cleanup with Promise-returning functions</title>
+<script src="../../testharness.js"></script>
+<script src="../../testharnessreport.js"></script>
+</head>
+<body>
+<div id="log"></div>
+
+<script>
+var resolve1, resolve2;
+var completeCount = 0;
+var counts = {
+	afterTick: null,
+	afterFirst: null
+};
+test(function(t) {
+  add_result_callback(function(result_t) {
+    if (result_t.name === t.name) {
+      completeCount += 1;
+    }
+  });
+  t.add_cleanup(function() {
+    return new Promise(function(_resolve) { resolve1 = _resolve; });
+  });
+  t.add_cleanup(function() {
+    return new Promise(function(_resolve) { resolve2 = _resolve; });
+  });
+
+  setTimeout(function() {
+	  counts.afterTick = completeCount;
+
+	  resolve1();
+
+	  setTimeout(function() {
+	      counts.afterFirst = completeCount;
+
+		  resolve2();
+	  }, 0);
+  }, 0);
+}, 'synchronous test with asynchronous cleanup');
+
+test(function() {
+  assert_equals(
+	counts.afterTick,
+	0,
+	"test is not asynchronously considered 'complete'"
+  );
+  assert_equals(
+	counts.afterFirst,
+	0,
+	"test is not considered 'complete' following fulfillment of first promise"
+  );
+  assert_equals(completeCount, 1);
+}, "synchronously-defined test");
+</script>
+<script type="text/json" id="expected">
+{
+  "summarized_status": {
+    "status_string": "OK",
+    "message": null,
+    "stack": null
+  },
+  "summarized_tests": [
+    {
+      "status_string": "PASS",
+      "name": "synchronous test with asynchronous cleanup",
+      "stack": null,
+      "message": null,
+      "properties": {}
+    },
+    {
+      "status_string": "PASS",
+      "name": "synchronously-defined test",
+      "stack": null,
+      "message": null,
+      "properties": {}
+    }
+  ],
+  "type": "complete"
+}
+</script>
+</body>
+</html>

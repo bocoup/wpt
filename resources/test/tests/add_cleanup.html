@@ -2,6 +2,7 @@
 <html>
 <head>
 <title>Test#add_cleanup</title>
+<script src="../test-env.js"></script>
 <script src="../../testharness.js"></script>
 <script src="../../testharnessreport.js"></script>
 </head>
@@ -9,7 +10,8 @@
 <div id="log"></div>
 <script>
 "use strict";
-
+//add_result_callback(t => console.log('resu;t', t));
+add_completion_callback((ts, t) => console.log('completion', ts, t));
 var log_sync;
 test(function(t) {
   log_sync = "";
