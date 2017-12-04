@@ -539,11 +539,11 @@ policies and contribution forms [3].
         var test_obj = new Test(test_name, properties);
 		schedule(function(next) {
             test_obj.step(func, test_obj, test_obj);
+			test_obj.add_done_callback(next);
+
             if (test_obj.phase === test_obj.phases.STARTED) {
-                test_obj.done(next);
+                test_obj.done();
             }
-            //test_obj._add_cleanup(done);
-			//done();
 		});
     }
 
@@ -567,9 +567,13 @@ policies and contribution forms [3].
         var test = async_test(name, properties);
         schedule(function(next) {
             var promise = test.step(func, test, test);
+
+			test.add_done_callback(next);
+
             test.step(function() {
                 assert_not_equals(promise, undefined);
             });
+
             Promise.resolve(promise)
                 .catch(test.step_func(
                     function(value) {
@@ -580,7 +584,7 @@ policies and contribution forms [3].
                                "Unhandled rejection with value: ${value}", {value:value});
                     }))
 				.then(function() {
-                    test.done(next);
+                    test.done();
 				});
         });
     }
@@ -1627,22 +1631,16 @@ policies and contribution forms [3].
     };
 
     Test.prototype.force_timeout = Test.prototype.timeout;
-    Test.prototype.force_timeout = function() {
-        this.set_status(this.TIMEOUT);
-        this.phase = this.phases.HAS_RESULT;
-    };
 
-    Test.prototype.done = function(fn)
+	Test.prototype.add_done_callback = function(callback) {
+        this._done_callbacks.push(callback);
+	};
+
+    Test.prototype.done = function()
     {
         var this_obj = this;
-        if (this.phase === this.phases.CLEANING) {
-			if (typeof fn === 'function') {
-				this._done_callbacks.push(fn);
-			}
-			return;
-        }
-        if (this.phase > this.phases.CLEANING) {
-			setTimeout(fn, 0);
+        if (this.phase === this.phases.CLEANING ||
+          this.phase > this.phases.CLEANING) {
 			return;
 		}
 
@@ -1658,9 +1656,6 @@ policies and contribution forms [3].
 				  try { cb(); } catch(err) {}
 			  });
 			  this_obj._done_callbacks.length = 0;
-			  if (typeof fn === 'function') {
-			      fn();
-			  }
             });
     };
 
@@ -2140,7 +2135,7 @@ policies and contribution forms [3].
 					  }
 					return;
 				}
-                test.done(function() {
+                test.add_done_callback(function() {
                       this_obj.notify_result(test);
 
 					  remaining -= 1;
@@ -2149,6 +2144,7 @@ policies and contribution forms [3].
                           this_obj.notify_complete();
 					  }
                     });
+				test.done();
             }
         );
     };
