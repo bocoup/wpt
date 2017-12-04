@@ -9,14 +9,14 @@
 <div id="log"></div>
 
 <script>
+"use strict";
 var resolve, reject;
 var completeCount = 0;
+add_result_callback(function(result_t) {
+  completeCount += 1;
+});
+
 test(function(t) {
-  add_result_callback(function(result_t) {
-    if (result_t.name === t.name) {
-      completeCount += 1;
-    }
-  });
   t.add_cleanup(function() {
     return new Promise(function(_, _reject) { reject = _reject; });
   });
@@ -40,6 +40,7 @@ test(function(t) {
 	        );
 	      }
 
+		  console.log(3);
 		  resolve();
 	  }, 0);
   });

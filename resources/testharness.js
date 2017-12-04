@@ -524,12 +524,7 @@ policies and contribution forms [3].
 	function schedule(fn) {
 	  queue.push(function() {
         setTimeout(function() {
-          var result = fn();
-		  if (result && typeof result.then === 'function') {
-			result.then(next);
-		  } else {
-			next();
-		  }
+		  fn(next);
 		}, 0);
 	  });
 	  if (queue.length === 1) {
@@ -542,11 +537,13 @@ policies and contribution forms [3].
         var test_name = name ? name : test_environment.next_default_test_name();
         properties = properties ? properties : {};
         var test_obj = new Test(test_name, properties);
-		schedule(function() {
-        test_obj.step(func, test_obj, test_obj);
-        if (test_obj.phase === test_obj.phases.STARTED) {
-            test_obj.done();
-        }
+		schedule(function(next) {
+            test_obj.step(func, test_obj, test_obj);
+            if (test_obj.phase === test_obj.phases.STARTED) {
+                test_obj.done(next);
+            }
+            //test_obj._add_cleanup(done);
+			//done();
 		});
     }
 
@@ -568,19 +565,12 @@ policies and contribution forms [3].
 
     function promise_test(func, name, properties) {
         var test = async_test(name, properties);
-        schedule(function() {
-            var donePromise = new Promise(function(resolve) {
-                test._add_cleanup(resolve);
-            });
+        schedule(function(next) {
             var promise = test.step(func, test, test);
             test.step(function() {
                 assert_not_equals(promise, undefined);
             });
-            Promise.resolve(promise).then(
-                    function() {
-                        assert_not_equals(promise, undefined);
-                        return test.done();
-                    })
+            Promise.resolve(promise)
                 .catch(test.step_func(
                     function(value) {
                         if (value instanceof AssertionError) {
@@ -588,8 +578,10 @@ policies and contribution forms [3].
                         }
                         assert(false, "promise_test", null,
                                "Unhandled rejection with value: ${value}", {value:value});
-                    }));
-            return donePromise;
+                    }))
+				.then(function() {
+                    test.done(next);
+				});
         });
     }
 
@@ -1666,6 +1658,9 @@ policies and contribution forms [3].
 				  try { cb(); } catch(err) {}
 			  });
 			  this_obj._done_callbacks.length = 0;
+			  if (typeof fn === 'function') {
+			      fn();
+			  }
             });
     };
 
@@ -1695,12 +1690,10 @@ policies and contribution forms [3].
 		  failureCount += 1;
 		  fnDone(fn);
 		};
-		console.log('FOOO');
 		if (this.phase === this.phases.COMPLETE) {
 			setTimeout(done, 0);
 			return;
 		}
-		console.log('barrrr');
         function invoke(cleanup_callback) {
 		    var result;
 		    var boundFnDone = fnDone.bind(null, cleanup_callback);
@@ -1749,6 +1742,7 @@ policies and contribution forms [3].
                     "' specified " + total + " 'cleanup' function" +
                     (total > 1 ? "s" : "") + ", and " + failureCount + " failed.";
                 tests.status.stack = null;
+				tests.complete();
 			}
 			done();
 			done = null;
