@@ -1649,14 +1649,7 @@ policies and contribution forms [3].
         }
 
         clearTimeout(this.timeout_id);
-        this.cleanup(function() {
-              this_obj.phase = this_obj.phases.COMPLETE;
-              tests.result(this_obj);
-			  forEach(this_obj._done_callbacks, function(cb) {
-				  try { cb(); } catch(err) {}
-			  });
-			  this_obj._done_callbacks.length = 0;
-            });
+        this.cleanup();
     };
 
     /*
@@ -1664,9 +1657,17 @@ policies and contribution forms [3].
      * the context is in an unpredictable state, so all further testing should
      * be cancelled.
      */
-    Test.prototype.cleanup = function(done) {
+    Test.prototype.cleanup = function() {
         var this_obj = this;
 		var failureCount = 0;
+		var allDone = function() {
+              this_obj.phase = this_obj.phases.COMPLETE;
+              tests.result(this_obj);
+			  forEach(this_obj._done_callbacks, function(cb) {
+				  try { cb(); } catch(err) {}
+			  });
+			  this_obj._done_callbacks.length = 0;
+            };
 		var fnDone = function(fn) {
 		  this_obj.cleanup_callbacks.splice(this_obj.cleanup_callbacks.indexOf(fn), 1);
 		  if (this_obj.cleanup_callbacks.length === 0) {
@@ -1686,7 +1687,7 @@ policies and contribution forms [3].
 		  fnDone(fn);
 		};
 		if (this.phase === this.phases.COMPLETE) {
-			setTimeout(done, 0);
+			setTimeout(allDone, 0);
 			return;
 		}
         function invoke(cleanup_callback) {
@@ -1710,7 +1711,7 @@ policies and contribution forms [3].
         this.phase = this.phases.CLEANING;
 		// TODO: account for "0 cleanup" case
 		if (this.cleanup_callbacks.length === 0) {
-			setTimeout(done, 0);
+			setTimeout(allDone, 0);
 			return;
 		}
         forEach(this.cleanup_callbacks, invoke);
@@ -1718,16 +1719,16 @@ policies and contribution forms [3].
         // TODO: Derive value from configuration
         this_obj.timeout_length = 1000;
         setTimeout(function() {
-			if (done === null) {
+			if (allDone === null) {
 				return;
 			}
             tests.timeout();
-            done();
-			done = null;
+            allDone();
+			allDone = null;
           }, this_obj.timeout_length);
 
         function report() {
-			if (done === null) {
+			if (allDone === null) {
 				return;
 			}
 			if (failureCount > 0) {
@@ -1739,8 +1740,8 @@ policies and contribution forms [3].
                 tests.status.stack = null;
 				tests.complete();
 			}
-			done();
-			done = null;
+			allDone();
+			allDone = null;
           };
     };
 
@@ -2122,29 +2123,25 @@ policies and contribution forms [3].
         if (this.phase === this.phases.COMPLETE) {
             return;
         }
+        this.phase = this.phases.COMPLETE;
         var this_obj = this;
 		var remaining = this.tests.length;
         forEach(this.tests,
             function(test)
             {
-				if (test.phase >= test.phases.CLEANING) {
-					remaining -= 1;
-					  if (remaining === 0) {
-                          this_obj.phase = this_obj.phases.COMPLETE;
-                          this_obj.notify_complete();
-					  }
-					return;
-				}
-                test.add_done_callback(function() {
-                      this_obj.notify_result(test);
-
+				var whenDone = function() {
 					  remaining -= 1;
 					  if (remaining === 0) {
                           this_obj.phase = this_obj.phases.COMPLETE;
                           this_obj.notify_complete();
 					  }
-                    });
-				test.done();
+                    };
+				if (test.phase >= test.phases.CLEANING) {
+					whenDone();
+					return;
+				}
+                test.add_done_callback(whenDone);
+				test.cleanup();
             }
         );
     };
