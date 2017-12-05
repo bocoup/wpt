@@ -20,8 +20,8 @@ policies and contribution forms [3].
     var settings = {
         output:true,
         harness_timeout:{
-            "normal":10000,
-            "long":60000
+            "normal":1000,
+            "long":2000
         },
         test_timeout:null,
         message_events: ["start", "test_state", "result", "completion"]
@@ -1639,8 +1639,10 @@ policies and contribution forms [3].
     Test.prototype.done = function()
     {
         var this_obj = this;
-        if (this.phase === this.phases.CLEANING ||
-          this.phase > this.phases.CLEANING) {
+        if (this.phase >= this.phases.CLEANING) {
+            if (this.phase === this.phases.CLEANING) {
+				this.set_status(this.PASS, null);
+			}
 			return;
 		}
 
@@ -1660,6 +1662,7 @@ policies and contribution forms [3].
     Test.prototype.cleanup = function() {
         var this_obj = this;
 		var failureCount = 0;
+		var timeoutCount = 0;
 		var allDone = function() {
               this_obj.phase = this_obj.phases.COMPLETE;
               tests.result(this_obj);
@@ -1679,11 +1682,11 @@ policies and contribution forms [3].
 		// declared within subsequent cleanup functions
 		// are not run.
 		var fnFailed = function(fn) {
-		  tests.phase = tests.phases.ABORTED;
-		  tests.tests.forEach(t => {
-		      t.phase = t.phases.COMPLETE
-		  });
 		  failureCount += 1;
+		  fnDone(fn);
+		};
+		var fnTimedOut = function(fn) {
+          timeoutCount += 1;
 		  fnDone(fn);
 		};
 		if (this.phase === this.phases.COMPLETE) {
@@ -1694,6 +1697,7 @@ policies and contribution forms [3].
 		    var result;
 		    var boundFnDone = fnDone.bind(null, cleanup_callback);
 		    var boundFnFailed = fnFailed.bind(null, cleanup_callback);
+			var boundFnTimedOut = fnTimedOut.bind(null, cleanup_callback);
 			setTimeout(function() {
 		 	try {
 		 	    result = cleanup_callback();
@@ -1703,6 +1707,9 @@ policies and contribution forms [3].
 		 	 }
 		 	if (result && typeof result.then === 'function') {
 		 	 result.then(boundFnDone, boundFnFailed);
+
+             // TODO(mike) Derive duration from configuration
+			 setTimeout(boundFnTimedOut, 1000);
 		 	} else {
 		 	 boundFnDone();
 		 	}
@@ -1716,29 +1723,31 @@ policies and contribution forms [3].
 		}
         forEach(this.cleanup_callbacks, invoke);
 
-        // TODO: Derive value from configuration
-        this_obj.timeout_length = 1000;
-        setTimeout(function() {
-			if (allDone === null) {
-				return;
-			}
-            tests.timeout();
-            allDone();
-			allDone = null;
-          }, this_obj.timeout_length);
-
         function report() {
 			if (allDone === null) {
 				return;
 			}
-			if (failureCount > 0) {
+			if (failureCount || timeoutCount) {
                 var total = this_obj._user_defined_cleanup_count;
+				var message = "Test named '" + this_obj.name + "' specified " +
+				  total + " 'cleanup' function" + (total > 1 ? "s" : "");
+				if (timeoutCount) {
+				  message += ", and " + timeoutCount + " timed out";
+				}
+				if (failureCount) {
+				  message += ", and " + failureCount + " failed";
+				}
+				message += ".";
+
+		        tests.phase = tests.phases.ABORTED;
+		        forEach(tests.tests, function(test) {
+		            test.phase = test.phases.COMPLETE
+		        });
+
                 tests.status.status = tests.status.ERROR;
-                tests.status.message = "Test named '" + this_obj.name +
-                    "' specified " + total + " 'cleanup' function" +
-                    (total > 1 ? "s" : "") + ", and " + failureCount + " failed.";
+                tests.status.message = message;
                 tests.status.stack = null;
-				tests.complete();
+		        tests.complete();
 			}
 			allDone();
 			allDone = null;

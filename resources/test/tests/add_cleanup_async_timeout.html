@@ -11,18 +11,36 @@
 <script>
 test(function(t) {
   t.add_cleanup(function() {
+    return Promise.resolve();
+  });
+
+  t.add_cleanup(function() {
+    return new Promise(function() {});
+  });
+
+  t.add_cleanup(function() {});
+
+  t.add_cleanup(function() {
     return new Promise(function() {});
   });
 }, 'synchronous test with asynchronous cleanup');
+test(function() {}, 'Expected status for this test: NOTRUN');
 </script>
 <script type="text/json" id="expected">
 {
   "summarized_status": {
-    "status_string": "TIMEOUT",
-    "message": null,
+    "status_string": "ERROR",
+    "message": "Test named 'synchronous test with asynchronous cleanup' specified 4 'cleanup' functions, and 2 timed out.",
     "stack": null
   },
   "summarized_tests": [
+    {
+      "status_string": "NOTRUN",
+      "name": "Expected status for this test: NOTRUN",
+      "stack": null,
+      "message": null,
+      "properties": {}
+    },
     {
       "status_string": "PASS",
       "name": "synchronous test with asynchronous cleanup",
