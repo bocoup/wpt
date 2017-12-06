@@ -1662,7 +1662,6 @@ policies and contribution forms [3].
     Test.prototype.cleanup = function() {
         var this_obj = this;
 		var failureCount = 0;
-		var timeoutCount = 0;
 		var allDone = function() {
               this_obj.phase = this_obj.phases.COMPLETE;
               tests.result(this_obj);
@@ -1685,10 +1684,6 @@ policies and contribution forms [3].
 		  failureCount += 1;
 		  fnDone(fn);
 		};
-		var fnTimedOut = function(fn) {
-          timeoutCount += 1;
-		  fnDone(fn);
-		};
 		if (this.phase === this.phases.COMPLETE) {
 			setTimeout(allDone, 0);
 			return;
@@ -1697,7 +1692,6 @@ policies and contribution forms [3].
 		    var result;
 		    var boundFnDone = fnDone.bind(null, cleanup_callback);
 		    var boundFnFailed = fnFailed.bind(null, cleanup_callback);
-			var boundFnTimedOut = fnTimedOut.bind(null, cleanup_callback);
 			setTimeout(function() {
 		 	try {
 		 	    result = cleanup_callback();
@@ -1707,9 +1701,6 @@ policies and contribution forms [3].
 		 	 }
 		 	if (result && typeof result.then === 'function') {
 		 	 result.then(boundFnDone, boundFnFailed);
-
-             // TODO(mike) Derive duration from configuration
-			 setTimeout(boundFnTimedOut, 1000);
 		 	} else {
 		 	 boundFnDone();
 		 	}
@@ -1727,17 +1718,8 @@ policies and contribution forms [3].
 			if (allDone === null) {
 				return;
 			}
-			if (failureCount || timeoutCount) {
+			if (failureCount) {
                 var total = this_obj._user_defined_cleanup_count;
-				var message = "Test named '" + this_obj.name + "' specified " +
-				  total + " 'cleanup' function" + (total > 1 ? "s" : "");
-				if (timeoutCount) {
-				  message += ", and " + timeoutCount + " timed out";
-				}
-				if (failureCount) {
-				  message += ", and " + failureCount + " failed";
-				}
-				message += ".";
 
 		        tests.phase = tests.phases.ABORTED;
 		        forEach(tests.tests, function(test) {
@@ -1745,13 +1727,16 @@ policies and contribution forms [3].
 		        });
 
                 tests.status.status = tests.status.ERROR;
-                tests.status.message = message;
+                tests.status.message = "Test named '" + this_obj.name +
+				  "' specified " + total +
+				  " 'cleanup' function" + (total > 1 ? "s" : "") +
+				  ", and " + failureCount + " failed.";
                 tests.status.stack = null;
 		        tests.complete();
 			}
 			allDone();
 			allDone = null;
-          };
+          }
     };
 
     /*
@@ -1905,6 +1890,14 @@ policies and contribution forms [3].
     function TestsStatus()
     {
         this.status = null;
+		var _status = null;
+		Object.defineProperty(this, 'status', {
+			set(value) {
+			  _status = value;
+			  console.log('setting tests.status', value, this);
+			},
+			get() { return _status; }
+		});
         this.message = null;
         this.stack = null;
     }
@@ -2051,7 +2044,31 @@ policies and contribution forms [3].
 
     Tests.prototype.timeout = function() {
         if (this.status.status === null) {
-            this.status.status = this.status.TIMEOUT;
+			var cleaningTest = null;
+
+			forEach(this.tests,
+					function(test) {
+					  if (test.phase === test.phases.CLEANING) {
+						cleaningTest = test;
+					  }
+					  test.phase = test.phases.COMPLETE;
+					});
+
+			// Timeouts that occur while a sub-test is in the "cleanup" phase
+			// indicate that some global state was not properly reverted. This
+			// invalidates the overall test execution, so the timeout should
+			// be reported as an error and cancel the execution of any
+			// remaining sub-tests.
+			if (cleaningTest) {
+			    this.status.status = this.status.ERROR;
+                this.status.message = "Cleanup function for test named '" +
+				  cleaningTest.name + " timed out.";
+                tests.status.stack = null;
+
+			} else {
+			    this.status.status = this.status.TIMEOUT;
+			}
+			console.log(this.status);
         }
         this.complete();
     };
