@@ -1640,10 +1640,7 @@ policies and contribution forms [3].
     {
         var this_obj = this;
         if (this.phase >= this.phases.CLEANING) {
-            if (this.phase === this.phases.CLEANING) {
-				this.set_status(this.PASS, null);
-			}
-			return;
+		    return;
 		}
 
         if (this.phase <= this.phases.STARTED) {
@@ -1894,7 +1891,8 @@ policies and contribution forms [3].
 		Object.defineProperty(this, 'status', {
 			set(value) {
 			  _status = value;
-			  console.log('setting tests.status', value, this);
+			  console.log('setting tests.status to:', value);
+			  console.log(JSON.stringify(TestsStatus.statuses, null, 2));
 			},
 			get() { return _status; }
 		});
@@ -2068,7 +2066,6 @@ policies and contribution forms [3].
 			} else {
 			    this.status.status = this.status.TIMEOUT;
 			}
-			console.log(this.status);
         }
         this.complete();
     };
