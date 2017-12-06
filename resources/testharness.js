@@ -717,13 +717,13 @@ policies and contribution forms [3].
         if (tests.tests.length === 0) {
             tests.set_file_is_test();
         }
-        var op;
+        var end_wait = function() { tests.end_wait(); };
         if (tests.file_is_test) {
-            op = tests.tests[0].done();
+			tests.tests[0].add_done_callback(end_wait);
+            tests.tests[0].done();
         } else {
-            op = Promise.resolve();
+            end_wait();
         }
-        op.then(function() { tests.end_wait(); });
     }
 
     function generate_tests(func, args, properties) {
@@ -3054,7 +3054,6 @@ policies and contribution forms [3].
             stack = e.filename + ":" + e.lineno + ":" + e.colno;
         }
 
-        var op = Promise.resolve();
         if (tests.file_is_test) {
             var test = tests.tests[0];
             if (test.phase >= test.phases.HAS_RESULT) {
@@ -3062,11 +3061,13 @@ policies and contribution forms [3].
             }
             test.set_status(test.FAIL, e.message, stack);
             test.phase = test.phases.HAS_RESULT;
-            op = test.done();
+			done();
+			//test.add_done_callback(done);
+            //test.done();
         } else if (!tests.allow_uncaught_exception) {
             tests.set_status(tests.status.ERROR, e.message, stack);
+			done();
         }
-        op.then(done);
     };
 
     addEventListener("error", error_handler, false);
