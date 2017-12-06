@@ -1752,6 +1752,7 @@ policies and contribution forms [3].
         this.index = null;
         this.phase = this.phases.INITIAL;
         this.update_state_from(clone);
+        this._done_callbacks = [];
         tests.push(this);
     }
 
@@ -1772,7 +1773,9 @@ policies and contribution forms [3].
         return clone;
     };
 
-    RemoteTest.prototype.cleanup = function() { return Promise.resolve(); };
+    RemoteTest.prototype.cleanup = function() {
+	    this.done();
+	};
     RemoteTest.prototype.phases = Test.prototype.phases;
     RemoteTest.prototype.update_state_from = function(clone) {
         this.status = clone.status;
@@ -1782,9 +1785,16 @@ policies and contribution forms [3].
             this.phase = this.phases.STARTED;
         }
     };
-    RemoteTest.prototype.done = function(cb) {
+	RemoteTest.prototype.add_done_callback = function(callback) {
+        this._done_callbacks.push(callback);
+	};
+    RemoteTest.prototype.done = function() {
         this.phase = this.phases.COMPLETE;
-		setTimeout(cb, 0);
+		forEach(this._done_callbacks,
+			    function(callback) {
+				    callback();
+				}
+			);
     }
 
     /*
@@ -1852,10 +1862,10 @@ policies and contribution forms [3].
     RemoteContext.prototype.test_done = function(data) {
         var remote_test = this.tests[data.test.index];
         remote_test.update_state_from(data.test);
-        remote_test.done()
-          .then(function() {
+		remote_test.add_done_callback(function() {
             tests.result(remote_test);
-          });
+		});
+        remote_test.done();
     };
 
     RemoteContext.prototype.remote_done = function(data) {
