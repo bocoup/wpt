@@ -502,49 +502,19 @@ policies and contribution forms [3].
     /*
      * API functions
      */
-	//var latest = null;
-	//function schedule(fn) {
-    //  if (!latest) {
-	//	result = fn();
-	//	if (result && typeof result.then === "function") {
-	//	  latest = result;
-	//	}
-	//  } else {
-    //    latest = latest.then(fn);
-	//  }
-	//}
-
-	var queue = [];
-	function next() {
-		if (queue.length === 0) {
-			return;
-		}
-		queue.shift()();
-	}
-	function schedule(fn) {
-	  queue.push(function() {
-        setTimeout(function() {
-		  fn(next);
-		}, 0);
-	  });
-	  if (queue.length === 1) {
-		setTimeout(next, 0);
-	  }
-	}
-
     function test(func, name, properties)
     {
         var test_name = name ? name : test_environment.next_default_test_name();
         properties = properties ? properties : {};
         var test_obj = new Test(test_name, properties);
-		schedule(function(next) {
+        tests.series(function(next) {
             test_obj.step(func, test_obj, test_obj);
-			test_obj.add_done_callback(next);
+            test_obj._add_done_callback(next);
 
             if (test_obj.phase === test_obj.phases.STARTED) {
                 test_obj.done();
             }
-		});
+        });
     }
 
     function async_test(func, name, properties)
@@ -565,10 +535,10 @@ policies and contribution forms [3].
 
     function promise_test(func, name, properties) {
         var test = async_test(name, properties);
-        schedule(function(next) {
+        tests.series(function(next) {
             var promise = test.step(func, test, test);
 
-			test.add_done_callback(next);
+            test._add_done_callback(next);
 
             test.step(function() {
                 assert_not_equals(promise, undefined);
@@ -583,9 +553,9 @@ policies and contribution forms [3].
                         assert(false, "promise_test", null,
                                "Unhandled rejection with value: ${value}", {value:value});
                     }))
-				.then(function() {
+                .then(function() {
                     test.done();
-				});
+                });
         });
     }
 
@@ -719,7 +689,7 @@ policies and contribution forms [3].
         }
         var end_wait = function() { tests.end_wait(); };
         if (tests.file_is_test) {
-			tests.tests[0].add_done_callback(end_wait);
+            tests.tests[0]._add_done_callback(end_wait);
             tests.tests[0].done();
         } else {
             end_wait();
@@ -1456,7 +1426,7 @@ policies and contribution forms [3].
 
         this.cleanup_callbacks = [];
         this._user_defined_cleanup_count = 0;
-		this._cleanup_done_callbacks = [];
+        this._cleanup_done_callbacks = [];
         this._done_callbacks = [];
 
         tests.push(this);
@@ -1632,16 +1602,15 @@ policies and contribution forms [3].
 
     Test.prototype.force_timeout = Test.prototype.timeout;
 
-	Test.prototype.add_done_callback = function(callback) {
+    Test.prototype._add_done_callback = function(callback) {
         this._done_callbacks.push(callback);
-	};
+    };
 
     Test.prototype.done = function()
     {
-        var this_obj = this;
         if (this.phase >= this.phases.CLEANING) {
-		    return;
-		}
+            return;
+        }
 
         if (this.phase <= this.phases.STARTED) {
             this.set_status(this.PASS, null);
@@ -1774,8 +1743,8 @@ policies and contribution forms [3].
     };
 
     RemoteTest.prototype.cleanup = function() {
-	    this.done();
-	};
+        this.done();
+    };
     RemoteTest.prototype.phases = Test.prototype.phases;
     RemoteTest.prototype.update_state_from = function(clone) {
         this.status = clone.status;
@@ -1785,16 +1754,16 @@ policies and contribution forms [3].
             this.phase = this.phases.STARTED;
         }
     };
-	RemoteTest.prototype.add_done_callback = function(callback) {
+    RemoteTest.prototype._add_done_callback = function(callback) {
         this._done_callbacks.push(callback);
-	};
+    };
     RemoteTest.prototype.done = function() {
         this.phase = this.phases.COMPLETE;
-		forEach(this._done_callbacks,
-			    function(callback) {
-				    callback();
-				}
-			);
+
+        forEach(this._done_callbacks,
+                function(callback) {
+                    callback();
+                });
     }
 
     /*
@@ -1862,9 +1831,9 @@ policies and contribution forms [3].
     RemoteContext.prototype.test_done = function(data) {
         var remote_test = this.tests[data.test.index];
         remote_test.update_state_from(data.test);
-		remote_test.add_done_callback(function() {
+        remote_test._add_done_callback(function() {
             tests.result(remote_test);
-		});
+        });
         remote_test.done();
     };
 
@@ -1897,15 +1866,6 @@ policies and contribution forms [3].
     function TestsStatus()
     {
         this.status = null;
-		var _status = null;
-		Object.defineProperty(this, 'status', {
-			set(value) {
-			  _status = value;
-			  console.log('setting tests.status to:', value);
-			  console.log(JSON.stringify(TestsStatus.statuses, null, 2));
-			},
-			get() { return _status; }
-		});
         this.message = null;
         this.stack = null;
     }
@@ -1935,6 +1895,7 @@ policies and contribution forms [3].
     function Tests()
     {
         this.tests = [];
+        this.queue = [];
         this.num_pending = 0;
 
         this.phases = {
@@ -2098,6 +2059,24 @@ policies and contribution forms [3].
         this.notify_test_state(test);
     };
 
+    Tests.prototype.series = function(fn) {
+        var queue = this.queue;
+        var next = function() {
+            if (queue.length === 0) {
+                return;
+            }
+            queue.shift()();
+        };
+
+        queue.push(function() {
+            fn(next);
+        });
+
+        if (queue.length === 1) {
+            setTimeout(next, 0);
+        }
+    };
+
     Tests.prototype.notify_test_state = function(test) {
         var this_obj = this;
         forEach(this.test_state_callbacks,
@@ -2156,27 +2135,31 @@ policies and contribution forms [3].
         if (this.phase === this.phases.COMPLETE) {
             return;
         }
-        this.phase = this.phases.COMPLETE;
         var this_obj = this;
-		var remaining = this.tests.length;
+        var remaining = this.tests.length;
+
+        this.phase = this.phases.COMPLETE;
+
         forEach(this.tests,
-            function(test)
-            {
-				var whenDone = function() {
-					  remaining -= 1;
-					  if (remaining === 0) {
-                          this_obj.phase = this_obj.phases.COMPLETE;
-                          this_obj.notify_complete();
-					  }
+                function(test)
+                {
+                    var whenComplete = function() {
+                        remaining -= 1;
+
+                        if (remaining === 0) {
+                            this_obj.phase = this_obj.phases.COMPLETE;
+                            this_obj.notify_complete();
+                        }
                     };
-				if (test.phase === test.phases.COMPLETE) {
-					whenDone();
-					return;
-				}
-                test.add_done_callback(whenDone);
-				test.cleanup();
-            }
-        );
+
+                    if (test.phase === test.phases.COMPLETE) {
+                        whenComplete();
+                        return;
+                    }
+
+                    test._add_done_callback(whenComplete);
+                    test.cleanup();
+                });
     };
 
     /*
@@ -3068,13 +3051,11 @@ policies and contribution forms [3].
             }
             test.set_status(test.FAIL, e.message, stack);
             test.phase = test.phases.HAS_RESULT;
-			done();
-			//test.add_done_callback(done);
-            //test.done();
         } else if (!tests.allow_uncaught_exception) {
             tests.set_status(tests.status.ERROR, e.message, stack);
-			done();
         }
+
+        done();
     };
 
     addEventListener("error", error_handler, false);
