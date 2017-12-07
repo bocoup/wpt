@@ -1627,82 +1627,88 @@ policies and contribution forms [3].
      */
     Test.prototype.cleanup = function() {
         var this_obj = this;
-		var failureCount = 0;
-		var allDone = function() {
-              this_obj.phase = this_obj.phases.COMPLETE;
-              tests.result(this_obj);
-			  forEach(this_obj._done_callbacks, function(cb) {
-				  try { cb(); } catch(err) {}
-			  });
-			  this_obj._done_callbacks.length = 0;
-            };
-		var fnDone = function(fn) {
-		  this_obj.cleanup_callbacks.splice(this_obj.cleanup_callbacks.indexOf(fn), 1);
-		  if (this_obj.cleanup_callbacks.length === 0) {
-              this_obj.phase = this_obj.phases.COMPLETE;
-			  report();
-		  }
-		};
-		// Set test phase immediately so that tests
-		// declared within subsequent cleanup functions
-		// are not run.
-		var fnFailed = function(fn) {
-		  failureCount += 1;
-		  fnDone(fn);
-		};
-		if (this.phase === this.phases.COMPLETE) {
-			setTimeout(allDone, 0);
-			return;
-		}
+        var failureCount = 0;
+        var allDone = function() {
+            this_obj.phase = this_obj.phases.COMPLETE;
+            tests.result(this_obj);
+            forEach(this_obj._done_callbacks,
+                    function(cb) {
+                        try {
+                            cb();
+                        } catch(err) {}
+                    });
+            this_obj._done_callbacks.length = 0;
+        };
+        var fnDone = function(fn) {
+            this_obj.cleanup_callbacks.splice(
+                this_obj.cleanup_callbacks.indexOf(fn), 1
+            );
+            if (this_obj.cleanup_callbacks.length === 0) {
+                this_obj.phase = this_obj.phases.COMPLETE;
+                report();
+            }
+        };
+        var fnFailed = function(fn) {
+            failureCount += 1;
+            fnDone(fn);
+        };
+        if (this.phase === this.phases.COMPLETE) {
+            setTimeout(allDone, 0);
+            return;
+        }
         function invoke(cleanup_callback) {
-		    var result;
-		    var boundFnDone = fnDone.bind(null, cleanup_callback);
-		    var boundFnFailed = fnFailed.bind(null, cleanup_callback);
-			setTimeout(function() {
-		 	try {
-		 	    result = cleanup_callback();
-		 	 } catch(err) {
-		 	    boundFnFailed();
-		 	    return;
-		 	 }
-		 	if (result && typeof result.then === 'function') {
-		 	 result.then(boundFnDone, boundFnFailed);
-		 	} else {
-		 	 boundFnDone();
-		 	}
-			}, 0);
+            var result;
+            var boundFnDone = fnDone.bind(null, cleanup_callback);
+            var boundFnFailed = fnFailed.bind(null, cleanup_callback);
+
+            setTimeout(function() {
+                try {
+                    result = cleanup_callback();
+                } catch(err) {
+                    boundFnFailed();
+                    return;
+                }
+
+                if (result && typeof result.then === 'function') {
+                    result.then(boundFnDone, boundFnFailed);
+                } else {
+                    boundFnDone();
+                }
+            }, 0);
         }
         this.phase = this.phases.CLEANING;
-		// TODO: account for "0 cleanup" case
-		if (this.cleanup_callbacks.length === 0) {
-			setTimeout(allDone, 0);
-			return;
-		}
+        if (this.cleanup_callbacks.length === 0) {
+            setTimeout(allDone, 0);
+            return;
+        }
         forEach(this.cleanup_callbacks, invoke);
 
         function report() {
-			if (allDone === null) {
-				return;
-			}
-			if (failureCount) {
+            if (allDone === null) {
+                return;
+            }
+
+            if (failureCount) {
                 var total = this_obj._user_defined_cleanup_count;
 
-		        tests.phase = tests.phases.ABORTED;
-		        forEach(tests.tests, function(test) {
-		            test.phase = test.phases.COMPLETE
-		        });
+                tests.phase = tests.phases.ABORTED;
+                forEach(tests.tests,
+                        function(test) {
+                            test.phase = test.phases.COMPLETE
+                        });
 
                 tests.status.status = tests.status.ERROR;
                 tests.status.message = "Test named '" + this_obj.name +
-				  "' specified " + total +
-				  " 'cleanup' function" + (total > 1 ? "s" : "") +
-				  ", and " + failureCount + " failed.";
+                    "' specified " + total +
+                    " 'cleanup' function" + (total > 1 ? "s" : "") +
+                    ", and " + failureCount + " failed.";
                 tests.status.stack = null;
-		        tests.complete();
-			}
-			allDone();
-			allDone = null;
-          }
+                tests.complete();
+            }
+
+            allDone();
+            allDone = null;
+        }
     };
 
     /*
