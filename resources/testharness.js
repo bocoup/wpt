@@ -2012,32 +2012,33 @@ policies and contribution forms [3].
     };
 
     Tests.prototype.timeout = function() {
+        var cleaningTest = null;
+
         if (this.status.status === null) {
-			var cleaningTest = null;
+            forEach(this.tests,
+                    function(test) {
+                        if (test.phase === test.phases.CLEANING) {
+                            cleaningTest = test;
+                        }
 
-			forEach(this.tests,
-					function(test) {
-					  if (test.phase === test.phases.CLEANING) {
-						cleaningTest = test;
-					  }
-					  test.phase = test.phases.COMPLETE;
-					});
+                        test.phase = test.phases.COMPLETE;
+                    });
 
-			// Timeouts that occur while a sub-test is in the "cleanup" phase
-			// indicate that some global state was not properly reverted. This
-			// invalidates the overall test execution, so the timeout should
-			// be reported as an error and cancel the execution of any
-			// remaining sub-tests.
-			if (cleaningTest) {
-			    this.status.status = this.status.ERROR;
+            // Timeouts that occur while a sub-test is in the "cleanup" phase
+            // indicate that some global state was not properly reverted. This
+            // invalidates the overall test execution, so the timeout should be
+            // reported as an error and cancel the execution of any remaining
+            // sub-tests.
+            if (cleaningTest) {
+                this.status.status = this.status.ERROR;
                 this.status.message = "Cleanup function for test named '" +
-				  cleaningTest.name + " timed out.";
+                    cleaningTest.name + " timed out.";
                 tests.status.stack = null;
-
-			} else {
-			    this.status.status = this.status.TIMEOUT;
-			}
+            } else {
+                this.status.status = this.status.TIMEOUT;
+            }
         }
+
         this.complete();
     };
 
