@@ -1628,24 +1628,13 @@ policies and contribution forms [3].
     Test.prototype.cleanup = function() {
         var this_obj = this;
         var failureCount = 0;
-        var allDone = function() {
-            this_obj.phase = this_obj.phases.COMPLETE;
-            tests.result(this_obj);
-            forEach(this_obj._done_callbacks,
-                    function(cb) {
-                        try {
-                            cb();
-                        } catch(err) {}
-                    });
-            this_obj._done_callbacks.length = 0;
-        };
         var fnDone = function(fn) {
             this_obj.cleanup_callbacks.splice(
                 this_obj.cleanup_callbacks.indexOf(fn), 1
             );
             if (this_obj.cleanup_callbacks.length === 0) {
                 this_obj.phase = this_obj.phases.COMPLETE;
-                report();
+                allComplete();
             }
         };
         var fnFailed = function(fn) {
@@ -1653,7 +1642,7 @@ policies and contribution forms [3].
             fnDone(fn);
         };
         if (this.phase === this.phases.COMPLETE) {
-            setTimeout(allDone, 0);
+            setTimeout(allComplete, 0);
             return;
         }
         function invoke(cleanup_callback) {
@@ -1678,16 +1667,12 @@ policies and contribution forms [3].
         }
         this.phase = this.phases.CLEANING;
         if (this.cleanup_callbacks.length === 0) {
-            setTimeout(allDone, 0);
+            setTimeout(allComplete, 0);
             return;
         }
         forEach(this.cleanup_callbacks, invoke);
 
-        function report() {
-            if (allDone === null) {
-                return;
-            }
-
+        function allComplete() {
             if (failureCount) {
                 var total = this_obj._user_defined_cleanup_count;
 
@@ -1706,8 +1691,13 @@ policies and contribution forms [3].
                 tests.complete();
             }
 
-            allDone();
-            allDone = null;
+            this_obj.phase = this_obj.phases.COMPLETE;
+            tests.result(this_obj);
+            forEach(this_obj._done_callbacks,
+                    function(cb) {
+                        cb();
+                    });
+            this_obj._done_callbacks.length = 0;
         }
     };
 
