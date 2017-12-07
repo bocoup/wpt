@@ -2169,7 +2169,7 @@ policies and contribution forms [3].
                           this_obj.notify_complete();
 					  }
                     };
-				if (test.phase >= test.phases.CLEANING) {
+				if (test.phase === test.phases.COMPLETE) {
 					whenDone();
 					return;
 				}
