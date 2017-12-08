@@ -31,7 +31,7 @@ test(function(t) {
   });
   t.add_cleanup(function() {
     return new Promise(function(resolve) {
-    
+
       setTimeout(function() {
         counts.afterFirst = completeCount;
         resolve();

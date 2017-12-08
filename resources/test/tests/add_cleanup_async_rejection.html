@@ -25,24 +25,23 @@ test(function(t) {
   });
 
   t.add_cleanup(function() {
-	  if (completeCount === 0) {
-		test(function() {}, "test is not asynchronously considered 'complete'");
-	  }
+    if (completeCount === 0) {
+      test(function() {}, "test is not asynchronously considered 'complete'");
+    }
 
-	  reject();
+    reject();
 
-	  setTimeout(function() {
-	      if (completeCount === 0) {
-	        test(
-	        	function() {},
-	        	"test is not considered 'complete' following rejection of " +
-					"first promise"
-	        );
-	      }
+    setTimeout(function() {
+      if (completeCount === 0) {
+        test(
+          function() {},
+          "test is not considered 'complete' following rejection of first " +
+          "promise"
+        );
+      }
 
-		  console.log(3);
-		  resolve();
-	  }, 0);
+      resolve();
+    }, 0);
   });
 }, "synchronous test with asynchronous cleanup including rejection");
 

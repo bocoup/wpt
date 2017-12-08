@@ -7,8 +7,9 @@
 </head>
 <body>
 <div id="log"></div>
-
 <script>
+"use strict";
+
 test(function(t) {
   t.add_cleanup(function() {
     return Promise.resolve();
@@ -23,8 +24,9 @@ test(function(t) {
   t.add_cleanup(function() {
     return new Promise(function() {});
   });
-}, 'synchronous test with asynchronous cleanup');
-test(function() {}, 'Expected status for this test: NOTRUN');
+}, "synchronous test with asynchronous cleanup");
+
+test(function() {}, "Expected status for this test: NOTRUN");
 </script>
 <script type="text/json" id="expected">
 {
