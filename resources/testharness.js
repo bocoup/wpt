@@ -1628,45 +1628,32 @@ policies and contribution forms [3].
     Test.prototype.cleanup = function() {
         var this_obj = this;
         var failureCount = 0;
-        var remaining = this.cleanup_callbacks.length;
-        var fnDone = function() {
-            remaining -= 1;
-
-            if (remaining === 0) {
-                this_obj._cleanup_done(failureCount);
-            }
-        };
-        var fnFailed = function() {
-            failureCount += 1;
-            fnDone();
-        };
-        function invoke(cleanup_callback) {
-            setTimeout(function() {
-                var result;
-
-                try {
-                    result = cleanup_callback();
-                } catch (err) {
-                    fnFailed();
-                    return;
-                }
-
-                if (result && typeof result.then === "function") {
-                    result.then(fnDone, fnFailed);
-                } else {
-                    fnDone();
-                }
-            }, 0);
-        }
         this.phase = this.phases.CLEANING;
-        if (remaining === 0) {
-            setTimeout(function() {
-                this_obj._cleanup_done(0);
-            }, 0);
-            return;
-        }
 
-        forEach(this.cleanup_callbacks, invoke);
+        allAsync(this.cleanup_callbacks,
+                 function(cleanup_callback, done) {
+                     setTimeout(function() {
+                         var result;
+
+                         try {
+                             result = cleanup_callback();
+                         } catch (err) {
+                             failureCount += 1;
+                         }
+
+                         if (result && typeof result.then === "function") {
+                             result.then(done, function() {
+                                 failureCount += 1;
+                                 done();
+                             });
+                         } else {
+                             done();
+                         }
+                     }, 0);
+                 },
+                 function() {
+                     this_obj._cleanup_done(failureCount);
+                 });
     };
 
     Test.prototype._cleanup_done = function(failureCount) {
@@ -2133,26 +2120,21 @@ policies and contribution forms [3].
 
         this.phase = this.phases.COMPLETE;
 
-        forEach(this.tests,
-                function(test)
-                {
-                    var whenComplete = function() {
-                        remaining -= 1;
+        allAsync(this.tests,
+                 function(test, testDone)
+                 {
+                     if (test.phase === test.phases.COMPLETE) {
+                         testDone();
+                         return;
+                     }
 
-                        if (remaining === 0) {
-                            this_obj.phase = this_obj.phases.COMPLETE;
-                            this_obj.notify_complete();
-                        }
-                    };
-
-                    if (test.phase === test.phases.COMPLETE) {
-                        whenComplete();
-                        return;
-                    }
-
-                    test._add_done_callback(whenComplete);
-                    test.cleanup();
-                });
+                     test._add_done_callback(testDone);
+                     test.cleanup();
+                 },
+                 function() {
+                     this_obj.phase = this_obj.phases.COMPLETE;
+                     this_obj.notify_complete();
+                 });
     };
 
     /*
@@ -2910,6 +2892,34 @@ policies and contribution forms [3].
                 callback.call(thisObj, array[i], i, array);
             }
         }
+    }
+
+    function allAsync(array, predicate, allDone)
+    {
+        var remaining = array.length;
+
+        if (remaining === 0) {
+            setTimeout(allDone, 0);
+        }
+
+        forEach(array,
+                function(element) {
+                    var invoked = false;
+                    var elDone = function() {
+                        if (invoked) {
+                            return;
+                        }
+
+                        invoked = true;
+                        remaining -= 1;
+
+                        if (remaining === 0) {
+                            allDone();
+                        }
+                    };
+
+                    predicate(element, elDone);
+                });
     }
 
     function merge(a,b)
