@@ -1632,24 +1632,22 @@ policies and contribution forms [3].
 
         allAsync(this.cleanup_callbacks,
                  function(cleanup_callback, done) {
-                     setTimeout(function() {
-                         var result;
+                     var result;
 
-                         try {
-                             result = cleanup_callback();
-                         } catch (err) {
+                     try {
+                         result = cleanup_callback();
+                     } catch (err) {
+                         failureCount += 1;
+                     }
+
+                     if (result && typeof result.then === "function") {
+                         result.then(done, function() {
                              failureCount += 1;
-                         }
-
-                         if (result && typeof result.then === "function") {
-                             result.then(done, function() {
-                                 failureCount += 1;
-                                 done();
-                             });
-                         } else {
                              done();
-                         }
-                     }, 0);
+                         });
+                     } else {
+                         done();
+                     }
                  },
                  function() {
                      this_obj._cleanup_done(failureCount);
@@ -2042,15 +2040,16 @@ policies and contribution forms [3].
     Tests.prototype.series = function(fn) {
         var queue = this.queue;
         var next = function() {
-            if (queue.length === 0) {
-                return;
-            }
-            queue.shift()();
+            queue[0](function() {
+                queue.shift();
+
+                if (queue.length) {
+                    next();
+                }
+            });
         };
 
-        queue.push(function() {
-            fn(next);
-        });
+        queue.push(fn);
 
         if (queue.length === 1) {
             setTimeout(next, 0);
@@ -2914,7 +2913,7 @@ policies and contribution forms [3].
                         remaining -= 1;
 
                         if (remaining === 0) {
-                            allDone();
+                            setTimeout(allDone, 0);
                         }
                     };
 
