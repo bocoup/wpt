@@ -10,7 +10,7 @@
 <script>
 "use strict";
 
-test(function(t) {
+promise_test(function(t) {
   t.add_cleanup(function() {
     return Promise.resolve();
   });
@@ -24,28 +24,30 @@ test(function(t) {
   t.add_cleanup(function() {
     return new Promise(function() {});
   });
-}, "synchronous test with asynchronous cleanup");
 
-test(function() {}, "Synchronous test following timed out cleanup ('NOT RUN')");
+  return Promise.resolve();
+}, "promise_test with asynchronous cleanup");
+
+promise_test(function() {}, "promise_test following timed out cleanup ('NOT RUN')");
 </script>
 <script type="text/json" id="expected">
 {
   "summarized_status": {
     "status_string": "ERROR",
-    "message": "Cleanup function for test named 'synchronous test with asynchronous cleanup timed out.",
+    "message": "Cleanup function for test named 'promise_test with asynchronous cleanup timed out.",
     "stack": null
   },
   "summarized_tests": [
     {
       "status_string": "NOTRUN",
-      "name": "Synchronous test following timed out cleanup ('NOT RUN')",
+      "name": "promise_test following timed out cleanup ('NOT RUN')",
       "stack": null,
       "message": null,
       "properties": {}
     },
     {
       "status_string": "PASS",
-      "name": "synchronous test with asynchronous cleanup",
+      "name": "promise_test with asynchronous cleanup",
       "stack": null,
       "message": null,
       "properties": {}

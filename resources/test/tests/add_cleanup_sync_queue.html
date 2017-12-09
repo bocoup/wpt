@@ -1,7 +1,7 @@
 <!DOCTYPE HTML>
 <html>
 <head>
-<title>Test#add_cleanup: queuing synchronous tests</title>
+<title>Test#add_cleanup: queuing tests</title>
 <script src="../../testharness.js"></script>
 <script src="../../testharnessreport.js"></script>
 </head>
@@ -12,16 +12,20 @@
 "use strict";
 var firstCleaned = false;
 
-test(function(t) {
-  test(function() {
+promise_test(function(t) {
+  promise_test(function() {
     assert_true(
       firstCleaned, "should not execute until first test is complete"
     );
+
+    return Promise.resolve();
   }, "test defined when no tests are queued, but one test is executing");
 
   t.add_cleanup(function() {
     firstCleaned = true;
   });
+
+  return Promise.resolve();
 }, "Test with a 'cleanup' function");
 </script>
 <script type="text/json" id="expected">

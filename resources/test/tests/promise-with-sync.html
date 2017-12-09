@@ -19,18 +19,18 @@ test(function(t) {
 }, "first synchronous test");
 
 promise_test(function() {
-  assert_array_equals(sequence, [1]);
+  assert_array_equals(sequence, [1, 2]);
 
   return Promise.resolve()
     .then(function() {
-        assert_array_equals(sequence, [1]);
-        sequence.push(2);
+        assert_array_equals(sequence, [1, 2]);
+        sequence.push(3);
       });
 }, "first promise_test");;
 
 test(function(t) {
-  assert_array_equals(sequence, [1, 2]);
-  sequence.push(3);
+  assert_array_equals(sequence, [1]);
+  sequence.push(2);
 }, "second synchronous test");
 
 promise_test(function() {

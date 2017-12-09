@@ -507,14 +507,10 @@ policies and contribution forms [3].
         var test_name = name ? name : test_environment.next_default_test_name();
         properties = properties ? properties : {};
         var test_obj = new Test(test_name, properties);
-        tests.series(function(next) {
-            test_obj.step(func, test_obj, test_obj);
-            test_obj._add_done_callback(next);
-
-            if (test_obj.phase === test_obj.phases.STARTED) {
-                test_obj.done();
-            }
-        });
+        test_obj.step(func, test_obj, test_obj);
+        if (test_obj.phase === test_obj.phases.STARTED) {
+            test_obj.done();
+        }
     }
 
     function async_test(func, name, properties)
@@ -535,10 +531,15 @@ policies and contribution forms [3].
 
     function promise_test(func, name, properties) {
         var test = async_test(name, properties);
-        tests.series(function(next) {
+        // If there is no promise tests queue make one.
+        if (!tests.promise_tests) {
+            tests.promise_tests = Promise.resolve();
+        }
+        tests.promise_tests = tests.promise_tests.then(function() {
+            var donePromise = new Promise(function(resolve) {
+                test._add_done_callback(resolve);
+            });
             var promise = test.step(func, test, test);
-
-            test._add_done_callback(next);
 
             test.step(function() {
                 assert_not_equals(promise, undefined);
@@ -556,6 +557,7 @@ policies and contribution forms [3].
                 .then(function() {
                     test.done();
                 });
+            return donePromise;
         });
     }
 
@@ -1628,8 +1630,16 @@ policies and contribution forms [3].
     Test.prototype.cleanup = function() {
         var this_obj = this;
         var failureCount = 0;
+        function fail() {
+            // Set test phase immediately so that tests declared within
+            // subsequent cleanup functions are not run.
+            tests.phase = tests.phases.ABORTED;
+        }
         this.phase = this.phases.CLEANING;
 
+        // TODO(mike) Explicitly specify asynchronous behavior based on some
+        // yet-to-be implemented instance property of the `Test` instance (e.g.
+        // as `is_promise_test`).
         all_async(this.cleanup_callbacks,
                   function(cleanup_callback, done) {
                       var result;
@@ -1637,12 +1647,14 @@ policies and contribution forms [3].
                       try {
                           result = cleanup_callback();
                       } catch (err) {
-                          failureCount += 1;
+                          fail();
                       }
 
                       if (result && typeof result.then === "function") {
+                          // TODO(mike) Report a test error if the current
+                          // `Test` instance was not created by `promise_test`.
                           result.then(done, function() {
-                              failureCount += 1;
+                              fail();
                               done();
                           });
                       } else {
@@ -1670,7 +1682,6 @@ policies and contribution forms [3].
                 " 'cleanup' function" + (total > 1 ? "s" : "") +
                 ", and " + failureCount + " failed.";
             tests.status.stack = null;
-            tests.complete();
         }
 
         this.phase = this.phases.COMPLETE;
@@ -1872,7 +1883,6 @@ policies and contribution forms [3].
     function Tests()
     {
         this.tests = [];
-        this.queue = [];
         this.num_pending = 0;
 
         this.phases = {
@@ -2037,39 +2047,6 @@ policies and contribution forms [3].
         this.notify_test_state(test);
     };
 
-    /**
-     * Insert a function representing an asynchronous operation into a queue
-     * and execute once all operations previously scheduled in this way have
-     * completed.
-     *
-     * @param {function} fn This function will be invoked once all previously-
-     *                      scheduled operations have completed. If there are
-     *                      no such operations, this function will be invoked
-     *                      in the next turn of the event loop. In ether case,
-     *                      a single argument will be available in the
-     *                      invocation: a function that must be called to
-     *                      signal the completion of the asynchronous
-     *                      operation.
-     */
-    Tests.prototype.series = function(fn) {
-        var queue = this.queue;
-        var next = function() {
-            queue[0](function() {
-                queue.shift();
-
-                if (queue.length) {
-                    next();
-                }
-            });
-        };
-
-        queue.push(fn);
-
-        if (queue.length === 1) {
-            setTimeout(next, 0);
-        }
-    };
-
     Tests.prototype.notify_test_state = function(test) {
         var this_obj = this;
         forEach(this.test_state_callbacks,
@@ -2130,9 +2107,6 @@ policies and contribution forms [3].
         }
         var this_obj = this;
         var remaining = this.tests.length;
-
-        this.phase = this.phases.COMPLETE;
-
         all_async(this.tests,
                   function(test, testDone)
                   {
@@ -2145,7 +2119,10 @@ policies and contribution forms [3].
                       test.cleanup();
                   },
                   function() {
-                      this_obj.phase = this_obj.phases.COMPLETE;
+                      if (this_obj.phase !== this_obj.phases.ABORTED) {
+                          this_obj.phase = this_obj.phases.COMPLETE;
+                      }
+
                       this_obj.notify_complete();
                   });
     };
@@ -2910,12 +2887,10 @@ policies and contribution forms [3].
     /**
      * Immediately invoke a "predicate" function with a series of values in
      * parallel and invoke a final "done" function when all of the "predicates"
-     * invocations have signaled completion. If no values are supplied, the
-     * "done" function will be invoked on the next turn of the event loop.
+     * invocations have signaled completion.
      *
-     * The eventual invocation of `allDone` is guaranteed to occur on a
-     * distinct turn of the event loop (even when all predicate invocations
-     * synchronously signal completion).
+     * TODO(mike) Make synchronicity configurable in order to reduce branching
+     * in domain logic.
      *
      * @param {array} value Zero or more values to use in the invocation of
      *                      `predicate`
@@ -2934,7 +2909,7 @@ policies and contribution forms [3].
         var isSync = true;
 
         if (remaining === 0) {
-            setTimeout(allDone, 0);
+            allDone();
         }
 
         forEach(values,
@@ -2949,11 +2924,7 @@ policies and contribution forms [3].
                         remaining -= 1;
 
                         if (remaining === 0) {
-                            if (isSync) {
-                                setTimeout(allDone, 0);
-                            } else {
-                                allDone();
-                            }
+                            allDone();
                         }
                     };
 

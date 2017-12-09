@@ -20,7 +20,7 @@ add_result_callback(function(result_t) {
   completeCount += 1;
 });
 
-test(function(t) {
+promise_test(function(t) {
   t.add_cleanup(function() {
     return new Promise(function(resolve) {
       setTimeout(function() {
@@ -38,9 +38,11 @@ test(function(t) {
       }, 0);
     });
   });
-}, 'synchronous test with asynchronous cleanup');
 
-test(function() {
+  return Promise.resolve();
+}, 'promise_test with asynchronous cleanup');
+
+promise_test(function() {
   assert_equals(
     counts.afterTick,
     0,
@@ -52,7 +54,9 @@ test(function() {
     "test is not considered 'complete' following fulfillment of first promise"
   );
   assert_equals(completeCount, 1);
-}, "synchronously-defined test");
+
+  return Promise.resolve();
+}, "synchronously-defined promise_test");
 </script>
 <script type="text/json" id="expected">
 {
@@ -64,14 +68,14 @@ test(function() {
   "summarized_tests": [
     {
       "status_string": "PASS",
-      "name": "synchronous test with asynchronous cleanup",
+      "name": "promise_test with asynchronous cleanup",
       "stack": null,
       "message": null,
       "properties": {}
     },
     {
       "status_string": "PASS",
-      "name": "synchronously-defined test",
+      "name": "synchronously-defined promise_test",
       "stack": null,
       "message": null,
       "properties": {}

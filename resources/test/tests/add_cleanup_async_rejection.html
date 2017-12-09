@@ -15,8 +15,7 @@ var completeCount = 0;
 add_result_callback(function(result_t) {
   completeCount += 1;
 });
-
-test(function(t) {
+promise_test(function(t) {
   t.add_cleanup(function() {
     return new Promise(function(_, _reject) { reject = _reject; });
   });
@@ -30,7 +29,7 @@ test(function(t) {
   // elsewhere).
   t.add_cleanup(function() {
     if (completeCount === 0) {
-      test(
+      promise_test(
         function() {},
         "test is not asynchronously considered 'complete' ('NOT RUN')"
       );
@@ -40,7 +39,7 @@ test(function(t) {
 
     setTimeout(function() {
       if (completeCount === 0) {
-        test(
+        promise_test(
           function() {},
           "test is not considered 'complete' following rejection of first " +
           "promise ('NOT RUN')"
@@ -50,9 +49,11 @@ test(function(t) {
       resolve();
     }, 0);
   });
+
+  return Promise.resolve();
 }, "synchronous test with asynchronous cleanup including rejection");
 
-test(function() {}, "synchronously-defined test ('NOT RUN')");
+promise_test(function() {}, "synchronously-defined test ('NOT RUN')");
 </script>
 <script type="text/json" id="expected">
 {
