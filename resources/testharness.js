@@ -2037,6 +2037,20 @@ policies and contribution forms [3].
         this.notify_test_state(test);
     };
 
+    /**
+     * Insert a function representing an asynchronous operation into a queue
+     * and execute once all operations previously scheduled in this way have
+     * completed.
+     *
+     * @param {function} fn This function will be invoked once all previously-
+     *                      scheduled operations have completed. If there are
+     *                      no such operations, this function will be invoked
+     *                      in the next turn of the event loop. In ether case,
+     *                      a single argument will be available in the
+     *                      invocation: a function that must be called to
+     *                      signal the completion of the asynchronous
+     *                      operation.
+     */
     Tests.prototype.series = function(fn) {
         var queue = this.queue;
         var next = function() {
