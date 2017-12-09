@@ -26,7 +26,10 @@ test(function(t) {
 
   t.add_cleanup(function() {
     if (completeCount === 0) {
-      test(function() {}, "test is not asynchronously considered 'complete'");
+      test(
+        function() {},
+        "test is not asynchronously considered 'complete' ('NOT RUN')"
+      );
     }
 
     reject();
@@ -36,7 +39,7 @@ test(function(t) {
         test(
           function() {},
           "test is not considered 'complete' following rejection of first " +
-          "promise"
+          "promise ('NOT RUN')"
         );
       }
 
@@ -45,7 +48,7 @@ test(function(t) {
   });
 }, "synchronous test with asynchronous cleanup including rejection");
 
-test(function() {}, "synchronously-defined test");
+test(function() {}, "synchronously-defined test ('NOT RUN')");
 </script>
 <script type="text/json" id="expected">
 {
@@ -64,21 +67,21 @@ test(function() {}, "synchronously-defined test");
     },
     {
       "status_string": "NOTRUN",
-      "name": "synchronously-defined test",
+      "name": "synchronously-defined test ('NOT RUN')",
       "stack": null,
       "message": null,
       "properties": {}
     },
     {
       "status_string": "NOTRUN",
-      "name": "test is not asynchronously considered 'complete'",
+      "name": "test is not asynchronously considered 'complete' ('NOT RUN')",
       "stack": null,
       "message": null,
       "properties": {}
     },
     {
       "status_string": "NOTRUN",
-      "name": "test is not considered 'complete' following rejection of first promise",
+      "name": "test is not considered 'complete' following rejection of first promise ('NOT RUN')",
       "stack": null,
       "message": null,
       "properties": {}
