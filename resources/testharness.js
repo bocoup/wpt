@@ -1630,28 +1630,28 @@ policies and contribution forms [3].
         var failureCount = 0;
         this.phase = this.phases.CLEANING;
 
-        allAsync(this.cleanup_callbacks,
-                 function(cleanup_callback, done) {
-                     var result;
+        all_async(this.cleanup_callbacks,
+                  function(cleanup_callback, done) {
+                      var result;
 
-                     try {
-                         result = cleanup_callback();
-                     } catch (err) {
-                         failureCount += 1;
-                     }
+                      try {
+                          result = cleanup_callback();
+                      } catch (err) {
+                          failureCount += 1;
+                      }
 
-                     if (result && typeof result.then === "function") {
-                         result.then(done, function() {
-                             failureCount += 1;
-                             done();
-                         });
-                     } else {
-                         done();
-                     }
-                 },
-                 function() {
-                     this_obj._cleanup_done(failureCount);
-                 });
+                      if (result && typeof result.then === "function") {
+                          result.then(done, function() {
+                              failureCount += 1;
+                              done();
+                          });
+                      } else {
+                          done();
+                      }
+                  },
+                  function() {
+                      this_obj._cleanup_done(failureCount);
+                  });
     };
 
     Test.prototype._cleanup_done = function(failureCount) {
@@ -2119,21 +2119,21 @@ policies and contribution forms [3].
 
         this.phase = this.phases.COMPLETE;
 
-        allAsync(this.tests,
-                 function(test, testDone)
-                 {
-                     if (test.phase === test.phases.COMPLETE) {
-                         testDone();
-                         return;
-                     }
+        all_async(this.tests,
+                  function(test, testDone)
+                  {
+                      if (test.phase === test.phases.COMPLETE) {
+                          testDone();
+                          return;
+                      }
 
-                     test._add_done_callback(testDone);
-                     test.cleanup();
-                 },
-                 function() {
-                     this_obj.phase = this_obj.phases.COMPLETE;
-                     this_obj.notify_complete();
-                 });
+                      test._add_done_callback(testDone);
+                      test.cleanup();
+                  },
+                  function() {
+                      this_obj.phase = this_obj.phases.COMPLETE;
+                      this_obj.notify_complete();
+                  });
     };
 
     /*
@@ -2893,15 +2893,37 @@ policies and contribution forms [3].
         }
     }
 
-    function allAsync(array, predicate, allDone)
+    /**
+     * Immediately invoke a "predicate" function with a series of values in
+     * parallel and invoke a final "done" function when all of the "predicates"
+     * invocations have signaled completion. If no values are supplied, the
+     * "done" function will be invoked on the next turn of the event loop.
+     *
+     * The eventual invocation of `allDone` is guaranteed to occur on a
+     * distinct turn of the event loop (even when all predicate invocations
+     * synchronously signal completion).
+     *
+     * @param {array} value Zero or more values to use in the invocation of
+     *                      `predicate`
+     * @param {function} predicate A function that will be invoked once for
+     *                             each of the provided `values`. Two arguments
+     *                             will be available in each invocation: the
+     *                             value from `values` and a function that must
+     *                             be invoked to signal completion
+     * @param {function} allDone A function that will be invoked after all
+     *                           operations initiated by the `predicate`
+     *                           function have signaled completion
+     */
+    function all_async(values, predicate, allDone)
     {
-        var remaining = array.length;
+        var remaining = values.length;
+        var isSync = true;
 
         if (remaining === 0) {
             setTimeout(allDone, 0);
         }
 
-        forEach(array,
+        forEach(values,
                 function(element) {
                     var invoked = false;
                     var elDone = function() {
@@ -2913,12 +2935,18 @@ policies and contribution forms [3].
                         remaining -= 1;
 
                         if (remaining === 0) {
-                            setTimeout(allDone, 0);
+                            if (isSync) {
+                                setTimeout(allDone, 0);
+                            } else {
+                                allDone();
+                            }
                         }
                     };
 
                     predicate(element, elDone);
                 });
+
+        isSync = false;
     }
 
     function merge(a,b)
