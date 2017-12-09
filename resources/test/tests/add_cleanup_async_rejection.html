@@ -24,6 +24,10 @@ test(function(t) {
     return new Promise(function(_resolve) { resolve = _resolve; });
   });
 
+  // The following cleanup function defines empty tests so that the reported
+  // data demonstrates the intended run-time behavior without relying on the
+  // test harness's handling of errors during test cleanup (which is tested
+  // elsewhere).
   t.add_cleanup(function() {
     if (completeCount === 0) {
       test(
