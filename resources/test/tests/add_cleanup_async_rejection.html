@@ -51,7 +51,7 @@ promise_test(function(t) {
   });
 
   return Promise.resolve();
-}, "synchronous test with asynchronous cleanup including rejection");
+}, "promise_test with asynchronous cleanup including rejection");
 
 promise_test(function() {}, "synchronously-defined test ('NOT RUN')");
 </script>
@@ -59,13 +59,13 @@ promise_test(function() {}, "synchronously-defined test ('NOT RUN')");
 {
   "summarized_status": {
     "status_string": "ERROR",
-    "message": "Test named 'synchronous test with asynchronous cleanup including rejection' specified 3 'cleanup' functions, and 1 failed.",
+    "message": "Test named 'promise_test with asynchronous cleanup including rejection' specified 3 'cleanup' functions, and 1 failed.",
     "stack": null
   },
   "summarized_tests": [
     {
       "status_string": "PASS",
-      "name": "synchronous test with asynchronous cleanup including rejection",
+      "name": "promise_test with asynchronous cleanup including rejection",
       "stack": null,
       "message": null,
       "properties": {}

@@ -1631,6 +1631,7 @@ policies and contribution forms [3].
         var this_obj = this;
         var failureCount = 0;
         function fail() {
+            failureCount += 1;
             // Set test phase immediately so that tests declared within
             // subsequent cleanup functions are not run.
             tests.phase = tests.phases.ABORTED;
@@ -2018,8 +2019,8 @@ policies and contribution forms [3].
             // sub-tests.
             if (cleaningTest) {
                 this.status.status = this.status.ERROR;
-                this.status.message = "Cleanup function for test named '" +
-                    cleaningTest.name + " timed out.";
+                this.status.message = "Cleanup function for test named \"" +
+                    cleaningTest.name + "\" timed out.";
                 tests.status.stack = null;
             } else {
                 this.status.status = this.status.TIMEOUT;
@@ -2116,7 +2117,9 @@ policies and contribution forms [3].
                       }
 
                       test._add_done_callback(testDone);
-                      test.cleanup();
+                      if (test.phase < test.phases.CLEANING) {
+                          test.cleanup();
+                      }
                   },
                   function() {
                       if (this_obj.phase !== this_obj.phases.ABORTED) {
