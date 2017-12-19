@@ -545,6 +545,10 @@ class TestRunnerManager(threading.Thread):
                 self.unexpected_count += 1
                 self.logger.debug("Unexpected count in this thread %i" % self.unexpected_count)
                 subtest_unexpected = True
+
+            marker = '__CLEANUP_RETURN_TYPE'
+            if marker in result.name:
+                print 'file[%s] - subtest[%s]' % (test.id, result.name)
             self.logger.test_status(test.id,
                                     result.name,
                                     result.status,

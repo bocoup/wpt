@@ -1621,17 +1621,30 @@ policies and contribution forms [3].
      */
     Test.prototype.cleanup = function() {
         var error_count = 0;
+        var this_obj = this;
         var total;
 
         forEach(this.cleanup_callbacks,
                 function(cleanup_callback) {
+                    var result;
+
                     try {
-                        cleanup_callback();
+                        result = cleanup_callback();
                     } catch (e) {
                         // Set test phase immediately so that tests declared
                         // within subsequent cleanup functions are not run.
                         tests.phase = tests.phases.ABORTED;
                         error_count += 1;
+                    }
+
+                    if (result !== undefined) {
+                       var type;
+                       if (result && typeof result.then === 'function') {
+                           type = 'thenable';
+                       } else {
+                           type = typeof result;
+                       }
+                       this_obj.name += ' __CLEANUP_RETURN_TYPE:' + type;
                     }
                 });
 
