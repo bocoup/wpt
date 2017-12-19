@@ -281,6 +281,9 @@ class ReplacementTokenizer(object):
     def ident(scanner, token):
         return ("ident", token)
 
+    def delimiter(scanner, token):
+        return ("delimiter", token.strip())
+
     def index(scanner, token):
         token = token[1:-1]
         try:
@@ -296,9 +299,21 @@ class ReplacementTokenizer(object):
     def tokenize(self, string):
         return self.scanner.scan(string)[0]
 
-    scanner = re.Scanner([(r"\$\w+:", var),
-                          (r"\$?\w+(?:\(\))?", ident),
-                          (r"\[[^\]]*\]", index)])
+    scanner = re.Scanner([(r"\s*[,\]\[)(]\s*", delimiter),
+                          (r"\$\w+:", var),
+                          (r"\$?\w[\w-]*", ident)])
+
+a = ReplacementTokenizer()
+
+print a.tokenize('foobar[baz]')
+print [('ident', 'foobar'), ('index', u'baz')]
+print a.tokenize('uuid()') == [('ident', 'uuid()')]
+print a.tokenize('uuid()')
+print a.tokenize('uuid(baz)')
+print a.tokenize('uuid(foo, bar, baz)')
+
+
+
 
 
 class FirstWrapper(object):
@@ -407,41 +422,67 @@ def template(request, content, escape_type="html"):
         else:
             variable = None
 
-        assert tokens[0][0] == "ident" and all(item[0] == "index" for item in tokens[1:]), tokens
+        assert tokens[0][0] == "ident"# and all(item[0] == "index" for item in tokens[1:]), tokens
+        assert len(tokens) == 1 or tokens[1][1] in "[("
 
         field = tokens[0][1]
 
-        if field in variables:
-            value = variables[field]
-        elif field == "sha384":
-            value = HashLookup(request.doc_root)
-        elif field == "headers":
-            value = request.headers
-        elif field == "GET":
-            value = FirstWrapper(request.GET)
-        elif field in request.server.config:
-            value = request.server.config[tokens[0][1]]
-        elif field == "location":
-            value = {"server": "%s://%s:%s" % (request.url_parts.scheme,
-                                               request.url_parts.hostname,
-                                               request.url_parts.port),
-                     "scheme": request.url_parts.scheme,
-                     "host": "%s:%s" % (request.url_parts.hostname,
-                                        request.url_parts.port),
-                     "hostname": request.url_parts.hostname,
-                     "port": request.url_parts.port,
-                     "path": request.url_parts.path,
-                     "pathname": request.url_parts.path,
-                     "query": "?%s" % request.url_parts.query}
-        elif field == "uuid()":
-            value = str(uuid.uuid4())
-        elif field == "url_base":
-            value = request.url_base
-        else:
-            raise Exception("Undefined template variable %s" % field)
+        if len(tokens) == 1:
+            if field in variables:
+                value = variables[field]
+            elif field in request.server.config:
+                value = request.server.config
+            elif field == "url_base":
+                value = request.url_base
+            else:
+                raise Exception("Undefined template variable %s" % field)
+        elif tokens[1][1] == "(":
+            assert tokens[-1][1] == ")"
+            arguments = []
+            for index, token in enumerate(tokens[2:-1]):
+                if index % 2 == 0:
+                    assert token[1] == ","
+                else:
+                    assert token[0] == "ident"
+                    arguments.append(token[1])
+            assert field == "uuid"
+            value = str(uuid.uuid4(*arguments))
+        elif tokens[1][1] == "[":
+            if field == "headers":
+                value = request.headers
+            elif field == "GET":
+                value = FirstWrapper(request.GET)
+            elif field in request.server.config:
+                value = request.server.config[tokens[0][1]]
+            elif field == "location":
+                value = {"server": "%s://%s:%s" % (request.url_parts.scheme,
+                                                   request.url_parts.hostname,
+                                                   request.url_parts.port),
+                         "scheme": request.url_parts.scheme,
+                         "host": "%s:%s" % (request.url_parts.hostname,
+                                            request.url_parts.port),
+                         "hostname": request.url_parts.hostname,
+                         "port": request.url_parts.port,
+                         "path": request.url_parts.path,
+                         "pathname": request.url_parts.path,
+                         "query": "?%s" % request.url_parts.query}
+            else:
+                raise Exception("Undefined template variable %s" % field)
 
-        for item in tokens[1:]:
-            value = value[item[1]]
+            is_open = False
+            for index, token in enumerate(tokens[1:]):
+                if token[1] == "[":
+                    assert is_open == False
+                    is_open = True
+                elif token[1] == "]":
+                    assert is_open
+                    is_open = False
+                else:
+                    assert is_open
+                    assert token[0] == "ident"
+                    value = value[token[1]]
+        else:
+            raise Error()
 
         assert isinstance(value, (int,) + types.StringTypes), tokens
 
