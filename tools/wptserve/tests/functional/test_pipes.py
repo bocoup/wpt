@@ -66,6 +66,16 @@ class TestSub(TestUsingServer):
         expected = "PASS"
         self.assertEqual(resp.read().rstrip(), expected)
 
+    def test_sub_uuid(self):
+        resp = self.request("/sub_uuid.txt", query="pipe=sub")
+        self.assertRegexpMatches(resp.read().rstrip(), r"Before [a-f0-9-]+ After")
+
+    def test_sub_var(self):
+        resp = self.request("/sub_var.txt", query="pipe=sub")
+        port = self.server.port
+        expected = "localhost %s A %s B localhost C" % (port, port)
+        self.assertEqual(resp.read().rstrip(), expected)
+
 class TestTrickle(TestUsingServer):
     def test_trickle(self):
         #Actually testing that the response trickles in is not that easy
