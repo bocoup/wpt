@@ -538,36 +538,36 @@ policies and contribution forms [3].
             tests.promise_tests = Promise.resolve();
         }
         tests.promise_tests = tests.promise_tests.then(function() {
-            var donePromise = new Promise(function(resolve) {
-                test._add_done_callback(resolve);
-            });
+            return new Promise(function(resolve) {
+                // The current test should be skipped if the harness is in an
+                // invalid state (e.g. if the "cleanup" logic of a previous test
+                // failed.
+				console.log(tests.phase, tests.phases);
+                if (tests.phase === tests.phases.ABORTED) {
+                    test._done_async(resolve);
+                    //test.cleanup(resolve);
+					return;
+                }
 
-            // The current test should be skipped if the harness is in an
-            // invalid state (e.g. if the "cleanup" logic of a previous test
-            // failed.
-            if (tests.phase === tests.phases.ABORTED) {
-                test.done();
-            }
+                var promise = test.step(func, test, test);
 
-            var promise = test.step(func, test, test);
-
-            test.step(function() {
-                assert_not_equals(promise, undefined);
-            });
-
-            Promise.resolve(promise)
-                .catch(test.step_func(
-                    function(value) {
-                        if (value instanceof AssertionError) {
-                            throw value;
-                        }
-                        assert(false, "promise_test", null,
-                               "Unhandled rejection with value: ${value}", {value:value});
-                    }))
-                .then(function() {
-                    test.done();
+                test.step(function() {
+                    assert_not_equals(promise, undefined);
                 });
-            return donePromise;
+
+                Promise.resolve(promise)
+                    .catch(test.step_func(
+                        function(value) {
+                            if (value instanceof AssertionError) {
+                                throw value;
+                            }
+                            assert(false, "promise_test", null,
+                                   "Unhandled rejection with value: ${value}", {value:value});
+                        }))
+                    .then(function() {
+                        test._done_async(resolve);
+                    });
+		    });
         });
     }
 
@@ -699,16 +699,11 @@ policies and contribution forms [3].
         if (tests.tests.length === 0) {
             tests.set_file_is_test();
         }
-        var end_wait = function() { tests.end_wait(); };
         if (tests.file_is_test) {
-            // Register a "done" callback to ensure the invocation of
-            // `end_wait` is deffered until after test "cleanup" logic has
-            // completed (as this may be asynchronous).
-            tests.tests[0]._add_done_callback(end_wait);
+            // Single-page tests are always synchronous
             tests.tests[0].done();
-        } else {
-            end_wait();
         }
+        tests.end_wait();
     }
 
     function generate_tests(func, args, properties) {
@@ -1442,7 +1437,6 @@ policies and contribution forms [3].
 
         this.cleanup_callbacks = [];
         this._user_defined_cleanup_count = 0;
-        this._done_callbacks = [];
 
         tests.push(this);
     }
@@ -1617,20 +1611,15 @@ policies and contribution forms [3].
 
     Test.prototype.force_timeout = Test.prototype.timeout;
 
-    Test.prototype._add_done_callback = function(callback) {
-        this._done_callbacks.push(callback);
-    };
-
-    /**
-     * Update the test status, initiate "cleanup" functions, and signal test
-     * completion. Note that this may involve asynchronous operations, so
-     * callers that expect the test to be fully complete should define a "done"
-     * callback using the `_add_done_callback` method prior to invoking this
-     * function.
-     */
     Test.prototype.done = function()
     {
-        if (this.phase > this.phases.HAS_RESULT) {
+        this._done_async(function() {});
+    };
+
+	Test.prototype._done_async = function(callback)
+	{
+        if (this.phase === this.phases.COMPLETE) {
+			setTimeout(callback, 0);
             return;
         }
 
@@ -1639,15 +1628,15 @@ policies and contribution forms [3].
         }
 
         clearTimeout(this.timeout_id);
-        this.cleanup();
-    };
+        this.cleanup(callback);
+	};
 
     /*
      * Invoke all specified cleanup functions. If one or more produce an error,
      * the context is in an unpredictable state, so all further testing should
      * be cancelled.
      */
-    Test.prototype.cleanup = function() {
+    Test.prototype.cleanup = function(callback) {
         var error_count = 0;
         var bad_value_count = 0;
         function on_error() {
@@ -1681,6 +1670,7 @@ policies and contribution forms [3].
 
                     results.push(result);
                 });
+		this.cleanup_callbacks.length = 0;
 
         if (!this._is_promise_test) {
             cleanup_done(this_obj, error_count, bad_value_count);
@@ -1697,6 +1687,7 @@ policies and contribution forms [3].
                       },
                       function() {
                           cleanup_done(this_obj, error_count, bad_value_count);
+						  callback();
                       });
         }
     };
@@ -1745,11 +1736,6 @@ policies and contribution forms [3].
 
         test.phase = test.phases.COMPLETE;
         tests.result(test);
-        forEach(test._done_callbacks,
-                function(callback) {
-                    callback();
-                });
-        test._done_callbacks.length = 0;
     }
 
     /*
@@ -1768,7 +1754,6 @@ policies and contribution forms [3].
         this.index = null;
         this.phase = this.phases.INITIAL;
         this.update_state_from(clone);
-        this._done_callbacks = [];
         tests.push(this);
     }
 
@@ -1777,7 +1762,6 @@ policies and contribution forms [3].
         Object.keys(this).forEach(
                 (function(key) {
                     var value = this[key];
-                    if (key === '_done_callbacks' ) { return; }
 
                     if (typeof value === "object" && value !== null) {
                         clone[key] = merge({}, value);
@@ -1799,8 +1783,8 @@ policies and contribution forms [3].
      * `done` in order to ensure that such callbacks are invoked following the
      * completion of the `RemoteTest`.
      */
-    RemoteTest.prototype.cleanup = function() {
-        this.done();
+    RemoteTest.prototype.cleanup = function(callback) {
+        this.done(callback);
     };
     RemoteTest.prototype.phases = Test.prototype.phases;
     RemoteTest.prototype.update_state_from = function(clone) {
@@ -1811,16 +1795,9 @@ policies and contribution forms [3].
             this.phase = this.phases.STARTED;
         }
     };
-    RemoteTest.prototype._add_done_callback = function(callback) {
-        this._done_callbacks.push(callback);
-    };
-    RemoteTest.prototype.done = function() {
+    RemoteTest.prototype.done = function(callback) {
         this.phase = this.phases.COMPLETE;
-
-        forEach(this._done_callbacks,
-                function(callback) {
-                    callback();
-                });
+        callback();
     }
 
     /*
@@ -1893,10 +1870,9 @@ policies and contribution forms [3].
     RemoteContext.prototype.test_done = function(data) {
         var remote_test = this.tests[data.test.index];
         remote_test.update_state_from(data.test);
-        remote_test._add_done_callback(function() {
+        remote_test._done_async(function() {
             tests.result(remote_test);
         });
-        remote_test.done();
     };
 
     RemoteContext.prototype.remote_done = function(data) {
@@ -2187,16 +2163,7 @@ policies and contribution forms [3].
         all_async(this.tests,
                   function(test, testDone)
                   {
-                      if (test.phase === test.phases.COMPLETE) {
-                          testDone();
-                          return;
-                      }
-
-                      test._add_done_callback(testDone);
-
-                      if (test.phase < test.phases.CLEANING) {
-                          test.cleanup();
-                      }
+				      test._done_async(testDone);
                   },
                   function() {
                       if (this_obj.phase !== this_obj.phases.ABORTED) {
