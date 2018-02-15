@@ -117,9 +117,9 @@ def env_extras(**kwargs):
 
 
 def env_options():
-    # > The host is deliberately not the default on Firefox, because Firefox is
-    # > set to always resolve the specified domains to localhost through its
-    # > `network.dns.localDomains` pref.
+    # The server host is set to 127.0.0.1 as Firefox is configured (through the
+    # network.dns.localDomains preference set below) to resolve the test
+    # domains to localhost without relying on the network stack.
     #
     # https://github.com/w3c/web-platform-tests/pull/9480
     return {"host": "127.0.0.1",
