@@ -65,6 +65,7 @@ def get_capabilities(**kwargs):
 
     if browser_name == 'MicrosoftEdge':
         capabilities['selenium-version'] = '2.4.8'
+    return {}
 
     return capabilities
 
@@ -75,8 +76,9 @@ def get_sauce_config(**kwargs):
     sauce_key = kwargs["sauce_key"]
 
     hub_url = "%s:%s@localhost:4445" % (sauce_user, sauce_key)
+    hub_url = "localedge:4444"
     data = {
-        "url": "http://%s/wd/hub" % hub_url,
+        "url": "http://%s" % hub_url,
         "browserName": browser_name,
         "capabilities": get_capabilities(**kwargs)
     }
@@ -109,7 +111,7 @@ def executor_kwargs(test_type, server_config, cache_manager, run_info_data,
 
 
 def env_extras(**kwargs):
-    return [SauceConnect(**kwargs)]
+    return []#SauceConnect(**kwargs)]
 
 
 def env_options():
