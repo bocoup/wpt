@@ -46,7 +46,7 @@ def get_capabilities(**kwargs):
     )
     prerun_script = {
         "MicrosoftEdge": {
-            "executable": "%s/%s" % (prerun_script_url, "edge-prerun.bat"),
+            "executable": "%s/%s" % (prerun_script_url, "edge-prerun.sub.bat"),
             "background": False,
         },
         "safari": {
