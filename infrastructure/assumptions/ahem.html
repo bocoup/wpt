@@ -1,4 +1,5 @@
 <!doctype html>
+<html class="reftest-wait">
 <title>Ahem checker</title>
 <link rel="match" href="ahem-ref.html">
 <style>
@@ -314,3 +315,14 @@ table {
         <td>&#xF002;x <!-- U+F002 -->
         <td>&#xFEFF;x <!-- U+FEFF: ZERO WIDTH NO-BREAK SPACE -->
 </table>
+<script>
+var start = new Date().getTime();
+setTimeout(function() {
+  var now = new Date().getTime();
+  var p = document.createElement('p');
+  p.innerHTML = String(now - start) + ' milliseconds elapsed';
+  document.body.appendChild(p);
+  document.documentElement.classList.remove('reftest-wait');
+}, 2 * 1000);
+</script>
+</html>
