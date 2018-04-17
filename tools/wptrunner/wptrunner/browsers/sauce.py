@@ -204,9 +204,13 @@ class SauceConnect():
     def upload_prerun_exec(self, file_name):
         auth = (self.sauce_user, self.sauce_key)
         url = "https://saucelabs.com/rest/v1/storage/%s/%s?overwrite=true" % (self.sauce_user, file_name)
+        local_url = 'http://%s:%s' % (
+            self.env_config[domains][''], env_config['ports']['http'][0]
+        )
 
         with open(os.path.join(here, 'sauce_setup', file_name), 'rb') as f:
-            requests.post(url, data=f, auth=auth)
+            expanded = f.read().format(local_url=local_url)
+            requests.post(url, data=CStringIO(expanded), auth=auth)
 
 
 class SauceException(Exception):
