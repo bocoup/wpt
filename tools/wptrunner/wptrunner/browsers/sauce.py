@@ -39,13 +39,18 @@ def get_capabilities(**kwargs):
     build = kwargs["sauce_build"]
     tags = kwargs["sauce_tags"]
     tunnel_id = kwargs["sauce_tunnel_id"]
+    prerun_script_url = "http://%s:%s/%s" % (
+        kwargs["config"]["domains"][""],
+        kwargs["config"]["ports"]["http"][0],
+        "tools/wptrunner/wptrunner/browsers/sauce_setup"
+    )
     prerun_script = {
         "MicrosoftEdge": {
-            "executable": "sauce-storage:edge-prerun.bat",
+            "executable": "%s/%s" % (prerun_script_url, "edge-prerun.bat"),
             "background": False,
         },
         "safari": {
-            "executable": "sauce-storage:safari-prerun.sh",
+            "executable": "%s/%s" % (prerun_script_url, "safari-prerun.sh"),
             "background": False,
         }
     }
@@ -103,7 +108,8 @@ def executor_kwargs(test_type, server_config, cache_manager, run_info_data,
     executor_kwargs = base_executor_kwargs(test_type, server_config,
                                            cache_manager, **kwargs)
 
-    executor_kwargs["capabilities"] = get_capabilities(**kwargs)
+    executor_kwargs["capabilities"] = get_capabilities(config=server_config,
+                                                       **kwargs)
 
     return executor_kwargs
 
@@ -154,9 +160,6 @@ class SauceConnect():
             get_tar("https://saucelabs.com/downloads/sc-4.4.9-linux.tar.gz", self.temp_dir)
             self.sauce_connect_binary = glob.glob(os.path.join(self.temp_dir, "sc-*-linux/bin/sc"))[0]
 
-        self.upload_prerun_exec('edge-prerun.bat')
-        self.upload_prerun_exec('safari-prerun.sh')
-
         self.sc_process = subprocess.Popen([
             self.sauce_connect_binary,
             "--user=%s" % self.sauce_user,
@@ -200,13 +203,6 @@ class SauceConnect():
                 shutil.rmtree(self.temp_dir)
             except OSError:
                 pass
-
-    def upload_prerun_exec(self, file_name):
-        auth = (self.sauce_user, self.sauce_key)
-        url = "https://saucelabs.com/rest/v1/storage/%s/%s?overwrite=true" % (self.sauce_user, file_name)
-
-        with open(os.path.join(here, 'sauce_setup', file_name), 'rb') as f:
-            requests.post(url, data=f, auth=auth)
 
 
 class SauceException(Exception):

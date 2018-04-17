@@ -202,6 +202,11 @@ rewrites = [("GET", "/resources/WebIDLParser.js", "/resources/webidl2/lib/webidl
 class RoutesBuilder(object):
     def __init__(self):
         self.forbidden_override = [("GET", "/tools/runner/*", handlers.file_handler),
+                                   # This override allows the Sauce Labs
+                                   # service to access system provisioning
+                                   # scripts through a network tunnel it
+                                   # creates to the local system.
+                                   ("GET", "/tools/wptrunner/wptrunner/browsers/sauce_setup/*", handlers.file_handler),
                                    ("POST", "/tools/runner/update_manifest.py",
                                     handlers.python_script_handler)]
 
