@@ -142,11 +142,9 @@ class TestEnvironment(object):
 
         config = serve.Config(override_ssl_env=self.ssl_env, **default_config)
 
-        config.ports = {
-            "http": [8000, 8001],
-            "https": [8443],
-            "ws": [8888]
-        }
+        config.ports["http"] = [8000, 8001]
+        config.ports["https"] = [8443]
+        config.ports["ws"] = [8888]
 
         if os.path.exists(override_path):
             with open(override_path) as f:
