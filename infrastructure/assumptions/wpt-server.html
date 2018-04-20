@@ -1,0 +1,22 @@
+<!doctype html>
+<title>WPT Server checker</title>
+<link rel="match" href="wpt-server-ref.html">
+<link rel="stylesheet" href="wpt-server.py?name=http_count">
+<link rel="stylesheet" href="wpt-server.py?name=http_availability">
+<link rel="stylesheet" href="wpt-server.py?name=https_count">
+<link rel="stylesheet" href="wpt-server.py?name=https_availability">
+<link rel="stylesheet" href="wpt-server.py?name=ws">
+<link rel="stylesheet" href="wpt-server.py?name=wss">
+<style>
+.tests li span {
+  font-weight: bold;
+}
+</style>
+
+<ul class="tests">
+  <li class="test-http">At least one HTTP server is <span>not</span> defined.</li>
+  <li class="test-http">All HTTP servers are <span>not</span> available.</li>
+  <li class="test-https">HTTPS server is <span>not</span> available.</li>
+  <li class="test-ws">WebSocket server is <span>not</span> available.</li>
+  <li class="test-wss">Secure WebSocket server is <span>not</span> available.</li>
+</ul>
