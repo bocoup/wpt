@@ -71,6 +71,14 @@ async_test(function(t) {
 }, 'WS protocol, punycode subdomain #2');
 
 async_test(function(t) {
+  check('ws', '{{not_domains[nonexistent-origin]}}', {{ports[ws][0]}}, t.step_func(function(result) {
+    assert_false(result);
+
+    t.done();
+  }));
+}, 'WS protocol, non-existent subdomain');
+
+async_test(function(t) {
   check('wss', '{{browser_host}}', {{ports[wss][0]}}, t.step_func(function(result) {
     assert_true(result);
 
@@ -117,6 +125,14 @@ async_test(function(t) {
     t.done();
   }));
 }, 'WSS protocol, punycode subdomain #2');
+
+async_test(function(t) {
+  check('wss', '{{not_domains[nonexistent-origin]}}', {{ports[wss][0]}}, t.step_func(function(result) {
+    assert_false(result);
+
+    t.done();
+  }));
+}, 'WSS protocol, non-existent subdomain');
 </script>
 </body>
 </html>
