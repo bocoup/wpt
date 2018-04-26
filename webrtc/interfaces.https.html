@@ -6,6 +6,7 @@
 <script src="/resources/WebIDLParser.js"></script>
 <script src="/resources/idlharness.js"></script>
 <script src="./RTCPeerConnection-helper.js"></script>
+<script src="media-helper.js"></script>
 <script>
   'use strict';
 
@@ -79,7 +80,7 @@
 
   // Asynchoronously generate MediaStreamTrack from getUserMedia
   function asyncInitMediaStreamTrack() {
-    return navigator.mediaDevices.getUserMedia({ audio: true })
+    return getBlackSilence({ audio: true })
     .then(mediaStream => {
       const tracks = mediaStream.getTracks();
       assert_greater_than(tracks.length, 0,

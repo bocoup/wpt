@@ -385,7 +385,7 @@ function generateMediaStreamTrack(kind) {
 // Assumes that there is at least one available device
 // to generate the track.
 function getTrackFromUserMedia(kind) {
-  return navigator.mediaDevices.getUserMedia({ [kind]: true })
+  return getBlackSilence({ [kind]: true })
   .then(mediaStream => {
     const tracks = mediaStream.getTracks();
     assert_greater_than(tracks.length, 0,

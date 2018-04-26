@@ -6,6 +6,7 @@
 <script src="RTCPeerConnection-helper.js"></script>
 <script src="dictionary-helper.js"></script>
 <script src="RTCStats-helper.js"></script>
+<script src="media-helper.js"></script>
 <script>
   'use strict';
 
@@ -226,7 +227,7 @@
 
     const dataChannel = pc1.createDataChannel('test-channel');
 
-    return navigator.mediaDevices.getUserMedia({
+    return getBlackSilence({
       audio: true,
       video: true
     })

@@ -4,6 +4,7 @@
 <script src="/resources/testharness.js"></script>
 <script src="/resources/testharnessreport.js"></script>
 <script src="RTCPeerConnection-helper.js"></script>
+<script src="media-helper.js"></script>
 <script>
   'use strict';
 
@@ -49,7 +50,7 @@
   promise_test(t => {
     const pc = new RTCPeerConnection();
 
-    return navigator.mediaDevices.getUserMedia({ audio: true })
+    return getBlackSilence({ audio: true })
     .then(mediaStream => {
       const tracks = mediaStream.getTracks();
       assert_greater_than(tracks.length, 0,
@@ -78,7 +79,7 @@
   promise_test(t => {
     const pc = new RTCPeerConnection();
 
-    return navigator.mediaDevices.getUserMedia({ audio: true })
+    return getBlackSilence({ audio: true })
     .then(mediaStream => {
       const tracks = mediaStream.getTracks();
       assert_greater_than(tracks.length, 0,
@@ -111,7 +112,7 @@
   promise_test(t => {
     const pc = new RTCPeerConnection();
 
-    return navigator.mediaDevices.getUserMedia({ audio: true })
+    return getBlackSilence({ audio: true })
     .then(mediaStream => {
       const tracks = mediaStream.getTracks();
       assert_greater_than(tracks.length, 0,
@@ -149,7 +150,7 @@
   promise_test(t => {
     const pc = new RTCPeerConnection();
 
-    return navigator.mediaDevices.getUserMedia({ audio: true })
+    return getBlackSilence({ audio: true })
     .then(mediaStream => {
       const tracks = mediaStream.getTracks();
       assert_greater_than(tracks.length, 0,

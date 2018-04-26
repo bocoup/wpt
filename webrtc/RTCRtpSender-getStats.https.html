@@ -6,6 +6,7 @@
 <script src="RTCPeerConnection-helper.js"></script>
 <script src="dictionary-helper.js"></script>
 <script src="RTCStats-helper.js"></script>
+<script src="media-helper.js"></script>
 <script>
   'use strict';
 
@@ -53,7 +54,7 @@
   promise_test(async () => {
     const caller = new RTCPeerConnection();
     const callee = new RTCPeerConnection();
-    const stream = await navigator.mediaDevices.getUserMedia({audio:true});
+    const stream = await getBlackSilence({audio:true});
     const [track] = stream.getTracks();
     const sender = caller.addTrack(track, stream);
 
