@@ -380,6 +380,38 @@ function generateMediaStreamTrack(kind) {
   return track;
 }
 
+// Share a single context between tests to avoid exceeding resource limits
+// without requiring explicit destruction.
+let silenceContext;
+function silence() {
+  silenceContext = silenceContext || new AudioContext();
+  const oscillator = silenceContext.createOscillator();
+  const dst = oscillator.connect(silenceContext.createMediaStreamDestination());
+  oscillator.start();
+  return Object.assign(dst.stream.getAudioTracks()[0], {enabled: false});
+}
+
+function black({width = 640, height = 480} = {}) {
+  const canvas = Object.assign(document.createElement("canvas"), {width, height});
+  canvas.getContext('2d').fillRect(0, 0, width, height);
+  const stream = canvas.captureStream();
+  return Object.assign(stream.getVideoTracks()[0], {enabled: false});
+}
+
+function getBlackSilence(caps) {
+  var tracks = [];
+
+  if (caps && caps.audio) {
+    tracks.push(silence());
+  }
+
+  if (caps && caps.video) {
+    tracks.push(black());
+  }
+
+  return Promise.resolve(new MediaStream(tracks));
+}
+
 // Obtain a MediaStreamTrack of kind using getUserMedia.
 // Return Promise of pair of track and associated mediaStream.
 // Assumes that there is at least one available device
