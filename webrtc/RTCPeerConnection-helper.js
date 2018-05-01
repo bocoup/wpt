@@ -388,7 +388,7 @@ function silence() {
   const oscillator = silenceContext.createOscillator();
   const dst = oscillator.connect(silenceContext.createMediaStreamDestination());
   oscillator.start();
-  return Object.assign(dst.stream.getAudioTracks()[0], {enabled: false});
+  return dst.stream.getAudioTracks()[0];
 }
 
 function black({width = 640, height = 480} = {}) {
