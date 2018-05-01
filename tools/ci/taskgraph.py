@@ -29,15 +29,13 @@ task_template = {
             """>-
             set -e
             ~/start.sh
-            (
-              cd /home/test/web-platform-tests
-              git fetch {{event.head.repo.url}}
-              git config advice.detachedHead false
-              git checkout {{event.head.sha}}
+            cd /home/test/web-platform-tests
+            git fetch {{event.head.repo.url}}
+            git config advice.detachedHead false
+            git checkout {{event.head.sha}}
 
-              # Test failures are not relevant in this context.
-              %(command)s || true
-            )"""],
+            # Test failures are not relevant in this context.
+            %(command)s || true"""],
         "artifacts": {
             "public/results": {
                 "path": "/home/test/artifacts",

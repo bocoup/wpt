@@ -12,11 +12,11 @@ tasks:
     artifacts:
       public/results: {path: /home/test/artifacts, type: directory}
     command: [/bin/bash, --login, -c, ">-\n            set -e\n            ~/start.sh\n\
-        \            (\n              cd /home/test/web-platform-tests\n         \
-        \     git fetch {{event.head.repo.url}}\n              git config advice.detachedHead\
-        \ false\n              git checkout {{event.head.sha}}\n\n              #\
-        \ Test failures are not relevant in this context.\n              ./tools/ci/ci_taskcluster.sh\
-        \ chrome reftest 1 10 || true\n            )"]
+        \            cd /home/test/web-platform-tests\n            git fetch {{event.head.repo.url}}\n\
+        \            git config advice.detachedHead false\n            git checkout\
+        \ {{event.head.sha}}\n\n            # Test failures are not relevant in this\
+        \ context.\n            ./tools/ci/ci_taskcluster.sh chrome reftest 1 10 ||\
+        \ true"]
     image: harjgam/web-platform-tests:0.6
     maxRunTime: 7200
   provisionerId: '{{ taskcluster.docker.provisionerId }}'
@@ -31,11 +31,11 @@ tasks:
     artifacts:
       public/results: {path: /home/test/artifacts, type: directory}
     command: [/bin/bash, --login, -c, ">-\n            set -e\n            ~/start.sh\n\
-        \            (\n              cd /home/test/web-platform-tests\n         \
-        \     git fetch {{event.head.repo.url}}\n              git config advice.detachedHead\
-        \ false\n              git checkout {{event.head.sha}}\n\n              #\
-        \ Test failures are not relevant in this context.\n              ./tools/ci/ci_taskcluster.sh\
-        \ chrome reftest 2 10 || true\n            )"]
+        \            cd /home/test/web-platform-tests\n            git fetch {{event.head.repo.url}}\n\
+        \            git config advice.detachedHead false\n            git checkout\
+        \ {{event.head.sha}}\n\n            # Test failures are not relevant in this\
+        \ context.\n            ./tools/ci/ci_taskcluster.sh chrome reftest 2 10 ||\
+        \ true"]
     image: harjgam/web-platform-tests:0.6
     maxRunTime: 7200
   provisionerId: '{{ taskcluster.docker.provisionerId }}'
@@ -50,11 +50,11 @@ tasks:
     artifacts:
       public/results: {path: /home/test/artifacts, type: directory}
     command: [/bin/bash, --login, -c, ">-\n            set -e\n            ~/start.sh\n\
-        \            (\n              cd /home/test/web-platform-tests\n         \
-        \     git fetch {{event.head.repo.url}}\n              git config advice.detachedHead\
-        \ false\n              git checkout {{event.head.sha}}\n\n              #\
-        \ Test failures are not relevant in this context.\n              ./tools/ci/ci_taskcluster.sh\
-        \ chrome reftest 3 10 || true\n            )"]
+        \            cd /home/test/web-platform-tests\n            git fetch {{event.head.repo.url}}\n\
+        \            git config advice.detachedHead false\n            git checkout\
+        \ {{event.head.sha}}\n\n            # Test failures are not relevant in this\
+        \ context.\n            ./tools/ci/ci_taskcluster.sh chrome reftest 3 10 ||\
+        \ true"]
     image: harjgam/web-platform-tests:0.6
     maxRunTime: 7200
   provisionerId: '{{ taskcluster.docker.provisionerId }}'
@@ -69,11 +69,11 @@ tasks:
     artifacts:
       public/results: {path: /home/test/artifacts, type: directory}
     command: [/bin/bash, --login, -c, ">-\n            set -e\n            ~/start.sh\n\
-        \            (\n              cd /home/test/web-platform-tests\n         \
-        \     git fetch {{event.head.repo.url}}\n              git config advice.detachedHead\
-        \ false\n              git checkout {{event.head.sha}}\n\n              #\
-        \ Test failures are not relevant in this context.\n              ./tools/ci/ci_taskcluster.sh\
-        \ chrome reftest 4 10 || true\n            )"]
+        \            cd /home/test/web-platform-tests\n            git fetch {{event.head.repo.url}}\n\
+        \            git config advice.detachedHead false\n            git checkout\
+        \ {{event.head.sha}}\n\n            # Test failures are not relevant in this\
+        \ context.\n            ./tools/ci/ci_taskcluster.sh chrome reftest 4 10 ||\
+        \ true"]
     image: harjgam/web-platform-tests:0.6
     maxRunTime: 7200
   provisionerId: '{{ taskcluster.docker.provisionerId }}'
@@ -88,11 +88,11 @@ tasks:
     artifacts:
       public/results: {path: /home/test/artifacts, type: directory}
     command: [/bin/bash, --login, -c, ">-\n            set -e\n            ~/start.sh\n\
-        \            (\n              cd /home/test/web-platform-tests\n         \
-        \     git fetch {{event.head.repo.url}}\n              git config advice.detachedHead\
-        \ false\n              git checkout {{event.head.sha}}\n\n              #\
-        \ Test failures are not relevant in this context.\n              ./tools/ci/ci_taskcluster.sh\
-        \ chrome reftest 5 10 || true\n            )"]
+        \            cd /home/test/web-platform-tests\n            git fetch {{event.head.repo.url}}\n\
+        \            git config advice.detachedHead false\n            git checkout\
+        \ {{event.head.sha}}\n\n            # Test failures are not relevant in this\
+        \ context.\n            ./tools/ci/ci_taskcluster.sh chrome reftest 5 10 ||\
+        \ true"]
     image: harjgam/web-platform-tests:0.6
     maxRunTime: 7200
   provisionerId: '{{ taskcluster.docker.provisionerId }}'
@@ -107,11 +107,11 @@ tasks:
     artifacts:
       public/results: {path: /home/test/artifacts, type: directory}
     command: [/bin/bash, --login, -c, ">-\n            set -e\n            ~/start.sh\n\
-        \            (\n              cd /home/test/web-platform-tests\n         \
-        \     git fetch {{event.head.repo.url}}\n              git config advice.detachedHead\
-        \ false\n              git checkout {{event.head.sha}}\n\n              #\
-        \ Test failures are not relevant in this context.\n              ./tools/ci/ci_taskcluster.sh\
-        \ chrome reftest 6 10 || true\n            )"]
+        \            cd /home/test/web-platform-tests\n            git fetch {{event.head.repo.url}}\n\
+        \            git config advice.detachedHead false\n            git checkout\
+        \ {{event.head.sha}}\n\n            # Test failures are not relevant in this\
+        \ context.\n            ./tools/ci/ci_taskcluster.sh chrome reftest 6 10 ||\
+        \ true"]
     image: harjgam/web-platform-tests:0.6
     maxRunTime: 7200
   provisionerId: '{{ taskcluster.docker.provisionerId }}'
@@ -126,11 +126,11 @@ tasks:
     artifacts:
       public/results: {path: /home/test/artifacts, type: directory}
     command: [/bin/bash, --login, -c, ">-\n            set -e\n            ~/start.sh\n\
-        \            (\n              cd /home/test/web-platform-tests\n         \
-        \     git fetch {{event.head.repo.url}}\n              git config advice.detachedHead\
-        \ false\n              git checkout {{event.head.sha}}\n\n              #\
-        \ Test failures are not relevant in this context.\n              ./tools/ci/ci_taskcluster.sh\
-        \ chrome reftest 7 10 || true\n            )"]
+        \            cd /home/test/web-platform-tests\n            git fetch {{event.head.repo.url}}\n\
+        \            git config advice.detachedHead false\n            git checkout\
+        \ {{event.head.sha}}\n\n            # Test failures are not relevant in this\
+        \ context.\n            ./tools/ci/ci_taskcluster.sh chrome reftest 7 10 ||\
+        \ true"]
     image: harjgam/web-platform-tests:0.6
     maxRunTime: 7200
   provisionerId: '{{ taskcluster.docker.provisionerId }}'
@@ -145,11 +145,11 @@ tasks:
     artifacts:
       public/results: {path: /home/test/artifacts, type: directory}
     command: [/bin/bash, --login, -c, ">-\n            set -e\n            ~/start.sh\n\
-        \            (\n              cd /home/test/web-platform-tests\n         \
-        \     git fetch {{event.head.repo.url}}\n              git config advice.detachedHead\
-        \ false\n              git checkout {{event.head.sha}}\n\n              #\
-        \ Test failures are not relevant in this context.\n              ./tools/ci/ci_taskcluster.sh\
-        \ chrome reftest 8 10 || true\n            )"]
+        \            cd /home/test/web-platform-tests\n            git fetch {{event.head.repo.url}}\n\
+        \            git config advice.detachedHead false\n            git checkout\
+        \ {{event.head.sha}}\n\n            # Test failures are not relevant in this\
+        \ context.\n            ./tools/ci/ci_taskcluster.sh chrome reftest 8 10 ||\
+        \ true"]
     image: harjgam/web-platform-tests:0.6
     maxRunTime: 7200
   provisionerId: '{{ taskcluster.docker.provisionerId }}'
@@ -164,11 +164,11 @@ tasks:
     artifacts:
       public/results: {path: /home/test/artifacts, type: directory}
     command: [/bin/bash, --login, -c, ">-\n            set -e\n            ~/start.sh\n\
-        \            (\n              cd /home/test/web-platform-tests\n         \
-        \     git fetch {{event.head.repo.url}}\n              git config advice.detachedHead\
-        \ false\n              git checkout {{event.head.sha}}\n\n              #\
-        \ Test failures are not relevant in this context.\n              ./tools/ci/ci_taskcluster.sh\
-        \ chrome reftest 9 10 || true\n            )"]
+        \            cd /home/test/web-platform-tests\n            git fetch {{event.head.repo.url}}\n\
+        \            git config advice.detachedHead false\n            git checkout\
+        \ {{event.head.sha}}\n\n            # Test failures are not relevant in this\
+        \ context.\n            ./tools/ci/ci_taskcluster.sh chrome reftest 9 10 ||\
+        \ true"]
     image: harjgam/web-platform-tests:0.6
     maxRunTime: 7200
   provisionerId: '{{ taskcluster.docker.provisionerId }}'
@@ -183,11 +183,11 @@ tasks:
     artifacts:
       public/results: {path: /home/test/artifacts, type: directory}
     command: [/bin/bash, --login, -c, ">-\n            set -e\n            ~/start.sh\n\
-        \            (\n              cd /home/test/web-platform-tests\n         \
-        \     git fetch {{event.head.repo.url}}\n              git config advice.detachedHead\
-        \ false\n              git checkout {{event.head.sha}}\n\n              #\
-        \ Test failures are not relevant in this context.\n              ./tools/ci/ci_taskcluster.sh\
-        \ chrome reftest 10 10 || true\n            )"]
+        \            cd /home/test/web-platform-tests\n            git fetch {{event.head.repo.url}}\n\
+        \            git config advice.detachedHead false\n            git checkout\
+        \ {{event.head.sha}}\n\n            # Test failures are not relevant in this\
+        \ context.\n            ./tools/ci/ci_taskcluster.sh chrome reftest 10 10\
+        \ || true"]
     image: harjgam/web-platform-tests:0.6
     maxRunTime: 7200
   provisionerId: '{{ taskcluster.docker.provisionerId }}'
@@ -202,11 +202,11 @@ tasks:
     artifacts:
       public/results: {path: /home/test/artifacts, type: directory}
     command: [/bin/bash, --login, -c, ">-\n            set -e\n            ~/start.sh\n\
-        \            (\n              cd /home/test/web-platform-tests\n         \
-        \     git fetch {{event.head.repo.url}}\n              git config advice.detachedHead\
-        \ false\n              git checkout {{event.head.sha}}\n\n              #\
-        \ Test failures are not relevant in this context.\n              ./tools/ci/ci_taskcluster.sh\
-        \ chrome wdspec 1 1 || true\n            )"]
+        \            cd /home/test/web-platform-tests\n            git fetch {{event.head.repo.url}}\n\
+        \            git config advice.detachedHead false\n            git checkout\
+        \ {{event.head.sha}}\n\n            # Test failures are not relevant in this\
+        \ context.\n            ./tools/ci/ci_taskcluster.sh chrome wdspec 1 1 ||\
+        \ true"]
     image: harjgam/web-platform-tests:0.6
     maxRunTime: 7200
   provisionerId: '{{ taskcluster.docker.provisionerId }}'
@@ -221,11 +221,11 @@ tasks:
     artifacts:
       public/results: {path: /home/test/artifacts, type: directory}
     command: [/bin/bash, --login, -c, ">-\n            set -e\n            ~/start.sh\n\
-        \            (\n              cd /home/test/web-platform-tests\n         \
-        \     git fetch {{event.head.repo.url}}\n              git config advice.detachedHead\
-        \ false\n              git checkout {{event.head.sha}}\n\n              #\
-        \ Test failures are not relevant in this context.\n              ./tools/ci/ci_taskcluster.sh\
-        \ chrome testharness 1 15 || true\n            )"]
+        \            cd /home/test/web-platform-tests\n            git fetch {{event.head.repo.url}}\n\
+        \            git config advice.detachedHead false\n            git checkout\
+        \ {{event.head.sha}}\n\n            # Test failures are not relevant in this\
+        \ context.\n            ./tools/ci/ci_taskcluster.sh chrome testharness 1\
+        \ 15 || true"]
     image: harjgam/web-platform-tests:0.6
     maxRunTime: 7200
   provisionerId: '{{ taskcluster.docker.provisionerId }}'
@@ -240,11 +240,11 @@ tasks:
     artifacts:
       public/results: {path: /home/test/artifacts, type: directory}
     command: [/bin/bash, --login, -c, ">-\n            set -e\n            ~/start.sh\n\
-        \            (\n              cd /home/test/web-platform-tests\n         \
-        \     git fetch {{event.head.repo.url}}\n              git config advice.detachedHead\
-        \ false\n              git checkout {{event.head.sha}}\n\n              #\
-        \ Test failures are not relevant in this context.\n              ./tools/ci/ci_taskcluster.sh\
-        \ chrome testharness 2 15 || true\n            )"]
+        \            cd /home/test/web-platform-tests\n            git fetch {{event.head.repo.url}}\n\
+        \            git config advice.detachedHead false\n            git checkout\
+        \ {{event.head.sha}}\n\n            # Test failures are not relevant in this\
+        \ context.\n            ./tools/ci/ci_taskcluster.sh chrome testharness 2\
+        \ 15 || true"]
     image: harjgam/web-platform-tests:0.6
     maxRunTime: 7200
   provisionerId: '{{ taskcluster.docker.provisionerId }}'
@@ -259,11 +259,11 @@ tasks:
     artifacts:
       public/results: {path: /home/test/artifacts, type: directory}
     command: [/bin/bash, --login, -c, ">-\n            set -e\n            ~/start.sh\n\
-        \            (\n              cd /home/test/web-platform-tests\n         \
-        \     git fetch {{event.head.repo.url}}\n              git config advice.detachedHead\
-        \ false\n              git checkout {{event.head.sha}}\n\n              #\
-        \ Test failures are not relevant in this context.\n              ./tools/ci/ci_taskcluster.sh\
-        \ chrome testharness 3 15 || true\n            )"]
+        \            cd /home/test/web-platform-tests\n            git fetch {{event.head.repo.url}}\n\
+        \            git config advice.detachedHead false\n            git checkout\
+        \ {{event.head.sha}}\n\n            # Test failures are not relevant in this\
+        \ context.\n            ./tools/ci/ci_taskcluster.sh chrome testharness 3\
+        \ 15 || true"]
     image: harjgam/web-platform-tests:0.6
     maxRunTime: 7200
   provisionerId: '{{ taskcluster.docker.provisionerId }}'
@@ -278,11 +278,11 @@ tasks:
     artifacts:
       public/results: {path: /home/test/artifacts, type: directory}
     command: [/bin/bash, --login, -c, ">-\n            set -e\n            ~/start.sh\n\
-        \            (\n              cd /home/test/web-platform-tests\n         \
-        \     git fetch {{event.head.repo.url}}\n              git config advice.detachedHead\
-        \ false\n              git checkout {{event.head.sha}}\n\n              #\
-        \ Test failures are not relevant in this context.\n              ./tools/ci/ci_taskcluster.sh\
-        \ chrome testharness 4 15 || true\n            )"]
+        \            cd /home/test/web-platform-tests\n            git fetch {{event.head.repo.url}}\n\
+        \            git config advice.detachedHead false\n            git checkout\
+        \ {{event.head.sha}}\n\n            # Test failures are not relevant in this\
+        \ context.\n            ./tools/ci/ci_taskcluster.sh chrome testharness 4\
+        \ 15 || true"]
     image: harjgam/web-platform-tests:0.6
     maxRunTime: 7200
   provisionerId: '{{ taskcluster.docker.provisionerId }}'
@@ -297,11 +297,11 @@ tasks:
     artifacts:
       public/results: {path: /home/test/artifacts, type: directory}
     command: [/bin/bash, --login, -c, ">-\n            set -e\n            ~/start.sh\n\
-        \            (\n              cd /home/test/web-platform-tests\n         \
-        \     git fetch {{event.head.repo.url}}\n              git config advice.detachedHead\
-        \ false\n              git checkout {{event.head.sha}}\n\n              #\
-        \ Test failures are not relevant in this context.\n              ./tools/ci/ci_taskcluster.sh\
-        \ chrome testharness 5 15 || true\n            )"]
+        \            cd /home/test/web-platform-tests\n            git fetch {{event.head.repo.url}}\n\
+        \            git config advice.detachedHead false\n            git checkout\
+        \ {{event.head.sha}}\n\n            # Test failures are not relevant in this\
+        \ context.\n            ./tools/ci/ci_taskcluster.sh chrome testharness 5\
+        \ 15 || true"]
     image: harjgam/web-platform-tests:0.6
     maxRunTime: 7200
   provisionerId: '{{ taskcluster.docker.provisionerId }}'
@@ -316,11 +316,11 @@ tasks:
     artifacts:
       public/results: {path: /home/test/artifacts, type: directory}
     command: [/bin/bash, --login, -c, ">-\n            set -e\n            ~/start.sh\n\
-        \            (\n              cd /home/test/web-platform-tests\n         \
-        \     git fetch {{event.head.repo.url}}\n              git config advice.detachedHead\
-        \ false\n              git checkout {{event.head.sha}}\n\n              #\
-        \ Test failures are not relevant in this context.\n              ./tools/ci/ci_taskcluster.sh\
-        \ chrome testharness 6 15 || true\n            )"]
+        \            cd /home/test/web-platform-tests\n            git fetch {{event.head.repo.url}}\n\
+        \            git config advice.detachedHead false\n            git checkout\
+        \ {{event.head.sha}}\n\n            # Test failures are not relevant in this\
+        \ context.\n            ./tools/ci/ci_taskcluster.sh chrome testharness 6\
+        \ 15 || true"]
     image: harjgam/web-platform-tests:0.6
     maxRunTime: 7200
   provisionerId: '{{ taskcluster.docker.provisionerId }}'
@@ -335,11 +335,11 @@ tasks:
     artifacts:
       public/results: {path: /home/test/artifacts, type: directory}
     command: [/bin/bash, --login, -c, ">-\n            set -e\n            ~/start.sh\n\
-        \            (\n              cd /home/test/web-platform-tests\n         \
-        \     git fetch {{event.head.repo.url}}\n              git config advice.detachedHead\
-        \ false\n              git checkout {{event.head.sha}}\n\n              #\
-        \ Test failures are not relevant in this context.\n              ./tools/ci/ci_taskcluster.sh\
-        \ chrome testharness 7 15 || true\n            )"]
+        \            cd /home/test/web-platform-tests\n            git fetch {{event.head.repo.url}}\n\
+        \            git config advice.detachedHead false\n            git checkout\
+        \ {{event.head.sha}}\n\n            # Test failures are not relevant in this\
+        \ context.\n            ./tools/ci/ci_taskcluster.sh chrome testharness 7\
+        \ 15 || true"]
     image: harjgam/web-platform-tests:0.6
     maxRunTime: 7200
   provisionerId: '{{ taskcluster.docker.provisionerId }}'
@@ -354,11 +354,11 @@ tasks:
     artifacts:
       public/results: {path: /home/test/artifacts, type: directory}
     command: [/bin/bash, --login, -c, ">-\n            set -e\n            ~/start.sh\n\
-        \            (\n              cd /home/test/web-platform-tests\n         \
-        \     git fetch {{event.head.repo.url}}\n              git config advice.detachedHead\
-        \ false\n              git checkout {{event.head.sha}}\n\n              #\
-        \ Test failures are not relevant in this context.\n              ./tools/ci/ci_taskcluster.sh\
-        \ chrome testharness 8 15 || true\n            )"]
+        \            cd /home/test/web-platform-tests\n            git fetch {{event.head.repo.url}}\n\
+        \            git config advice.detachedHead false\n            git checkout\
+        \ {{event.head.sha}}\n\n            # Test failures are not relevant in this\
+        \ context.\n            ./tools/ci/ci_taskcluster.sh chrome testharness 8\
+        \ 15 || true"]
     image: harjgam/web-platform-tests:0.6
     maxRunTime: 7200
   provisionerId: '{{ taskcluster.docker.provisionerId }}'
@@ -373,11 +373,11 @@ tasks:
     artifacts:
       public/results: {path: /home/test/artifacts, type: directory}
     command: [/bin/bash, --login, -c, ">-\n            set -e\n            ~/start.sh\n\
-        \            (\n              cd /home/test/web-platform-tests\n         \
-        \     git fetch {{event.head.repo.url}}\n              git config advice.detachedHead\
-        \ false\n              git checkout {{event.head.sha}}\n\n              #\
-        \ Test failures are not relevant in this context.\n              ./tools/ci/ci_taskcluster.sh\
-        \ chrome testharness 9 15 || true\n            )"]
+        \            cd /home/test/web-platform-tests\n            git fetch {{event.head.repo.url}}\n\
+        \            git config advice.detachedHead false\n            git checkout\
+        \ {{event.head.sha}}\n\n            # Test failures are not relevant in this\
+        \ context.\n            ./tools/ci/ci_taskcluster.sh chrome testharness 9\
+        \ 15 || true"]
     image: harjgam/web-platform-tests:0.6
     maxRunTime: 7200
   provisionerId: '{{ taskcluster.docker.provisionerId }}'
@@ -392,11 +392,11 @@ tasks:
     artifacts:
       public/results: {path: /home/test/artifacts, type: directory}
     command: [/bin/bash, --login, -c, ">-\n            set -e\n            ~/start.sh\n\
-        \            (\n              cd /home/test/web-platform-tests\n         \
-        \     git fetch {{event.head.repo.url}}\n              git config advice.detachedHead\
-        \ false\n              git checkout {{event.head.sha}}\n\n              #\
-        \ Test failures are not relevant in this context.\n              ./tools/ci/ci_taskcluster.sh\
-        \ chrome testharness 10 15 || true\n            )"]
+        \            cd /home/test/web-platform-tests\n            git fetch {{event.head.repo.url}}\n\
+        \            git config advice.detachedHead false\n            git checkout\
+        \ {{event.head.sha}}\n\n            # Test failures are not relevant in this\
+        \ context.\n            ./tools/ci/ci_taskcluster.sh chrome testharness 10\
+        \ 15 || true"]
     image: harjgam/web-platform-tests:0.6
     maxRunTime: 7200
   provisionerId: '{{ taskcluster.docker.provisionerId }}'
@@ -411,11 +411,11 @@ tasks:
     artifacts:
       public/results: {path: /home/test/artifacts, type: directory}
     command: [/bin/bash, --login, -c, ">-\n            set -e\n            ~/start.sh\n\
-        \            (\n              cd /home/test/web-platform-tests\n         \
-        \     git fetch {{event.head.repo.url}}\n              git config advice.detachedHead\
-        \ false\n              git checkout {{event.head.sha}}\n\n              #\
-        \ Test failures are not relevant in this context.\n              ./tools/ci/ci_taskcluster.sh\
-        \ chrome testharness 11 15 || true\n            )"]
+        \            cd /home/test/web-platform-tests\n            git fetch {{event.head.repo.url}}\n\
+        \            git config advice.detachedHead false\n            git checkout\
+        \ {{event.head.sha}}\n\n            # Test failures are not relevant in this\
+        \ context.\n            ./tools/ci/ci_taskcluster.sh chrome testharness 11\
+        \ 15 || true"]
     image: harjgam/web-platform-tests:0.6
     maxRunTime: 7200
   provisionerId: '{{ taskcluster.docker.provisionerId }}'
@@ -430,11 +430,11 @@ tasks:
     artifacts:
       public/results: {path: /home/test/artifacts, type: directory}
     command: [/bin/bash, --login, -c, ">-\n            set -e\n            ~/start.sh\n\
-        \            (\n              cd /home/test/web-platform-tests\n         \
-        \     git fetch {{event.head.repo.url}}\n              git config advice.detachedHead\
-        \ false\n              git checkout {{event.head.sha}}\n\n              #\
-        \ Test failures are not relevant in this context.\n              ./tools/ci/ci_taskcluster.sh\
-        \ chrome testharness 12 15 || true\n            )"]
+        \            cd /home/test/web-platform-tests\n            git fetch {{event.head.repo.url}}\n\
+        \            git config advice.detachedHead false\n            git checkout\
+        \ {{event.head.sha}}\n\n            # Test failures are not relevant in this\
+        \ context.\n            ./tools/ci/ci_taskcluster.sh chrome testharness 12\
+        \ 15 || true"]
     image: harjgam/web-platform-tests:0.6
     maxRunTime: 7200
   provisionerId: '{{ taskcluster.docker.provisionerId }}'
@@ -449,11 +449,11 @@ tasks:
     artifacts:
       public/results: {path: /home/test/artifacts, type: directory}
     command: [/bin/bash, --login, -c, ">-\n            set -e\n            ~/start.sh\n\
-        \            (\n              cd /home/test/web-platform-tests\n         \
-        \     git fetch {{event.head.repo.url}}\n              git config advice.detachedHead\
-        \ false\n              git checkout {{event.head.sha}}\n\n              #\
-        \ Test failures are not relevant in this context.\n              ./tools/ci/ci_taskcluster.sh\
-        \ chrome testharness 13 15 || true\n            )"]
+        \            cd /home/test/web-platform-tests\n            git fetch {{event.head.repo.url}}\n\
+        \            git config advice.detachedHead false\n            git checkout\
+        \ {{event.head.sha}}\n\n            # Test failures are not relevant in this\
+        \ context.\n            ./tools/ci/ci_taskcluster.sh chrome testharness 13\
+        \ 15 || true"]
     image: harjgam/web-platform-tests:0.6
     maxRunTime: 7200
   provisionerId: '{{ taskcluster.docker.provisionerId }}'
@@ -468,11 +468,11 @@ tasks:
     artifacts:
       public/results: {path: /home/test/artifacts, type: directory}
     command: [/bin/bash, --login, -c, ">-\n            set -e\n            ~/start.sh\n\
-        \            (\n              cd /home/test/web-platform-tests\n         \
-        \     git fetch {{event.head.repo.url}}\n              git config advice.detachedHead\
-        \ false\n              git checkout {{event.head.sha}}\n\n              #\
-        \ Test failures are not relevant in this context.\n              ./tools/ci/ci_taskcluster.sh\
-        \ chrome testharness 14 15 || true\n            )"]
+        \            cd /home/test/web-platform-tests\n            git fetch {{event.head.repo.url}}\n\
+        \            git config advice.detachedHead false\n            git checkout\
+        \ {{event.head.sha}}\n\n            # Test failures are not relevant in this\
+        \ context.\n            ./tools/ci/ci_taskcluster.sh chrome testharness 14\
+        \ 15 || true"]
     image: harjgam/web-platform-tests:0.6
     maxRunTime: 7200
   provisionerId: '{{ taskcluster.docker.provisionerId }}'
@@ -487,11 +487,11 @@ tasks:
     artifacts:
       public/results: {path: /home/test/artifacts, type: directory}
     command: [/bin/bash, --login, -c, ">-\n            set -e\n            ~/start.sh\n\
-        \            (\n              cd /home/test/web-platform-tests\n         \
-        \     git fetch {{event.head.repo.url}}\n              git config advice.detachedHead\
-        \ false\n              git checkout {{event.head.sha}}\n\n              #\
-        \ Test failures are not relevant in this context.\n              ./tools/ci/ci_taskcluster.sh\
-        \ chrome testharness 15 15 || true\n            )"]
+        \            cd /home/test/web-platform-tests\n            git fetch {{event.head.repo.url}}\n\
+        \            git config advice.detachedHead false\n            git checkout\
+        \ {{event.head.sha}}\n\n            # Test failures are not relevant in this\
+        \ context.\n            ./tools/ci/ci_taskcluster.sh chrome testharness 15\
+        \ 15 || true"]
     image: harjgam/web-platform-tests:0.6
     maxRunTime: 7200
   provisionerId: '{{ taskcluster.docker.provisionerId }}'
@@ -506,11 +506,11 @@ tasks:
     artifacts:
       public/results: {path: /home/test/artifacts, type: directory}
     command: [/bin/bash, --login, -c, ">-\n            set -e\n            ~/start.sh\n\
-        \            (\n              cd /home/test/web-platform-tests\n         \
-        \     git fetch {{event.head.repo.url}}\n              git config advice.detachedHead\
-        \ false\n              git checkout {{event.head.sha}}\n\n              #\
-        \ Test failures are not relevant in this context.\n              ./tools/ci/ci_taskcluster.sh\
-        \ firefox reftest 1 10 || true\n            )"]
+        \            cd /home/test/web-platform-tests\n            git fetch {{event.head.repo.url}}\n\
+        \            git config advice.detachedHead false\n            git checkout\
+        \ {{event.head.sha}}\n\n            # Test failures are not relevant in this\
+        \ context.\n            ./tools/ci/ci_taskcluster.sh firefox reftest 1 10\
+        \ || true"]
     image: harjgam/web-platform-tests:0.6
     maxRunTime: 7200
   provisionerId: '{{ taskcluster.docker.provisionerId }}'
@@ -525,11 +525,11 @@ tasks:
     artifacts:
       public/results: {path: /home/test/artifacts, type: directory}
     command: [/bin/bash, --login, -c, ">-\n            set -e\n            ~/start.sh\n\
-        \            (\n              cd /home/test/web-platform-tests\n         \
-        \     git fetch {{event.head.repo.url}}\n              git config advice.detachedHead\
-        \ false\n              git checkout {{event.head.sha}}\n\n              #\
-        \ Test failures are not relevant in this context.\n              ./tools/ci/ci_taskcluster.sh\
-        \ firefox reftest 2 10 || true\n            )"]
+        \            cd /home/test/web-platform-tests\n            git fetch {{event.head.repo.url}}\n\
+        \            git config advice.detachedHead false\n            git checkout\
+        \ {{event.head.sha}}\n\n            # Test failures are not relevant in this\
+        \ context.\n            ./tools/ci/ci_taskcluster.sh firefox reftest 2 10\
+        \ || true"]
     image: harjgam/web-platform-tests:0.6
     maxRunTime: 7200
   provisionerId: '{{ taskcluster.docker.provisionerId }}'
@@ -544,11 +544,11 @@ tasks:
     artifacts:
       public/results: {path: /home/test/artifacts, type: directory}
     command: [/bin/bash, --login, -c, ">-\n            set -e\n            ~/start.sh\n\
-        \            (\n              cd /home/test/web-platform-tests\n         \
-        \     git fetch {{event.head.repo.url}}\n              git config advice.detachedHead\
-        \ false\n              git checkout {{event.head.sha}}\n\n              #\
-        \ Test failures are not relevant in this context.\n              ./tools/ci/ci_taskcluster.sh\
-        \ firefox reftest 3 10 || true\n            )"]
+        \            cd /home/test/web-platform-tests\n            git fetch {{event.head.repo.url}}\n\
+        \            git config advice.detachedHead false\n            git checkout\
+        \ {{event.head.sha}}\n\n            # Test failures are not relevant in this\
+        \ context.\n            ./tools/ci/ci_taskcluster.sh firefox reftest 3 10\
+        \ || true"]
     image: harjgam/web-platform-tests:0.6
     maxRunTime: 7200
   provisionerId: '{{ taskcluster.docker.provisionerId }}'
@@ -563,11 +563,11 @@ tasks:
     artifacts:
       public/results: {path: /home/test/artifacts, type: directory}
     command: [/bin/bash, --login, -c, ">-\n            set -e\n            ~/start.sh\n\
-        \            (\n              cd /home/test/web-platform-tests\n         \
-        \     git fetch {{event.head.repo.url}}\n              git config advice.detachedHead\
-        \ false\n              git checkout {{event.head.sha}}\n\n              #\
-        \ Test failures are not relevant in this context.\n              ./tools/ci/ci_taskcluster.sh\
-        \ firefox reftest 4 10 || true\n            )"]
+        \            cd /home/test/web-platform-tests\n            git fetch {{event.head.repo.url}}\n\
+        \            git config advice.detachedHead false\n            git checkout\
+        \ {{event.head.sha}}\n\n            # Test failures are not relevant in this\
+        \ context.\n            ./tools/ci/ci_taskcluster.sh firefox reftest 4 10\
+        \ || true"]
     image: harjgam/web-platform-tests:0.6
     maxRunTime: 7200
   provisionerId: '{{ taskcluster.docker.provisionerId }}'
@@ -582,11 +582,11 @@ tasks:
     artifacts:
       public/results: {path: /home/test/artifacts, type: directory}
     command: [/bin/bash, --login, -c, ">-\n            set -e\n            ~/start.sh\n\
-        \            (\n              cd /home/test/web-platform-tests\n         \
-        \     git fetch {{event.head.repo.url}}\n              git config advice.detachedHead\
-        \ false\n              git checkout {{event.head.sha}}\n\n              #\
-        \ Test failures are not relevant in this context.\n              ./tools/ci/ci_taskcluster.sh\
-        \ firefox reftest 5 10 || true\n            )"]
+        \            cd /home/test/web-platform-tests\n            git fetch {{event.head.repo.url}}\n\
+        \            git config advice.detachedHead false\n            git checkout\
+        \ {{event.head.sha}}\n\n            # Test failures are not relevant in this\
+        \ context.\n            ./tools/ci/ci_taskcluster.sh firefox reftest 5 10\
+        \ || true"]
     image: harjgam/web-platform-tests:0.6
     maxRunTime: 7200
   provisionerId: '{{ taskcluster.docker.provisionerId }}'
@@ -601,11 +601,11 @@ tasks:
     artifacts:
       public/results: {path: /home/test/artifacts, type: directory}
     command: [/bin/bash, --login, -c, ">-\n            set -e\n            ~/start.sh\n\
-        \            (\n              cd /home/test/web-platform-tests\n         \
-        \     git fetch {{event.head.repo.url}}\n              git config advice.detachedHead\
-        \ false\n              git checkout {{event.head.sha}}\n\n              #\
-        \ Test failures are not relevant in this context.\n              ./tools/ci/ci_taskcluster.sh\
-        \ firefox reftest 6 10 || true\n            )"]
+        \            cd /home/test/web-platform-tests\n            git fetch {{event.head.repo.url}}\n\
+        \            git config advice.detachedHead false\n            git checkout\
+        \ {{event.head.sha}}\n\n            # Test failures are not relevant in this\
+        \ context.\n            ./tools/ci/ci_taskcluster.sh firefox reftest 6 10\
+        \ || true"]
     image: harjgam/web-platform-tests:0.6
     maxRunTime: 7200
   provisionerId: '{{ taskcluster.docker.provisionerId }}'
@@ -620,11 +620,11 @@ tasks:
     artifacts:
       public/results: {path: /home/test/artifacts, type: directory}
     command: [/bin/bash, --login, -c, ">-\n            set -e\n            ~/start.sh\n\
-        \            (\n              cd /home/test/web-platform-tests\n         \
-        \     git fetch {{event.head.repo.url}}\n              git config advice.detachedHead\
-        \ false\n              git checkout {{event.head.sha}}\n\n              #\
-        \ Test failures are not relevant in this context.\n              ./tools/ci/ci_taskcluster.sh\
-        \ firefox reftest 7 10 || true\n            )"]
+        \            cd /home/test/web-platform-tests\n            git fetch {{event.head.repo.url}}\n\
+        \            git config advice.detachedHead false\n            git checkout\
+        \ {{event.head.sha}}\n\n            # Test failures are not relevant in this\
+        \ context.\n            ./tools/ci/ci_taskcluster.sh firefox reftest 7 10\
+        \ || true"]
     image: harjgam/web-platform-tests:0.6
     maxRunTime: 7200
   provisionerId: '{{ taskcluster.docker.provisionerId }}'
@@ -639,11 +639,11 @@ tasks:
     artifacts:
       public/results: {path: /home/test/artifacts, type: directory}
     command: [/bin/bash, --login, -c, ">-\n            set -e\n            ~/start.sh\n\
-        \            (\n              cd /home/test/web-platform-tests\n         \
-        \     git fetch {{event.head.repo.url}}\n              git config advice.detachedHead\
-        \ false\n              git checkout {{event.head.sha}}\n\n              #\
-        \ Test failures are not relevant in this context.\n              ./tools/ci/ci_taskcluster.sh\
-        \ firefox reftest 8 10 || true\n            )"]
+        \            cd /home/test/web-platform-tests\n            git fetch {{event.head.repo.url}}\n\
+        \            git config advice.detachedHead false\n            git checkout\
+        \ {{event.head.sha}}\n\n            # Test failures are not relevant in this\
+        \ context.\n            ./tools/ci/ci_taskcluster.sh firefox reftest 8 10\
+        \ || true"]
     image: harjgam/web-platform-tests:0.6
     maxRunTime: 7200
   provisionerId: '{{ taskcluster.docker.provisionerId }}'
@@ -658,11 +658,11 @@ tasks:
     artifacts:
       public/results: {path: /home/test/artifacts, type: directory}
     command: [/bin/bash, --login, -c, ">-\n            set -e\n            ~/start.sh\n\
-        \            (\n              cd /home/test/web-platform-tests\n         \
-        \     git fetch {{event.head.repo.url}}\n              git config advice.detachedHead\
-        \ false\n              git checkout {{event.head.sha}}\n\n              #\
-        \ Test failures are not relevant in this context.\n              ./tools/ci/ci_taskcluster.sh\
-        \ firefox reftest 9 10 || true\n            )"]
+        \            cd /home/test/web-platform-tests\n            git fetch {{event.head.repo.url}}\n\
+        \            git config advice.detachedHead false\n            git checkout\
+        \ {{event.head.sha}}\n\n            # Test failures are not relevant in this\
+        \ context.\n            ./tools/ci/ci_taskcluster.sh firefox reftest 9 10\
+        \ || true"]
     image: harjgam/web-platform-tests:0.6
     maxRunTime: 7200
   provisionerId: '{{ taskcluster.docker.provisionerId }}'
@@ -677,11 +677,11 @@ tasks:
     artifacts:
       public/results: {path: /home/test/artifacts, type: directory}
     command: [/bin/bash, --login, -c, ">-\n            set -e\n            ~/start.sh\n\
-        \            (\n              cd /home/test/web-platform-tests\n         \
-        \     git fetch {{event.head.repo.url}}\n              git config advice.detachedHead\
-        \ false\n              git checkout {{event.head.sha}}\n\n              #\
-        \ Test failures are not relevant in this context.\n              ./tools/ci/ci_taskcluster.sh\
-        \ firefox reftest 10 10 || true\n            )"]
+        \            cd /home/test/web-platform-tests\n            git fetch {{event.head.repo.url}}\n\
+        \            git config advice.detachedHead false\n            git checkout\
+        \ {{event.head.sha}}\n\n            # Test failures are not relevant in this\
+        \ context.\n            ./tools/ci/ci_taskcluster.sh firefox reftest 10 10\
+        \ || true"]
     image: harjgam/web-platform-tests:0.6
     maxRunTime: 7200
   provisionerId: '{{ taskcluster.docker.provisionerId }}'
@@ -696,11 +696,11 @@ tasks:
     artifacts:
       public/results: {path: /home/test/artifacts, type: directory}
     command: [/bin/bash, --login, -c, ">-\n            set -e\n            ~/start.sh\n\
-        \            (\n              cd /home/test/web-platform-tests\n         \
-        \     git fetch {{event.head.repo.url}}\n              git config advice.detachedHead\
-        \ false\n              git checkout {{event.head.sha}}\n\n              #\
-        \ Test failures are not relevant in this context.\n              ./tools/ci/ci_taskcluster.sh\
-        \ firefox wdspec 1 1 || true\n            )"]
+        \            cd /home/test/web-platform-tests\n            git fetch {{event.head.repo.url}}\n\
+        \            git config advice.detachedHead false\n            git checkout\
+        \ {{event.head.sha}}\n\n            # Test failures are not relevant in this\
+        \ context.\n            ./tools/ci/ci_taskcluster.sh firefox wdspec 1 1 ||\
+        \ true"]
     image: harjgam/web-platform-tests:0.6
     maxRunTime: 7200
   provisionerId: '{{ taskcluster.docker.provisionerId }}'
@@ -715,11 +715,11 @@ tasks:
     artifacts:
       public/results: {path: /home/test/artifacts, type: directory}
     command: [/bin/bash, --login, -c, ">-\n            set -e\n            ~/start.sh\n\
-        \            (\n              cd /home/test/web-platform-tests\n         \
-        \     git fetch {{event.head.repo.url}}\n              git config advice.detachedHead\
-        \ false\n              git checkout {{event.head.sha}}\n\n              #\
-        \ Test failures are not relevant in this context.\n              ./tools/ci/ci_taskcluster.sh\
-        \ firefox testharness 1 15 || true\n            )"]
+        \            cd /home/test/web-platform-tests\n            git fetch {{event.head.repo.url}}\n\
+        \            git config advice.detachedHead false\n            git checkout\
+        \ {{event.head.sha}}\n\n            # Test failures are not relevant in this\
+        \ context.\n            ./tools/ci/ci_taskcluster.sh firefox testharness 1\
+        \ 15 || true"]
     image: harjgam/web-platform-tests:0.6
     maxRunTime: 7200
   provisionerId: '{{ taskcluster.docker.provisionerId }}'
@@ -734,11 +734,11 @@ tasks:
     artifacts:
       public/results: {path: /home/test/artifacts, type: directory}
     command: [/bin/bash, --login, -c, ">-\n            set -e\n            ~/start.sh\n\
-        \            (\n              cd /home/test/web-platform-tests\n         \
-        \     git fetch {{event.head.repo.url}}\n              git config advice.detachedHead\
-        \ false\n              git checkout {{event.head.sha}}\n\n              #\
-        \ Test failures are not relevant in this context.\n              ./tools/ci/ci_taskcluster.sh\
-        \ firefox testharness 2 15 || true\n            )"]
+        \            cd /home/test/web-platform-tests\n            git fetch {{event.head.repo.url}}\n\
+        \            git config advice.detachedHead false\n            git checkout\
+        \ {{event.head.sha}}\n\n            # Test failures are not relevant in this\
+        \ context.\n            ./tools/ci/ci_taskcluster.sh firefox testharness 2\
+        \ 15 || true"]
     image: harjgam/web-platform-tests:0.6
     maxRunTime: 7200
   provisionerId: '{{ taskcluster.docker.provisionerId }}'
@@ -753,11 +753,11 @@ tasks:
     artifacts:
       public/results: {path: /home/test/artifacts, type: directory}
     command: [/bin/bash, --login, -c, ">-\n            set -e\n            ~/start.sh\n\
-        \            (\n              cd /home/test/web-platform-tests\n         \
-        \     git fetch {{event.head.repo.url}}\n              git config advice.detachedHead\
-        \ false\n              git checkout {{event.head.sha}}\n\n              #\
-        \ Test failures are not relevant in this context.\n              ./tools/ci/ci_taskcluster.sh\
-        \ firefox testharness 3 15 || true\n            )"]
+        \            cd /home/test/web-platform-tests\n            git fetch {{event.head.repo.url}}\n\
+        \            git config advice.detachedHead false\n            git checkout\
+        \ {{event.head.sha}}\n\n            # Test failures are not relevant in this\
+        \ context.\n            ./tools/ci/ci_taskcluster.sh firefox testharness 3\
+        \ 15 || true"]
     image: harjgam/web-platform-tests:0.6
     maxRunTime: 7200
   provisionerId: '{{ taskcluster.docker.provisionerId }}'
@@ -772,11 +772,11 @@ tasks:
     artifacts:
       public/results: {path: /home/test/artifacts, type: directory}
     command: [/bin/bash, --login, -c, ">-\n            set -e\n            ~/start.sh\n\
-        \            (\n              cd /home/test/web-platform-tests\n         \
-        \     git fetch {{event.head.repo.url}}\n              git config advice.detachedHead\
-        \ false\n              git checkout {{event.head.sha}}\n\n              #\
-        \ Test failures are not relevant in this context.\n              ./tools/ci/ci_taskcluster.sh\
-        \ firefox testharness 4 15 || true\n            )"]
+        \            cd /home/test/web-platform-tests\n            git fetch {{event.head.repo.url}}\n\
+        \            git config advice.detachedHead false\n            git checkout\
+        \ {{event.head.sha}}\n\n            # Test failures are not relevant in this\
+        \ context.\n            ./tools/ci/ci_taskcluster.sh firefox testharness 4\
+        \ 15 || true"]
     image: harjgam/web-platform-tests:0.6
     maxRunTime: 7200
   provisionerId: '{{ taskcluster.docker.provisionerId }}'
@@ -791,11 +791,11 @@ tasks:
     artifacts:
       public/results: {path: /home/test/artifacts, type: directory}
     command: [/bin/bash, --login, -c, ">-\n            set -e\n            ~/start.sh\n\
-        \            (\n              cd /home/test/web-platform-tests\n         \
-        \     git fetch {{event.head.repo.url}}\n              git config advice.detachedHead\
-        \ false\n              git checkout {{event.head.sha}}\n\n              #\
-        \ Test failures are not relevant in this context.\n              ./tools/ci/ci_taskcluster.sh\
-        \ firefox testharness 5 15 || true\n            )"]
+        \            cd /home/test/web-platform-tests\n            git fetch {{event.head.repo.url}}\n\
+        \            git config advice.detachedHead false\n            git checkout\
+        \ {{event.head.sha}}\n\n            # Test failures are not relevant in this\
+        \ context.\n            ./tools/ci/ci_taskcluster.sh firefox testharness 5\
+        \ 15 || true"]
     image: harjgam/web-platform-tests:0.6
     maxRunTime: 7200
   provisionerId: '{{ taskcluster.docker.provisionerId }}'
@@ -810,11 +810,11 @@ tasks:
     artifacts:
       public/results: {path: /home/test/artifacts, type: directory}
     command: [/bin/bash, --login, -c, ">-\n            set -e\n            ~/start.sh\n\
-        \            (\n              cd /home/test/web-platform-tests\n         \
-        \     git fetch {{event.head.repo.url}}\n              git config advice.detachedHead\
-        \ false\n              git checkout {{event.head.sha}}\n\n              #\
-        \ Test failures are not relevant in this context.\n              ./tools/ci/ci_taskcluster.sh\
-        \ firefox testharness 6 15 || true\n            )"]
+        \            cd /home/test/web-platform-tests\n            git fetch {{event.head.repo.url}}\n\
+        \            git config advice.detachedHead false\n            git checkout\
+        \ {{event.head.sha}}\n\n            # Test failures are not relevant in this\
+        \ context.\n            ./tools/ci/ci_taskcluster.sh firefox testharness 6\
+        \ 15 || true"]
     image: harjgam/web-platform-tests:0.6
     maxRunTime: 7200
   provisionerId: '{{ taskcluster.docker.provisionerId }}'
@@ -829,11 +829,11 @@ tasks:
     artifacts:
       public/results: {path: /home/test/artifacts, type: directory}
     command: [/bin/bash, --login, -c, ">-\n            set -e\n            ~/start.sh\n\
-        \            (\n              cd /home/test/web-platform-tests\n         \
-        \     git fetch {{event.head.repo.url}}\n              git config advice.detachedHead\
-        \ false\n              git checkout {{event.head.sha}}\n\n              #\
-        \ Test failures are not relevant in this context.\n              ./tools/ci/ci_taskcluster.sh\
-        \ firefox testharness 7 15 || true\n            )"]
+        \            cd /home/test/web-platform-tests\n            git fetch {{event.head.repo.url}}\n\
+        \            git config advice.detachedHead false\n            git checkout\
+        \ {{event.head.sha}}\n\n            # Test failures are not relevant in this\
+        \ context.\n            ./tools/ci/ci_taskcluster.sh firefox testharness 7\
+        \ 15 || true"]
     image: harjgam/web-platform-tests:0.6
     maxRunTime: 7200
   provisionerId: '{{ taskcluster.docker.provisionerId }}'
@@ -848,11 +848,11 @@ tasks:
     artifacts:
       public/results: {path: /home/test/artifacts, type: directory}
     command: [/bin/bash, --login, -c, ">-\n            set -e\n            ~/start.sh\n\
-        \            (\n              cd /home/test/web-platform-tests\n         \
-        \     git fetch {{event.head.repo.url}}\n              git config advice.detachedHead\
-        \ false\n              git checkout {{event.head.sha}}\n\n              #\
-        \ Test failures are not relevant in this context.\n              ./tools/ci/ci_taskcluster.sh\
-        \ firefox testharness 8 15 || true\n            )"]
+        \            cd /home/test/web-platform-tests\n            git fetch {{event.head.repo.url}}\n\
+        \            git config advice.detachedHead false\n            git checkout\
+        \ {{event.head.sha}}\n\n            # Test failures are not relevant in this\
+        \ context.\n            ./tools/ci/ci_taskcluster.sh firefox testharness 8\
+        \ 15 || true"]
     image: harjgam/web-platform-tests:0.6
     maxRunTime: 7200
   provisionerId: '{{ taskcluster.docker.provisionerId }}'
@@ -867,11 +867,11 @@ tasks:
     artifacts:
       public/results: {path: /home/test/artifacts, type: directory}
     command: [/bin/bash, --login, -c, ">-\n            set -e\n            ~/start.sh\n\
-        \            (\n              cd /home/test/web-platform-tests\n         \
-        \     git fetch {{event.head.repo.url}}\n              git config advice.detachedHead\
-        \ false\n              git checkout {{event.head.sha}}\n\n              #\
-        \ Test failures are not relevant in this context.\n              ./tools/ci/ci_taskcluster.sh\
-        \ firefox testharness 9 15 || true\n            )"]
+        \            cd /home/test/web-platform-tests\n            git fetch {{event.head.repo.url}}\n\
+        \            git config advice.detachedHead false\n            git checkout\
+        \ {{event.head.sha}}\n\n            # Test failures are not relevant in this\
+        \ context.\n            ./tools/ci/ci_taskcluster.sh firefox testharness 9\
+        \ 15 || true"]
     image: harjgam/web-platform-tests:0.6
     maxRunTime: 7200
   provisionerId: '{{ taskcluster.docker.provisionerId }}'
@@ -886,11 +886,11 @@ tasks:
     artifacts:
       public/results: {path: /home/test/artifacts, type: directory}
     command: [/bin/bash, --login, -c, ">-\n            set -e\n            ~/start.sh\n\
-        \            (\n              cd /home/test/web-platform-tests\n         \
-        \     git fetch {{event.head.repo.url}}\n              git config advice.detachedHead\
-        \ false\n              git checkout {{event.head.sha}}\n\n              #\
-        \ Test failures are not relevant in this context.\n              ./tools/ci/ci_taskcluster.sh\
-        \ firefox testharness 10 15 || true\n            )"]
+        \            cd /home/test/web-platform-tests\n            git fetch {{event.head.repo.url}}\n\
+        \            git config advice.detachedHead false\n            git checkout\
+        \ {{event.head.sha}}\n\n            # Test failures are not relevant in this\
+        \ context.\n            ./tools/ci/ci_taskcluster.sh firefox testharness 10\
+        \ 15 || true"]
     image: harjgam/web-platform-tests:0.6
     maxRunTime: 7200
   provisionerId: '{{ taskcluster.docker.provisionerId }}'
@@ -905,11 +905,11 @@ tasks:
     artifacts:
       public/results: {path: /home/test/artifacts, type: directory}
     command: [/bin/bash, --login, -c, ">-\n            set -e\n            ~/start.sh\n\
-        \            (\n              cd /home/test/web-platform-tests\n         \
-        \     git fetch {{event.head.repo.url}}\n              git config advice.detachedHead\
-        \ false\n              git checkout {{event.head.sha}}\n\n              #\
-        \ Test failures are not relevant in this context.\n              ./tools/ci/ci_taskcluster.sh\
-        \ firefox testharness 11 15 || true\n            )"]
+        \            cd /home/test/web-platform-tests\n            git fetch {{event.head.repo.url}}\n\
+        \            git config advice.detachedHead false\n            git checkout\
+        \ {{event.head.sha}}\n\n            # Test failures are not relevant in this\
+        \ context.\n            ./tools/ci/ci_taskcluster.sh firefox testharness 11\
+        \ 15 || true"]
     image: harjgam/web-platform-tests:0.6
     maxRunTime: 7200
   provisionerId: '{{ taskcluster.docker.provisionerId }}'
@@ -924,11 +924,11 @@ tasks:
     artifacts:
       public/results: {path: /home/test/artifacts, type: directory}
     command: [/bin/bash, --login, -c, ">-\n            set -e\n            ~/start.sh\n\
-        \            (\n              cd /home/test/web-platform-tests\n         \
-        \     git fetch {{event.head.repo.url}}\n              git config advice.detachedHead\
-        \ false\n              git checkout {{event.head.sha}}\n\n              #\
-        \ Test failures are not relevant in this context.\n              ./tools/ci/ci_taskcluster.sh\
-        \ firefox testharness 12 15 || true\n            )"]
+        \            cd /home/test/web-platform-tests\n            git fetch {{event.head.repo.url}}\n\
+        \            git config advice.detachedHead false\n            git checkout\
+        \ {{event.head.sha}}\n\n            # Test failures are not relevant in this\
+        \ context.\n            ./tools/ci/ci_taskcluster.sh firefox testharness 12\
+        \ 15 || true"]
     image: harjgam/web-platform-tests:0.6
     maxRunTime: 7200
   provisionerId: '{{ taskcluster.docker.provisionerId }}'
@@ -943,11 +943,11 @@ tasks:
     artifacts:
       public/results: {path: /home/test/artifacts, type: directory}
     command: [/bin/bash, --login, -c, ">-\n            set -e\n            ~/start.sh\n\
-        \            (\n              cd /home/test/web-platform-tests\n         \
-        \     git fetch {{event.head.repo.url}}\n              git config advice.detachedHead\
-        \ false\n              git checkout {{event.head.sha}}\n\n              #\
-        \ Test failures are not relevant in this context.\n              ./tools/ci/ci_taskcluster.sh\
-        \ firefox testharness 13 15 || true\n            )"]
+        \            cd /home/test/web-platform-tests\n            git fetch {{event.head.repo.url}}\n\
+        \            git config advice.detachedHead false\n            git checkout\
+        \ {{event.head.sha}}\n\n            # Test failures are not relevant in this\
+        \ context.\n            ./tools/ci/ci_taskcluster.sh firefox testharness 13\
+        \ 15 || true"]
     image: harjgam/web-platform-tests:0.6
     maxRunTime: 7200
   provisionerId: '{{ taskcluster.docker.provisionerId }}'
@@ -962,11 +962,11 @@ tasks:
     artifacts:
       public/results: {path: /home/test/artifacts, type: directory}
     command: [/bin/bash, --login, -c, ">-\n            set -e\n            ~/start.sh\n\
-        \            (\n              cd /home/test/web-platform-tests\n         \
-        \     git fetch {{event.head.repo.url}}\n              git config advice.detachedHead\
-        \ false\n              git checkout {{event.head.sha}}\n\n              #\
-        \ Test failures are not relevant in this context.\n              ./tools/ci/ci_taskcluster.sh\
-        \ firefox testharness 14 15 || true\n            )"]
+        \            cd /home/test/web-platform-tests\n            git fetch {{event.head.repo.url}}\n\
+        \            git config advice.detachedHead false\n            git checkout\
+        \ {{event.head.sha}}\n\n            # Test failures are not relevant in this\
+        \ context.\n            ./tools/ci/ci_taskcluster.sh firefox testharness 14\
+        \ 15 || true"]
     image: harjgam/web-platform-tests:0.6
     maxRunTime: 7200
   provisionerId: '{{ taskcluster.docker.provisionerId }}'
@@ -981,11 +981,11 @@ tasks:
     artifacts:
       public/results: {path: /home/test/artifacts, type: directory}
     command: [/bin/bash, --login, -c, ">-\n            set -e\n            ~/start.sh\n\
-        \            (\n              cd /home/test/web-platform-tests\n         \
-        \     git fetch {{event.head.repo.url}}\n              git config advice.detachedHead\
-        \ false\n              git checkout {{event.head.sha}}\n\n              #\
-        \ Test failures are not relevant in this context.\n              ./tools/ci/ci_taskcluster.sh\
-        \ firefox testharness 15 15 || true\n            )"]
+        \            cd /home/test/web-platform-tests\n            git fetch {{event.head.repo.url}}\n\
+        \            git config advice.detachedHead false\n            git checkout\
+        \ {{event.head.sha}}\n\n            # Test failures are not relevant in this\
+        \ context.\n            ./tools/ci/ci_taskcluster.sh firefox testharness 15\
+        \ 15 || true"]
     image: harjgam/web-platform-tests:0.6
     maxRunTime: 7200
   provisionerId: '{{ taskcluster.docker.provisionerId }}'
