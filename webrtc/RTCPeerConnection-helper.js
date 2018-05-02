@@ -404,18 +404,27 @@ const trackFactories = {
   },
 
   video({width = 640, height = 480} = {}) {
-    const canvas = Object.assign(document.createElement("canvas"), {width, height});
+    const canvas = Object.assign(
+      document.createElement("canvas"), {width, height}
+    );
     const ctx = canvas.getContext('2d');
     const stream = canvas.captureStream();
 
     let count = 0;
-    document.body.appendChild(canvas);
     setInterval(() => {
-      ctx.fillStyle = `rgb(${count % 255}, ${count*count%255}, ${count%255})`;
-      count += 10;
+      ctx.fillStyle = `rgb(${count%255}, ${count*count%255}, ${count%255})`;
+      count += 1;
 
       ctx.fillRect(0, 0, width, height);
     }, 100);
+
+    if (document.body) {
+      document.body.appendChild(canvas);
+    } else {
+      document.addEventListener('DOMContentLoaded', () => {
+        document.body.appendChild(canvas);
+      });
+    }
 
     return stream.getVideoTracks()[0];
   }
