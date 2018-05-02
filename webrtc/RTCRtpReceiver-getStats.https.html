@@ -58,7 +58,7 @@
   promise_test(async () => {
     const caller = new RTCPeerConnection();
     const callee = new RTCPeerConnection();
-    const stream = await getBlackSilence({audio:true});
+    const stream = await getNoiseStream({audio:true});
     const [track] = stream.getTracks();
     caller.addTrack(track, stream);
 

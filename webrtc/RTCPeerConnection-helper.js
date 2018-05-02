@@ -380,33 +380,63 @@ function generateMediaStreamTrack(kind) {
   return track;
 }
 
-// Share a single context between tests to avoid exceeding resource limits
-// without requiring explicit destruction.
-let silenceContext;
-function silence() {
-  silenceContext = silenceContext || new AudioContext();
-  const oscillator = silenceContext.createOscillator();
-  const dst = oscillator.connect(silenceContext.createMediaStreamDestination());
-  oscillator.start();
-  return dst.stream.getAudioTracks()[0];
-}
+// These media tracks will be continually updated with deterministic "noise" in
+// order to ensure UAs do not cease transmission in response to apparent
+// silence.
+//
+// > Many codecs and systems are capable of detecting "silence" and changing
+// > their behavior in this case by doing things such as not transmitting any
+// > media.
+//
+// Source: https://w3c.github.io/webrtc-pc/#offer-answer-options
+const trackFactories = {
+  // Share a single context between tests to avoid exceeding resource limits
+  // without requiring explicit destruction.
+  audioContext: null,
 
-function black({width = 640, height = 480} = {}) {
-  const canvas = Object.assign(document.createElement("canvas"), {width, height});
-  canvas.getContext('2d').fillRect(0, 0, width, height);
-  const stream = canvas.captureStream();
-  return Object.assign(stream.getVideoTracks()[0], {enabled: false});
-}
+  audio() {
+    const ctx = trackFactories.audioContext = trackFactories.audioContext ||
+      new AudioContext();
+    const oscillator = ctx.createOscillator();
+    const dst = oscillator.connect(ctx.createMediaStreamDestination());
+    oscillator.start();
+    return dst.stream.getAudioTracks()[0];
+  },
 
-function getBlackSilence(caps) {
+  video({width = 640, height = 480} = {}) {
+    const canvas = Object.assign(document.createElement("canvas"), {width, height});
+    const ctx = canvas.getContext('2d');
+    const stream = canvas.captureStream();
+
+    let count = 0;
+    document.body.appendChild(canvas);
+    setInterval(() => {
+      ctx.fillStyle = `rgb(${count % 255}, ${count*count%255}, ${count%255})`;
+      count += 10;
+
+      ctx.fillRect(0, 0, width, height);
+    }, 100);
+
+    return stream.getVideoTracks()[0];
+  }
+};
+
+// Generate a MediaStream bearing the specified tracks.
+//
+// @param {object} [caps]
+// @param {boolean} [caps.audio] - flag indicating whether the generated stream
+//                                 should include an audio track
+// @param {boolean} [caps.video] - flag indicating whether the generated stream
+//                                 should include a video track
+function getNoiseStream(caps) {
   var tracks = [];
 
   if (caps && caps.audio) {
-    tracks.push(silence());
+    tracks.push(trackFactories.audio());
   }
 
   if (caps && caps.video) {
-    tracks.push(black());
+    tracks.push(trackFactories.video());
   }
 
   return Promise.resolve(new MediaStream(tracks));
@@ -417,7 +447,7 @@ function getBlackSilence(caps) {
 // Assumes that there is at least one available device
 // to generate the track.
 function getTrackFromUserMedia(kind) {
-  return getBlackSilence({ [kind]: true })
+  return getNoiseStream({ [kind]: true })
   .then(mediaStream => {
     const tracks = mediaStream.getTracks();
     assert_greater_than(tracks.length, 0,
