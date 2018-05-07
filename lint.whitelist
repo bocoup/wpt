@@ -927,10 +927,3 @@ CONSOLE: payment-request/payment-request-response-id.html
 
 # Tests that use WebKit/Blink testing APIs
 LAYOUTTESTS APIS: css/css-regions/interactivity/*
-
-# Existing use of WEB-PLATFORM.TEST
-WEB-PLATFORM.TEST: longtask-timing/longtask-in-childiframe-crossorigin.html
-WEB-PLATFORM.TEST: longtask-timing/longtask-in-sibling-iframe-crossorigin.html
-WEB-PLATFORM.TEST: service-workers/service-worker/update-bytecheck.https.html
-WEB-PLATFORM.TEST: webdriver/tests/cookies/add_cookie.py
-WEB-PLATFORM.TEST: webdriver/tests/cookies/get_named_cookie.py
