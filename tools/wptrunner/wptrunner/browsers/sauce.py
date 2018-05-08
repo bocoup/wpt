@@ -73,8 +73,12 @@ def get_sauce_config(**kwargs):
     browser_name = kwargs["sauce_browser"]
     sauce_user = kwargs["sauce_user"]
     sauce_key = kwargs["sauce_key"]
+    sauce_wd_host = kwargs["sauce_wd_host"]
+    sauce_wd_port = kwargs["sauce_wd_port"]
 
-    hub_url = "%s:%s@localhost:4445" % (sauce_user, sauce_key)
+    hub_url = "%s:%s@%s:%s" % (
+        sauce_user, sauce_key, sauce_wd_host, sauce_wd_port
+    )
     data = {
         "url": "http://%s/wd/hub" % hub_url,
         "browserName": browser_name,
@@ -90,6 +94,12 @@ def check_args(**kwargs):
     require_arg(kwargs, "sauce_version")
     require_arg(kwargs, "sauce_user")
     require_arg(kwargs, "sauce_key")
+    require_arg(kwargs, "sauce_wd_host")
+    if "sauce_wd_host" in kwargs and "sauce_connect_binary" in kwargs:
+        raise ValueError(
+            "WebDriver host and SC binary cannot be specified together"
+        )
+    require_arg(kwargs, "sauce_wd_port")
 
 
 def browser_kwargs(test_type, run_info_data, **kwargs):
@@ -130,6 +140,7 @@ class SauceConnect():
         self.sauce_key = kwargs["sauce_key"]
         self.sauce_tunnel_id = kwargs["sauce_tunnel_id"]
         self.sauce_connect_binary = kwargs.get("sauce_connect_binary")
+        self.sauce_wd_port = kwargs["sauce_wd_port"]
         self.sc_process = None
         self.temp_dir = None
         self.env_config = None
@@ -164,6 +175,7 @@ class SauceConnect():
             "--no-remove-colliding-tunnels",
             "--tunnel-identifier=%s" % self.sauce_tunnel_id,
             "--metrics-address=0.0.0.0:9876",
+            "--se-port=%s" % self.sauce_wd_port,
             "--readyfile=./sauce_is_ready",
             "--tunnel-domains",
             ",".join(self.env_config.domains_set)

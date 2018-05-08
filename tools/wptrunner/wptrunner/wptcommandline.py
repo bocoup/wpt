@@ -277,6 +277,11 @@ scheme host and port.""")
     sauce_group.add_argument("--sauce-connect-binary",
                              dest="sauce_connect_binary",
                              help="Path to Sauce Connect binary")
+    sauce_group.add_argument("--sauce-wd-host", dest="sauce_wd_host",
+                             help="Destination host name for WebDriver commands")
+    sauce_group.add_argument("--sauce-wd-port", dest="sauce_wd_port",
+                             default=4445, type=int,
+                             help="Destination TCP/IP port for WebDriver commands")
 
     webkit_group = parser.add_argument_group("WebKit-specific")
     webkit_group.add_argument("--webkit-port", dest="webkit_port",
