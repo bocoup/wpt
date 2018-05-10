@@ -1,0 +1,14 @@
+<!doctype html>
+<title>Existing passing test is updated with removed assertion</title>
+<!-- In particular, valid non-broken schemes that are nevertheless not going to work -->
+<script src=/resources/testharness.js></script>
+<script src=/resources/testharnessreport.js></script>
+<script>
+test(function() {
+    assert_true(true);
+}, "First passing test");
+
+test(function() {
+    assert_true(true);
+}, "Second passing test (to be removed after sycn)");
+</script>
