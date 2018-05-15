@@ -71,6 +71,27 @@ class HTMLItem(pytest.Item, pytest.Collector):
         return pytest.Collector.repr_failure(self, excinfo)
 
     def runtest(self):
+        if self.type == 'unit':
+            self._run_unit_test()
+        elif self.type == 'functional':
+            self._run_functional_test()
+
+    def _run_unit_test(self):
+        driver = self.session.config.driver
+        server = self.session.config.server
+
+        driver.get(server.url(HARNESS))
+
+        actual = driver.execute_async_script('runTest("%s", "foo", arguments[0])' % server.url(str(self.filename)))
+
+        summarized = self._summarize(actual)
+
+        assert summarized[u'summarized_status'][u'status_string'] == u'OK', summarized[u'summarized_status'][u'message']
+        for test in summarized[u'summarized_tests']:
+            msg = "%s\n%s" % (test[u'name'], test[u'message'])
+            assert test[u'status_string'] == u'PASS', msg
+
+    def _run_functional_test(self):
         driver = self.session.config.driver
         server = self.session.config.server
 
@@ -83,20 +104,20 @@ class HTMLItem(pytest.Item, pytest.Collector):
         indices = [test_obj.get('index') for test_obj in actual['tests']]
         self._assert_sequence(indices)
 
+        summarized = self._summarize(actual)
+
+        assert summarized == self.expected
+
+    def _summarize(self, actual):
         summarized = {}
+
         summarized[u'summarized_status'] = self._summarize_status(actual['status'])
         summarized[u'summarized_tests'] = [
             self._summarize_test(test) for test in actual['tests']]
         summarized[u'summarized_tests'].sort(key=lambda test_obj: test_obj.get('name'))
         summarized[u'type'] = actual['type']
 
-        if self.type == 'unit':
-            assert summarized[u'summarized_status'][u'status_string'] == u'OK', summarized[u'summarized_status'][u'message']
-            for test in summarized[u'summarized_tests']:
-                msg = "%s\n%s" % (test[u'name'], test[u'message'])
-                assert test[u'status_string'] == u'PASS', msg
-        else:
-            assert summarized == self.expected
+        return summarized
 
     @staticmethod
     def _assert_sequence(nums):
