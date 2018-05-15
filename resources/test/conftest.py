@@ -34,6 +34,9 @@ class HTMLItem(pytest.Item, pytest.Collector):
         self.filename = filename
         self.type = test_type
 
+        if test_type not in ('functional', 'unit'):
+            raise ValueError('Unrecognized test type: "%s"' % test_type)
+
         with io.open(filename, encoding=ENC) as f:
             markup = f.read()
 
