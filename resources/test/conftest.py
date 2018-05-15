@@ -17,8 +17,15 @@ def pytest_addoption(parser):
     parser.addoption("--binary", action="store", default=None, help="path to browser binary")
 
 def pytest_collect_file(path, parent):
+    subdir = os.path.relpath(str(path), HERE).split(os.path.sep)[0]
+
+    if subdir == 'tests-functional':
+        test_type = 'function'
+    elif subdir == 'tests-unit':
+        test_type = 'unit'
+
     if path.ext.lower() == '.html':
-        return HTMLItem(str(path), parent)
+        return HTMLItem(str(path), test_type, parent)
 
 def pytest_configure(config):
     config.driver = webdriver.Firefox(firefox_binary=config.getoption("--binary"))
@@ -28,8 +35,10 @@ def pytest_configure(config):
     config.add_cleanup(config.driver.quit)
 
 class HTMLItem(pytest.Item, pytest.Collector):
-    def __init__(self, filename, parent):
+    def __init__(self, filename, test_type, parent):
         self.filename = filename
+        self.type = test_type
+
         with io.open(filename, encoding=ENC) as f:
             markup = f.read()
 
@@ -47,6 +56,10 @@ class HTMLItem(pytest.Item, pytest.Collector):
 
         if not name:
             raise ValueError('No name found in file: %s' % filename)
+        elif self.type == 'functional' and not self.expected:
+            raise ValueError('Functional tests must specify expected report data')
+        elif self.type == 'unit' and self.expected:
+            raise ValueError('Unit tests must not specify expected report data')
 
         super(HTMLItem, self).__init__(name, parent)
 
@@ -77,7 +90,7 @@ class HTMLItem(pytest.Item, pytest.Collector):
         summarized[u'summarized_tests'].sort(key=lambda test_obj: test_obj.get('name'))
         summarized[u'type'] = actual['type']
 
-        if not self.expected:
+        if self.type == 'unit':
             assert summarized[u'summarized_status'][u'status_string'] == u'OK', summarized[u'summarized_status'][u'message']
             for test in summarized[u'summarized_tests']:
                 msg = "%s\n%s" % (test[u'name'], test[u'message'])
