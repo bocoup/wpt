@@ -17,12 +17,7 @@ def pytest_addoption(parser):
     parser.addoption("--binary", action="store", default=None, help="path to browser binary")
 
 def pytest_collect_file(path, parent):
-    subdir = os.path.relpath(str(path), HERE).split(os.path.sep)[0]
-
-    if subdir == 'tests-functional':
-        test_type = 'function'
-    elif subdir == 'tests-unit':
-        test_type = 'unit'
+    test_type = os.path.relpath(str(path), HERE).split(os.path.sep)[1]
 
     if path.ext.lower() == '.html':
         return HTMLItem(str(path), test_type, parent)
