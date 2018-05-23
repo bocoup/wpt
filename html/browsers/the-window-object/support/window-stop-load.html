@@ -1,0 +1,21 @@
+<!doctype html>
+<meta charset="utf-8">
+<script>
+window.addEventListener('load', function() {
+  window.name = 'failure: "load" event fired';
+});
+
+function poll() {
+  if (document.readyState === 'complete') {
+    if (!window.name) {
+      window.name = 'success';
+    }
+  } else {
+    setTimeout(poll, 100);
+  }
+}
+
+window.stop();
+
+poll();
+</script>

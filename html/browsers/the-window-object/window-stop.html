@@ -1,0 +1,65 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>window.stop()</title>
+<script src="/resources/testharness.js"></script>
+<script src="/resources/testharnessreport.js"></script>
+<iframe id="parse"></iframe>
+<iframe id="load"></iframe>
+<script>
+/**
+ * TODO: tests for
+ *
+ * - [ ] Abort the active documents of every child browsing context. If this
+ *       results in any of those Document objects having their salvageable
+ *       state set to false, then set document's salvageable state to false
+ *       also.
+ * - [ ] Cancel any instances of the fetch algorithm in the context of
+ *       document, discarding any tasks queued for them, and discarding any
+ *       further data received from the network for them. If this resulted in
+ *       any instances of the fetch algorithm being canceled or any queued
+ *       tasks or any network data getting discarded, then set document's
+ *       salvageable state to false.
+ * - [x] If document has an active parser, then abort that parser and set
+ *       document's salvageable state to false.
+ */
+
+async_test(function(t) {
+  var iframe = document.getElementById('load');
+  iframe.src = 'support/window-stop-load.html';
+
+  function poll(ready) {
+    t.step_timeout(function() {
+      if (iframe.contentWindow.name) {
+        ready();
+      } else {
+        poll();
+      }
+    }, 100);
+  }
+
+  poll(t.step_func(function() {
+    assert_equals(iframe.contentWindow.name, 'success');
+    t.done();
+  }));
+}, 'prevents the `load` event');
+
+async_test(function(t) {
+  var iframe = document.getElementById('parse');
+  iframe.src = 'support/window-stop-parse.html';
+
+  function poll(ready) {
+    t.step_timeout(function() {
+      if (iframe.contentWindow.name) {
+        ready();
+      } else {
+        poll();
+      }
+    }, 100);
+  }
+
+  poll(t.step_func(function() {
+    assert_equals(iframe.contentWindow.name, 'success');
+    t.done();
+  }));
+}, 'cancels document parsing');
+</script>
