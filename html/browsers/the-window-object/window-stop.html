@@ -130,24 +130,29 @@ async_test(function(t) {
  */
 async_test(function(t) {
   var iframe = document.createElement('iframe');
-  document.body.appendChild(iframe);
+
   iframe.src = '/common/blank.html';
+  document.body.appendChild(iframe);
 
   iframe.addEventListener('load', t.step_func(function() {
     var child = iframe.contentDocument.createElement('iframe');
+    var firstCalls = 0;
+    var secondCalls = 0;
+
+    child.src = 'about:blank';
     iframe.contentDocument.body.appendChild(child);
-    var didStop = false;
-    child.contentWindow.secondScript = t.step_func(function() {
-      assert_unreached('Document parsing did not halt');
-    });
-    child.contentWindow.signalStop = function() {
-      didStop = true;
+
+    child.contentWindow.secondScript = function() {
+      secondCalls += 1;
+    };
+    child.contentWindow.firstScript = function() {
+      firstCalls += 1;
     };
 
     child.contentDocument.write([
       '<script>',
       'parent.stop();',
-      'signalStop();',
+      'firstScript();',
       '<' + '/script>',
       '<script>',
       'secondScript();',
@@ -155,11 +160,48 @@ async_test(function(t) {
     ].join('\n'));
     child.contentDocument.close();
 
-    t.step_timeout(t.step_func(function() {
-      assert_true(didStop);
-      t.done();
-    }), 0);
+    assert_equals(firstCalls, 1);
+    assert_equals(secondCalls, 0);
+    t.done();
   }));
 }, 'aborts child browsing contexts');
+
+/**
+ * > [...] then, it must abort the active document of the browsing context of
+ * > the Window object on which it was invoked.
+ *
+ * From "Aborting a document load":
+ *
+ * > 3. If document has an active parser, then abort that parser and set
+ * >    document's salvageable state to false.
+ */
+test(function() {
+  var iframe = document.createElement('iframe');
+  var firstCalls = 0;
+  var secondCalls = 0;
+
+  iframe.src = 'about:blank';
+  document.body.appendChild(iframe);
+
+  iframe.contentWindow.firstScript = function() {
+    firstCalls += 1;
+  };
+  iframe.contentWindow.secondScript = function() {
+    secondCalls += 1;
+  };
+  iframe.contentDocument.write([
+    '<script>',
+    'window.stop();',
+    'firstScript();',
+    '<' + '/script>',
+    '<script>',
+    'secondScript();',
+    '<' + '/script>'
+  ].join('\n'));
+  iframe.contentDocument.close();
+
+  assert_equals(firstCalls, 1);
+  assert_equals(secondCalls, 0);
+}, 'aborts parsing');
 </script>
 </body>
