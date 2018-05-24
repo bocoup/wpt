@@ -1,37 +1,12 @@
 <!doctype html>
-<meta charset="utf-8">
-<title>window.stop()</title>
-<script src="/resources/testharness.js"></script>
-<script src="/resources/testharnessreport.js"></script>
-<p>
+<head>
+  <meta charset="utf-8">
+  <title>window.stop()</title>
+  <script src="/resources/testharness.js"></script>
+  <script src="/resources/testharnessreport.js"></script>
+</head>
+<body>
 <script>
-/**
- * TODO: tests for
- *
- * - [ ] Abort the active documents of every child browsing context. If this
- *       results in any of those Document objects having their salvageable
- *       state set to false, then set document's salvageable state to false
- *       also.
- * - [ ] Cancel any instances of the fetch algorithm in the context of
- *       document, discarding any tasks queued for them, and discarding any
- *       further data received from the network for them. If this resulted in
- *       any instances of the fetch algorithm being canceled or any queued
- *       tasks or any network data getting discarded, then set document's
- *       salvageable state to false.
- * - [x] If document has an active parser, then abort that parser and set
- *       document's salvageable state to false.
- */
-
-function poll(t, iframe, done) {
-  t.step_timeout(function() {
-    if (iframe.contentWindow.name) {
-      done();
-    } else {
-      poll(t, iframe, done);
-    }
-  }, 100);
-}
-
 /**
  * > The stop() method on Window objects should, if there is an existing
  * > attempt to navigate the browsing context and that attempt is not currently
@@ -61,6 +36,17 @@ async_test(function(t) {
   ].join('');
 }, 'cancels navigation that is not unloading');
 
+/**
+ * > The stop() method on Window objects should, if there is an existing
+ * > attempt to navigate the browsing context and that attempt is not currently
+ * > running the unload a document algorithm, cancel that navigation; [...]
+ *
+ * From "unload a document":
+ *
+ * > 7. Unload event: If document's fired unload flag is false, then fire an
+ * >    event named unload at document's Window object, with legacy target
+ * >    override flag set.
+ */
 async_test(function(t) {
   var iframe = document.createElement('iframe');
   var unloadCount = 0;
@@ -78,4 +64,102 @@ async_test(function(t) {
     iframe.contentWindow.stop();
   }));
 }, 'does not cancel navigation that is unloading');
+
+/**
+ * > [...] then, it must abort the active document of the browsing context of
+ * > the Window object on which it was invoked.
+ *
+ * From "Aborting a document load":
+ *
+ * > 2. Cancel any instances of the fetch algorithm in the context of document,
+ * >    discarding any tasks queued for them, and discarding any further data
+ * >    received from the network for them. [...]
+ *
+ * Because this does not use the "terminate" algorithm of the fetch
+ * specification [1], there is no direct signal that the cancellation has taken
+ * place. In order to safely (i.e. without creating race conditions)assert
+ * fetching has been cancelled , a second fetch is triggered immediately after
+ * the invocation of `stop`. The second operation uses the same task queues as
+ * the first, so cancellation can be verified when it completes.
+ */
+async_test(function(t) {
+  var iframe = document.createElement('iframe');
+  iframe.src = '/common/blank.html';
+  document.body.appendChild(iframe);
+
+  var link1 = iframe.contentDocument.createElement('link');
+  link1.rel = 'stylesheet';
+  link1.href = 'data:text/css,body{opacity: 0.23;}';
+  var link2 = iframe.contentDocument.createElement('link');
+  link2.rel = 'stylesheet';
+  link2.href = 'data:text/css,body{position: absolute; z-index: 45;}';
+
+  iframe.addEventListener('load', function() {
+    iframe.contentDocument.body.appendChild(link1);
+    iframe.contentWindow.stop();
+    iframe.contentDocument.body.appendChild(link2);
+  });
+
+  var poll = t.step_func(function() {
+    var style = getComputedStyle(iframe.contentDocument.body);
+
+    if (style.zIndex !== '45') {
+      t.step_timeout(poll, 100);
+      return;
+    }
+
+    assert_not_equals(style.opacity, '0.23');
+    t.done();
+  });
+
+  poll();
+}, 'aborts active fetches');
+
+/**
+ * > [...] then, it must abort the active document of the browsing context of
+ * > the Window object on which it was invoked.
+ *
+ * From "Aborting a document load":
+ *
+ * > 1. Abort the active documents of every child browsing context. [...]
+ *
+ * From "Aborting a document load":
+ *
+ * > 3. If document has an active parser, then abort that parser and set
+ * >    document's salvageable state to false.
+ */
+async_test(function(t) {
+  var iframe = document.createElement('iframe');
+  document.body.appendChild(iframe);
+  iframe.src = '/common/blank.html';
+
+  iframe.addEventListener('load', t.step_func(function() {
+    var child = iframe.contentDocument.createElement('iframe');
+    iframe.contentDocument.body.appendChild(child);
+    var didStop = false;
+    child.contentWindow.secondScript = t.step_func(function() {
+      assert_unreached('Document parsing did not halt');
+    });
+    child.contentWindow.signalStop = function() {
+      didStop = true;
+    };
+
+    child.contentDocument.write([
+      '<script>',
+      'parent.stop();',
+      'signalStop();',
+      '<' + '/script>',
+      '<script>',
+      'secondScript();',
+      '<' + '/script>'
+    ].join('\n'));
+    child.contentDocument.close();
+
+    t.step_timeout(t.step_func(function() {
+      assert_true(didStop);
+      t.done();
+    }), 0);
+  }));
+}, 'aborts child browsing contexts');
 </script>
+</body>
