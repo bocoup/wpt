@@ -93,5 +93,23 @@ async_test(function(t) {
     'window.location = "javascript: parent.a.secondNavigation();";',
     '"<script>parent.a.firstNavigation();<' + '/script>"'
   ].join('');
-}, 'synchronously cancels navigation that is not unloading');
+}, 'cancels navigation that is not unloading');
+
+async_test(function(t) {
+  var iframe = document.createElement('iframe');
+  var unloadCount = 0;
+  document.body.appendChild(iframe);
+
+  iframe.addEventListener('load', t.step_func(function() {
+    assert_equals(unloadCount, 1);
+    t.done();
+  }));
+
+  iframe.src = '/common/blank.html';
+
+  iframe.contentWindow.addEventListener('unload', t.step_func(function() {
+    unloadCount += 1;
+    iframe.contentWindow.stop();
+  }));
+}, 'does not cancel navigation that is unloading');
 </script>
