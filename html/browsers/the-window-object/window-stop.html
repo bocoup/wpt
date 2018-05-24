@@ -95,6 +95,8 @@ async_test(function(t) {
   link2.href = 'data:text/css,body{position: absolute; z-index: 45;}';
 
   iframe.addEventListener('load', function() {
+    poll();
+
     iframe.contentDocument.body.appendChild(link1);
     iframe.contentWindow.stop();
     iframe.contentDocument.body.appendChild(link2);
@@ -111,8 +113,6 @@ async_test(function(t) {
     assert_not_equals(style.opacity, '0.23');
     t.done();
   });
-
-  poll();
 }, 'aborts active fetches');
 
 /**
