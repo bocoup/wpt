@@ -66,13 +66,32 @@ async_test(function(t) {
   }));
 }, 'prevents the `load` event');
 
+/**
+ * > The stop() method on Window objects should, if there is an existing
+ * > attempt to navigate the browsing context and that attempt is not currently
+ * > running the unload a document algorithm, cancel that navigation; [...]
+ *
+ * Evaluation of `javascript:` URLs precedes document unloading [1], so the
+ * navigation should be cancelled.
+ *
+ * [1] https://html.spec.whatwg.org/multipage/browsing-the-web.html#navigate
+ */
 async_test(function(t) {
-  var iframe = document.getElementById('parse');
-  iframe.src = 'support/window-stop-parse.html';
+  var iframe = document.createElement('iframe');
+  document.body.appendChild(iframe);
 
-  poll(t, iframe, t.step_func(function() {
-    assert_equals(iframe.contentWindow.name, 'success');
-    t.done();
-  }));
-}, 'cancels document parsing');
+  window.a = {
+    firstNavigation: t.step_func(function() {
+      assert_unreached('Navigation was not cancelled.');
+    }),
+    secondNavigation: t.step_func(function() {
+      t.done();
+    })
+  };
+  iframe.contentWindow.location = 'javascript:' + [
+    'window.stop();',
+    'window.location = "javascript: parent.a.secondNavigation();";',
+    '"<script>parent.a.firstNavigation();<' + '/script>"'
+  ].join('');
+}, 'synchronously cancels navigation that is not unloading');
 </script>
