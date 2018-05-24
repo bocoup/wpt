@@ -5,11 +5,9 @@ window.location = 'window-stop-navigate-destination.html';
 
 window.addEventListener('unload', function() {
   window.stop();
-  console.log('unload');
 });
 
 document.addEventListener('readystatechange', function() {
-  console.log(document.readyState);
-  //window.name = 'failure - navigation cancelled';
+  window.name = 'failure - navigation cancelled';
 });
 </script>

@@ -3,10 +3,7 @@
 <title>window.stop()</title>
 <script src="/resources/testharness.js"></script>
 <script src="/resources/testharnessreport.js"></script>
-<iframe id="navigate-cancel"></iframe>
-<iframe id="navigate-allow"></iframe>
-<iframe id="parse"></iframe>
-<iframe id="load"></iframe>
+<p>
 <script>
 /**
  * TODO: tests for
@@ -34,37 +31,6 @@ function poll(t, iframe, done) {
     }
   }, 100);
 }
-
-async_test(function(t) {
-  var iframe = document.getElementById('navigate-cancel');
-  iframe.src = 'support/window-stop-navigate-cancel.html';
-
-  poll(t, iframe, t.step_func(function() {
-    assert_equals(iframe.contentWindow.name, 'success');
-    t.done();
-  }));
-}, 'aborts navigation');
-
-async_test(function(t) {
-  var iframe = document.getElementById('navigate-allow');
-  iframe.src = 'support/window-stop-navigate-allow.html';
-
-  poll(t, iframe, t.step_func(function() {
-    assert_equals(iframe.contentWindow.name, 'loaded destination');
-    t.done();
-  }));
-}, 'allows navigation');
-
-
-async_test(function(t) {
-  var iframe = document.getElementById('load');
-  iframe.src = 'support/window-stop-load.html';
-
-  poll(t, iframe, t.step_func(function() {
-    assert_equals(iframe.contentWindow.name, 'success');
-    t.done();
-  }));
-}, 'prevents the `load` event');
 
 /**
  * > The stop() method on Window objects should, if there is an existing
