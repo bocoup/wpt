@@ -3,6 +3,8 @@
 <title>window.stop()</title>
 <script src="/resources/testharness.js"></script>
 <script src="/resources/testharnessreport.js"></script>
+<iframe id="navigate-cancel"></iframe>
+<iframe id="navigate-allow"></iframe>
 <iframe id="parse"></iframe>
 <iframe id="load"></iframe>
 <script>
@@ -23,21 +25,42 @@
  *       document's salvageable state to false.
  */
 
+function poll(t, iframe, done) {
+  t.step_timeout(function() {
+    if (iframe.contentWindow.name) {
+      done();
+    } else {
+      poll(t, iframe, done);
+    }
+  }, 100);
+}
+
+async_test(function(t) {
+  var iframe = document.getElementById('navigate-cancel');
+  iframe.src = 'support/window-stop-navigate-cancel.html';
+
+  poll(t, iframe, t.step_func(function() {
+    assert_equals(iframe.contentWindow.name, 'success');
+    t.done();
+  }));
+}, 'aborts navigation');
+
+async_test(function(t) {
+  var iframe = document.getElementById('navigate-allow');
+  iframe.src = 'support/window-stop-navigate-allow.html';
+
+  poll(t, iframe, t.step_func(function() {
+    assert_equals(iframe.contentWindow.name, 'loaded destination');
+    t.done();
+  }));
+}, 'allows navigation');
+
+
 async_test(function(t) {
   var iframe = document.getElementById('load');
   iframe.src = 'support/window-stop-load.html';
 
-  function poll(ready) {
-    t.step_timeout(function() {
-      if (iframe.contentWindow.name) {
-        ready();
-      } else {
-        poll();
-      }
-    }, 100);
-  }
-
-  poll(t.step_func(function() {
+  poll(t, iframe, t.step_func(function() {
     assert_equals(iframe.contentWindow.name, 'success');
     t.done();
   }));
@@ -47,17 +70,7 @@ async_test(function(t) {
   var iframe = document.getElementById('parse');
   iframe.src = 'support/window-stop-parse.html';
 
-  function poll(ready) {
-    t.step_timeout(function() {
-      if (iframe.contentWindow.name) {
-        ready();
-      } else {
-        poll();
-      }
-    }, 100);
-  }
-
-  poll(t.step_func(function() {
+  poll(t, iframe, t.step_func(function() {
     assert_equals(iframe.contentWindow.name, 'success');
     t.done();
   }));
