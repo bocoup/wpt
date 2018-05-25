@@ -5,6 +5,7 @@
         <title>MediaSource.duration &amp; HTMLMediaElement.duration test cases.</title>
         <script src="/resources/testharness.js"></script>
         <script src="/resources/testharnessreport.js"></script>
+        <script src="/resources/testdriver.js"></script>
         <script src="mediasource-util.js"></script>
     </head>
     <body>
@@ -25,7 +26,7 @@
                   var seekTo = fullDuration / 2.0;
                   var truncatedDuration = seekTo / 2.0;
 
-                  mediaElement.play();
+                  MediaSourceUtil.requestPlayback(test_driver, mediaElement);
 
                   // Append all the segments
                   test.expectEvent(sourceBuffer, 'updateend', 'sourceBuffer');
@@ -186,7 +187,7 @@
                   durationchangeEventCounter++;
               });
 
-              mediaElement.play();
+              MediaSourceUtil.requestPlayback(test_driver, mediaElement);
 
               // Append all the segments
               test.expectEvent(sourceBuffer, 'updateend', 'sourceBuffer');
@@ -368,7 +369,7 @@
           mediasource_testafterdataloaded(function(test, mediaElement, mediaSource, segmentInfo, sourceBuffer, mediaData)
           {
               assert_greater_than(segmentInfo.duration, 2, 'Sufficient test media duration');
-              mediaElement.play();
+              MediaSourceUtil.requestPlayback(test_driver, mediaElement);
               sourceBuffer.appendBuffer(mediaData);
               test.expectEvent(sourceBuffer, 'updateend', 'Media data appended to the SourceBuffer');
               test.waitForExpectedEvents(function()

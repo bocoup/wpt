@@ -5,6 +5,7 @@
         <title>Simple MediaSource playback &amp; seek test case.</title>
         <script src="/resources/testharness.js"></script>
         <script src="/resources/testharnessreport.js"></script>
+        <script src="/resources/testdriver.js"></script>
         <script src="mediasource-util.js"></script>
     </head>
     <body>
@@ -14,7 +15,7 @@
             mediasource_testafterdataloaded(function(test, mediaElement, mediaSource, segmentInfo, sourceBuffer, mediaData)
             {
 
-                mediaElement.play();
+                MediaSourceUtil.requestPlayback(test_driver, mediaElement);
                 // Append all the segments
                 test.expectEvent(sourceBuffer, 'updateend', 'sourceBuffer');
                 test.expectEvent(mediaElement, 'playing', 'Playing triggered');
