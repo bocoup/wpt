@@ -6,6 +6,7 @@
         <meta name="timeout" content="long">
         <script src="/resources/testharness.js"></script>
         <script src="/resources/testharnessreport.js"></script>
+        <script src="/resources/testdriver.js"></script>
         <script src="mediasource-util.js"></script>
     </head>
     <body>
@@ -14,7 +15,7 @@
 
             mediasource_testafterdataloaded(function(test, mediaElement, mediaSource, segmentInfo, sourceBuffer, mediaData)
             {
-                mediaElement.play();
+                MediaSourceUtil.requestPlayback(test_driver, mediaElement);
 
                 // Append all media data for complete playback.
                 test.expectEvent(sourceBuffer, 'updateend', 'sourceBuffer end update.');

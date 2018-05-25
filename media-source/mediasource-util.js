@@ -288,6 +288,22 @@
 
     };
 
+    MediaSourceUtil.requestPlayback = function(test_driver, mediaElement) {
+        var button = document.createElement('button');
+        button.innerHTML = 'User input required: please click here to trigger playback';
+        button.id = 'media-playback-handle-' + Date.now();
+        button.addEventListener('click', function() {
+            mediaElement.play();
+        });
+
+        mediaElement.insertAdjacentElement('afterend', button);
+
+        return test_driver.click(button)
+            .then(function() {
+                button.remove();
+            });
+    };
+
     function addExtraTestMethods(test)
     {
         test.eventExpectations_ = new EventExpectationsManager(test);
