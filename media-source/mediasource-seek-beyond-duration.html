@@ -5,6 +5,7 @@
         <title>Test MediaSource behavior when seeking beyond the duration of the clip.</title>
         <script src="/resources/testharness.js"></script>
         <script src="/resources/testharnessreport.js"></script>
+        <script src="/resources/testdriver.js"></script>
         <script src="mediasource-util.js"></script>
     </head>
     <body>
@@ -42,7 +43,8 @@
 
             mediasource_testafterdataloaded(function(test, mediaElement, mediaSource, segmentInfo, sourceBuffer, mediaData)
             {
-                mediaElement.play();
+                MediaSourceUtil.requestPlayback(test_driver, mediaElement);
+
                 var initSegment = MediaSourceUtil.extractSegmentData(mediaData, segmentInfo.init);
 
                 // Append the initialization segment to trigger a transition to HAVE_METADATA.
@@ -83,7 +85,7 @@
 
             mediasource_testafterdataloaded(function(test, mediaElement, mediaSource, segmentInfo, sourceBuffer, mediaData)
             {
-                mediaElement.play();
+                MediaSourceUtil.requestPlayback(test_driver, mediaElement);
 
                 // Append all media data for complete playback.
                 test.expectEvent(sourceBuffer, 'updateend', 'sourceBuffer end update.');
