@@ -1,23 +1,28 @@
 (function() {
   'use strict';
   var variants = {
-    'default': {
-      description: 'No modification of global environment.',
-      apply: function() {}
-    },
     /**
-     * This variant is intended to verify support for the Servo browser engine.
+     * Tests are executed in the absence of the global Promise constructor by
+     * default in order to verify support for the Server browser engine.
      *
      * https://github.com/w3c/web-platform-tests/issues/6266
      */
-    'no-promise': {
+    'default': {
       description: 'Global Promise constructor removed.',
       apply: function() {
         delete window.Promise;
       }
+    },
+    /**
+     * This variant allows for testing functionality that is fundamentally
+     * dependent on Promise support, e.g. the `promise_test` function
+     */
+    'keep-promise': {
+      description: 'No modification of global environment.',
+      apply: function() {}
     }
   };
-  var match = window.location.search.match(/[?&]variant=([^&]+)(?:&|$)/);
+  var match = window.location.search.match(/\?(.*)$/);
   var variantName = match && match[1] || 'default';
   var variant;
 

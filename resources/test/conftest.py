@@ -13,7 +13,6 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 WPT_ROOT = os.path.normpath(os.path.join(HERE, '..', '..'))
 HARNESS = os.path.join(HERE, 'harness.html')
 TEST_TYPES= ('functional', 'unit')
-VARIANTS = ('default', 'no-promise')
 
 def pytest_addoption(parser):
     parser.addoption("--binary", action="store", default=None, help="path to browser binary")
@@ -48,7 +47,7 @@ class HTMLItem(pytest.Item, pytest.Collector):
     def __init__(self, filename, test_type, parent):
         self.filename = filename
         self.type = test_type
-        self.skipped_variants = []
+        self.variants = []
 
         if test_type not in TEST_TYPES:
             raise ValueError('Unrecognized test type: "%s"' % test_type)
@@ -65,13 +64,8 @@ class HTMLItem(pytest.Item, pytest.Collector):
             if not name and element.tag == 'title':
                 name = element.text
                 continue
-            if element.tag == 'meta' and element.attrib.get('name') == 'wpt-test-skip-variant':
-                content = element.attrib.get('content')
-
-                if content not in VARIANTS:
-                    raise ValueError('Unrecognized test variant: "%s"' % content)
-
-                self.skipped_variants.append(content)
+            if element.tag == 'meta' and element.attrib.get('name') == 'variant':
+                self.variants.append(element.attrib.get('content'))
                 continue
             if element.tag == 'script':
                 if element.attrib.get('id') == 'expected':
@@ -127,10 +121,7 @@ class HTMLItem(pytest.Item, pytest.Collector):
             assert test[u'status_string'] == u'PASS', msg
 
     def _run_functional_test(self):
-        for variant in VARIANTS:
-            if variant in self.skipped_variants:
-                continue
-
+        for variant in self.variants:
             self._run_functional_test_variant(variant)
 
     def _run_functional_test_variant(self, variant):
@@ -139,7 +130,7 @@ class HTMLItem(pytest.Item, pytest.Collector):
 
         driver.get(server.url(HARNESS))
 
-        test_url = server.url(str(self.filename)) + ('?variant=%s' % variant)
+        test_url = server.url(str(self.filename) + variant)
         actual = driver.execute_async_script('runTest("%s", "foo", arguments[0])' % test_url)
 
         # Test object ordering is not guaranteed. This weak assertion verifies
