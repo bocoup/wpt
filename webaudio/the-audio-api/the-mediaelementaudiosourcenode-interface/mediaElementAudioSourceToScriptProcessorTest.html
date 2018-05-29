@@ -16,12 +16,33 @@ Somewhat similiar to a test from Mozilla:
   <title>MediaElementAudioSource interface test (to scriptProcessor)</title>
   <script src="/resources/testharness.js"></script>
   <script src="/resources/testharnessreport.js"></script>
+  <script src="/resources/testdriver.js"></script>
   <script src="/webaudio/js/helpers.js"></script>
   <script src="/webaudio/js/buffer-loader.js"></script>
  </head>
  <body class="a">
   <div id="log"></div>
   <script>
+ setup({explicit_done: true});
+
+var idCounter = 0;
+function requestTrust(intent) {
+  var button = document.createElement('button');
+  button.innerHTML = 'This test requires user interaction.<br />' +
+    'Please click here to allow ' + intent + '.';
+  button.id = 'wpt-test-driver-bless-' + (idCounter += 1);
+  document.body.appendChild(button);
+
+  return new Promise(function(resolve, reject) {
+      button.addEventListener('click', resolve);
+
+      test_driver.click(button).catch(reject);
+    }).then(function() {
+      button.remove();
+    });
+}
+
+requestTrust('audio context creation').then(function() {
  var elementSourceTest = async_test("Element Source tests completed");
 
  var src = '/webaudio/resources/sin_440Hz_-6dBFS_1s.wav';
@@ -76,7 +97,9 @@ function processListener (e) {
    window.setTimeout(loadExpectedBuffer, 50);
  });
 
- audio.play();
+ requestTrust('audio playback').then(function() {
+   audio.play();
+ });
 
  function runTests(expected) {
    source.disconnect();
@@ -118,6 +141,7 @@ function processListener (e) {
 
    elementSourceTest.done();
  };
+}).then(done, done);
   </script>
  </body>
 </html>
