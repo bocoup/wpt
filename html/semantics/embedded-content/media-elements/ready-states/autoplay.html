@@ -2,6 +2,8 @@
 <title>autoplay</title>
 <script src="/resources/testharness.js"></script>
 <script src="/resources/testharnessreport.js"></script>
+<script src="/resources/testdriver.js"></script>
+<script src="../resources/request-trust.js"></script>
 <script src="/common/media.js"></script>
 <div id="log"></div>
 <script>
@@ -68,6 +70,12 @@ function autoplay_test(tagName, src) {
   }, tagName + '.autoplay and internal pause steps');
 }
 
-autoplay_test('audio', getAudioURI('/media/sound_5'));
-autoplay_test('video', getVideoURI('/media/movie_5'));
+setup({explicit_done: true});
+
+requestTrust(test_driver)
+  .then(function() {
+    autoplay_test('audio', getAudioURI('/media/sound_5'));
+    autoplay_test('video', getVideoURI('/media/movie_5'));
+  })
+  .then(done, done);
 </script>
