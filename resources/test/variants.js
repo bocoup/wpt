@@ -23,8 +23,7 @@
     }
   };
   var match = window.location.search.match(/\?(.*)$/);
-  var variantName = match && match[1] || 'default';
-  var variant;
+  var variantName = (match && match[1]) || 'default';
 
   if (!Object.hasOwnProperty.call(variants, variantName)) {
     window.location = 'javascript:"Unrecognized variant: ' + variantName + '";';
@@ -34,10 +33,10 @@
 
   if (typeof test === 'function') {
     test(function() {
-      throw new Error('variants.js must be included before testharness.js');
+      assert_unreached('variants.js must be included before testharness.js');
     });
   }
-  variant = variants[variantName];
+  var variant = variants[variantName];
 
   var variantNode = document.createElement('div');
   variantNode.innerHTML = '<p>This testharness.js test was executed with ' +
@@ -48,7 +47,7 @@
       return;
     }
 
-    document.body.insertBefore(variantNode, document.body.childNodes[0]);
+    document.body.insertBefore(variantNode, document.body.firstChild);
   }
 
   onReady();

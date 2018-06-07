@@ -12,7 +12,7 @@ ENC = 'utf8'
 HERE = os.path.dirname(os.path.abspath(__file__))
 WPT_ROOT = os.path.normpath(os.path.join(HERE, '..', '..'))
 HARNESS = os.path.join(HERE, 'harness.html')
-TEST_TYPES= ('functional', 'unit')
+TEST_TYPES = ('functional', 'unit')
 
 def pytest_addoption(parser):
     parser.addoption("--binary", action="store", default=None, help="path to browser binary")
@@ -83,8 +83,10 @@ class HTMLItem(pytest.Item, pytest.Collector):
         elif self.type == 'functional':
             if not self.expected:
                 raise ValueError('Functional tests must specify expected report data')
-            elif not includes_variants_script:
+            if not includes_variants_script:
                 raise ValueError('No variants script found in file: %s' % filename)
+            if len(self.variants) == 0:
+                raise ValueError('No test variants specified in file %s' % filename)
         elif self.type == 'unit' and self.expected:
             raise ValueError('Unit tests must not specify expected report data')
 

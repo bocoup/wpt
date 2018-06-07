@@ -87,4 +87,4 @@ distinct environments. In order to verify this expectation, each functional
 test may be executed under a number of distinct conditions. These conditions
 are applied using WPT's "test variants" pattern. The available variants are
 defined in the `variants.js` file; this file must be included before
-`testharness.js`.
+`testharness.js`. Every test must specify at least one variant.
