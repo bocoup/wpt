@@ -34,6 +34,9 @@
         <span style="font-family: 'W100';">A</span>
         <span style="font-family: 'W200';">A</span>
         <span style="font-family: 'W300';">A</span>
+        <span style="font-family: 'descriptorPriorityTest'; font-stretch: 125%;">A</span>
+        <span style="font-family: 'descriptorPriorityTest'; font-style: italic;">A</span>
+        <span style="font-family: 'descriptorPriorityTest'; font-weight: 350;">A</span>
     </span>
 
     <div id="master" class="test">A1 A2 A2 A3 A3 A3</div>
@@ -88,18 +91,15 @@
             );
         });
 
-        function createFontFaceRules(fontFaceFamily, descriptorName, expectedMatch, unexpectedMatch) {
+        function load(family, name, value) {
             const el = document.createElement("span");
             el.innerText = "A";
+            el.style[name] = value;
             document.body.appendChild(el);
             const initialWidth = el.offsetWidth;
 
-            dynamicStyles.innerHTML =
-                "@font-face { font-family: " + fontFaceFamily + "; src: url('./resources/csstest-weights-100-kerned.ttf'); "+ descriptorName + ": " + expectedMatch   + "; }" +
-                "@font-face { font-family: " + fontFaceFamily + "; src: url('./resources/csstest-weights-200-kerned.ttf'); " + descriptorName + ": " + unexpectedMatch + "; }";
-
             return new Promise((resolve) => {
-                el.style.fontFamily = fontFaceFamily;
+                el.style.fontFamily = family;
 
                 (function check() {
                     if (el.offsetWidth !== initialWidth) {
@@ -110,6 +110,16 @@
                     }
                 }());
             });
+        }
+        function createFontFaceRules(fontFaceFamily, descriptorName, expectedMatch, unexpectedMatch) {
+            dynamicStyles.innerHTML =
+                "@font-face { font-family: " + fontFaceFamily + "; src: url('./resources/csstest-weights-100-kerned.ttf'); "+ descriptorName + ": " + expectedMatch   + "; }" +
+                "@font-face { font-family: " + fontFaceFamily + "; src: url('./resources/csstest-weights-200-kerned.ttf'); " + descriptorName + ": " + unexpectedMatch + "; }";
+
+            return Promise.all([
+                load(fontFaceFamily, descriptorName, expectedMatch.split(" ")[0]),
+                load(fontFaceFamily, descriptorName, unexpectedMatch.split(" ")[0])
+            ]);
         }
 
         let familyId = 0;
