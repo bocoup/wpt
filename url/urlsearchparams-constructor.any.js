@@ -1,11 +1,3 @@
-<!doctype html>
-<html>
-<head>
-<meta charset="utf8">
-<link rel="help" href="http://url.spec.whatwg.org/#urlsearchparams">
-<script src="/resources/testharness.js"></script>
-<script src="/resources/testharnessreport.js"></script>
-<script>
 test(function() {
     var params = new URLSearchParams();
     assert_equals(params + '', '');
@@ -182,6 +174,3 @@ test(() => {
   let params2 = new URLSearchParams(params)
   assert_equals(params2.get("a"), "b")
 }, "Custom [Symbol.iterator]")
-</script>
-</head>
-</html>
