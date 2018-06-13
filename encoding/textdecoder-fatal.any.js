@@ -1,9 +1,3 @@
-<!DOCTYPE html>
-<title>Encoding API: Fatal flag</title>
-<script src="/resources/testharness.js"></script>
-<script src="/resources/testharnessreport.js"></script>
-<script>
-
 var bad = [
     { encoding: 'utf-8', input: [0xFF], name: 'invalid code' },
     { encoding: 'utf-8', input: [0xC0], name: 'ends early' },
@@ -68,5 +62,3 @@ test(function() {
     assert_true(new TextDecoder('utf-8', {fatal: true}).fatal, 'The fatal attribute can be set using an option.');
 
 }, 'The fatal attribute of TextDecoder');
-
-</script>

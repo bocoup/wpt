@@ -1,9 +1,3 @@
-<!DOCTYPE html>
-<title>Encoding API: Fatal flag for single byte encodings</title>
-<script src="/resources/testharness.js"></script>
-<script src="/resources/testharnessreport.js"></script>
-<script>
-
 var singleByteEncodings = [
      {encoding: 'IBM866', bad: []},
      {encoding: 'ISO-8859-2', bad: []},
@@ -51,5 +45,3 @@ singleByteEncodings.forEach(function(t) {
         }
     }
 });
-
-</script>
