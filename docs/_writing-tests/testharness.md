@@ -166,6 +166,12 @@ Use `// META: variant=url-suffix` at the beginning of the resource. For example,
     // META: variant=
     // META: variant=?wss
 
+### Specifying a custom charsetin auto-generated boilerplate tests
+
+Use `// META: charset=value` at the beginning of the resource. For example,
+
+    // META: charset=iso-8851
+
 
 [general guidelines]: {{ site.baseurl }}{% link _writing-tests/general-guidelines.md %}
 [testharness-api]: {{ site.baseurl }}{% link _writing-tests/testharness-api.md %}
