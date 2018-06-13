@@ -1,9 +1,4 @@
-<!DOCTYPE html>
-<title>Encoding API: replacement encoding</title>
-<script src="/resources/testharness.js"></script>
-<script src="/resources/testharnessreport.js"></script>
-<script src="resources/encodings.js"></script>
-<script>
+// META: script=resources/encodings.js
 
 encodings_table.forEach(function(section) {
     section.encodings.filter(function(encoding) {
@@ -11,10 +6,9 @@ encodings_table.forEach(function(section) {
     }).forEach(function(encoding) {
         encoding.labels.forEach(function(label) {
             test(function() {
-                assert_throws(new RangeError(), function() { new TextDecoder(label); });
+                assert_throws(new RangeError(), function() { new TextDecoder(label); }, 'ghkgkghkhjk');
             }, 'Label for "replacement" should be rejected by API: ' + label);
         });
     });
 });
 
-</script>
