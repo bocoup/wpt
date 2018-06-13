@@ -1,9 +1,4 @@
-<!DOCTYPE html>
-<title>Encoding API: Streaming decode</title>
-<script src="/resources/testharness.js"></script>
-<script src="/resources/testharnessreport.js"></script>
-<script src="resources/encodings.js"></script>
-<script>
+// META: script=resources/encodings.js
 
 var string = '\x00123ABCabc\x80\xFF\u0100\u1000\uFFFD\uD800\uDC00\uDBFF\uDFFF';
 var octets = {
@@ -38,5 +33,3 @@ Object.keys(octets).forEach(function(encoding) {
         }, 'Streaming decode: ' + encoding + ', ' + len + ' byte window');
     }
 });
-
-</script>
