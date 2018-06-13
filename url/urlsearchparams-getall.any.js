@@ -1,3 +1,7 @@
+/*
+    https://url.spec.whatwg.org/#dom-urlsearchparams-getAll
+ */
+
 test(function() {
     var params = new URLSearchParams('a=b&c=d');
     assert_array_equals(params.getAll('a'), ['b']);
