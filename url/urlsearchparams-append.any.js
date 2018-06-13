@@ -1,11 +1,3 @@
-<!doctype html>
-<html>
-<head>
-<meta charset="utf8">
-<link rel="help" href="http://url.spec.whatwg.org/#dom-urlsearchparams-append">
-<script src="/resources/testharness.js"></script>
-<script src="/resources/testharnessreport.js"></script>
-<script>
 test(function() {
     var params = new URLSearchParams();
     params.append('a', 'b');
@@ -45,6 +37,3 @@ test(function() {
     params.append('first', 10);
     assert_equals(params.get('first'), '1', 'Search params object has name "first" with value "1"');
 }, 'Append multiple');
-</script>
-</head>
-</html>
