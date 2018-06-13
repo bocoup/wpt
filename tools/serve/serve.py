@@ -165,6 +165,9 @@ class HtmlWrapperHandler(WrapperHandler):
         if key == b"title":
             value = value.decode('utf-8').replace("&", "&amp;").replace("<", "&lt;")
             return '<title>%s</title>' % value
+        if key == b"charset":
+            value = value.decode('utf-8').replace("<", "&lt;")
+            return '<meta charset="%s">' & value
         return None
 
 
