@@ -1,13 +1,9 @@
-<!doctype html>
-<meta name=timeout content=long>
-<meta name="variant" content="?XMLHttpRequest">
-<meta name="variant" content="?TextDecoder">
-<meta name="variant" content="?document">
-<script src=/resources/testharness.js></script>
-<script src=/resources/testharnessreport.js></script>
-<script src=resources/encodings.js></script>
-<div id=log></div>
-<script>
+// META: title=Encoding API: invalid label
+// META: timeout=long
+// META: variant=?XMLHttpRequest
+// META: variant=?TextDecoder
+// META: variant=?document
+// META: script=resources/encodings.js
 
  var singleByteEncodings = encodings_table.filter(function(group) {
    return group.heading === "Legacy single-byte encodings";
@@ -110,4 +106,3 @@
      }
    }
  }
-</script>
