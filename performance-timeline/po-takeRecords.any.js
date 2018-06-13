@@ -1,11 +1,6 @@
-<!DOCTYPE HTML>
-<meta charset=utf-8>
-<title>PerformanceObserver: takeRecords</title>
-<script src="/resources/testharness.js"></script>
-<script src="/resources/testharnessreport.js"></script>
-<script src="performanceobservers.js"></script>
-<script>
-  async_test(function (t) {
+// META: script=performanceobservers.js
+
+async_test(function (t) {
     const observer = new PerformanceObserver(function (entryList, observer) {
       assert_unreached('This callback should not have been called.')
     });
@@ -36,4 +31,3 @@
     observer.disconnect();
     t.done();
   }, "Test PerformanceObserver's takeRecords()");
-</script>

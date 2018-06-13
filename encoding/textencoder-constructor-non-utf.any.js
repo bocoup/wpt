@@ -1,9 +1,4 @@
-<!DOCTYPE html>
-<title>Encoding API: Legacy encodings</title>
-<script src="/resources/testharness.js"></script>
-<script src="/resources/testharnessreport.js"></script>
-<script src="resources/encodings.js"></script>
-<script>
+// META: script=resources/encodings.js
 
 encodings_table.forEach(function(section) {
     section.encodings.forEach(function(encoding) {
@@ -18,5 +13,3 @@ encodings_table.forEach(function(section) {
         }, 'Encoding argument not considered for encode: ' + encoding.name);
     });
 });
-
-</script>

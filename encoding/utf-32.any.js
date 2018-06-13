@@ -1,10 +1,3 @@
-<!DOCTYPE html>
-<title>Character Decoding: UTF-32 (not supported)</title>
-<script src="/resources/testharness.js"></script>
-<script src="/resources/testharnessreport.js"></script>
-<body>
-<script>
-
 // Since UTF-32 is not supported, such content will be interpreted
 // as the default HTML encoding (windows-1252) unless it has a
 // leading little endian BOM (FF FE 00 00), in which case it will
@@ -32,6 +25,3 @@ samples.forEach(sample => async_test(t => {
   document.body.appendChild(iframe);
   t.add_cleanup(() => iframe.remove());
 }, `Expect ${sample.file} to parse as ${sample.expected}`));
-
-</script>
-</body>
