@@ -1,9 +1,3 @@
-<!DOCTYPE html>
-<title>Encoding API: Basics</title>
-<script src="/resources/testharness.js"></script>
-<script src="/resources/testharnessreport.js"></script>
-<script>
-
 test(function() {
     assert_equals((new TextEncoder).encoding, 'utf-8', 'default encoding is utf-8');
     assert_equals((new TextDecoder).encoding, 'utf-8', 'default encoding is utf-8');
@@ -54,5 +48,3 @@ testDecodeSample(
   sample,
   [0x7A, 0x00, 0xA2, 0x00, 0x34, 0x6C, 0x34, 0xD8, 0x1E, 0xDD, 0xFF, 0xF8, 0xFF, 0xDB, 0xFD, 0xDF, 0xFE, 0xFF]
 );
-
-</script>
