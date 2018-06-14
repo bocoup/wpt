@@ -92,18 +92,31 @@
         });
 
         function load(family, name, value) {
-            const el = document.createElement("span");
-            el.innerText = "A";
-            el.style[name] = value;
-            document.body.appendChild(el);
-            const initialWidth = el.offsetWidth;
-
+            const el1 = document.createElement("span");
+            const el2 = document.createElement("span");
+            el1.innerText = "A";
+            el2.innerText = "A";
+            let value1, value2;
+            if (value.indexOf("deg") > 0) {
+                value1 = "oblique " + value.split(" ")[1];
+                value2 = "oblique " + (value.split(" ")[2] || value.split(" ")[1]);
+            } else {
+                value1 = value.split(" ")[0];
+                value2 = value.split(" ")[1] || value1;
+            }
+            el1.style[name] = value1;
+            el2.style[name] = value2;
+            document.body.appendChild(el1);
+            document.body.appendChild(el2);
+            const initialWidth1 = el1.offsetWidth;
+            const initialWidth2 = el2.offsetWidth;
             return new Promise((resolve) => {
-                el.style.fontFamily = family;
-
+                el1.style.fontFamily = family;
+                el2.style.fontFamily = family;
                 (function check() {
-                    if (el.offsetWidth !== initialWidth) {
-                        el.remove();
+                    if (el1.offsetWidth !== initialWidth1 && el2.offsetWidth !== initialWidth2) {
+                        el1.remove();
+                        el2.remove();
                         resolve();
                     } else {
                         requestAnimationFrame(check);
@@ -117,8 +130,8 @@
                 "@font-face { font-family: " + fontFaceFamily + "; src: url('./resources/csstest-weights-200-kerned.ttf'); " + descriptorName + ": " + unexpectedMatch + "; }";
 
             return Promise.all([
-                load(fontFaceFamily, descriptorName, expectedMatch.split(" ")[0]),
-                load(fontFaceFamily, descriptorName, unexpectedMatch.split(" ")[0])
+                load(fontFaceFamily, descriptorName, expectedMatch),
+                load(fontFaceFamily, descriptorName, unexpectedMatch)
             ]);
         }
 
