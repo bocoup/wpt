@@ -137,6 +137,63 @@
         }
     };
 
+    /**
+     * These media tracks will be continually updated with deterministic "noise" in
+     * order to ensure UAs do not cease transmission in response to apparent
+     * silence.
+     *
+     * > Many codecs and systems are capable of detecting "silence" and changing
+     * > their behavior in this case by doing things such as not transmitting any
+     * > media.
+     *
+     * Source: https://w3c.github.io/webrtc-pc/#offer-answer-options
+     */
+    var trackFactories = {
+        // Share a single context between tests to avoid exceeding resource limits
+        // without requiring explicit destruction.
+        audioContext: null,
+
+        audio: function() {
+            var ctx = trackFactories.audioContext;
+
+            if (!ctx) {
+                ctx = trackFactories.audioContext = new AudioContext();
+            }
+
+            var oscillator = ctx.createOscillator();
+            var dst = oscillator.connect(ctx.createMediaStreamDestination());
+            oscillator.start();
+            return dst.stream.getAudioTracks()[0];
+        },
+
+        video(dimensions) {
+          var canvas = document.createElement("canvas");
+          var ctx = canvas.getContext("2d");
+          var stream = canvas.captureStream();
+          var count = 0;
+
+          canvas.height = dimensions && dimensions.height || 480;
+          canvas.width = dimensions && dimensions.width || 640;
+          setInterval(function() {
+              ctx.fillStyle = "rgb(" + (count % 255) +", " +
+                  (count * count % 255) + ", " + (count % 255) + ")";
+              count += 1;
+
+              ctx.fillRect(0, 0, width, height);
+          }, 100);
+
+          if (document.body) {
+              document.body.appendChild(canvas);
+          } else {
+              document.addEventListener("DOMContentLoaded", function() {
+                  document.body.appendChild(canvas);
+              });
+          }
+
+          return stream.getVideoTracks()[0];
+        }
+    };
+
     window.test_driver_internal = {
         /**
          * Triggers a user-initiated click
@@ -146,7 +203,31 @@
          * @returns {Promise} fulfilled after click occurs or rejected if click fails
          */
         click: function(element, coords) {
+
             return Promise.reject(new Error("unimplemented"));
+        },
+
+        /**
+         * Generate a MediaStream bearing the specified tracks.
+         *
+         * @param {object} [caps]
+         * @param {boolean} [caps.audio] - flag indicating whether the generated stream
+         *                                 should include an audio track
+         * @param {boolean} [caps.video] - flag indicating whether the generated stream
+         *                                 should include a video track
+         */
+        getNoiseStream: function(caps) {
+          var tracks = [];
+
+          if (caps && caps.audio) {
+            tracks.push(trackFactories.audio());
+          }
+
+          if (caps && caps.video) {
+            tracks.push(trackFactories.video());
+          }
+
+          return Promise.resolve(new MediaStream(tracks));
         },
 
         /**
