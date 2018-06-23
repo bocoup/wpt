@@ -160,6 +160,18 @@ class SauceConnect():
         self.upload_prerun_exec('edge-prerun.bat')
         self.upload_prerun_exec('safari-prerun.sh')
 
+        # The following file is intended for use as a sentinel in determining
+        # the availability of the tunnel. It is created by the Sauce Connect
+        # binary, and under typical circumstances, it is later removed by that
+        # process. In exceptional circumstances, the Sauce Connect binary may
+        # fail to remove the file. Its presence at this moment indicates that
+        # some prior execution reached that state. Remove the file so the new
+        # Sauce Connect subprocess can effectively signal its own readiness.
+        try:
+            os.remove('./sauce_is_ready')
+        except OSError:
+            pass
+
         self.sc_process = subprocess.Popen([
             self.sauce_connect_binary,
             "--user=%s" % self.sauce_user,
