@@ -24,6 +24,28 @@ def test_arguments(session):
     assert_success(response, [u"foo", u"bar"])
 
 
+# The JavaScript function used to execute the provided script is
+# unconditionally created with zero formal parameters.
+#
+# > 8. Let function be the result of calling FunctionCreate, with arguments:
+# >
+# > kind
+# >     Normal.
+# > list
+# >     An empty List.
+# > body
+# >     The result of parsing body above.
+# > global scope
+# >     The result of parsing global scope above.
+# > strict
+# >     The result of parsing strict above.
+def test_arguments_length(session):
+    response = execute_script(session, """
+        return arguments.length;
+        """, [1, 2, 3, 4, 5])
+    assert_success(response, 0)
+
+
 def test_array(session):
     response = execute_script(session, "return [1, 2]")
     assert_success(response, [1, 2])
