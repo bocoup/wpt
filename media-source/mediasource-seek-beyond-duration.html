@@ -43,7 +43,9 @@
 
             mediasource_testafterdataloaded(function(test, mediaElement, mediaSource, segmentInfo, sourceBuffer, mediaData)
             {
-                MediaSourceUtil.requestPlayback(test_driver, mediaElement);
+                MediaSourceUtil.queue(test_driver.bless('initiate media playback', function() {
+                    mediaElement.play();
+                }));
 
                 var initSegment = MediaSourceUtil.extractSegmentData(mediaData, segmentInfo.init);
 
@@ -85,7 +87,9 @@
 
             mediasource_testafterdataloaded(function(test, mediaElement, mediaSource, segmentInfo, sourceBuffer, mediaData)
             {
-                MediaSourceUtil.requestPlayback(test_driver, mediaElement);
+                MediaSourceUtil.queue(test_driver.bless('request media playback', function() {
+                    mediaElement.play();
+                }));
 
                 // Append all media data for complete playback.
                 test.expectEvent(sourceBuffer, 'updateend', 'sourceBuffer end update.');

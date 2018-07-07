@@ -26,7 +26,9 @@
                   var seekTo = fullDuration / 2.0;
                   var truncatedDuration = seekTo / 2.0;
 
-                  MediaSourceUtil.requestPlayback(test_driver, mediaElement);
+                  MediaSourceUtil.queue(test_driver.bless('initiate media playback', function() {
+                      mediaElement.play();
+                  }));
 
                   // Append all the segments
                   test.expectEvent(sourceBuffer, 'updateend', 'sourceBuffer');
@@ -187,7 +189,9 @@
                   durationchangeEventCounter++;
               });
 
-              MediaSourceUtil.requestPlayback(test_driver, mediaElement);
+              MediaSourceUtil.queue(test_driver.bless('initiate media playback', function() {
+                  mediaElement.play();
+              }));
 
               // Append all the segments
               test.expectEvent(sourceBuffer, 'updateend', 'sourceBuffer');
@@ -369,7 +373,9 @@
           mediasource_testafterdataloaded(function(test, mediaElement, mediaSource, segmentInfo, sourceBuffer, mediaData)
           {
               assert_greater_than(segmentInfo.duration, 2, 'Sufficient test media duration');
-              MediaSourceUtil.requestPlayback(test_driver, mediaElement);
+              MediaSourceUtil.queue(test_driver.bless('initiate media playback', function () {
+                  mediaElement.play();
+              }));
               sourceBuffer.appendBuffer(mediaData);
               test.expectEvent(sourceBuffer, 'updateend', 'Media data appended to the SourceBuffer');
               test.waitForExpectedEvents(function()

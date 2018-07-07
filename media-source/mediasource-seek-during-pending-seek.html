@@ -13,7 +13,9 @@
         <script>
           mediasource_testafterdataloaded(function(test, mediaElement, mediaSource, segmentInfo, sourceBuffer, mediaData)
           {
-              MediaSourceUtil.requestPlayback(test_driver, mediaElement);
+              MediaSourceUtil.queue(test_driver.bless('initiate media playback', function() {
+                  mediaElement.play();
+              }));
 
               var initSegment = MediaSourceUtil.extractSegmentData(mediaData, segmentInfo.init);
               var firstSegment = MediaSourceUtil.extractSegmentData(mediaData, segmentInfo.media[0]);
@@ -92,7 +94,9 @@
 
           mediasource_testafterdataloaded(function(test, mediaElement, mediaSource, segmentInfo, sourceBuffer, mediaData)
           {
-              MediaSourceUtil.requestPlayback(test_driver, mediaElement);
+              MediaSourceUtil.queue(test_driver.bless('initiate media playback', function() {
+                  mediaElement.play();
+              }));
 
               var initSegment = MediaSourceUtil.extractSegmentData(mediaData, segmentInfo.init);
               var firstSegment = MediaSourceUtil.extractSegmentData(mediaData, segmentInfo.media[0]);

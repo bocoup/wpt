@@ -53,7 +53,9 @@
               test.waitForExpectedEvents(function()
               {
                   mediaSource.endOfStream();
-                  MediaSourceUtil.requestPlayback(test_driver, mediaElement);
+                  MediaSourceUtil.queue(test_driver.bless("initiate media playback", function() {
+                      mediaElement.play();
+                  }));
               });
           }, "Test normal playback case with MediaSource API");
         </script>

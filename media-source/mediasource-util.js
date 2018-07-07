@@ -288,38 +288,12 @@
 
     };
 
-    var previousPlayback;
-    MediaSourceUtil.requestPlayback = function(test_driver, mediaElement) {
-        var button = document.createElement('button');
-        button.innerHTML = 'User input required<br />' +
-            'Please click here to trigger playback';
-        button.id = 'media-playback-handle-' + Date.now();
-
-        if (!previousPlayback) {
-            previousPlayback = Promise.resolve();
+    var queue;
+    MediaSourceUtil.queue = function(op) {
+        if (!queue) {
+            queue = Promise.resolve();
         }
-
-        var nextPlayback = previousPlayback.then(function() {
-            return new Promise(function(resolve, reject) {
-                    document.body.appendChild(button);
-                    button.addEventListener('click', resolve);
-                    test_driver.click(button).catch(reject);
-                });
-            }).then(function() {
-                return mediaElement.play();
-            });
-
-        // Ensure that a request failure does not interfere with pending
-        // requests
-        previousPlayback = nextPlayback
-            .catch(function() {})
-            .then(function() {
-                button.remove();
-            });
-
-        // Expose the uncaught Promise so that callers may react to failure if
-        // they wish
-        return nextPlayback;
+        queue = queue.then(op).catch(function() {});
     };
 
     function addExtraTestMethods(test)
