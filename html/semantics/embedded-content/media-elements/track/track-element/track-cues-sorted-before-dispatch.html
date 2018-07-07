@@ -3,6 +3,7 @@
 <script src="/common/media.js"></script>
 <script src="/resources/testharness.js"></script>
 <script src="/resources/testharnessreport.js"></script>
+<script src="/resources/testdriver.js"></script>
 <video>
     <track src="resources/sorted-dispatch.vtt" default>
     <script>
@@ -20,7 +21,9 @@
                 cues[i].onexit = t.step_func(cueEnteredOrExited);
             }
 
-            video.play();
+            test_driver.bless("initiate video playback", function() {
+                video.play();
+            });
         });
 
         var cueTimings = [];

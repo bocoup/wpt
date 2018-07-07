@@ -3,6 +3,7 @@
 <script src="/common/media.js"></script>
 <script src="/resources/testharness.js"></script>
 <script src="/resources/testharnessreport.js"></script>
+<script src="/resources/testdriver.js"></script>
 <video>
     <track src="resources/cues-chrono-order.vtt" kind="captions" default>
     <script>
@@ -21,7 +22,9 @@
                 testTrack.track.cues[i].onenter = t.step_func(cueEntered);
                 testTrack.track.cues[i].onexit = t.step_func(cueExited);
             }
-            video.play();
+            test_driver.bless("initiate video playback", function() {
+                video.play();
+            });
         }
 
         var cueCount = 0;

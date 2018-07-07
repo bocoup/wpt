@@ -3,6 +3,7 @@
 <script src="/common/media.js"></script>
 <script src="/resources/testharness.js"></script>
 <script src="/resources/testharnessreport.js"></script>
+<script src="/resources/testdriver.js"></script>
 <video></video>
 <script>
 async_test(function(t) {
@@ -29,7 +30,9 @@ async_test(function(t) {
     }
 
     // Play the video and remove cue when it becomes active.
-    video.play();
-    track.mode = "showing";
+    test_driver.bless("initiate video playback", function() {
+        video.play();
+        track.mode = "showing";
+    });
 });
 </script>

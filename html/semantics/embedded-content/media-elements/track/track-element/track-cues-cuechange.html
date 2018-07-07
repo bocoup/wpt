@@ -3,6 +3,7 @@
 <script src="/common/media.js"></script>
 <script src="/resources/testharness.js"></script>
 <script src="/resources/testharnessreport.js"></script>
+<script src="/resources/testdriver.js"></script>
 <video>
     <track src="resources/cues-chrono-order.vtt" kind="captions" default>
     <script>
@@ -17,7 +18,9 @@
         function attemptTests() {
             assert_equals(testTrack.track.cues.length, 3);
             testTrack.oncuechange = t.step_func(cueChangedFromTrackElement);
-            video.play();
+            test_driver.bless("initiate video playback", function() {
+                video.play();
+            });
         }
 
         var currentCueIndex;

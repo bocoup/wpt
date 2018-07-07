@@ -3,6 +3,7 @@
 <script src="/common/media.js"></script>
 <script src="/resources/testharness.js"></script>
 <script src="/resources/testharnessreport.js"></script>
+<script src="/resources/testdriver.js"></script>
 <video>
     <track src="resources/missed-cues.vtt" default>
     <script>
@@ -42,7 +43,9 @@
             // Test events for missed cues, which are cues with ids
             // from 3 to 7 in the file resources/missed-cues.vtt.
             cueCount = 3;
-            video.play();
+            test_driver.bless("initiate video playback", function() {
+                video.play();
+            });
         }
 
         function cueEnteredOrExited() {

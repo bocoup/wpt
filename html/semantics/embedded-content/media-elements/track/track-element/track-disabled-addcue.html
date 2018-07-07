@@ -3,6 +3,8 @@
 <script src="/common/media.js"></script>
 <script src="/resources/testharness.js"></script>
 <script src="/resources/testharnessreport.js"></script>
+<script src="/resources/testdriver.js"></script>
+<div id="log"></div>
 <script>
 async_test(function(t) {
     var cueDuration = 0.1;
@@ -28,6 +30,9 @@ async_test(function(t) {
     });
 
     video.src = getVideoURI("/media/test");
-    video.play();
+
+    test_driver.bless("initiate media playback", function() {
+        video.play();
+    });
 });
 </script>

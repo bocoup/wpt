@@ -3,6 +3,7 @@
 <script src="/common/media.js"></script>
 <script src="/resources/testharness.js"></script>
 <script src="/resources/testharnessreport.js"></script>
+<script src="/resources/testdriver.js"></script>
 <video>
     <track src="resources/no-webvtt.vtt" kind="captions" default>
     <script>
@@ -30,8 +31,10 @@
             assert_equals(track.readyState, HTMLTrackElement.ERROR);
 
             video.onplaying = t.step_func_done();
-            video.play();
-            // The video should start playing.
+            test_driver.bless('initiate video playback', function() {
+                video.play();
+                // The video should start playing.
+            });
         }
     });
     </script>

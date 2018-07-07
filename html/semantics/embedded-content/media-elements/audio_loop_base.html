@@ -9,6 +9,7 @@
     <meta name=timeout content=long>
     <script src="/resources/testharness.js"></script>
     <script src="/resources/testharnessreport.js"></script>
+    <script src="/resources/testdriver.js"></script>
     <script src="/common/media.js"></script>
   </head>
   <body>
@@ -37,7 +38,9 @@
         media.addEventListener("seeking", startTest, false);
         media.loop = true;
         media.src = getAudioURI("/media/sound_5") + "?" + new Date() + Math.random();
-        media.play();
+        test_driver.bless("initiate audio playback", function() {
+            media.play();
+        });
     </script>
   </body>
 </html>

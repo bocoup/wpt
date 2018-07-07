@@ -3,6 +3,7 @@
 <script src="/common/media.js"></script>
 <script src="/resources/testharness.js"></script>
 <script src="/resources/testharnessreport.js"></script>
+<script src="/resources/testdriver.js"></script>
 <video>
   <script>
   async_test(function(t) {
@@ -26,7 +27,9 @@
     missedCue.onexit = t.unreached_func();
 
     video.src = getVideoURI("/media/test");
-    video.play();
+    test_driver.bless("initiate video playback", function() {
+      video.play();
+    });
   });
   </script>
 </video>

@@ -2,6 +2,7 @@
 <title>paused state when removing from a document</title>
 <script src="/resources/testharness.js"></script>
 <script src="/resources/testharnessreport.js"></script>
+<script src="/resources/testdriver.js"></script>
 <script src="/common/media.js"></script>
 <div id="log"></div>
 <video hidden></video>
@@ -15,7 +16,9 @@ function afterStableState(func) {
 async_test(function(t) {
   var v = document.querySelector('video');
   v.src = getVideoURI('/media/movie_300');
-  v.play();
+  test_driver.bless('initiate video playback', function() {
+    v.play();
+  });
   v.onplaying = t.step_func(function() {
     assert_false(v.paused, 'paused after playing');
     v.parentNode.removeChild(v);
