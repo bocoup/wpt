@@ -1833,6 +1833,15 @@ policies and contribution forms [3].
         }
         this.message_target.removeEventListener("message", this.message_handler);
         this.running = false;
+
+        // If remote context is cross origin assigning to onerror is not
+        // possible, so silently catch those errors.
+        try {
+          this.remote.onerror = null;
+        } catch (e) {
+          // Ignore.
+        }
+
         this.remote = null;
         this.message_target = null;
         if (this.doneResolve) {
@@ -2987,7 +2996,6 @@ policies and contribution forms [3].
                 tests.status.stack = stack;
             }
             done();
-            e.preventDefault();
         };
 
         addEventListener("error", error_handler, false);
