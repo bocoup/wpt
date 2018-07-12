@@ -12,6 +12,9 @@ tasks:
     artifacts:
       public/results: {path: /home/test/artifacts, type: directory}
     command: [/bin/bash, --login, -c, ">- \n
+        ls -lah \n
+        whoami \n
+        pwd \n
         cat wpt-report-11-of-15.json | python ./write-json.py /home/tests/artifacts/rewritten.json"]
     image: gsnedders/web-platform-tests:0.13
     maxRunTime: 150
