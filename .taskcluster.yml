@@ -17,8 +17,7 @@ tasks:
             for _ in $(seq 1023); do \n
                 printf $idx$_ \n
             done \n
-            echo \n
-            [ $(( $idx % 1024 )) = '0' ] && echo $idx $(date) \n
+            echo $SECONDS\n
         done \n
         date"]
     image: gsnedders/web-platform-tests:0.13
