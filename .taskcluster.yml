@@ -12,15 +12,7 @@ tasks:
     artifacts:
       public/results: {path: /home/test/artifacts, type: directory}
     command: [/bin/bash, --login, -c, ">- \n
-        date \n
-        for idx in $(seq $((1024 * 2))); do \n
-            for _ in $(seq 1023); do \n
-                printf $idx$_ \n
-            done \n
-            echo \n
-            echo $SECONDS\n
-        done \n
-        date"]
+        cat wpt-report-11-of-15.json | python ./write-json.py /home/tests/artifacts/rewritten.json"]
     image: gsnedders/web-platform-tests:0.13
     maxRunTime: 150
   provisionerId: aws-provisioner-v1
