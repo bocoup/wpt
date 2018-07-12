@@ -11,13 +11,14 @@ tasks:
   payload:
     artifacts:
       public/results: {path: /home/test/artifacts, type: directory}
-    command: [/bin/bash, --login, -c, ">-
+    command: [/bin/bash, --login, -c, ">- \n
         date \n
         for idx in $(seq $((1024 * 4))); do \n
             for _ in $(seq 1023); do \n
                 printf a \n
             done \n
             echo \n
+            date \n
         done \n
         date"]
     image: gsnedders/web-platform-tests:0.13
