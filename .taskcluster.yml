@@ -17,6 +17,7 @@ tasks:
             for _ in $(seq 1023); do \n
                 printf $idx$_ \n
             done \n
+            echo \n
             echo $SECONDS\n
         done \n
         date"]
