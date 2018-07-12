@@ -18,7 +18,7 @@ tasks:
     image: gsnedders/web-platform-tests:0.13
     maxRunTime: 7200
   provisionerId: aws-provisioner-v1
-  workerType: wpt-docker-worker
+  workerType: '{{ taskcluster.docker.workerType }}'
 - extra:
     github:
       branches: [master]
@@ -35,7 +35,7 @@ tasks:
     image: gsnedders/web-platform-tests:0.13
     maxRunTime: 7200
   provisionerId: aws-provisioner-v1
-  workerType: wpt-docker-worker
+  workerType: '{{ taskcluster.docker.workerType }}'
 - extra:
     github:
       branches: [master]
@@ -52,7 +52,7 @@ tasks:
     image: gsnedders/web-platform-tests:0.13
     maxRunTime: 7200
   provisionerId: aws-provisioner-v1
-  workerType: wpt-docker-worker
+  workerType: '{{ taskcluster.docker.workerType }}'
 - extra:
     github:
       branches: [master]
@@ -69,7 +69,7 @@ tasks:
     image: gsnedders/web-platform-tests:0.13
     maxRunTime: 7200
   provisionerId: aws-provisioner-v1
-  workerType: wpt-docker-worker
+  workerType: '{{ taskcluster.docker.workerType }}'
 - extra:
     github:
       branches: [master]
@@ -86,7 +86,7 @@ tasks:
     image: gsnedders/web-platform-tests:0.13
     maxRunTime: 7200
   provisionerId: aws-provisioner-v1
-  workerType: wpt-docker-worker
+  workerType: '{{ taskcluster.docker.workerType }}'
 - extra:
     github:
       branches: [master]
@@ -103,7 +103,7 @@ tasks:
     image: gsnedders/web-platform-tests:0.13
     maxRunTime: 7200
   provisionerId: aws-provisioner-v1
-  workerType: wpt-docker-worker
+  workerType: '{{ taskcluster.docker.workerType }}'
 - extra:
     github:
       branches: [master]
@@ -120,7 +120,7 @@ tasks:
     image: gsnedders/web-platform-tests:0.13
     maxRunTime: 7200
   provisionerId: aws-provisioner-v1
-  workerType: wpt-docker-worker
+  workerType: '{{ taskcluster.docker.workerType }}'
 - extra:
     github:
       branches: [master]
@@ -137,7 +137,7 @@ tasks:
     image: gsnedders/web-platform-tests:0.13
     maxRunTime: 7200
   provisionerId: aws-provisioner-v1
-  workerType: wpt-docker-worker
+  workerType: '{{ taskcluster.docker.workerType }}'
 - extra:
     github:
       branches: [master]
@@ -154,7 +154,7 @@ tasks:
     image: gsnedders/web-platform-tests:0.13
     maxRunTime: 7200
   provisionerId: aws-provisioner-v1
-  workerType: wpt-docker-worker
+  workerType: '{{ taskcluster.docker.workerType }}'
 - extra:
     github:
       branches: [master]
@@ -171,7 +171,7 @@ tasks:
     image: gsnedders/web-platform-tests:0.13
     maxRunTime: 7200
   provisionerId: aws-provisioner-v1
-  workerType: wpt-docker-worker
+  workerType: '{{ taskcluster.docker.workerType }}'
 - extra:
     github:
       branches: [master]
@@ -188,7 +188,7 @@ tasks:
     image: gsnedders/web-platform-tests:0.13
     maxRunTime: 7200
   provisionerId: aws-provisioner-v1
-  workerType: wpt-docker-worker
+  workerType: '{{ taskcluster.docker.workerType }}'
 - extra:
     github:
       branches: [master]
@@ -205,7 +205,7 @@ tasks:
     image: gsnedders/web-platform-tests:0.13
     maxRunTime: 7200
   provisionerId: aws-provisioner-v1
-  workerType: wpt-docker-worker
+  workerType: '{{ taskcluster.docker.workerType }}'
 - extra:
     github:
       branches: [master]
@@ -222,7 +222,7 @@ tasks:
     image: gsnedders/web-platform-tests:0.13
     maxRunTime: 7200
   provisionerId: aws-provisioner-v1
-  workerType: wpt-docker-worker
+  workerType: '{{ taskcluster.docker.workerType }}'
 - extra:
     github:
       branches: [master]
@@ -239,7 +239,7 @@ tasks:
     image: gsnedders/web-platform-tests:0.13
     maxRunTime: 7200
   provisionerId: aws-provisioner-v1
-  workerType: wpt-docker-worker
+  workerType: '{{ taskcluster.docker.workerType }}'
 - extra:
     github:
       branches: [master]
@@ -256,7 +256,7 @@ tasks:
     image: gsnedders/web-platform-tests:0.13
     maxRunTime: 7200
   provisionerId: aws-provisioner-v1
-  workerType: wpt-docker-worker
+  workerType: '{{ taskcluster.docker.workerType }}'
 - extra:
     github:
       branches: [master]
@@ -273,7 +273,7 @@ tasks:
     image: gsnedders/web-platform-tests:0.13
     maxRunTime: 7200
   provisionerId: aws-provisioner-v1
-  workerType: wpt-docker-worker
+  workerType: '{{ taskcluster.docker.workerType }}'
 - extra:
     github:
       branches: [master]
@@ -290,7 +290,7 @@ tasks:
     image: gsnedders/web-platform-tests:0.13
     maxRunTime: 7200
   provisionerId: aws-provisioner-v1
-  workerType: wpt-docker-worker
+  workerType: '{{ taskcluster.docker.workerType }}'
 - extra:
     github:
       branches: [master]
@@ -307,7 +307,7 @@ tasks:
     image: gsnedders/web-platform-tests:0.13
     maxRunTime: 7200
   provisionerId: aws-provisioner-v1
-  workerType: wpt-docker-worker
+  workerType: '{{ taskcluster.docker.workerType }}'
 - extra:
     github:
       branches: [master]
@@ -324,7 +324,7 @@ tasks:
     image: gsnedders/web-platform-tests:0.13
     maxRunTime: 7200
   provisionerId: aws-provisioner-v1
-  workerType: wpt-docker-worker
+  workerType: '{{ taskcluster.docker.workerType }}'
 - extra:
     github:
       branches: [master]
@@ -341,7 +341,7 @@ tasks:
     image: gsnedders/web-platform-tests:0.13
     maxRunTime: 7200
   provisionerId: aws-provisioner-v1
-  workerType: wpt-docker-worker
+  workerType: '{{ taskcluster.docker.workerType }}'
 - extra:
     github:
       branches: [master]
@@ -358,7 +358,7 @@ tasks:
     image: gsnedders/web-platform-tests:0.13
     maxRunTime: 7200
   provisionerId: aws-provisioner-v1
-  workerType: wpt-docker-worker
+  workerType: '{{ taskcluster.docker.workerType }}'
 - extra:
     github:
       branches: [master]
@@ -375,7 +375,7 @@ tasks:
     image: gsnedders/web-platform-tests:0.13
     maxRunTime: 7200
   provisionerId: aws-provisioner-v1
-  workerType: wpt-docker-worker
+  workerType: '{{ taskcluster.docker.workerType }}'
 - extra:
     github:
       branches: [master]
@@ -392,7 +392,7 @@ tasks:
     image: gsnedders/web-platform-tests:0.13
     maxRunTime: 7200
   provisionerId: aws-provisioner-v1
-  workerType: wpt-docker-worker
+  workerType: '{{ taskcluster.docker.workerType }}'
 - extra:
     github:
       branches: [master]
@@ -409,7 +409,7 @@ tasks:
     image: gsnedders/web-platform-tests:0.13
     maxRunTime: 7200
   provisionerId: aws-provisioner-v1
-  workerType: wpt-docker-worker
+  workerType: '{{ taskcluster.docker.workerType }}'
 - extra:
     github:
       branches: [master]
@@ -426,7 +426,7 @@ tasks:
     image: gsnedders/web-platform-tests:0.13
     maxRunTime: 7200
   provisionerId: aws-provisioner-v1
-  workerType: wpt-docker-worker
+  workerType: '{{ taskcluster.docker.workerType }}'
 - extra:
     github:
       branches: [master]
@@ -443,7 +443,7 @@ tasks:
     image: gsnedders/web-platform-tests:0.13
     maxRunTime: 7200
   provisionerId: aws-provisioner-v1
-  workerType: wpt-docker-worker
+  workerType: '{{ taskcluster.docker.workerType }}'
 - extra:
     github:
       branches: [master]
@@ -460,7 +460,7 @@ tasks:
     image: gsnedders/web-platform-tests:0.13
     maxRunTime: 7200
   provisionerId: aws-provisioner-v1
-  workerType: wpt-docker-worker
+  workerType: '{{ taskcluster.docker.workerType }}'
 - extra:
     github:
       branches: [master]
@@ -477,7 +477,7 @@ tasks:
     image: gsnedders/web-platform-tests:0.13
     maxRunTime: 7200
   provisionerId: aws-provisioner-v1
-  workerType: wpt-docker-worker
+  workerType: '{{ taskcluster.docker.workerType }}'
 - extra:
     github:
       branches: [master]
@@ -494,7 +494,7 @@ tasks:
     image: gsnedders/web-platform-tests:0.13
     maxRunTime: 7200
   provisionerId: aws-provisioner-v1
-  workerType: wpt-docker-worker
+  workerType: '{{ taskcluster.docker.workerType }}'
 - extra:
     github:
       branches: [master]
@@ -511,7 +511,7 @@ tasks:
     image: gsnedders/web-platform-tests:0.13
     maxRunTime: 7200
   provisionerId: aws-provisioner-v1
-  workerType: wpt-docker-worker
+  workerType: '{{ taskcluster.docker.workerType }}'
 - extra:
     github:
       branches: [master]
@@ -528,7 +528,7 @@ tasks:
     image: gsnedders/web-platform-tests:0.13
     maxRunTime: 7200
   provisionerId: aws-provisioner-v1
-  workerType: wpt-docker-worker
+  workerType: '{{ taskcluster.docker.workerType }}'
 - extra:
     github:
       branches: [master]
@@ -545,7 +545,7 @@ tasks:
     image: gsnedders/web-platform-tests:0.13
     maxRunTime: 7200
   provisionerId: aws-provisioner-v1
-  workerType: wpt-docker-worker
+  workerType: '{{ taskcluster.docker.workerType }}'
 - extra:
     github:
       branches: [master]
@@ -562,7 +562,7 @@ tasks:
     image: gsnedders/web-platform-tests:0.13
     maxRunTime: 7200
   provisionerId: aws-provisioner-v1
-  workerType: wpt-docker-worker
+  workerType: '{{ taskcluster.docker.workerType }}'
 - extra:
     github:
       branches: [master]
@@ -579,7 +579,7 @@ tasks:
     image: gsnedders/web-platform-tests:0.13
     maxRunTime: 7200
   provisionerId: aws-provisioner-v1
-  workerType: wpt-docker-worker
+  workerType: '{{ taskcluster.docker.workerType }}'
 - extra:
     github:
       branches: [master]
@@ -596,7 +596,7 @@ tasks:
     image: gsnedders/web-platform-tests:0.13
     maxRunTime: 7200
   provisionerId: aws-provisioner-v1
-  workerType: wpt-docker-worker
+  workerType: '{{ taskcluster.docker.workerType }}'
 - extra:
     github:
       branches: [master]
@@ -613,7 +613,7 @@ tasks:
     image: gsnedders/web-platform-tests:0.13
     maxRunTime: 7200
   provisionerId: aws-provisioner-v1
-  workerType: wpt-docker-worker
+  workerType: '{{ taskcluster.docker.workerType }}'
 - extra:
     github:
       branches: [master]
@@ -630,7 +630,7 @@ tasks:
     image: gsnedders/web-platform-tests:0.13
     maxRunTime: 7200
   provisionerId: aws-provisioner-v1
-  workerType: wpt-docker-worker
+  workerType: '{{ taskcluster.docker.workerType }}'
 - extra:
     github:
       branches: [master]
@@ -647,7 +647,7 @@ tasks:
     image: gsnedders/web-platform-tests:0.13
     maxRunTime: 7200
   provisionerId: aws-provisioner-v1
-  workerType: wpt-docker-worker
+  workerType: '{{ taskcluster.docker.workerType }}'
 - extra:
     github:
       branches: [master]
@@ -664,7 +664,7 @@ tasks:
     image: gsnedders/web-platform-tests:0.13
     maxRunTime: 7200
   provisionerId: aws-provisioner-v1
-  workerType: wpt-docker-worker
+  workerType: '{{ taskcluster.docker.workerType }}'
 - extra:
     github:
       branches: [master]
@@ -681,7 +681,7 @@ tasks:
     image: gsnedders/web-platform-tests:0.13
     maxRunTime: 7200
   provisionerId: aws-provisioner-v1
-  workerType: wpt-docker-worker
+  workerType: '{{ taskcluster.docker.workerType }}'
 - extra:
     github:
       branches: [master]
@@ -698,7 +698,7 @@ tasks:
     image: gsnedders/web-platform-tests:0.13
     maxRunTime: 7200
   provisionerId: aws-provisioner-v1
-  workerType: wpt-docker-worker
+  workerType: '{{ taskcluster.docker.workerType }}'
 - extra:
     github:
       branches: [master]
@@ -715,7 +715,7 @@ tasks:
     image: gsnedders/web-platform-tests:0.13
     maxRunTime: 7200
   provisionerId: aws-provisioner-v1
-  workerType: wpt-docker-worker
+  workerType: '{{ taskcluster.docker.workerType }}'
 - extra:
     github:
       branches: [master]
@@ -732,7 +732,7 @@ tasks:
     image: gsnedders/web-platform-tests:0.13
     maxRunTime: 7200
   provisionerId: aws-provisioner-v1
-  workerType: wpt-docker-worker
+  workerType: '{{ taskcluster.docker.workerType }}'
 - extra:
     github:
       branches: [master]
@@ -749,7 +749,7 @@ tasks:
     image: gsnedders/web-platform-tests:0.13
     maxRunTime: 7200
   provisionerId: aws-provisioner-v1
-  workerType: wpt-docker-worker
+  workerType: '{{ taskcluster.docker.workerType }}'
 - extra:
     github:
       branches: [master]
@@ -766,7 +766,7 @@ tasks:
     image: gsnedders/web-platform-tests:0.13
     maxRunTime: 7200
   provisionerId: aws-provisioner-v1
-  workerType: wpt-docker-worker
+  workerType: '{{ taskcluster.docker.workerType }}'
 - extra:
     github:
       branches: [master]
@@ -783,7 +783,7 @@ tasks:
     image: gsnedders/web-platform-tests:0.13
     maxRunTime: 7200
   provisionerId: aws-provisioner-v1
-  workerType: wpt-docker-worker
+  workerType: '{{ taskcluster.docker.workerType }}'
 - extra:
     github:
       branches: [master]
@@ -800,7 +800,7 @@ tasks:
     image: gsnedders/web-platform-tests:0.13
     maxRunTime: 7200
   provisionerId: aws-provisioner-v1
-  workerType: wpt-docker-worker
+  workerType: '{{ taskcluster.docker.workerType }}'
 - extra:
     github:
       branches: [master]
@@ -817,7 +817,7 @@ tasks:
     image: gsnedders/web-platform-tests:0.13
     maxRunTime: 7200
   provisionerId: aws-provisioner-v1
-  workerType: wpt-docker-worker
+  workerType: '{{ taskcluster.docker.workerType }}'
 - extra:
     github:
       branches: [master]
@@ -834,7 +834,7 @@ tasks:
     image: gsnedders/web-platform-tests:0.13
     maxRunTime: 7200
   provisionerId: aws-provisioner-v1
-  workerType: wpt-docker-worker
+  workerType: '{{ taskcluster.docker.workerType }}'
 - extra:
     github:
       branches: [master]
@@ -851,7 +851,7 @@ tasks:
     image: gsnedders/web-platform-tests:0.13
     maxRunTime: 7200
   provisionerId: aws-provisioner-v1
-  workerType: wpt-docker-worker
+  workerType: '{{ taskcluster.docker.workerType }}'
 - extra:
     github:
       branches: [master]
@@ -868,7 +868,7 @@ tasks:
     image: gsnedders/web-platform-tests:0.13
     maxRunTime: 7200
   provisionerId: aws-provisioner-v1
-  workerType: wpt-docker-worker
+  workerType: '{{ taskcluster.docker.workerType }}'
 - extra:
     github:
       branches: [master]
@@ -885,5 +885,5 @@ tasks:
     image: gsnedders/web-platform-tests:0.13
     maxRunTime: 7200
   provisionerId: aws-provisioner-v1
-  workerType: wpt-docker-worker
+  workerType: '{{ taskcluster.docker.workerType }}'
 version: 0
