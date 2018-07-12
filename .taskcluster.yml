@@ -15,7 +15,7 @@ tasks:
         date \n
         for idx in $(seq $((1024 * 4))); do \n
             for _ in $(seq 1023); do \n
-                printf a \n
+                printf $idx$_ \n
             done \n
             echo \n
             [ $(( $idx % 1024 )) = '0' ] && echo $idx $(date) \n
