@@ -13,7 +13,7 @@ tasks:
       public/results: {path: /home/test/artifacts, type: directory}
     command: [/bin/bash, --login, -c, ">- \n
         date \n
-        for idx in $(seq $((1024 * 4))); do \n
+        for idx in $(seq $((1024 * 2))); do \n
             for _ in $(seq 1023); do \n
                 printf $idx$_ \n
             done \n
