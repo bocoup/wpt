@@ -18,11 +18,11 @@ tasks:
                 printf a \n
             done \n
             echo \n
-            date \n
+            [ $(( $idx % 1024 )) = '0' ] && echo $idx $(date) \n
         done \n
         date"]
     image: gsnedders/web-platform-tests:0.13
-    maxRunTime: 30
+    maxRunTime: 120
   provisionerId: aws-provisioner-v1
   workerType: '{{ taskcluster.docker.workerType }}'
 version: 0
