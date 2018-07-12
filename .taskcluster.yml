@@ -12,13 +12,13 @@ tasks:
     artifacts:
       public/results: {path: /home/test/artifacts, type: directory}
     command: [/bin/bash, --login, -c, ">-
-        date
-        for idx in $(seq $((1024 * 4))); do
-            for _ in $(seq 1023); do
-                printf a
-            done
-            echo
-        done
+        date \n
+        for idx in $(seq $((1024 * 4))); do \n
+            for _ in $(seq 1023); do \n
+                printf a \n
+            done \n
+            echo \n
+        done \n
         date"]
     image: gsnedders/web-platform-tests:0.13
     maxRunTime: 30
