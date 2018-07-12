@@ -22,7 +22,7 @@ tasks:
         done \n
         date"]
     image: gsnedders/web-platform-tests:0.13
-    maxRunTime: 120
+    maxRunTime: 150
   provisionerId: aws-provisioner-v1
   workerType: '{{ taskcluster.docker.workerType }}'
 version: 0
