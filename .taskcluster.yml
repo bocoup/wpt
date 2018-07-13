@@ -16,7 +16,7 @@ tasks:
         \         cd ~/web-platform-tests &&\n            ./tools/ci/ci_taskcluster.sh\
         \ firefox testharness 11 15"]
     image: gsnedders/web-platform-tests:0.13
-    maxRunTime: 7200
+    maxRunTime: 1800
   provisionerId: aws-provisioner-v1
   workerType: '{{ taskcluster.docker.workerType }}'
 - extra:
@@ -33,7 +33,7 @@ tasks:
         \         cd ~/web-platform-tests &&\n            ./tools/ci/ci_taskcluster.sh\
         \ firefox testharness 11 15"]
     image: gsnedders/web-platform-tests:0.13
-    maxRunTime: 7200
+    maxRunTime: 1800
   provisionerId: aws-provisioner-v1
   workerType: '{{ taskcluster.docker.workerType }}'
 - extra:
@@ -50,7 +50,7 @@ tasks:
         \         cd ~/web-platform-tests &&\n            ./tools/ci/ci_taskcluster.sh\
         \ firefox testharness 11 15"]
     image: gsnedders/web-platform-tests:0.13
-    maxRunTime: 7200
+    maxRunTime: 1800
   provisionerId: aws-provisioner-v1
   workerType: '{{ taskcluster.docker.workerType }}'
 - extra:
@@ -67,7 +67,7 @@ tasks:
         \         cd ~/web-platform-tests &&\n            ./tools/ci/ci_taskcluster.sh\
         \ firefox testharness 11 15"]
     image: gsnedders/web-platform-tests:0.13
-    maxRunTime: 7200
+    maxRunTime: 1800
   provisionerId: aws-provisioner-v1
   workerType: '{{ taskcluster.docker.workerType }}'
 - extra:
@@ -84,7 +84,7 @@ tasks:
         \         cd ~/web-platform-tests &&\n            ./tools/ci/ci_taskcluster.sh\
         \ firefox testharness 11 15"]
     image: gsnedders/web-platform-tests:0.13
-    maxRunTime: 7200
+    maxRunTime: 1800
   provisionerId: aws-provisioner-v1
   workerType: '{{ taskcluster.docker.workerType }}'
 - extra:
@@ -101,7 +101,7 @@ tasks:
         \         cd ~/web-platform-tests &&\n            ./tools/ci/ci_taskcluster.sh\
         \ firefox testharness 11 15"]
     image: gsnedders/web-platform-tests:0.13
-    maxRunTime: 7200
+    maxRunTime: 1800
   provisionerId: aws-provisioner-v1
   workerType: '{{ taskcluster.docker.workerType }}'
 - extra:
@@ -118,7 +118,7 @@ tasks:
         \         cd ~/web-platform-tests &&\n            ./tools/ci/ci_taskcluster.sh\
         \ firefox testharness 11 15"]
     image: gsnedders/web-platform-tests:0.13
-    maxRunTime: 7200
+    maxRunTime: 1800
   provisionerId: aws-provisioner-v1
   workerType: '{{ taskcluster.docker.workerType }}'
 - extra:
@@ -135,7 +135,7 @@ tasks:
         \         cd ~/web-platform-tests &&\n            ./tools/ci/ci_taskcluster.sh\
         \ firefox testharness 11 15"]
     image: gsnedders/web-platform-tests:0.13
-    maxRunTime: 7200
+    maxRunTime: 1800
   provisionerId: aws-provisioner-v1
   workerType: '{{ taskcluster.docker.workerType }}'
 - extra:
@@ -152,7 +152,7 @@ tasks:
         \         cd ~/web-platform-tests &&\n            ./tools/ci/ci_taskcluster.sh\
         \ firefox testharness 11 15"]
     image: gsnedders/web-platform-tests:0.13
-    maxRunTime: 7200
+    maxRunTime: 1800
   provisionerId: aws-provisioner-v1
   workerType: '{{ taskcluster.docker.workerType }}'
 - extra:
@@ -169,7 +169,7 @@ tasks:
         \         cd ~/web-platform-tests &&\n            ./tools/ci/ci_taskcluster.sh\
         \ firefox testharness 11 15"]
     image: gsnedders/web-platform-tests:0.13
-    maxRunTime: 7200
+    maxRunTime: 1800
   provisionerId: aws-provisioner-v1
   workerType: '{{ taskcluster.docker.workerType }}'
 - extra:
@@ -186,7 +186,7 @@ tasks:
         \         cd ~/web-platform-tests &&\n            ./tools/ci/ci_taskcluster.sh\
         \ firefox testharness 11 15"]
     image: gsnedders/web-platform-tests:0.13
-    maxRunTime: 7200
+    maxRunTime: 1800
   provisionerId: aws-provisioner-v1
   workerType: '{{ taskcluster.docker.workerType }}'
 - extra:
@@ -203,7 +203,7 @@ tasks:
         \         cd ~/web-platform-tests &&\n            ./tools/ci/ci_taskcluster.sh\
         \ firefox testharness 11 15"]
     image: gsnedders/web-platform-tests:0.13
-    maxRunTime: 7200
+    maxRunTime: 1800
   provisionerId: aws-provisioner-v1
   workerType: '{{ taskcluster.docker.workerType }}'
 - extra:
@@ -220,7 +220,7 @@ tasks:
         \         cd ~/web-platform-tests &&\n            ./tools/ci/ci_taskcluster.sh\
         \ firefox testharness 11 15"]
     image: gsnedders/web-platform-tests:0.13
-    maxRunTime: 7200
+    maxRunTime: 1800
   provisionerId: aws-provisioner-v1
   workerType: '{{ taskcluster.docker.workerType }}'
 - extra:
@@ -237,7 +237,7 @@ tasks:
         \         cd ~/web-platform-tests &&\n            ./tools/ci/ci_taskcluster.sh\
         \ firefox testharness 11 15"]
     image: gsnedders/web-platform-tests:0.13
-    maxRunTime: 7200
+    maxRunTime: 1800
   provisionerId: aws-provisioner-v1
   workerType: '{{ taskcluster.docker.workerType }}'
 - extra:
@@ -254,7 +254,7 @@ tasks:
         \         cd ~/web-platform-tests &&\n            ./tools/ci/ci_taskcluster.sh\
         \ firefox testharness 11 15"]
     image: gsnedders/web-platform-tests:0.13
-    maxRunTime: 7200
+    maxRunTime: 1800
   provisionerId: aws-provisioner-v1
   workerType: '{{ taskcluster.docker.workerType }}'
 - extra:
@@ -271,7 +271,7 @@ tasks:
         \         cd ~/web-platform-tests &&\n            ./tools/ci/ci_taskcluster.sh\
         \ firefox testharness 11 15"]
     image: gsnedders/web-platform-tests:0.13
-    maxRunTime: 7200
+    maxRunTime: 1800
   provisionerId: aws-provisioner-v1
   workerType: '{{ taskcluster.docker.workerType }}'
 - extra:
@@ -288,7 +288,7 @@ tasks:
         \         cd ~/web-platform-tests &&\n            ./tools/ci/ci_taskcluster.sh\
         \ firefox testharness 11 15"]
     image: gsnedders/web-platform-tests:0.13
-    maxRunTime: 7200
+    maxRunTime: 1800
   provisionerId: aws-provisioner-v1
   workerType: '{{ taskcluster.docker.workerType }}'
 - extra:
@@ -305,7 +305,7 @@ tasks:
         \         cd ~/web-platform-tests &&\n            ./tools/ci/ci_taskcluster.sh\
         \ firefox testharness 11 15"]
     image: gsnedders/web-platform-tests:0.13
-    maxRunTime: 7200
+    maxRunTime: 1800
   provisionerId: aws-provisioner-v1
   workerType: '{{ taskcluster.docker.workerType }}'
 - extra:
@@ -322,7 +322,7 @@ tasks:
         \         cd ~/web-platform-tests &&\n            ./tools/ci/ci_taskcluster.sh\
         \ firefox testharness 11 15"]
     image: gsnedders/web-platform-tests:0.13
-    maxRunTime: 7200
+    maxRunTime: 1800
   provisionerId: aws-provisioner-v1
   workerType: '{{ taskcluster.docker.workerType }}'
 - extra:
@@ -339,7 +339,7 @@ tasks:
         \         cd ~/web-platform-tests &&\n            ./tools/ci/ci_taskcluster.sh\
         \ firefox testharness 11 15"]
     image: gsnedders/web-platform-tests:0.13
-    maxRunTime: 7200
+    maxRunTime: 1800
   provisionerId: aws-provisioner-v1
   workerType: '{{ taskcluster.docker.workerType }}'
 version: 0
