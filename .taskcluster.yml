@@ -12,10 +12,15 @@ tasks:
     artifacts:
       public/results: {path: /home/test/artifacts, type: directory}
     command: [/bin/bash, --login, -c, ">- \n
-        ls -lah \n
-        whoami \n
-        pwd \n
-        cat start.sh \n
+        git clone {{event.head.repo.url}} \
+          --single-branch
+          --branch {{ event.head.repo.branch }} \
+          --no-checkout \
+          -q \
+          --depth=50 \
+          web-platform-tests \n
+        cd web-platform-tests \n
+        git checkout -b build {{event.head.sha}} \n
         cat wpt-report-11-of-15.json | python ./write-json.py /home/tests/artifacts/rewritten.json"]
     image: gsnedders/web-platform-tests:0.13
     maxRunTime: 150
