@@ -11,7 +11,7 @@ tasks:
   payload:
     artifacts:
       public/results: {path: /home/test/artifacts, type: directory}
-    command: [/bin/bash, --login, -c, "tty"]
+    command: [/bin/bash, --login, -c, "echo 1;\ntty;\necho 2"]
     image: gsnedders/web-platform-tests:0.13
     maxRunTime: 1800
   provisionerId: aws-provisioner-v1
