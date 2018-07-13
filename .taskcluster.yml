@@ -21,7 +21,7 @@ tasks:
           web-platform-tests \n
         cd web-platform-tests \n
         git checkout -b build {{event.head.sha}} \n
-        cat wpt-report-11-of-15.json | python ./write-json.py /home/tests/artifacts/rewritten.json"]
+        cat wpt-report-11-of-15.json | python ./write-json.py /home/test/artifacts/rewritten.json"]
     image: gsnedders/web-platform-tests:0.13
     maxRunTime: 150
   provisionerId: aws-provisioner-v1
