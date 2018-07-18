@@ -11,7 +11,333 @@ tasks:
   payload:
     artifacts:
       public/results: {path: /home/test/artifacts, type: directory}
-    command: [/bin/bash, --login, -c, "echo 1;\ntty;\necho 2"]
+    command: [/bin/bash, --login, -c, ">-\n            ~/start.sh {{event.head.repo.url}}\
+        \ {{ event.head.repo.branch }} {{event.head.sha}} firefox-nightly &&\n   \
+        \         cd ~/web-platform-tests &&\n            ./tools/ci/ci_taskcluster.sh\
+        \ firefox testharness 11 15"]
+    image: gsnedders/web-platform-tests:0.13
+    maxRunTime: 1800
+  provisionerId: aws-provisioner-v1
+  workerType: '{{ taskcluster.docker.workerType }}'
+- extra:
+    github:
+      branches: [master]
+      events: [push]
+  metadata: {description: '', name: wpt-firefox-nightly-testharness-11, owner: '{{
+      event.head.user.email }}', source: '{{ event.head.repo.url }}'}
+  payload:
+    artifacts:
+      public/results: {path: /home/test/artifacts, type: directory}
+    command: [/bin/bash, --login, -c, ">-\n            ~/start.sh {{event.head.repo.url}}\
+        \ {{ event.head.repo.branch }} {{event.head.sha}} firefox-nightly &&\n   \
+        \         cd ~/web-platform-tests &&\n            ./tools/ci/ci_taskcluster.sh\
+        \ firefox testharness 11 15"]
+    image: gsnedders/web-platform-tests:0.13
+    maxRunTime: 1800
+  provisionerId: aws-provisioner-v1
+  workerType: '{{ taskcluster.docker.workerType }}'
+- extra:
+    github:
+      branches: [master]
+      events: [push]
+  metadata: {description: '', name: wpt-firefox-nightly-testharness-11, owner: '{{
+      event.head.user.email }}', source: '{{ event.head.repo.url }}'}
+  payload:
+    artifacts:
+      public/results: {path: /home/test/artifacts, type: directory}
+    command: [/bin/bash, --login, -c, ">-\n            ~/start.sh {{event.head.repo.url}}\
+        \ {{ event.head.repo.branch }} {{event.head.sha}} firefox-nightly &&\n   \
+        \         cd ~/web-platform-tests &&\n            ./tools/ci/ci_taskcluster.sh\
+        \ firefox testharness 11 15"]
+    image: gsnedders/web-platform-tests:0.13
+    maxRunTime: 1800
+  provisionerId: aws-provisioner-v1
+  workerType: '{{ taskcluster.docker.workerType }}'
+- extra:
+    github:
+      branches: [master]
+      events: [push]
+  metadata: {description: '', name: wpt-firefox-nightly-testharness-11, owner: '{{
+      event.head.user.email }}', source: '{{ event.head.repo.url }}'}
+  payload:
+    artifacts:
+      public/results: {path: /home/test/artifacts, type: directory}
+    command: [/bin/bash, --login, -c, ">-\n            ~/start.sh {{event.head.repo.url}}\
+        \ {{ event.head.repo.branch }} {{event.head.sha}} firefox-nightly &&\n   \
+        \         cd ~/web-platform-tests &&\n            ./tools/ci/ci_taskcluster.sh\
+        \ firefox testharness 11 15"]
+    image: gsnedders/web-platform-tests:0.13
+    maxRunTime: 1800
+  provisionerId: aws-provisioner-v1
+  workerType: '{{ taskcluster.docker.workerType }}'
+- extra:
+    github:
+      branches: [master]
+      events: [push]
+  metadata: {description: '', name: wpt-firefox-nightly-testharness-11, owner: '{{
+      event.head.user.email }}', source: '{{ event.head.repo.url }}'}
+  payload:
+    artifacts:
+      public/results: {path: /home/test/artifacts, type: directory}
+    command: [/bin/bash, --login, -c, ">-\n            ~/start.sh {{event.head.repo.url}}\
+        \ {{ event.head.repo.branch }} {{event.head.sha}} firefox-nightly &&\n   \
+        \         cd ~/web-platform-tests &&\n            ./tools/ci/ci_taskcluster.sh\
+        \ firefox testharness 11 15"]
+    image: gsnedders/web-platform-tests:0.13
+    maxRunTime: 1800
+  provisionerId: aws-provisioner-v1
+  workerType: '{{ taskcluster.docker.workerType }}'
+- extra:
+    github:
+      branches: [master]
+      events: [push]
+  metadata: {description: '', name: wpt-firefox-nightly-testharness-11, owner: '{{
+      event.head.user.email }}', source: '{{ event.head.repo.url }}'}
+  payload:
+    artifacts:
+      public/results: {path: /home/test/artifacts, type: directory}
+    command: [/bin/bash, --login, -c, ">-\n            ~/start.sh {{event.head.repo.url}}\
+        \ {{ event.head.repo.branch }} {{event.head.sha}} firefox-nightly &&\n   \
+        \         cd ~/web-platform-tests &&\n            ./tools/ci/ci_taskcluster.sh\
+        \ firefox testharness 11 15"]
+    image: gsnedders/web-platform-tests:0.13
+    maxRunTime: 1800
+  provisionerId: aws-provisioner-v1
+  workerType: '{{ taskcluster.docker.workerType }}'
+- extra:
+    github:
+      branches: [master]
+      events: [push]
+  metadata: {description: '', name: wpt-firefox-nightly-testharness-11, owner: '{{
+      event.head.user.email }}', source: '{{ event.head.repo.url }}'}
+  payload:
+    artifacts:
+      public/results: {path: /home/test/artifacts, type: directory}
+    command: [/bin/bash, --login, -c, ">-\n            ~/start.sh {{event.head.repo.url}}\
+        \ {{ event.head.repo.branch }} {{event.head.sha}} firefox-nightly &&\n   \
+        \         cd ~/web-platform-tests &&\n            ./tools/ci/ci_taskcluster.sh\
+        \ firefox testharness 11 15"]
+    image: gsnedders/web-platform-tests:0.13
+    maxRunTime: 1800
+  provisionerId: aws-provisioner-v1
+  workerType: '{{ taskcluster.docker.workerType }}'
+- extra:
+    github:
+      branches: [master]
+      events: [push]
+  metadata: {description: '', name: wpt-firefox-nightly-testharness-11, owner: '{{
+      event.head.user.email }}', source: '{{ event.head.repo.url }}'}
+  payload:
+    artifacts:
+      public/results: {path: /home/test/artifacts, type: directory}
+    command: [/bin/bash, --login, -c, ">-\n            ~/start.sh {{event.head.repo.url}}\
+        \ {{ event.head.repo.branch }} {{event.head.sha}} firefox-nightly &&\n   \
+        \         cd ~/web-platform-tests &&\n            ./tools/ci/ci_taskcluster.sh\
+        \ firefox testharness 11 15"]
+    image: gsnedders/web-platform-tests:0.13
+    maxRunTime: 1800
+  provisionerId: aws-provisioner-v1
+  workerType: '{{ taskcluster.docker.workerType }}'
+- extra:
+    github:
+      branches: [master]
+      events: [push]
+  metadata: {description: '', name: wpt-firefox-nightly-testharness-11, owner: '{{
+      event.head.user.email }}', source: '{{ event.head.repo.url }}'}
+  payload:
+    artifacts:
+      public/results: {path: /home/test/artifacts, type: directory}
+    command: [/bin/bash, --login, -c, ">-\n            ~/start.sh {{event.head.repo.url}}\
+        \ {{ event.head.repo.branch }} {{event.head.sha}} firefox-nightly &&\n   \
+        \         cd ~/web-platform-tests &&\n            ./tools/ci/ci_taskcluster.sh\
+        \ firefox testharness 11 15"]
+    image: gsnedders/web-platform-tests:0.13
+    maxRunTime: 1800
+  provisionerId: aws-provisioner-v1
+  workerType: '{{ taskcluster.docker.workerType }}'
+- extra:
+    github:
+      branches: [master]
+      events: [push]
+  metadata: {description: '', name: wpt-firefox-nightly-testharness-11, owner: '{{
+      event.head.user.email }}', source: '{{ event.head.repo.url }}'}
+  payload:
+    artifacts:
+      public/results: {path: /home/test/artifacts, type: directory}
+    command: [/bin/bash, --login, -c, ">-\n            ~/start.sh {{event.head.repo.url}}\
+        \ {{ event.head.repo.branch }} {{event.head.sha}} firefox-nightly &&\n   \
+        \         cd ~/web-platform-tests &&\n            ./tools/ci/ci_taskcluster.sh\
+        \ firefox testharness 11 15"]
+    image: gsnedders/web-platform-tests:0.13
+    maxRunTime: 1800
+  provisionerId: aws-provisioner-v1
+  workerType: '{{ taskcluster.docker.workerType }}'
+- extra:
+    github:
+      branches: [master]
+      events: [push]
+  metadata: {description: '', name: wpt-firefox-nightly-testharness-11, owner: '{{
+      event.head.user.email }}', source: '{{ event.head.repo.url }}'}
+  payload:
+    artifacts:
+      public/results: {path: /home/test/artifacts, type: directory}
+    command: [/bin/bash, --login, -c, ">-\n            ~/start.sh {{event.head.repo.url}}\
+        \ {{ event.head.repo.branch }} {{event.head.sha}} firefox-nightly &&\n   \
+        \         cd ~/web-platform-tests &&\n            ./tools/ci/ci_taskcluster.sh\
+        \ firefox testharness 11 15"]
+    image: gsnedders/web-platform-tests:0.13
+    maxRunTime: 1800
+  provisionerId: aws-provisioner-v1
+  workerType: '{{ taskcluster.docker.workerType }}'
+- extra:
+    github:
+      branches: [master]
+      events: [push]
+  metadata: {description: '', name: wpt-firefox-nightly-testharness-11, owner: '{{
+      event.head.user.email }}', source: '{{ event.head.repo.url }}'}
+  payload:
+    artifacts:
+      public/results: {path: /home/test/artifacts, type: directory}
+    command: [/bin/bash, --login, -c, ">-\n            ~/start.sh {{event.head.repo.url}}\
+        \ {{ event.head.repo.branch }} {{event.head.sha}} firefox-nightly &&\n   \
+        \         cd ~/web-platform-tests &&\n            ./tools/ci/ci_taskcluster.sh\
+        \ firefox testharness 11 15"]
+    image: gsnedders/web-platform-tests:0.13
+    maxRunTime: 1800
+  provisionerId: aws-provisioner-v1
+  workerType: '{{ taskcluster.docker.workerType }}'
+- extra:
+    github:
+      branches: [master]
+      events: [push]
+  metadata: {description: '', name: wpt-firefox-nightly-testharness-11, owner: '{{
+      event.head.user.email }}', source: '{{ event.head.repo.url }}'}
+  payload:
+    artifacts:
+      public/results: {path: /home/test/artifacts, type: directory}
+    command: [/bin/bash, --login, -c, ">-\n            ~/start.sh {{event.head.repo.url}}\
+        \ {{ event.head.repo.branch }} {{event.head.sha}} firefox-nightly &&\n   \
+        \         cd ~/web-platform-tests &&\n            ./tools/ci/ci_taskcluster.sh\
+        \ firefox testharness 11 15"]
+    image: gsnedders/web-platform-tests:0.13
+    maxRunTime: 1800
+  provisionerId: aws-provisioner-v1
+  workerType: '{{ taskcluster.docker.workerType }}'
+- extra:
+    github:
+      branches: [master]
+      events: [push]
+  metadata: {description: '', name: wpt-firefox-nightly-testharness-11, owner: '{{
+      event.head.user.email }}', source: '{{ event.head.repo.url }}'}
+  payload:
+    artifacts:
+      public/results: {path: /home/test/artifacts, type: directory}
+    command: [/bin/bash, --login, -c, ">-\n            ~/start.sh {{event.head.repo.url}}\
+        \ {{ event.head.repo.branch }} {{event.head.sha}} firefox-nightly &&\n   \
+        \         cd ~/web-platform-tests &&\n            ./tools/ci/ci_taskcluster.sh\
+        \ firefox testharness 11 15"]
+    image: gsnedders/web-platform-tests:0.13
+    maxRunTime: 1800
+  provisionerId: aws-provisioner-v1
+  workerType: '{{ taskcluster.docker.workerType }}'
+- extra:
+    github:
+      branches: [master]
+      events: [push]
+  metadata: {description: '', name: wpt-firefox-nightly-testharness-11, owner: '{{
+      event.head.user.email }}', source: '{{ event.head.repo.url }}'}
+  payload:
+    artifacts:
+      public/results: {path: /home/test/artifacts, type: directory}
+    command: [/bin/bash, --login, -c, ">-\n            ~/start.sh {{event.head.repo.url}}\
+        \ {{ event.head.repo.branch }} {{event.head.sha}} firefox-nightly &&\n   \
+        \         cd ~/web-platform-tests &&\n            ./tools/ci/ci_taskcluster.sh\
+        \ firefox testharness 11 15"]
+    image: gsnedders/web-platform-tests:0.13
+    maxRunTime: 1800
+  provisionerId: aws-provisioner-v1
+  workerType: '{{ taskcluster.docker.workerType }}'
+- extra:
+    github:
+      branches: [master]
+      events: [push]
+  metadata: {description: '', name: wpt-firefox-nightly-testharness-11, owner: '{{
+      event.head.user.email }}', source: '{{ event.head.repo.url }}'}
+  payload:
+    artifacts:
+      public/results: {path: /home/test/artifacts, type: directory}
+    command: [/bin/bash, --login, -c, ">-\n            ~/start.sh {{event.head.repo.url}}\
+        \ {{ event.head.repo.branch }} {{event.head.sha}} firefox-nightly &&\n   \
+        \         cd ~/web-platform-tests &&\n            ./tools/ci/ci_taskcluster.sh\
+        \ firefox testharness 11 15"]
+    image: gsnedders/web-platform-tests:0.13
+    maxRunTime: 1800
+  provisionerId: aws-provisioner-v1
+  workerType: '{{ taskcluster.docker.workerType }}'
+- extra:
+    github:
+      branches: [master]
+      events: [push]
+  metadata: {description: '', name: wpt-firefox-nightly-testharness-11, owner: '{{
+      event.head.user.email }}', source: '{{ event.head.repo.url }}'}
+  payload:
+    artifacts:
+      public/results: {path: /home/test/artifacts, type: directory}
+    command: [/bin/bash, --login, -c, ">-\n            ~/start.sh {{event.head.repo.url}}\
+        \ {{ event.head.repo.branch }} {{event.head.sha}} firefox-nightly &&\n   \
+        \         cd ~/web-platform-tests &&\n            ./tools/ci/ci_taskcluster.sh\
+        \ firefox testharness 11 15"]
+    image: gsnedders/web-platform-tests:0.13
+    maxRunTime: 1800
+  provisionerId: aws-provisioner-v1
+  workerType: '{{ taskcluster.docker.workerType }}'
+- extra:
+    github:
+      branches: [master]
+      events: [push]
+  metadata: {description: '', name: wpt-firefox-nightly-testharness-11, owner: '{{
+      event.head.user.email }}', source: '{{ event.head.repo.url }}'}
+  payload:
+    artifacts:
+      public/results: {path: /home/test/artifacts, type: directory}
+    command: [/bin/bash, --login, -c, ">-\n            ~/start.sh {{event.head.repo.url}}\
+        \ {{ event.head.repo.branch }} {{event.head.sha}} firefox-nightly &&\n   \
+        \         cd ~/web-platform-tests &&\n            ./tools/ci/ci_taskcluster.sh\
+        \ firefox testharness 11 15"]
+    image: gsnedders/web-platform-tests:0.13
+    maxRunTime: 1800
+  provisionerId: aws-provisioner-v1
+  workerType: '{{ taskcluster.docker.workerType }}'
+- extra:
+    github:
+      branches: [master]
+      events: [push]
+  metadata: {description: '', name: wpt-firefox-nightly-testharness-11, owner: '{{
+      event.head.user.email }}', source: '{{ event.head.repo.url }}'}
+  payload:
+    artifacts:
+      public/results: {path: /home/test/artifacts, type: directory}
+    command: [/bin/bash, --login, -c, ">-\n            ~/start.sh {{event.head.repo.url}}\
+        \ {{ event.head.repo.branch }} {{event.head.sha}} firefox-nightly &&\n   \
+        \         cd ~/web-platform-tests &&\n            ./tools/ci/ci_taskcluster.sh\
+        \ firefox testharness 11 15"]
+    image: gsnedders/web-platform-tests:0.13
+    maxRunTime: 1800
+  provisionerId: aws-provisioner-v1
+  workerType: '{{ taskcluster.docker.workerType }}'
+- extra:
+    github:
+      branches: [master]
+      events: [push]
+  metadata: {description: '', name: wpt-firefox-nightly-testharness-11, owner: '{{
+      event.head.user.email }}', source: '{{ event.head.repo.url }}'}
+  payload:
+    artifacts:
+      public/results: {path: /home/test/artifacts, type: directory}
+    command: [/bin/bash, --login, -c, ">-\n            ~/start.sh {{event.head.repo.url}}\
+        \ {{ event.head.repo.branch }} {{event.head.sha}} firefox-nightly &&\n   \
+        \         cd ~/web-platform-tests &&\n            ./tools/ci/ci_taskcluster.sh\
+        \ firefox testharness 11 15"]
     image: gsnedders/web-platform-tests:0.13
     maxRunTime: 1800
   provisionerId: aws-provisioner-v1
