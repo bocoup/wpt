@@ -38,6 +38,7 @@ tasks:
             - [wdspec, 1, 1]
           each(chunk): 
             taskId: {$eval: 'as_slugid(browser.name + browser.channel + chunk[0] + str(chunk[1]))'}
+            taskGroupId: {$eval: 'as_slugid("task group")'}
             created: {$fromNow: ''}
             deadline: {$fromNow: '2 hours'}
             provisionerId: aws-provisioner-v1
