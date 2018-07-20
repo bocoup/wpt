@@ -40,7 +40,7 @@ tasks:
             taskId: {$eval: 'as_slugid(browser.name + browser.channel + chunk[0] + str(chunk[1]))'}
             taskGroupId: {$eval: 'as_slugid("task group")'}
             created: {$fromNow: ''}
-            deadline: {$fromNow: '2 hours'}
+            deadline: {$fromNow: '5 hours'}
             provisionerId: aws-provisioner-v1
             # Contributors interested in configurating TaskCluster to run
             # against their fork of WPT should change the `workerType` to
@@ -65,7 +65,7 @@ tasks:
                 - /bin/bash
                 - --login
                 - -c
-                - "~/start.sh ${event.repository.url} ${event.ref[11:]} ${event.after} ${browser.name}-${browser.channel} &&
+                - "~/start.sh ${event.repository.url} ${event.ref[len('refs/heads/'):]} ${event.after} ${browser.name}-${browser.channel} &&
                   cd ~/web-platform-tests &&
                   ./tools/ci/ci_taskcluster.sh ${browser.name} ${chunk[0]} ${chunk[1]} ${chunk[2]}"
     else: []
