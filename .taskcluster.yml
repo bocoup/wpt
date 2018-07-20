@@ -40,7 +40,7 @@ tasks:
             taskId: {$eval: 'as_slugid(browser.name + browser.channel + chunk[0] + str(chunk[1]))'}
             taskGroupId: {$eval: 'as_slugid("task group")'}
             created: {$fromNow: ''}
-            deadline: {$fromNow: '5 hours'}
+            deadline: {$fromNow: '24 hours'}
             provisionerId: aws-provisioner-v1
             # Contributors interested in configurating TaskCluster to run
             # against their fork of WPT should change the `workerType` to
