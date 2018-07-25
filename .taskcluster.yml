@@ -10,23 +10,23 @@ tasks:
         $map: [{name: firefox, channel: nightly}]
         each(browser):
           $map:
-            - [testharness, 11, 15]
-            - [testharness, 11, 15]
-            - [testharness, 11, 15]
-            - [testharness, 11, 15]
-            - [testharness, 11, 15]
-            - [testharness, 11, 15]
-            - [testharness, 11, 15]
-            - [testharness, 11, 15]
-            - [testharness, 11, 15]
-            - [testharness, 11, 15]
-            - [testharness, 11, 15]
-            - [testharness, 11, 15]
-            - [testharness, 11, 15]
-            - [testharness, 11, 15]
-            - [testharness, 11, 15]
+            - [testharness, 11, 15, 0]
+            - [testharness, 11, 15, 1]
+            - [testharness, 11, 15, 2]
+            - [testharness, 11, 15, 3]
+            - [testharness, 11, 15, 4]
+            - [testharness, 11, 15, 5]
+            - [testharness, 11, 15, 6]
+            - [testharness, 11, 15, 7]
+            - [testharness, 11, 15, 8]
+            - [testharness, 11, 15, 9]
+            - [testharness, 11, 15, 10]
+            - [testharness, 11, 15, 11]
+            - [testharness, 11, 15, 12]
+            - [testharness, 11, 15, 13]
+            - [testharness, 11, 15, 14]
           each(chunk): 
-            taskId: {$eval: 'as_slugid(browser.name + browser.channel + chunk[0] + str(chunk[1]))'}
+            taskId: {$eval: 'as_slugid(str(chunk[3]))'}
             taskGroupId: {$eval: 'as_slugid("task group")'}
             created: {$fromNow: ''}
             deadline: {$fromNow: '24 hours'}
