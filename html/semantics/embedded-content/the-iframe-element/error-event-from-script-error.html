@@ -1,0 +1,87 @@
+<!doctype html>
+<meta charset=utf-8>
+<script>
+var isChild = false;
+try {
+  isChild = parent !== window && parent.location.href == window.location.href;
+} catch (err) {}
+
+if (isChild) {
+  throw new Error();
+}
+</script>
+<script>
+</script>
+<script src="/resources/testharness.js"></script>
+<script src="/resources/testharnessreport.js"></script>
+<body>
+<script>
+if (isChild) {
+  onerror = function() {
+    parent.postMessage('from same document', '*');
+  };
+  throw new Error('second error');
+}
+
+setup({
+  allow_uncaught_exception: true
+});
+async_test(function(t) {
+  var iframe = document.createElement('iframe');
+
+  window.addEventListener('error', function(event) {
+    t.done();
+  });
+  window.addEventListener('message', function(event) {
+    if (event.data == 'from other document') {
+      throw new Error();
+    }
+  });
+
+  iframe.onerror = t.step_func(function() {
+    console.log('hi there 1');
+    assert_unreached(
+      'The "error" event should not be triggered (`onerror` property)'
+    );
+  });
+  iframe.addEventListener('error', t.step_func(function() {
+    console.log('hi there 2');
+    assert_unreached(
+      'The "error" event should not be triggered (`error` event handler)'
+    );
+  }));
+
+  iframe.setAttribute('src', 'https://web-platform.test:8443/html/semantics/embedded-content/the-iframe-element/support/iframe-that-throws.html');
+  document.body.appendChild(iframe);
+}, 'other document');
+
+async_test(function(t) {
+  var iframe = document.createElement('iframe');
+
+  window.addEventListener('error', function() {
+    t.done();
+  });
+  window.addEventListener('message', function(event) {
+    if (event.data == 'from same document') {
+      throw new Error();
+    }
+  });
+
+  iframe.onerror = t.step_func(function() {
+    console.log('hi there 1');
+    assert_unreached(
+      'The "error" event should not be triggered (`onerror` property)'
+    );
+  });
+  iframe.addEventListener('error', t.step_func(function() {
+    console.log('hi there 2');
+    assert_unreached(
+      'The "error" event should not be triggered (`error` event handler)'
+    );
+  }));
+
+  iframe.setAttribute('src', location.href);
+  document.body.appendChild(iframe);
+}, 'same document');
+</script>
+</body>

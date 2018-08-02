@@ -1,0 +1,13 @@
+<!doctype html>
+<meta charset=utf-8>
+<script>
+  throw new Error('first error');
+</script>
+
+<script>
+  onerror = function() {
+    parent.postMessage('from other document', '*');
+  };
+
+  throw new Error('second error');
+</script>
