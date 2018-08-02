@@ -15,19 +15,20 @@
 "use strict";
 
 promise_test(function() {
+  var frame, img;
   return new Promise(function(resolve, reject) {
-    var frame = document.getElementById("frame_loaded");
-    var img = frame.contentDocument.createElement("img");
+    frame = document.getElementById("frame_loaded");
+    img = frame.contentDocument.createElement("img");
     img.src = "/images/green.png";
-    img.onload = function() {
-      // At this point the frame which created the img is removed, so decode() should fail.
-      frame.parentNode.removeChild(frame);
-      img.decode().then(function() {
+    img.onerror = reject;
+    img.onload = resolve;
+  }).then(function() {
+    // At this point the frame which created the img is removed, so decode() should fail.
+    frame.parentNode.removeChild(frame);
+    return img.decode()
+      .then(function() {
         assert_false(true, "Unexpected success");
-      }, function() {
-        resolve();
-      });
-    };
+      }, function() {});
   });
 }, document.title + " Decode from removed iframe fails (loaded img)");
 
