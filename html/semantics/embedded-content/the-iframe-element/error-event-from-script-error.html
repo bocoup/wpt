@@ -1,6 +1,15 @@
 <!doctype html>
 <meta charset=utf-8>
 <script>
+/**
+ * In order to assert that an error event does not fire, this test
+ * intentionally causes two uncaught exceptions. The first is used to trigger
+ * the event in those browsers that incorrectly implement it. The second is
+ * used to determine when the test is complete--that is: when it is acceptable
+ * to stop waiting for the incorrect event.
+ */
+'use strict';
+
 var isChild = false;
 try {
   isChild = parent !== window && parent.location.href == window.location.href;
@@ -10,15 +19,15 @@ if (isChild) {
   throw new Error();
 }
 </script>
-<script>
-</script>
 <script src="/resources/testharness.js"></script>
 <script src="/resources/testharnessreport.js"></script>
 <body>
 <script>
+'use strict';
+
 if (isChild) {
   onerror = function() {
-    parent.postMessage('from same document', '*');
+    parent.postMessage('from identical location', '*');
   };
   throw new Error('second error');
 }
@@ -30,22 +39,22 @@ async_test(function(t) {
   var iframe = document.createElement('iframe');
 
   window.addEventListener('error', function(event) {
-    t.done();
+    if (event.error.message === 'from distinct location') {
+      t.done();
+    }
   });
   window.addEventListener('message', function(event) {
-    if (event.data == 'from other document') {
-      throw new Error();
+    if (event.data == 'from distinct location') {
+      throw new Error(event.data);
     }
   });
 
   iframe.onerror = t.step_func(function() {
-    console.log('hi there 1');
     assert_unreached(
       'The "error" event should not be triggered (`onerror` property)'
     );
   });
   iframe.addEventListener('error', t.step_func(function() {
-    console.log('hi there 2');
     assert_unreached(
       'The "error" event should not be triggered (`error` event handler)'
     );
@@ -53,28 +62,28 @@ async_test(function(t) {
 
   iframe.setAttribute('src', 'https://web-platform.test:8443/html/semantics/embedded-content/the-iframe-element/support/iframe-that-throws.html');
   document.body.appendChild(iframe);
-}, 'other document');
+}, 'iframe with distinct location');
 
 async_test(function(t) {
   var iframe = document.createElement('iframe');
 
-  window.addEventListener('error', function() {
-    t.done();
+  window.addEventListener('error', function(event) {
+    if (event.error.message === 'from identical location') {
+      t.done();
+    }
   });
   window.addEventListener('message', function(event) {
-    if (event.data == 'from same document') {
-      throw new Error();
+    if (event.data == 'from identical location') {
+      throw new Error(event.data);
     }
   });
 
   iframe.onerror = t.step_func(function() {
-    console.log('hi there 1');
     assert_unreached(
       'The "error" event should not be triggered (`onerror` property)'
     );
   });
   iframe.addEventListener('error', t.step_func(function() {
-    console.log('hi there 2');
     assert_unreached(
       'The "error" event should not be triggered (`error` event handler)'
     );
@@ -82,6 +91,6 @@ async_test(function(t) {
 
   iframe.setAttribute('src', location.href);
   document.body.appendChild(iframe);
-}, 'same document');
+}, 'iframe with identical location');
 </script>
 </body>

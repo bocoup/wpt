@@ -1,12 +1,15 @@
 <!doctype html>
 <meta charset=utf-8>
 <script>
+  'use strict';
+
   throw new Error('first error');
 </script>
-
 <script>
-  onerror = function() {
-    parent.postMessage('from other document', '*');
+  'use strict';
+
+  window.onerror = function() {
+    parent.postMessage('from distinct location', '*');
   };
 
   throw new Error('second error');
