@@ -55,7 +55,7 @@ tasks:
               owner: ${event.pusher.email}
               source: ${event.repository.url}
             payload:
-              image: gsnedders/web-platform-tests:0.13
+              image: jugglinmike/web-platform-tests:0.14
               maxRunTime: 7200
               artifacts:
                 public/results:
@@ -65,7 +65,7 @@ tasks:
                 - /bin/bash
                 - --login
                 - -c
-                - "~/provision.sh ${event.repository.url} ${event.ref[len('refs/heads/'):]} ${event.after} ${browser.name}-${browser.channel} &&
+                - "~/provision.sh ${event.repository.url} ${event.after} ${browser.name}-${browser.channel} &&
                   cd ~/web-platform-tests &&
                   ./tools/ci/ci_taskcluster.sh ${browser.name} ${chunk[0]} ${chunk[1]} ${chunk[2]}"
     else: []
