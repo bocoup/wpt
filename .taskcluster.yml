@@ -65,7 +65,7 @@ tasks:
                 - /bin/bash
                 - --login
                 - -c
-                - "~/provision.sh ${event.repository.url} ${event.after} ${browser.name}-${browser.channel} &&
+                - "~/provision.sh ${browser.name}-${browser.channel} ${event.repository.url} ${event.ref} ${event.after} &&
                   cd ~/web-platform-tests &&
                   ./tools/ci/ci_taskcluster.sh ${browser.name} ${chunk[0]} ${chunk[1]} ${chunk[2]}"
     else: []
