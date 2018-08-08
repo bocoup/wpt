@@ -23,7 +23,7 @@ git init
 
 # Initially we just fetch 50 commits in order to save several minutes of
 # fetching
-git fetch origin ${REF} --quiet --depth=50
+git fetch ${REMOTE} ${REF} --quiet --depth=50
 
 if [ -n "${REVISION}" ]; then
     if [[ ! `git rev-parse --verify --quiet ${REVISION}^{object}` ]]; then
