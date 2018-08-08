@@ -29,13 +29,13 @@ if [ -n "${REVISION}" ]; then
     if [[ ! `git rev-parse --verify --quiet ${REVISION}^{object}` ]]; then
         # But if for some reason the commit under test isn't in that range, we
         # give in and fetch everything
-        git fetch --quiet --unshallow ${REMOTE}
+        git fetch --quiet ${REMOTE}
         git rev-parse --verify ${REVISION}^{object}
     fi
 
     git checkout ${REVISION}
 else
-    git checkout ${REF}
+    git checkout FETCH_HEAD
 fi
 
 sudo sh -c './wpt make-hosts-file >> /etc/hosts'
