@@ -543,7 +543,7 @@ class Safari(Browser):
     def find_webdriver(self):
         return find_executable("safaridriver")
 
-    def install_webdriver(self):
+    def install_webdriver(self, dest=None):
         raise NotImplementedError
 
     def version(self, binary):
@@ -640,7 +640,7 @@ class WebKit(Browser):
     def find_webdriver(self):
         return None
 
-    def install_webdriver(self):
+    def install_webdriver(self, dest=None):
         raise NotImplementedError
 
     def version(self, binary):
