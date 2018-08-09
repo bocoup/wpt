@@ -468,7 +468,7 @@ class TestLoader(object):
                  chunk_number=1,
                  include_https=True,
                  skip_timeout=False,
-                 executor_classes={}):
+                 executor_classes=None):
 
         self.test_types = test_types
         self.run_info = run_info
@@ -564,10 +564,10 @@ class TestLoader(object):
                  "disabled":defaultdict(list)}
 
         for test_path, test_type, test in self.iter_tests():
-            if test.jsshell:
-                executor_class = self.executor_classes.get(test_type)
-                if executor_class and not executor_class.supports_jsshell:
-                    continue
+            executor_class = (self.executor_classes and
+                              self.executor_classes.get(test_type))
+            if executor_class and executor_class.ignores(test):
+                continue
 
             enabled = not test.disabled()
             if not self.include_https and test.environment["protocol"] == "https":
