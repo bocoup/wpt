@@ -2,11 +2,11 @@ version: 1
 policy:
   pullRequests: collaborators
 tasks:
-  - $if: tasks_for == "github-push"
-    then:
-      $if: event.ref == "refs/heads/master"
+  $flattenDeep:
+    - $if: tasks_for == "github-push"
       then:
-        $flattenDeep:
+        $if: event.ref == "refs/heads/master"
+        then:
           $map: [{name: firefox, channel: nightly}, {name: chrome, channel: dev}]
           each(browser):
             $map:
@@ -68,10 +68,8 @@ tasks:
                   - "~/provision.sh ${browser.name}-${browser.channel} ${event.repository.url} ${event.ref} ${event.after} &&
                     cd ~/web-platform-tests &&
                     ./tools/ci/ci_taskcluster.sh ${browser.name} ${chunk[0]} ${chunk[1]} ${chunk[2]}"
-      else: []
-  - $if: tasks_for == "github-pull-request"
-    then:
-      $flatten:
+    - $if: tasks_for == "github-pull-request"
+      then:
         $map: [{name: firefox, channel: nightly}, {name: chrome, channel: dev}]
         each(browser):
           taskId: {$eval: 'as_slugid(browser.name)'}
