@@ -86,7 +86,7 @@ tasks:
             description: >-
               Verify that tests modified in a pull request are stable when
               executed in ${browser.name}.
-            owner: ${event.pusher.email}
+            owner: ${event.sender.login}
             source: ${event.repository.url}
           payload:
             image: jugglinmike/web-platform-tests:0.17
