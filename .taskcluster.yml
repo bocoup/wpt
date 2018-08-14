@@ -82,7 +82,7 @@ tasks:
           # "github-worker".
           workerType: github-worker
           metadata:
-            name: wpt-${browser.name}-${browser.channel}-${chunk[0]}-${chunk[1]}
+            name: wpt-${browser.name}-${browser.channel}-stability
             description: >-
               Verify that tests modified in a pull request are stable when
               executed in ${browser.name}.
