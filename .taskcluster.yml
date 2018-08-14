@@ -100,6 +100,6 @@ tasks:
               - --login
               - -c
               - "set -e
-                ~/provision.sh ${browser.name}-${browser.channel} ${event.repository.url} ${event.ref} ${event.after}
+                ~/provision.sh ${browser.name}-${browser.channel} ${event.repository.url} refs/pull/${event.number}/head
                 cd ~/web-platform-tests
                 ./wpt check-stability ${browser.name} --metadata ~/meta/ --install-fonts"
