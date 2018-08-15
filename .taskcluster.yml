@@ -87,7 +87,7 @@ tasks:
                 ./wpt tests-affected | \
                   xargs ./tools/ci/ci_taskcluster.sh ${browser.name}
           each(operation):
-            taskId: {$eval: 'as_slugid(browser.name)'}
+            taskId: {$eval: 'as_slugid(operation.name)'}
             taskGroupId: {$eval: 'as_slugid("task group")'}
             created: {$fromNow: ''}
             deadline: {$fromNow: '24 hours'}
