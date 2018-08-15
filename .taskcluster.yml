@@ -114,5 +114,5 @@ tasks:
                 - -c
                 - "set -e
                   ~/provision.sh ${browser.name}-${browser.channel} ${event.repository.url} refs/pull/${event.number}/head
-                  cd ~/web-platform-tests
+                  cd ~/web-platform-tests &&
                   ${operation.command}"
