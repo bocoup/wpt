@@ -78,14 +78,14 @@ tasks:
                 Verify that tests modified in a pull request are stable when
                 executed in ${browser.name}.
               command: >-
-                ./wpt tests-affected | \
-                  xargs ./tools/ci/ci_taskcluster.sh ${browser.name} --verify
+                ./wpt --null tests-affected | \
+                  xargs --null ./tools/ci/ci_taskcluster.sh ${browser.name} --verify
             - name: wpt-${browser.name}-${browser.channel}-results
               description: >-
                 Collect results for modified tests in ${browser.name}.
               command: >-
-                ./wpt tests-affected | \
-                  xargs ./tools/ci/ci_taskcluster.sh ${browser.name}
+                ./wpt --null tests-affected | \
+                  xargs --null ./tools/ci/ci_taskcluster.sh ${browser.name}
           each(operation):
             taskId: {$eval: 'as_slugid(operation.name)'}
             taskGroupId: {$eval: 'as_slugid("task group")'}
