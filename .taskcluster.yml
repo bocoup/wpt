@@ -77,14 +77,14 @@ tasks:
               description: >-
                 Verify that tests modified in a pull request are stable when
                 executed in ${browser.name}.
-              command: >-
+              command:
                 ./wpt --null tests-affected |
                   xargs --null ./tools/ci/ci_taskcluster.sh ${browser.name} --verify
               creates_artifacts: false
             - name: wpt-${browser.name}-${browser.channel}-results
               description: >-
                 Collect results for modified tests in ${browser.name}.
-              command: >-
+              command:
                 ./wpt --null tests-affected |
                   xargs --null ./tools/ci/ci_taskcluster.sh ${browser.name}
               creates_artifacts: true
