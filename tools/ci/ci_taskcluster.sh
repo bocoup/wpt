@@ -15,7 +15,6 @@ fi
   --log-tbpl-level=info \
   --log-wptreport=../artifacts/wpt_report.json \
   --log-mach=- \
-  --this-chunk=$3 --total-chunks=$4 --test-type=$2 \
   -y \
   --no-pause \
   --no-restart-on-unexpected \
