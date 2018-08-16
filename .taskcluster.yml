@@ -80,17 +80,14 @@ tasks:
               command: >-
                 ./wpt --null tests-affected | \
                   xargs --null ./tools/ci/ci_taskcluster.sh ${browser.name} --verify
-              artifacts: NULL
+              creates_artifacts: false
             - name: wpt-${browser.name}-${browser.channel}-results
               description: >-
                 Collect results for modified tests in ${browser.name}.
               command: >-
                 ./wpt --null tests-affected | \
                   xargs --null ./tools/ci/ci_taskcluster.sh ${browser.name}
-              artifacts:
-                public/results:
-                  path: /home/test/artifacts
-                  type: directory
+              creates_artifacts: true
           each(operation):
             taskId: {$eval: 'as_slugid(operation.name)'}
             taskGroupId: {$eval: 'as_slugid("task group")'}
@@ -109,7 +106,12 @@ tasks:
             payload:
               image: jugglinmike/web-platform-tests:0.17
               maxRunTime: 7200
-              artifacts: ${operation.artifacts}
+              artifacts:
+                $if: operation.creates_artifacts
+                then:
+                  public/results:
+                    path: /home/test/artifacts
+                    type: directory
               command:
                 - /bin/bash
                 - --login
