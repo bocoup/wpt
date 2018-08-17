@@ -116,6 +116,6 @@ tasks:
                 - -c
                 - "set -ex
                   ls && pwd &&
-                  ~/provision.sh ${browser.name}-${browser.channel} ${event.repository.clone_url} refs/pull/${event.number}/head &&
+                  ~/provision.sh ${browser.name}-${browser.channel} ${event.repository.clone_url} refs/pull/${event.number}/head ${event.pull_request.base.sha} &&
                   cd ~/web-platform-tests &&
                   ${operation.command}"
