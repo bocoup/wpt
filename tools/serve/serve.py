@@ -378,15 +378,17 @@ def build_routes(aliases):
 
 
 class ServerProc(object):
-    def __init__(self):
+    def __init__(self, name=None):
         self.proc = None
         self.daemon = None
         self.stop = Event()
+        self.name = name
 
     def start(self, init_func, host, port, paths, routes, bind_address, config, **kwargs):
         self.proc = Process(target=self.create_daemon,
                             args=(init_func, host, port, paths, routes, bind_address,
                                   config),
+                            name=self.name,
                             kwargs=kwargs)
         self.proc.daemon = True
         self.proc.start()
@@ -506,7 +508,7 @@ def start_servers(host, ports, paths, routes, bind_address, config, **kwargs):
                          "ws":start_ws_server,
                          "wss":start_wss_server}[scheme]
 
-            server_proc = ServerProc()
+            server_proc = ServerProc(name="%s on port %s" % (scheme, port))
             server_proc.start(init_func, host, port, paths, routes, bind_address,
                               config, **kwargs)
             servers[scheme].append((port, server_proc))
@@ -832,6 +834,9 @@ def run(**kwargs):
                         item.join(1)
             except KeyboardInterrupt:
                 logger.info("Shutting down")
+
+        for item in iter_procs(servers):
+            logger.info("Status of %s:\t%s" % (item.name, "running" if item.is_alive() else "not running"))
 
 
 def main():

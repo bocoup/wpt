@@ -39,9 +39,10 @@ def test_subprocess_exit(server_subprocesses, tempfile_name):
     def target():
         # By default, the server initially creates a child to validate local
         # system configuration. That process is unrelated to the behavior under
-        # test, but it currently uses the same constructor. Disable the check
-        # so that the constructor is only used to create the long-running
-        # processes which are relevant to this functionality.
+        # test, but at the time of this writing, it uses the same constructor
+        # that is also used to create the long-running processes which are
+        # relevant to this functionality. Disable the check so that the
+        # constructor is only used to create relevant processes.
         with open(tempfile_name, 'w') as handle:
             json.dump({"check_subdomains": False}, handle)
 
