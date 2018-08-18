@@ -34,7 +34,7 @@ def tempfile_name():
 
 
 def test_subprocess_exit(server_subprocesses, tempfile_name):
-    timeout = 10
+    timeout = 30
 
     def target():
         # By default, the server initially creates a child to validate local
