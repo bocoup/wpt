@@ -800,8 +800,10 @@ def get_parser():
 
 
 def run(**kwargs):
+    print('building config')
     with build_config(os.path.join(repo_root, "config.json"),
                       **kwargs) as config:
+        print('config built')
         global logger
         logger = config.logger
         set_logger(logger)
@@ -818,14 +820,19 @@ def run(**kwargs):
                     })
 
         if config["check_subdomains"]:
+            print('checking subdomains')
             check_subdomains(config)
+        else:
+            print('not checking subdomains')
 
         stash_address = None
         if bind_address:
             stash_address = (config.server_host, get_port(""))
             logger.debug("Going to use port %d for stash" % stash_address[1])
 
+        print('starting Stash')
         with stash.StashServer(stash_address, authkey=str(uuid.uuid4())):
+            print('Stash stated')
             servers = start(config, build_routes(config["aliases"]), **kwargs)
 
             try:

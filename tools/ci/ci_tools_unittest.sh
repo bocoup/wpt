@@ -13,7 +13,7 @@ run_applicable_tox () {
     unset TOXENV
     local RUN_ENVS=$(tox -l | grep "^${OLD_TOXENV}\(\-\|\$\)" | tr "\n" ",")
     if [[ -n "$RUN_ENVS" ]]; then
-        tox -e "$RUN_ENVS"
+        tox -s -e "$RUN_ENVS"
     fi
     export TOXENV="$OLD_TOXENV"
 }
