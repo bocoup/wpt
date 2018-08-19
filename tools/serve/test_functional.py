@@ -1,6 +1,13 @@
+try:
+    from importlib import reload
+except ImportError:
+    pass
 import json
 import os
-import Queue
+try:
+    import Queue as queue
+except ImportError:
+    import queue
 import tempfile
 import threading
 
@@ -23,7 +30,7 @@ serve.ServerProc = StubServerProc
 
 @pytest.fixture()
 def server_subprocesses():
-    StubServerProc.instances = Queue.Queue()
+    StubServerProc.instances = queue.Queue()
     yield StubServerProc.instances
     StubServerProc.instances = None
 
