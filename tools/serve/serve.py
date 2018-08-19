@@ -832,8 +832,7 @@ def run(**kwargs):
                 while all(item.is_alive() for item in iter_procs(servers)):
                     for item in iter_procs(servers):
                         item.join(1)
-                exited = filter(lambda item: not item.is_alive(),
-                                iter_procs(servers))
+                exited = [item for item in iter_procs(servers) if not item.is_alive()]
                 subject = "subprocess" if len(exited) == 1 else "subprocesses"
 
                 logger.info("%s %s exited:" % (len(exited), subject))
