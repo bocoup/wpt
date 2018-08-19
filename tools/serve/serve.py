@@ -378,17 +378,17 @@ def build_routes(aliases):
 
 
 class ServerProc(object):
-    def __init__(self, name=None):
+    def __init__(self, scheme=None):
         self.proc = None
         self.daemon = None
         self.stop = Event()
-        self.name = name
+        self.scheme = scheme
 
     def start(self, init_func, host, port, paths, routes, bind_address, config, **kwargs):
         self.proc = Process(target=self.create_daemon,
                             args=(init_func, host, port, paths, routes, bind_address,
                                   config),
-                            name=self.name,
+                            name='%s on port %s' % (self.scheme, port),
                             kwargs=kwargs)
         self.proc.daemon = True
         self.proc.start()
@@ -508,7 +508,7 @@ def start_servers(host, ports, paths, routes, bind_address, config, **kwargs):
                          "ws":start_ws_server,
                          "wss":start_wss_server}[scheme]
 
-            server_proc = ServerProc(name="%s on port %s" % (scheme, port))
+            server_proc = ServerProc(scheme=scheme)
             server_proc.start(init_func, host, port, paths, routes, bind_address,
                               config, **kwargs)
             servers[scheme].append((port, server_proc))
@@ -832,11 +832,16 @@ def run(**kwargs):
                 while all(item.is_alive() for item in iter_procs(servers)):
                     for item in iter_procs(servers):
                         item.join(1)
+                exited = filter(lambda item: not item.is_alive(),
+                                iter_procs(servers))
+                subject = "subprocess" if len(exited) == 1 else "subprocesses"
+
+                logger.info("%s %s exited:" % (len(exited), subject))
+
+                for item in iter_procs(servers):
+                    logger.info("Status of %s:\t%s" % (item.name, "running" if item.is_alive() else "not running"))
             except KeyboardInterrupt:
                 logger.info("Shutting down")
-
-        for item in iter_procs(servers):
-            logger.info("Status of %s:\t%s" % (item.name, "running" if item.is_alive() else "not running"))
 
 
 def main():
