@@ -121,6 +121,7 @@ tasks:
                     ${event.pull_request.base.ref}
                     ${event.pull_request.base.sha};
                   cd ~/web-platform-tests;
+                  ./wpt manifest-download;
                   git fetch
                     ${event.repository.clone_url}
                     refs/pull/${event.number}/head;
