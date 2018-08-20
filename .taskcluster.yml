@@ -114,8 +114,7 @@ tasks:
                 - /bin/bash
                 - --login
                 - -c
-                - >-
-                  set -ex;
+                - set -ex;
                   ~/provision.sh
                     ${browser.name}-${browser.channel}
                     ${event.repository.clone_url}
