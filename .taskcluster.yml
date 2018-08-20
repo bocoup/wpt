@@ -114,7 +114,8 @@ tasks:
                 - /bin/bash
                 - --login
                 - -c
-                - "set -ex;
+                - >-
+                  set -ex;
                   ~/provision.sh
                     ${browser.name}-${browser.channel}
                     ${event.repository.clone_url}
@@ -131,4 +132,4 @@ tasks:
                     | base64);
                   echo Affected tests:;
                   echo $affected | base64 -d | sed 's/\x0/\\n/g';
-                  ${operation.command}"
+                  ${operation.command}
