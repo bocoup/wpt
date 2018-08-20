@@ -3,7 +3,7 @@ policy:
   pullRequests: collaborators
 tasks:
   $flattenDeep:
-    - $if: tasks_for == "github-push"
+    - $if: tasks_for == "skip for now"
       then:
         $if: event.ref == "refs/heads/master"
         then:
