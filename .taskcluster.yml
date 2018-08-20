@@ -130,5 +130,5 @@ tasks:
                     ${event.pull_request.base.sha}
                     | base64);
                   echo Affected tests:;
-                  echo $affected | base64 -d | sed 's/\x0/\n/g';
+                  echo $affected | base64 -d | sed 's/\x0/\\n/g';
                   ${operation.command}"
