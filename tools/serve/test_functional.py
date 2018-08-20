@@ -20,11 +20,13 @@ from wptserve import logger
 class StubServerProc(serve.ServerProc):
     instances = None
 
-    def __init__(self, *args, **kwargs):
-        super(StubServerProc, self).__init__(*args, **kwargs)
+    def start(self, *args, **kwargs):
+        result = super(StubServerProc, self).start(*args, **kwargs)
 
         if StubServerProc.instances is not None:
             StubServerProc.instances.put(self)
+
+        return result
 
 serve.ServerProc = StubServerProc
 
