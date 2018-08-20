@@ -9,7 +9,6 @@ if [ $1 == 'firefox' ]; then
 fi
 
 ./wpt run \
-  $@ \
   $browser_specific_args \
   --log-tbpl=../artifacts/log_tbpl.log \
   --log-tbpl-level=info \
@@ -19,6 +18,7 @@ fi
   --no-pause \
   --no-restart-on-unexpected \
   --install-fonts \
-  --no-fail-on-unexpected
+  --no-fail-on-unexpected \
+  $@
 
 gzip ../artifacts/wpt_report.json

@@ -78,7 +78,7 @@ tasks:
                 Verify that tests modified in a pull request are stable when
                 executed in ${browser.name}.
               command:
-                echo $affected | base64 -d | xargs -0 ./tools/ci/ci_taskcluster.sh ${browser.name} --verify
+                echo $affected | base64 -d | xargs -0 ./tools/ci/ci_taskcluster.sh --verify ${browser.name}
               creates_artifacts: false
             - name: wpt-${browser.name}-${browser.channel}-results
               description: >-
