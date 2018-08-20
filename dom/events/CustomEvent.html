@@ -4,6 +4,9 @@
 <script src="/resources/testharnessreport.js"></script>
 <div id="log"></div>
 <script>
+test(function() {
+  assert_true(Math.random() > 0.5);
+}, "Intentionally unstable test");
 
 test(function() {
   var type = "foo";
