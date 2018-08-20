@@ -17,24 +17,24 @@ from . import serve
 from wptserve import logger
 
 
-class StubServerProc(serve.ServerProc):
+class ServerProcSpy(serve.ServerProc):
     instances = None
 
     def start(self, *args, **kwargs):
-        result = super(StubServerProc, self).start(*args, **kwargs)
+        result = super(ServerProcSpy, self).start(*args, **kwargs)
 
-        if StubServerProc.instances is not None:
-            StubServerProc.instances.put(self)
+        if ServerProcSpy.instances is not None:
+            ServerProcSpy.instances.put(self)
 
         return result
 
-serve.ServerProc = StubServerProc
+serve.ServerProc = ServerProcSpy
 
 @pytest.fixture()
 def server_subprocesses():
-    StubServerProc.instances = queue.Queue()
-    yield StubServerProc.instances
-    StubServerProc.instances = None
+    ServerProcSpy.instances = queue.Queue()
+    yield ServerProcSpy.instances
+    ServerProcSpy.instances = None
 
 @pytest.fixture()
 def tempfile_name():
