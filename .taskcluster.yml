@@ -114,9 +114,9 @@ tasks:
                 - /bin/bash
                 - --login
                 - -c
-                - "set -ex
-                  ~/provision.sh ${browser.name}-${browser.channel} ${event.repository.clone_url} ${event.pull_request.base.ref} ${event.pull_request.base.sha} &&
-                  cd ~/web-platform-tests
-                  git fetch refs/pull/${event.number}/head
-                  git checkout FETCH_HEAD
+                - "set -ex;
+                  ~/provision.sh ${browser.name}-${browser.channel} ${event.repository.clone_url} ${event.pull_request.base.ref} ${event.pull_request.base.sha};
+                  cd ~/web-platform-tests;
+                  git fetch refs/pull/${event.number}/head;
+                  git checkout FETCH_HEAD;
                   ${operation.command}"
