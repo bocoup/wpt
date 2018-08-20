@@ -115,7 +115,8 @@ tasks:
                 - --login
                 - -c
                 - "set -ex
-                  ls && pwd &&
-                  ~/provision.sh ${browser.name}-${browser.channel} ${event.repository.clone_url} refs/pull/${event.number}/head ${event.pull_request.base.sha} &&
-                  cd ~/web-platform-tests &&
+                  ~/provision.sh ${browser.name}-${browser.channel} ${event.repository.clone_url} ${event.pull_request.base.ref} ${event.pull_request.base.sha} &&
+                  cd ~/web-platform-tests
+                  git fetch refs/pull/${event.number}/head
+                  git checkout FETCH_HEAD
                   ${operation.command}"
