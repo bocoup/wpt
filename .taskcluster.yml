@@ -55,7 +55,7 @@ tasks:
                 owner: ${event.pusher.email}
                 source: ${event.repository.url}
               payload:
-                image: jugglinmike/web-platform-tests:0.17
+                image: gsnedders/web-platform-tests:0.13
                 maxRunTime: 7200
                 artifacts:
                   public/results:
@@ -65,7 +65,7 @@ tasks:
                   - /bin/bash
                   - --login
                   - -c
-                  - "~/provision.sh ${browser.name}-${browser.channel} ${event.repository.url} ${event.ref} ${event.after} &&
+                  - "~/start.sh ${event.repository.url} ${event.ref} ${event.after} ${browser.name}-${browser.channel} &&
                     cd ~/web-platform-tests &&
                     ./tools/ci/ci_taskcluster.sh ${browser.name} --test-type=${chunk[0]} --this-chunk=${chunk[1]} --total-chunks=${chunk[2]}"
     - $if: tasks_for == "github-pull-request"
@@ -102,7 +102,7 @@ tasks:
               owner: ${event.pull_request.user.login}@users.noreply.github.com
               source: ${event.repository.url}
             payload:
-              image: jugglinmike/web-platform-tests:0.17
+              image: gsnedders/web-platform-tests:0.13
               maxRunTime: 7200
               artifacts:
                 $if: operation.creates_artifacts
@@ -115,13 +115,13 @@ tasks:
                 - --login
                 - -c
                 - set -ex;
-                  ~/provision.sh
-                    ${browser.name}-${browser.channel}
+                  ~/start.sh
                     ${event.repository.clone_url}
                     ${event.pull_request.base.ref}
-                    ${event.pull_request.base.sha};
+                    ${event.pull_request.base.sha}
+                    ${browser.name}-${browser.channel};
                   cd ~/web-platform-tests;
-                  ./wpt manifest-download;
+                  ./wpt manifest-download || true;
                   git fetch
                     ${event.repository.clone_url}
                     refs/pull/${event.number}/head;
