@@ -69,4 +69,4 @@ WORKDIR /home/test/
 
 COPY .bashrc /home/test/.bashrc
 
-COPY start.sh /home/test/start.sh
+COPY provision.sh /home/test/provision.sh
