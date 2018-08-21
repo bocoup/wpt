@@ -65,9 +65,18 @@ tasks:
                   - /bin/bash
                   - --login
                   - -c
-                  - "~/start.sh ${event.repository.url} ${event.ref} ${event.after} ${browser.name}-${browser.channel} &&
-                    cd ~/web-platform-tests &&
-                    ./tools/ci/ci_taskcluster.sh ${browser.name} --test-type=${chunk[0]} --this-chunk=${chunk[1]} --total-chunks=${chunk[2]}"
+                  - set -ex;
+                    ~/start.sh
+                      ${event.repository.url}
+                      ${event.ref}
+                      ${event.after}
+                      ${browser.name}-${browser.channel};
+                    cd ~/web-platform-tests;
+                    ./tools/ci/ci_taskcluster.sh
+                      --test-type=${chunk[0]}
+                      --this-chunk=${chunk[1]}
+                      --total-chunks=${chunk[2]}
+                      ${browser.name};
     - $if: tasks_for == "github-pull-request"
       then:
         $map: [{name: firefox, channel: nightly}, {name: chrome, channel: dev}]
