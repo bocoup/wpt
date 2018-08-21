@@ -2,14 +2,27 @@
 
 ./wpt manifest-download
 
+# The first script argument that is not prefixed with a dash (`-`) is assumed
+# to be the name of the browser under test. This restricts the syntax available
+# to consumers: value-accepting options must be specified using the equals sign
+# (`=`).
+for argument in $@; do
+  if [ ${argument:0:1} == '-' ]; then
+    continue
+  fi
+
+  browser_name=$arg
+
+  break
+done
+
 browser_specific_args=''
 
-if [ $1 == 'firefox' ]; then
+if [ $browser_name == 'firefox' ]; then
   browser_specific_args='--install-browser --reftest-internal'
 fi
 
 ./wpt run \
-  $browser_specific_args \
   --log-tbpl=../artifacts/log_tbpl.log \
   --log-tbpl-level=info \
   --log-wptreport=../artifacts/wpt_report.json \
@@ -19,6 +32,7 @@ fi
   --no-restart-on-unexpected \
   --install-fonts \
   --no-fail-on-unexpected \
+  $browser_specific_args \
   $@
 
 if [ -f ../artifacts/wpt_report.json ]; then
