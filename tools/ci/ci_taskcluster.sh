@@ -21,4 +21,6 @@ fi
   --no-fail-on-unexpected \
   $@
 
-gzip ../artifacts/wpt_report.json
+if [ -f ../artifacts/wpt_report.json ]; then
+  gzip ../artifacts/wpt_report.json
+fi
