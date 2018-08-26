@@ -10,13 +10,13 @@ tasks:
         $map:
           $if: event.ref == 'refs/heads/master'
           then:
-            {config: [{name: firefox, channel: nightly}, {name: chrome, channel: dev}]}
+            [{name: firefox, channel: nightly}, {name: chrome, channel: dev}]
           else:
             $if: event.ref == 'refs/heads/epochs/daily'
             then:
-              {config: [{name: firefox, channel: beta}, {name: chrome, channel: beta}]}
+              [{name: firefox, channel: beta}, {name: chrome, channel: beta}]
             else:
-              {config: [{name: firefox, channel: stable}, {name: chrome, channel: stable}]}
+              [{name: firefox, channel: stable}, {name: chrome, channel: stable}]
         each(browser):
           $map:
             - [testharness, 1, 15]
