@@ -26,6 +26,11 @@ policies and contribution forms [3].
         test_timeout:null,
         message_events: ["start", "test_state", "result", "completion"]
     };
+    var counts = {
+      async_tests: 0,
+      promise_tests: 0,
+      uncaught_exceptions: 0
+    };
 
     var xhtml_ns = "http://www.w3.org/1999/xhtml";
 
@@ -564,6 +569,7 @@ policies and contribution forms [3].
 
     function async_test(func, name, properties)
     {
+        counts.async_tests += 1;
         if (typeof func !== "function") {
             properties = name;
             name = func;
@@ -580,6 +586,9 @@ policies and contribution forms [3].
 
     function promise_test(func, name, properties) {
         var test = async_test(name, properties);
+        counts.promise_tests += 1;
+        counts.async_tests -= 1;
+
         test._is_promise_test = true;
 
         // If there is no promise tests queue make one.
@@ -2353,6 +2362,21 @@ policies and contribution forms [3].
             }
         }
 
+        if (counts.uncaught_exceptions && counts.promise_tests) {
+            var xhr = new XMLHttpRequest();
+            var summary = [
+                counts.uncaught_exceptions,
+                counts.async_tests,
+                counts.promise_tests
+            ].join(',');
+            xhr.open(
+                'GET',
+                '/encrypted-media/log.py?name=' + encodeURIComponent(summary),
+                false
+            );
+            xhr.send(null);
+        }
+
         forEach (this.all_done_callbacks,
                  function(callback)
                  {
@@ -3246,6 +3270,8 @@ policies and contribution forms [3].
 
     if (global_scope.addEventListener) {
         var error_handler = function(e) {
+            counts.uncaught_exceptions +=1;
+
             if (tests.tests.length === 0 && !tests.allow_uncaught_exception) {
                 tests.set_file_is_test();
             }

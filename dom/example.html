@@ -1,0 +1,42 @@
+<!doctype html>
+<title>Example</title>
+<script src="/resources/testharness.js"></script>
+<script src="/resources/testharnessreport.js"></script>
+<div id="log"></div>
+<script>
+setTimeout(function() { throw new Error('this error is expected'); }, 0);
+
+test(function() {}, 'first synchronous test');
+
+test(function() {}, 'second synchronous test');
+
+async_test(function(t) {
+  setTimeout(function() { t.done(); }, 0);
+}, 'first async_test');
+
+async_test(function(t) {
+  setTimeout(function() { t.done(); }, 0);
+}, 'second async_test');
+
+async_test(function(t) {
+  setTimeout(function() { t.done(); }, 0);
+}, 'third async_test');
+
+
+promise_test(function() {
+  return Promise.resolve();
+}, 'first promise_test');
+
+promise_test(function() {
+  return Promise.resolve();
+}, 'second promise_test');
+
+promise_test(function() {
+  return Promise.resolve();
+}, 'third promise_test');
+
+promise_test(function() {
+  return Promise.resolve();
+}, 'fourth promise_test');
+</script>
+
