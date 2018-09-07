@@ -4,6 +4,11 @@
 <script src="/resources/testharnessreport.js"></script>
 <div id="log"></div>
 <script>
+test(() => {
+  assert_exists({a:0}, 'a');
+  assert_not_exists({}, 'a');
+}, 'this test uses a depcrecated API');
+
 test(function() {
   var type = "foo";
 

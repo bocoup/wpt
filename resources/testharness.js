@@ -1243,6 +1243,15 @@ policies and contribution forms [3].
     function _assert_own_property(name) {
         return function(object, property_name, description)
         {
+            if (name === "assert_exists") {
+                var xhr = new XMLHttpRequest();
+                xhr.open(
+                    "GET",
+                    "/encrypted-media/log.py?name=" + name + "_" + property_name,
+                    false
+                );
+                xhr.send(null);
+            }
             assert(object.hasOwnProperty(property_name),
                    name, description,
                    "expected property ${p} missing", {p:property_name});
@@ -1253,6 +1262,13 @@ policies and contribution forms [3].
 
     function assert_not_exists(object, property_name, description)
     {
+        var xhr = new XMLHttpRequest();
+        xhr.open(
+            "GET",
+            "/encrypted-media/log.py?name=assert_not_extsts_" + property_name,
+            false
+        );
+        xhr.send(null);
         assert(!object.hasOwnProperty(property_name),
                "assert_not_exists", description,
                "unexpected property ${p} found", {p:property_name});
