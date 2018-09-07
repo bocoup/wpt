@@ -577,6 +577,15 @@ policies and contribution forms [3].
 
                 test.step(function() {
                     assert_not_equals(promise, undefined);
+                    if (!promise || typeof promise.then !== 'function') {
+                        var xhr = new XMLHttpRequest();
+                        xhr.open(
+                            'GET',
+                            '/encrypted-media/log.py?name=' + test.name,
+                            false
+                        );
+                        xhr.send(null);
+                    }
                 });
 
                 // Test authors may use the `step` method within a
