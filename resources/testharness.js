@@ -26,6 +26,7 @@ policies and contribution forms [3].
         test_timeout:null,
         message_events: ["start", "test_state", "result", "completion"]
     };
+    var initialCookie = document.cookie;
 
     var xhtml_ns = "http://www.w3.org/1999/xhtml";
 
@@ -2363,6 +2364,19 @@ policies and contribution forms [3].
             } else {
                 this.status.status = this.status.OK;
             }
+        }
+
+        if (document.cookie !== initialCookie) {
+            var xhr = new XMLHttpRequest();
+            var summary = 'initial-' + initialCookie + '-final-' + document.cookie;
+            xhr.open(
+                'GET',
+                '/encrypted-media/log.py?name=' + encodeURIComponent(summary),
+                false
+            );
+            xhr.send(null);
+            this.status.status = this.status.ERROR;
+            this.status.message = 'Cookie still set: ' + summary;
         }
 
         forEach (this.all_done_callbacks,

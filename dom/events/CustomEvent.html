@@ -32,4 +32,8 @@ test(function() {
     assert_false(e.cancelable, "cancelable");
     assert_equals(e.detail, null, "detail");
 }, "initCustomEvent's default parameter values.");
+
+test(() => {
+  document.cookie = 'foo=bar';
+}, 'setting a cookie');
 </script>
