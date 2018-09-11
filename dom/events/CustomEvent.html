@@ -4,7 +4,11 @@
 <script src="/resources/testharnessreport.js"></script>
 <div id="log"></div>
 <script>
-test(() => Promise.resolve(), 'this is likely a mistake');
+async_test((t) => {
+  t.step_timeout(() => t.done());
+  return 23;
+}, 'this is likely a mistake');
+
 test(function() {
   var type = "foo";
 
