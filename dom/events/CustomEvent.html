@@ -6,8 +6,8 @@
 <script>
 async_test((t) => {
   t.step_timeout(() => t.done());
-  return 23;
-}, 'this is likely a mistake');
+  return false;
+}, 'this is likely a falsey mistake');
 
 test(function() {
   var type = "foo";

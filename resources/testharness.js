@@ -571,7 +571,7 @@ policies and contribution forms [3].
         if (func) {
             var value = test_obj.step(func, test_obj, test_obj);
 
-            if (value) {
+            if (value !== undefined) {
                 var xhr = new XMLHttpRequest();
                 xhr.open(
                     'GET',
