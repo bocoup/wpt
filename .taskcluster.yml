@@ -63,7 +63,7 @@ tasks:
             source: ${event.repository.url}
           payload:
             image: harjgam/web-platform-tests:0.14
-            maxRunTime: 7200
+            maxRunTime: 10800
             artifacts:
               public/results:
                 path: /home/test/artifacts
