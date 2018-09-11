@@ -543,7 +543,7 @@ policies and contribution forms [3].
         var test_obj = new Test(test_name, properties);
         var value = test_obj.step(func, test_obj, test_obj);
 
-        if (value && typeof value.then === 'function') {
+        if (value) {
             var xhr = new XMLHttpRequest();
             xhr.open(
                 'GET',
@@ -571,15 +571,15 @@ policies and contribution forms [3].
         if (func) {
             var value = test_obj.step(func, test_obj, test_obj);
 
-            if (value && typeof value.then === 'function') {
-                var xhr = new XMLHttpRequest();
-                xhr.open(
-                    'GET',
-                    '/encrypted-media/log.py?name=' + test_name,
-                    false
-                );
-                xhr.send(null);
-            }
+            //if (value && typeof value.then === 'function') {
+            //    var xhr = new XMLHttpRequest();
+            //    xhr.open(
+            //        'GET',
+            //        '/encrypted-media/log.py?name=' + test_name,
+            //        false
+            //    );
+            //    xhr.send(null);
+            //}
         }
         return test_obj;
     }
