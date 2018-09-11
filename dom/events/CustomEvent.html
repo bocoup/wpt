@@ -4,7 +4,6 @@
 <script src="/resources/testharnessreport.js"></script>
 <div id="log"></div>
 <script>
-test(() => Promise.resolve(), 'this is likely a mistake');
 test(function() {
   var type = "foo";
 
@@ -33,4 +32,8 @@ test(function() {
     assert_false(e.cancelable, "cancelable");
     assert_equals(e.detail, null, "detail");
 }, "initCustomEvent's default parameter values.");
+
+test(() => {
+  document.cookie = 'foo=bar';
+}, 'setting a cookie');
 </script>

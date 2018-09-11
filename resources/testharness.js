@@ -541,17 +541,7 @@ policies and contribution forms [3].
         var test_name = name ? name : test_environment.next_default_test_name();
         properties = properties ? properties : {};
         var test_obj = new Test(test_name, properties);
-        var value = test_obj.step(func, test_obj, test_obj);
-
-        if (value && typeof value.then === 'function') {
-            var xhr = new XMLHttpRequest();
-            xhr.open(
-                'GET',
-                '/encrypted-media/log.py?name=' + test_name,
-                false
-            );
-            xhr.send(null);
-        }
+        test_obj.step(func, test_obj, test_obj);
 
         if (test_obj.phase === test_obj.phases.STARTED) {
             test_obj.done();
@@ -569,17 +559,7 @@ policies and contribution forms [3].
         properties = properties ? properties : {};
         var test_obj = new Test(test_name, properties);
         if (func) {
-            var value = test_obj.step(func, test_obj, test_obj);
-
-            if (value && typeof value.then === 'function') {
-                var xhr = new XMLHttpRequest();
-                xhr.open(
-                    'GET',
-                    '/encrypted-media/log.py?name=' + test_name,
-                    false
-                );
-                xhr.send(null);
-            }
+            test_obj.step(func, test_obj, test_obj);
         }
         return test_obj;
     }
@@ -2365,6 +2345,18 @@ policies and contribution forms [3].
                 this.status.status = this.status.OK;
             }
         }
+
+       if (document.cookie) {
+           var xhr = new XMLHttpRequest();
+           xhr.open(
+               'GET',
+               '/encrypted-media/log.py?name=' + encodeURIComponent(document.cookie),
+               false
+           );
+           xhr.send(null);
+           this.status.status = this.status.ERROR;
+           this.status.message = 'Cookie still set: ' + document.cookie;
+       }
 
         forEach (this.all_done_callbacks,
                  function(callback)
