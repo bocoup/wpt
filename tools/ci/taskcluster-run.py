@@ -8,7 +8,10 @@ import shutil
 import subprocess
 
 browser_specific_args = {
-    "firefox": ["--install-browser"]
+    "firefox": [
+      "--install-browser", "--binary-arg=-headless",
+      "--binary-arg=-marionette", "--binary-arg=about:blank"
+    ]
 }
 
 def tests_affected(commit_range):
