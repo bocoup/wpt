@@ -31,6 +31,7 @@ promise_test(function(t) {
           return new Promise(function(resolve, reject) {
               var channel = new MessageChannel();
               channel.port1.onmessage = resolve;
+              channel.port1.onmessageerror = reject;
               frame.contentWindow.postMessage({},
                                               host_info['HTTPS_ORIGIN'],
                                               [channel.port2]);
