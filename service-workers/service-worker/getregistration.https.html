@@ -17,8 +17,8 @@ async_test(function(t) {
 promise_test(function(t) {
     var scope = 'resources/scope/getregistration/normal';
     var registration;
-    service_worker_unregister_and_register(t, 'resources/empty-worker.js',
-                                           scope)
+    return service_worker_unregister_and_register(t, 'resources/empty-worker.js',
+                                                  scope)
       .then(function(r) {
           t.add_cleanup(function() {
               return service_worker_unregister(t, scope);
@@ -39,7 +39,7 @@ promise_test(function(t) {
     var documentURL = scope + '#ref';
     var registration;
     return service_worker_unregister_and_register(t, 'resources/empty-worker.js',
-                                           scope)
+                                                  scope)
       .then(function(r) {
           t.add_cleanup(function() {
               return service_worker_unregister(t, scope);

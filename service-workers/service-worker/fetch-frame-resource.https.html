@@ -104,7 +104,7 @@ promise_test(function(t) {
 promise_test(function(t) {
     var scope = 'resources/fetch-frame-resource/frame-cors';
     var frame;
-    service_worker_unregister_and_register(t, worker, scope)
+    return service_worker_unregister_and_register(t, worker, scope)
       .then(function(reg) {
           t.add_cleanup(function() {
               return service_worker_unregister(t, scope);
@@ -134,7 +134,7 @@ promise_test(function(t) {
 promise_test(function(t) {
     var scope = 'resources/fetch-frame-resource/frame-opaque';
     var frame;
-    service_worker_unregister_and_register(t, worker, scope)
+    return service_worker_unregister_and_register(t, worker, scope)
       .then(function(reg) {
           t.add_cleanup(function() {
               return service_worker_unregister(t, scope);
@@ -161,7 +161,7 @@ promise_test(function(t) {
 
 promise_test(function(t) {
     var scope = 'resources/fetch-frame-resource/window-basic';
-    service_worker_unregister_and_register(t, worker, scope)
+    return service_worker_unregister_and_register(t, worker, scope)
       .then(function(reg) {
           t.add_cleanup(function() {
               return service_worker_unregister(t, scope);
@@ -185,7 +185,7 @@ promise_test(function(t) {
 
 promise_test(function(t) {
     var scope = 'resources/fetch-frame-resource/window-cors';
-    service_worker_unregister_and_register(t, worker, scope)
+    return service_worker_unregister_and_register(t, worker, scope)
       .then(function(reg) {
           t.add_cleanup(function() {
               return service_worker_unregister(t, scope);
@@ -211,7 +211,7 @@ promise_test(function(t) {
 
 promise_test(function(t) {
     var scope = 'resources/fetch-frame-resource/window-opaque';
-    service_worker_unregister_and_register(t, worker, scope)
+    return service_worker_unregister_and_register(t, worker, scope)
       .then(function(reg) {
           t.add_cleanup(function() {
               return service_worker_unregister(t, scope);

@@ -24,7 +24,7 @@ function runTest(test, step, testBody) {
   var script = 'resources/extendable-event-async-waituntil.js?' + scope;
   return service_worker_unregister_and_register(test, script, scope)
     .then(function(registration) {
-        t.add_cleanup(function() {
+        test.add_cleanup(function() {
             return service_worker_unregister(test, scope);
           });
 

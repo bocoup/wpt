@@ -70,8 +70,7 @@ promise_test(function(t) {
         })
       .then(function() {
           frame.remove();
-        })
-      .catch(unreached_rejection(t));
+        });
   }, 'Verify matchAll() with window client type');
 
 promise_test(function(t) {

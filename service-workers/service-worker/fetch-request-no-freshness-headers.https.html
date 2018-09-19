@@ -8,7 +8,7 @@ promise_test(function(t) {
     var SCOPE = 'resources/fetch-request-no-freshness-headers-iframe.html';
     var SCRIPT = 'resources/fetch-request-no-freshness-headers-worker.js';
     var worker;
-    service_worker_unregister_and_register(t, SCRIPT, SCOPE)
+    return service_worker_unregister_and_register(t, SCRIPT, SCOPE)
       .then(function(registration) {
           t.add_cleanup(function() {
               return service_worker_unregister(t, SCOPE);
@@ -42,14 +42,14 @@ promise_test(function(t) {
             'if-none-match': true,
             'if-modified-since': true
           };
-          msg.data.requests.forEach(t.step_func(function(request) {
-              request.headers.forEach(t.step_func(function(header) {
+          msg.data.requests.forEach(function(request) {
+              request.headers.forEach(function(header) {
                   assert_false(
                       !!freshness_headers[header[0]],
                       header[0] + ' header must not be set in the ' +
                       'FetchEvent\'s request. (url = ' + request.url + ')');
-                }));
-            }))
+                });
+            })
         });
   }, 'The headers of FetchEvent shouldn\'t contain freshness headers.');
 </script>
