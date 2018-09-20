@@ -2,10 +2,13 @@
 layout: page
 title: Running Tests
 ---
-In simple cases individual tests can be run by simply loading the page
-in a browser window. For running larger groups of tests, or running
-tests frequently, this is not a practical approach and several better
-options exist.
+In simple cases, individual tests can be run by simply loading the test file
+in a browser window. Many tests rely on particulars in HTTP traffic. Running
+the command `python ./wpt serve` from the root of the WPT repository will
+starts a local web server that satisfy these needs.
+
+For running larger groups of tests or running tests frequently, these are not
+practical approaches, and several better options exist.
 
 ## From the Command Line
 
