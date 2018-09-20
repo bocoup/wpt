@@ -2,79 +2,77 @@
 layout: page
 title: Running Tests
 ---
-In simple cases individual tests can be run by simply loading the page
-in a browser window. For running larger groups of tests, or running
-tests frequently, this is not a practical approach and several better
-options exist.
 
-## From the Command Line
+The tests are designed to be run from your local computer. The test
+environment requires [Python 2.7+](http://www.python.org/downloads) (but not Python 3.x).
 
-The simplest way to run tests is to use the `wpt run` command from the
-root of the repository. This will automatically load the tests in the
-chosen browser, and extract the test results. For example to run the
-`dom/historical.html` tests in a local copy of Chrome:
+On Windows, be sure to add the Python directory (`c:\python2x`, by default) to
+your `%Path%` [Environment Variable](http://www.computerhope.com/issues/ch000549.htm),
+and read the [Windows Notes](#windows-notes) section below.
 
-    ./wpt run chrome dom/historical.html
+To get the tests running, you need to set up the test domains in your
+[`hosts` file](http://en.wikipedia.org/wiki/Hosts_%28file%29%23Location_in_the_file_system).
 
-Or to run in a specified copy of Firefox:
+The necessary content can be generated with `./wpt make-hosts-file`; on
+Windows, you will need to preceed the prior command with `python` or
+the path to the Python binary (`python wpt make-hosts-file`).
 
-    ./wpt run --binary ~/local/firefox/firefox firefox dom/historical.html
+For example, on most UNIX-like systems, you can setup the hosts file with:
 
-`./wpt run --help` lists the supported products.
+```bash
+./wpt make-hosts-file | sudo tee -a /etc/hosts
+```
 
-For details on the supported products and a large number of other options for
-customising the test run, see `./wpt run --help`.
+And on Windows (this must be run in a PowerShell session with Administrator privileges):
 
-Additional browser-specific documentation:
+```bash
+python wpt make-hosts-file | Out-File %SystemRoot%\System32\drivers\etc\hosts -Encoding ascii -Append
+```
 
-  * [Chrome][chrome]
+If you are behind a proxy, you also need to make sure the domains above are
+excluded from your proxy lookups.
 
-  * [Chrome for Android][chrome android]
+The test environment can then be started using
 
-  * [Safari][safari]
+    ./wpt serve
 
-## From Inside a Browser
-Tests that have been merged on GitHub are mirrored at [http://w3c-test.org/][w3c-test].
+This will start HTTP servers on two ports and a websockets server on
+one port. By default the web servers start on ports 8000 and 8443 and the other
+ports are randomly-chosen free ports. Tests must be loaded from the
+*first* HTTP server in the output. To change the ports,
+create a `config.json` file in the wpt root directory, and add
+port definitions of your choice e.g.:
 
-For running multiple tests inside a browser, there is a test runner
-located at `/tools/runner/index.html`.
+```
+{
+  "ports": {
+    "http": [1234, "auto"],
+    "https":[5678]
+  }
+}
+```
 
-This allows all the tests, or those matching a specific prefix
-(e.g. all tests under `/dom/`) to be run. For testharness.js tests,
-the results will be automatically collected, while the runner
-provides a simple UI for manually comparing reftest rendering and
-running manual tests.
+After your `hosts` file is configured, the servers will be locally accessible at:
 
-Note, however, it does not currently handle more complex reftests with
-more than one reference involved.
+http://web-platform.test:8000/<br>
+https://web-platform.test:8443/ *
 
-Because it runs entirely in-browser, this runner cannot deal with
-edge-cases like tests that cause the browser to crash or hang.
+\**See [Trusting Root CA](https://github.com/web-platform-tests/wpt/blob/master/README.md#trusting-root-ca)*
 
-## Writing Your Own Runner
+## Running tests automatically
 
-Most test runners have two stages: finding all tests, followed by
-executing them (or a subset thereof).
+Several options exist to support running large groups of tests or running tests
+frequently. These are documented in [Running Tests in Automation][automation].
 
-To find all tests in the repository, it is **strongly** recommended to
-use the included `wpt manifest` tool: the required behaviors are more
-complex than what are documented (especially when it comes to
-precedence of the various possibilities and some undocumented legacy
-ways to define test types), and hence its behavior should be
-considered the canonical definition of how to enumerate tests and find
-their type in the repository.
+### Windows Notes
 
-For test execution, please read the documentation for the various test types
-very carefully and then check your understanding on
-the [mailing list][public-test-infra] or [IRC][] ([webclient][web irc], join
-channel `#testing`). It's possible edge-case behavior isn't properly
-documented!
+Generally Windows Subsystem for Linux will provide the smoothest user
+experience for running web-platform-tests on Windows.
 
+The standard Windows shell requires that all `wpt` commands are prefixed
+by the Python binary i.e. assuming `python` is on your path the server is
+started using:
 
-[chrome]: {{ site.baseurl }}{% link _running-tests/chrome.md %}
-[chrome android]: {{ site.baseurl }}{% link _running-tests/chrome_android.md %}
-[safari]: {{ site.baseurl }}{% link _running-tests/safari.md %}
-[public-test-infra]: https://lists.w3.org/Archives/Public/public-test-infra/
-[IRC]: irc://irc.w3.org:6667/testing
-[web irc]: http://irc.w3.org
-[w3c-test]: http://w3c-test.org
+`python wpt serve`
+
+[automation]: {{ site.baseurl }}{% link _running-tests/automation.md %}
