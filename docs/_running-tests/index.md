@@ -10,6 +10,14 @@ starts a local web server that satisfy these needs.
 For running larger groups of tests or running tests frequently, these are not
 practical approaches, and several better options exist.
 
+## Supporting Automation
+
+Setting                       | Supported by `./wpt run`
+Installation of system fonts  |
+Disabling pop-up blockers     | 
+Trusting SSL certificate      | 
+Simulating user media streams | 
+
 ## From the Command Line
 
 The simplest way to run tests is to use the `wpt run` command from the
