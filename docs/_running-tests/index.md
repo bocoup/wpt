@@ -31,7 +31,8 @@ Additional browser-specific documentation:
 
   * [Safari][safari]
 
-## From Inside a Browser
+## From the Web
+
 Tests that have been merged on GitHub are mirrored at [http://w3c-test.org/][w3c-test].
 
 For running multiple tests inside a browser, there is a test runner
