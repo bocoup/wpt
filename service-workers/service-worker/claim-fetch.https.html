@@ -32,7 +32,7 @@ promise_test(function(t) {
 
     // Register a service worker.
     .then(() => service_worker_unregister_and_register(t, script, scope))
-    .then((r) => {
+    .then(r => {
         t.add_cleanup(() => service_worker_unregister(t, scope));
 
         worker = r.installing;

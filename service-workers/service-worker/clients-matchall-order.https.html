@@ -145,8 +145,6 @@ function matchAllOrderTest(t, opts) {
   }).then(_ => {
     frameResultList.forEach(result => result.top.remove());
     extraWindowResult.top.remove();
-
-    t.done();
   }).catch(e => {
     if (frameResultList) {
       frameResultList.forEach(result => result.top.remove());
