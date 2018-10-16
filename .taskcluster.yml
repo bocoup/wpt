@@ -5,7 +5,7 @@ tasks:
   $flattenDeep:
     - $if: tasks_for == "github-pull-request"
       then:
-        $if: event.action == "labeled" || event.action == "unlabeled"
+        $if: event.action == "labeled" || event.action == "unlabeled" || event.action == "synchronize"
         then:
           taskId: {$eval: 'as_slugid("debugging")'}
           taskGroupId: {$eval: 'as_slugid("task group")'}
