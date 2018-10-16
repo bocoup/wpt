@@ -5,32 +5,35 @@ tasks:
   $flattenDeep:
     - $if: tasks_for == "github-pull-request"
       then:
-        taskId: {$eval: 'as_slugid("debugging")'}
-        taskGroupId: {$eval: 'as_slugid("task group")'}
-        created: {$fromNow: ''}
-        deadline: {$fromNow: '24 hours'}
-        provisionerId: aws-provisioner-v1
-        workerType:
-          $if: event.repository.full_name == 'web-platform-tests/wpt'
-          then:
-            wpt-docker-worker
-          else:
-            github-worker
-        metadata:
-          name: debugging
-          description: debugging
-          owner: ${event.pull_request.user.login}@users.noreply.github.com
-          source: ${event.repository.url}
-        payload:
-          image: jugglinmike/web-platform-tests:0.21
-          maxRunTime: 7200
-          artifacts:
-            public/results:
-              path: /home/test/artifacts
-              type: directory
-          command:
-            - /bin/bash
-            - --login
-            - -c
-            - set -ex;
-              echo GitHub PullRequestEvent action ${event.action};
+        $if: event.action == "labeled" || event.action == "unlabeled"
+        then:
+          taskId: {$eval: 'as_slugid("debugging")'}
+          taskGroupId: {$eval: 'as_slugid("task group")'}
+          created: {$fromNow: ''}
+          deadline: {$fromNow: '24 hours'}
+          provisionerId: aws-provisioner-v1
+          workerType:
+            $if: event.repository.full_name == 'web-platform-tests/wpt'
+            then:
+              wpt-docker-worker
+            else:
+              github-worker
+          metadata:
+            name: debugging
+            description: debugging
+            owner: ${event.pull_request.user.login}@users.noreply.github.com
+            source: ${event.repository.url}
+          payload:
+            image: jugglinmike/web-platform-tests:0.21
+            maxRunTime: 7200
+            artifacts:
+              public/results:
+                path: /home/test/artifacts
+                type: directory
+            command:
+              - /bin/bash
+              - --login
+              - -c
+              - set -ex;
+                echo GitHub PullRequestEvent action ${event.action};
+                [[ "${event.action}" == "labeled" ]]
