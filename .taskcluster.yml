@@ -92,7 +92,7 @@ tasks:
       then:
         # Taskcluster responds to a number of events issued by the GitHub API
         # which should not trigger re-validation.
-        $if: event.action in ['opened', 'reopened', 'synchronized']
+        $if: event.action in ['opened', 'reopened', 'synchronize']
         then:
           $map: [{name: firefox, channel: nightly}, {name: chrome, channel: dev}]
           each(browser):
