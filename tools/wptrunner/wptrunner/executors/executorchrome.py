@@ -1,8 +1,9 @@
 from ..webdriver_server import ChromeDriverServer
 from .base import WdspecExecutor, WebDriverProtocol
 
+from .executorcdp import CDPProtocol
 
-class ChromeDriverProtocol(WebDriverProtocol):
+class ChromeDriverProtocol(CDPProtocol):
     server_cls = ChromeDriverServer
 
 

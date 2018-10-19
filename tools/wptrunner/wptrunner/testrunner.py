@@ -88,7 +88,9 @@ class TestRunner(object):
                     "stop": self.stop,
                     "wait": self.wait}
         while True:
+            self.logger.debug('awaiting command...')
             command, args = self.command_queue.get()
+            self.logger.debug('got it')
             try:
                 rv = commands[command](*args)
             except Exception:
@@ -526,6 +528,8 @@ class TestRunnerManager(threading.Thread):
         return test, test_group, group_metadata
 
     def run_test(self):
+        with open('mike.txt', 'a+') as handle:
+            handle.write('ueah okay')
         assert isinstance(self.state, RunnerManagerState.running)
         assert self.state.test is not None
 

@@ -1,16 +1,16 @@
 from .base import Browser, ExecutorBrowser, require_arg
 from ..webdriver_server import ChromeDriverServer
 from ..executors import executor_kwargs as base_executor_kwargs
-from ..executors.executorwebdriver import (WebDriverTestharnessExecutor,  # noqa: F401
-                                           WebDriverRefTestExecutor)  # noqa: F401
-from ..executors.executorchrome import ChromeDriverWdspecExecutor  # noqa: F401
+from ..executors.executorwebdriver import (WebDriverTestharnessExecutor) # noqa: F401
+from ..executors.executorcdp import CDPRefTestExecutor # noqa: F401
+from ..executors.executorchrome import ChromeDriverWdspecExecutor # noqa: F401
 
 
 __wptrunner__ = {"product": "chrome",
                  "check_args": "check_args",
                  "browser": "ChromeBrowser",
                  "executor": {"testharness": "WebDriverTestharnessExecutor",
-                              "reftest": "WebDriverRefTestExecutor",
+                              "reftest": "CDPRefTestExecutor",
                               "wdspec": "ChromeDriverWdspecExecutor"},
                  "browser_kwargs": "browser_kwargs",
                  "executor_kwargs": "executor_kwargs",
@@ -89,27 +89,22 @@ class ChromeBrowser(Browser):
         the browser binary to use for testing."""
         Browser.__init__(self, logger)
         self.binary = binary
-        self.server = ChromeDriverServer(self.logger,
-                                         binary=webdriver_binary,
-                                         args=webdriver_args)
 
     def start(self, **kwargs):
-        self.server.start(block=False)
+        None
 
     def stop(self, force=False):
-        self.server.stop(force=force)
+        None
 
     def pid(self):
-        return self.server.pid
+        return 0
 
     def is_alive(self):
-        # TODO(ato): This only indicates the driver is alive,
-        # and doesn't say anything about whether a browser session
-        # is active.
-        return self.server.is_alive()
+        return True
 
     def cleanup(self):
-        self.stop()
+        None
 
     def executor_browser(self):
-        return ExecutorBrowser, {"webdriver_url": self.server.url}
+        #import pdb; pdb.set_trace()
+        return ExecutorBrowser, {"binary_path": self.binary}
