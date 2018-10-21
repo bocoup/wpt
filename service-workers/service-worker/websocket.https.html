@@ -29,11 +29,8 @@ promise_test(function(t) {
         })
       .then(function() {
           var channel = new MessageChannel();
-          return new Promise(function(resolve, reject) {
-            channel.port1.onmessage = resolve;
-            channel.port1.onmessageerror = reject;
-            frame.contentWindow.navigator.serviceWorker.controller.postMessage({port: channel.port2}, [channel.port2]);
-          });
+          frame.contentWindow.navigator.serviceWorker.controller.postMessage({port: channel.port2}, [channel.port2]);
+          return on_message(channel.port1);
         })
       .then(function(e) {
           for (var url in e.data.urls) {

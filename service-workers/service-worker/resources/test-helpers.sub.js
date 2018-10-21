@@ -169,20 +169,30 @@ function base_path() {
   return location.pathname.replace(/\/[^\/]*$/, '/');
 }
 
+function on_message(channel, messagePort) {
+  return new Promise(function(resolve, reject) {
+      messagePort.onmessage = resolve;
+      messagePort.onmessageerror = reject;
+    });
+}
+
 function test_login(test, origin, username, password, cookie) {
+  var frame;
+
   return new Promise(function(resolve, reject) {
       with_iframe(
         origin + base_path() +
         'resources/fetch-access-control-login.html')
-        .then(test.step_func(function(frame) {
+        .then(test.step_func(function(_frame) {
             var channel = new MessageChannel();
-            channel.port1.onmessage = test.step_func(function() {
-                frame.remove();
-                resolve();
-              });
+            frame = _frame;
             frame.contentWindow.postMessage(
               {username: username, password: password, cookie: cookie},
               origin, [channel.port2]);
+            return on_message(channel.port1);
+          }))
+        .then(test_step_func(function() {
+            frame.remove();
           }));
     });
 }
