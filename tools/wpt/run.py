@@ -265,6 +265,8 @@ class Chrome(BrowserSetup):
             logger.info("Automatically turning on experimental features for Chrome Dev")
             kwargs["binary_args"].append("--enable-experimental-web-platform-features")
 
+        kwargs["binary_args"].append("--disable-popup-blocking")
+
         # Allow audio autoplay without a user gesture.
         kwargs["binary_args"].append("--autoplay-policy=no-user-gesture-required")
 
