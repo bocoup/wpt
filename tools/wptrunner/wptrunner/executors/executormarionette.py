@@ -17,8 +17,7 @@ from .base import (CallbackHandler,
                    TestharnessExecutor,
                    WdspecExecutor,
                    WebDriverProtocol,
-                   extra_timeout,
-                   strip_server)
+                   extra_timeout)
 from .protocol import (ActionSequenceProtocolPart,
                        AssertsProtocolPart,
                        BaseProtocolPart,
@@ -682,7 +681,6 @@ class MarionetteTestharnessExecutor(TestharnessExecutor):
             self.protocol.coverage.reset()
 
         format_map = {"abs_url": url,
-                      "url": strip_server(url),
                       "window_id": self.window_id,
                       "timeout_multiplier": self.timeout_multiplier,
                       "timeout": timeout_ms,

@@ -10,8 +10,7 @@ from .base import (CallbackHandler,
                    RefTestExecutor,
                    RefTestImplementation,
                    TestharnessExecutor,
-                   extra_timeout,
-                   strip_server)
+                   extra_timeout)
 from .protocol import (BaseProtocolPart,
                        TestharnessProtocolPart,
                        Protocol,
@@ -317,7 +316,6 @@ class WebDriverTestharnessExecutor(TestharnessExecutor):
 
     def do_testharness(self, protocol, url, timeout):
         format_map = {"abs_url": url,
-                      "url": strip_server(url),
                       "window_id": self.window_id,
                       "timeout_multiplier": self.timeout_multiplier,
                       "timeout": timeout * 1000}
