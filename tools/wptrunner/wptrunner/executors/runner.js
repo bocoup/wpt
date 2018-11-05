@@ -1,32 +1,42 @@
 document.title = '%(title)s';
 
-var message_queue = [];
+window.addEventListener(
+  "message",
+  function(event) {
+    window.message_queue.push(event);
+    window.process_next_event();
+  },
+  false
+);
 
-/**
- * In preparation to execute a test, testdriver issues a number of messages
- * which should be queued until execution time. During execution, testdriver
- * consumes the queued messages by repeatedly "resuming" via `do_testharness`.
- */
-window.addEventListener("message", function(event) {
-  if (!event.data || !event.data.type) {
+
+window.process_next_event = function() {
+  /* This function handles the next testdriver event. The presence of
+     window.testdriver_callback is used as a switch; when that function
+     is present we are able to handle the next event and when is is not
+     present we must wait. Therefore to drive the event processing, this
+     function must be called in two circumstances:
+       * Every time there is a new event that we may be able to handle
+       * Every time we set the callback function
+     This function unsets the callback, so no further testdriver actions
+     will be run until it is reset, which wptrunner does after it has
+     completed handling the current action.
+   */
+  if (!window.testdriver_callback) {
     return;
   }
-
-  if (event.data.type === "testdriver-resume") {
-    var next_message = message_queue.shift();
-    reply(event.source, next_message);
-  } else {
-    message_queue.push(event.data);
+  var event = window.message_queue.shift();
+  if (!event) {
+    return;
   }
-}, false);
+  var data = event.data;
 
-function reply(source, data) {
   var payload = undefined;
 
   switch(data.type) {
   case "complete":
-    var tests = data.tests;
-    var status = data.status;
+    var tests = event.data.tests;
+    var status = event.data.status;
 
     var subtest_results = tests.map(function(x) {
       return [x.name, x.status, x.message, x.stack];
@@ -43,11 +53,7 @@ function reply(source, data) {
   default:
     return;
   }
-
-  source.postMessage({
-      type: "testdriver-next message",
-      message: [window.url, data.type, payload]
-    },
-    "*"
-  );
-}
+  var callback = window.testdriver_callback;
+  window.testdriver_callback = null;
+  callback([window.url, data.type, payload]);
+};
