@@ -15,7 +15,7 @@ test(function() {
   var fooEvent = document.createEvent("CustomEvent");
   fooEvent.initEvent(type, true, true);
   target.dispatchEvent(fooEvent);
-}, "CustomEvent dispatching.");
+}, "CustomEvent [\u0000] dispatching.");
 
 test(function() {
     var e = document.createEvent("CustomEvent");

@@ -1484,6 +1484,14 @@ policies and contribution forms [3].
                 name = "'" + name + "'";
             }
 
+            var xhr = new XMLHttpRequest();
+            xhr.open(
+                'GET',
+                '/encrypted-media/log.py?name=' + encodeURIComponent(name),
+                false
+            );
+            xhr.send(null);
+
             throw new Error(
                 "Test names may not include the null byte: " + name + "."
             );
