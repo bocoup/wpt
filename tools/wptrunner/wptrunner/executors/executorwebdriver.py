@@ -397,16 +397,9 @@ class WebDriverTestharnessExecutor(TestharnessExecutor):
 
         parent_window = protocol.testharness.close_old_windows()
         # Now start the test harness
-<<<<<<< HEAD
         protocol.base.execute_script("window.open('about:blank', '%s', 'noopener')" % self.window_id)
-        test_window = protocol.testharness.get_test_window(self.window_id,
-                                                           parent_window,
-                                                           timeout=5*self.timeout_multiplier)
-        self.protocol.base.set_window(test_window)
-=======
-        protocol.base.execute_script(self.script % format_map, async=True)
         test_window = protocol.testharness.get_test_window(self.window_id, parent_window)
->>>>>>> 01757b13d3... PARTIAL: Begin implementation
+        self.protocol.base.set_window(test_window)
         handler = CallbackHandler(self.logger, protocol, test_window)
         protocol.webdriver.url = url
 
@@ -414,10 +407,7 @@ class WebDriverTestharnessExecutor(TestharnessExecutor):
             self.wait_for_load(protocol)
 
         while True:
-<<<<<<< HEAD
-=======
             self.protocol.session = test_window
->>>>>>> 01757b13d3... PARTIAL: Begin implementation
             result = protocol.base.execute_script(
                 self.script_resume % format_map, async=True)
             done, rv = handler(result)
