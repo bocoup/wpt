@@ -9,7 +9,7 @@ class Element(object):
         inner_width, inner_height = self._session.execute_script(
             'return [innerWidth, innerHeight];'
         )
-        quads = self._session._send('DOM.getBoxModel', { # API status: stable
+        quads = self._session._send('DOM.getBoxModel', {  # API status: stable
             'objectId': self._remote_object_id
         })['model']['margin']
 
@@ -19,42 +19,42 @@ class Element(object):
         bottom = min(inner_height, max(quads[1], quads[5]))
 
         return {
-          'x': int((left + right) / 2),
-          'y': int((top + bottom) / 2)
+            'x': int((left + right) / 2),
+            'y': int((top + bottom) / 2)
         }
 
     def click(self):
         center = self.in_view_center()
-        self._session._send('Input.dispatchMouseEvent', { # API status: stable
-          'type': 'mouseMoved',
-          'x': center['x'],
-          'y': center['y']
+        self._session._send('Input.dispatchMouseEvent', {  # API status: stable
+            'type': 'mouseMoved',
+            'x': center['x'],
+            'y': center['y']
         })
-        self._session._send('Input.dispatchMouseEvent', { # API status: stable
-          'type': 'mousePressed',
-          'button': 'left',
-          'clickCount': 1,
-          'x': center['x'],
-          'y': center['y']
+        self._session._send('Input.dispatchMouseEvent', {  # API status: stable
+            'type': 'mousePressed',
+            'button': 'left',
+            'clickCount': 1,
+            'x': center['x'],
+            'y': center['y']
         })
-        self._session._send('Input.dispatchMouseEvent', { # API status: stable
-          'type': 'mouseReleased',
-          'button': 'left',
-          'clickCount': 1,
-          'x': center['x'],
-          'y': center['y']
+        self._session._send('Input.dispatchMouseEvent', {  # API status: stable
+            'type': 'mouseReleased',
+            'button': 'left',
+            'clickCount': 1,
+            'x': center['x'],
+            'y': center['y']
         })
 
     def send_keys(self, text):
-        self._session._send('DOM.focus', { # API status: stable
+        self._session._send('DOM.focus', {  # API status: stable
             'objectId': self._remote_object_id
         })
 
         for char in text:
-            self._session._send('Input.dispatchKeyEvent', { # API status: stable
+            self._session._send('Input.dispatchKeyEvent', {  # API status: stable
                 'type': 'keyDown',
                 'text': char
             })
-            self._session._send('Input.dispatchKeyEvent', { # API status: stable
+            self._session._send('Input.dispatchKeyEvent', {  # API status: stable
                 'type': 'keyUp'
             })

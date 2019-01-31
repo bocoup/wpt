@@ -31,11 +31,11 @@ class Connection(object):
     def _handle_event(self, message):
         method = message.get('method')
 
-        if (method == 'Security.certificateError' and # API status: deprecated
+        if (method == 'Security.certificateError' and  # API status: deprecated
             not self.prefer_experimental):
             def target(connection, message):
                 connection.send(
-                    'Security.handleCertificateError', # API status: deprecated
+                    'Security.handleCertificateError',  # API status: deprecated
                     {
                         'eventId': message['params']['eventId'],
                         'action': 'continue'
@@ -73,7 +73,7 @@ class Connection(object):
                     message = self._messages.get(False)
                     self.logger.debug('SEND %s' % (message,))
                     self._websocket.send_text(
-                        unicode(json.dumps(message), 'utf-8')
+                        u'{}'.format(json.dumps(message), 'utf-8')
                     )
                 except Queue.Empty:
                     pass
@@ -119,7 +119,7 @@ class Connection(object):
 
     def open(self):
         if self._polling_thread:
-            raise PypetteerError('Connection is already open')
+            raise PyppeteerError('Connection is already open')
 
         self.logger.info('opening')
         self._polling_thread = threading.Thread(target=lambda: self._poll())
@@ -129,27 +129,27 @@ class Connection(object):
 
         if self.prefer_experimental:
             self.send(
-                'Security.setIgnoreCertificateErrors', # API status: experimental
+                'Security.setIgnoreCertificateErrors',  # API status: experimental
                 {'ignore': True}
             )
         else:
-            self.send('Security.enable', {}) # API status: stable
+            self.send('Security.enable', {})  # API status: stable
             self.send(
-                'Security.setOverrideCertificateErrors', # API status: deprecated
+                'Security.setOverrideCertificateErrors',  # API status: deprecated
                 {'override': True}
             )
 
     def create_session(self, target_id):
         if target_id not in self._sessions:
             result = self.send(
-                'Target.attachToTarget', # API status: stable
+                'Target.attachToTarget',  # API status: stable
                 {'targetId': target_id}
             )
 
             self._sessions[target_id] = Session(
                 self, result['sessionId'], target_id
             )
-            self._sessions[target_id]._send('Page.enable') # API status: stable
+            self._sessions[target_id]._send('Page.enable')  # API status: stable
 
         return self._sessions[target_id]
 

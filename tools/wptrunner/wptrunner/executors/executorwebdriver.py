@@ -6,7 +6,6 @@ import socket
 import subprocess
 import tempfile
 import threading
-import time
 import traceback
 import urllib
 import urllib2
@@ -216,12 +215,13 @@ class WebDriverProtocol(Protocol):
 
         self.profile_dir = tempfile.mkdtemp()
         identifier = 'cdp-executor-%s' % urllib.quote(self.profile_dir)
-        self.browser_process = subprocess.Popen([
+        self.browser_process = subprocess.Popen(
+            [
                 self.binary,
                 '--user-data-dir=%s' % self.profile_dir,
                 '--remote-debugging-port=0',
                 'data:text/html,%s' % identifier
-                ] + self.args,
+            ] + self.args,
             stderr=open(os.devnull, 'w')
         )
 
@@ -270,7 +270,7 @@ class WebDriverProtocol(Protocol):
 
         try:
             self.connection.close()
-        except:
+        except Exception:
             pass
 
         self.session = None
@@ -284,7 +284,7 @@ class WebDriverProtocol(Protocol):
 
         try:
             shutil.rmtree(self.profile_dir)
-        except:
+        except Exception:
             pass
 
         self.profile_dir = None

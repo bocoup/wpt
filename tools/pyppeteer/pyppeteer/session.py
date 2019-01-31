@@ -2,9 +2,7 @@ import json
 import Queue
 import threading
 
-import lomond
-from lomond.persist import persist
-
+from six.moves import xrange
 from . import logging, Element
 from errors import ConnectionError, ProtocolError, ScriptError
 import action_handlers
@@ -82,7 +80,7 @@ class Session(object):
         }
         self.logger.debug('SEND %s' % (message,))
         self.connection.send(
-            'Target.sendMessageToTarget', # API status: stable
+            'Target.sendMessageToTarget',  # API status: stable
             {'sessionId': self._id, 'message': json.dumps(message)}
         )
 
@@ -101,14 +99,14 @@ class Session(object):
         return result['result']
 
     def evaluate(self, source):
-        result = self._send('Runtime.evaluate', { # API status: stable
+        result = self._send('Runtime.evaluate', {  # API status: stable
             'expression': source
         })
 
         if 'exceptionDetails' in result:
             details = result['exceptionDetails']
             try:
-                self._send('Runtime.releaseObject', { # API status: stable
+                self._send('Runtime.releaseObject', {  # API status: stable
                     'objectId': details['exception']['objectId']
                 })
             finally:
@@ -138,17 +136,17 @@ class Session(object):
             }});
         }}())'''.format(source=source)
 
-        result = self._send('Runtime.evaluate', { # API status: stable
+        result = self._send('Runtime.evaluate', {  # API status: stable
             'expression': as_expression,
             'awaitPromise': True,
             'returnByValue': True,
-            'timeout': self._script_timeout # API status: experimental
+            'timeout': self._script_timeout  # API status: experimental
         })
 
         if 'exceptionDetails' in result:
             details = result['exceptionDetails']
             try:
-                self._send('Runtime.releaseObject', { # API status: stable
+                self._send('Runtime.releaseObject', {  # API status: stable
                     'objectId': details['exception']['objectId']
                 })
             finally:
@@ -173,20 +171,20 @@ class Session(object):
               }});
         }}())'''.format(source=source)
 
-        result = self._send('Runtime.evaluate', { # API status: stable
+        result = self._send('Runtime.evaluate', {  # API status: stable
             'expression': as_expression,
             # This parameter is set to `true` in all cases to mimic the
             # behavior of the "Execute Script" command in WebDriver
             # https://w3c.github.io/webdriver/#execute-script
             'awaitPromise': True,
             'returnByValue': True,
-            'timeout': self._script_timeout # API status: experimental
+            'timeout': self._script_timeout  # API status: experimental
         })
 
         if 'exceptionDetails' in result:
             details = result['exceptionDetails']
             try:
-                self._send('Runtime.releaseObject', { # API status: stable
+                self._send('Runtime.releaseObject', {  # API status: stable
                     'objectId': details['exception']['objectId']
                 })
             finally:
@@ -195,7 +193,7 @@ class Session(object):
         return unpack_remote_object(result['result'])
 
     def targets(self):
-        return self._send('Target.getTargets')['targetInfos'] # API status: stable
+        return self._send('Target.getTargets')['targetInfos']  # API status: stable
 
     def navigate(self, url):
         result_store = Queue.Queue()
@@ -205,7 +203,7 @@ class Session(object):
 
         def request_navigation(result_store, url):
             result_store.put(
-                self._send('Page.navigate', {'url': url}) # API status: stable
+                self._send('Page.navigate', {'url': url})  # API status: stable
             )
 
         frame_id = self._send('Page.getFrameTree')['frameTree']['frame']['id']
@@ -251,6 +249,7 @@ class Session(object):
 
         def create_thread(action, exceptions):
             handler = getattr(action_handlers, action['type'])
+
             def target():
                 try:
                     handler(self, action)
@@ -280,11 +279,11 @@ class Session(object):
         document_object = self.evaluate(
             'Array.from(document.querySelectorAll(%s))' % json.dumps(selector)
         )
-        props = self._send('Runtime.getProperties', { # API status: stable
+        props = self._send('Runtime.getProperties', {  # API status: stable
             'objectId': document_object['objectId'],
             'ownProperties': True
         })['result']
-        self._send('Runtime.releaseObject', { # API status: stable
+        self._send('Runtime.releaseObject', {  # API status: stable
             'objectId': document_object['objectId']
         })
 
@@ -298,15 +297,15 @@ class Session(object):
         return [Element(self, node_id) for node_id in node_ids]
 
     def screenshot(self):
-        return self._send('Page.captureScreenshot', {}) # API status: stable
+        return self._send('Page.captureScreenshot', {})  # API status: stable
 
     def set_window_bounds(self, bounds):
         result = self._send(
-            'Browser.getWindowForTarget', # API status: experimental
+            'Browser.getWindowForTarget',  # API status: experimental
             {'targetId': self.target_id}
         )
         return self._send(
-            'Browser.setWindowBounds', # API status: experimental
+            'Browser.setWindowBounds',  # API status: experimental
             {
                 'windowId': result['windowId'],
                 'bounds': bounds
