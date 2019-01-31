@@ -197,9 +197,6 @@ class Session(object):
     def targets(self):
         return self._send('Target.getTargets')['targetInfos'] # API status: stable
 
-    def navigate1(self, url):
-        return self._send('Page.navigate', {'url': url}) # API status: stable
-
     def navigate(self, url):
         result_store = Queue.Queue()
 

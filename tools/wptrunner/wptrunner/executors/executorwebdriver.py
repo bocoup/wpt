@@ -399,9 +399,9 @@ class WebDriverTestharnessExecutor(TestharnessExecutor):
         # Now start the test harness
         protocol.base.execute_script("window.open('about:blank', '%s', 'noopener')" % self.window_id)
         test_window = protocol.testharness.get_test_window(self.window_id, parent_window)
-        self.protocol.base.set_window(test_window)
+        self.protocol.session = test_window
         handler = CallbackHandler(self.logger, protocol, test_window)
-        protocol.webdriver.url = url
+        protocol.session.navigate(url)
 
         if not self.supports_eager_pageload:
             self.wait_for_load(protocol)

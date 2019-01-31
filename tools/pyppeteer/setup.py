@@ -8,6 +8,7 @@ setup(name="pyppeteer",
       author_email="public-test-infra@w3.org",
       license="BSD",
       packages=find_packages(),
+      install_requires=["lomond"],
       classifiers=["Development Status :: 4 - Beta",
                    "Intended Audience :: Developers",
                    "Operating System :: OS Independent"])
