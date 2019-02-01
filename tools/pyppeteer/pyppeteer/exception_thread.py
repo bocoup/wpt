@@ -1,11 +1,12 @@
 import threading
-import Queue
+
+from six.moves import queue
 
 class ExceptionThread(threading.Thread):
     '''Create a thread which, upon joining, will raise any runtime exceptions
     to the caller'''
     def __init__(self, target, *args, **kwargs):
-        self._exception_store = Queue.Queue()
+        self._exception_store = queue.Queue()
 
         def wrapped(*args, **kwargs):
             try:
@@ -23,7 +24,7 @@ class ExceptionThread(threading.Thread):
 
         try:
             exception = self._exception_store.get_nowait()
-        except Queue.Empty:
+        except queue.Empty:
             pass
         else:
             raise exception

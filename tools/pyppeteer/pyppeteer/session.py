@@ -1,13 +1,9 @@
 import json
-import Queue
 import threading
 
-from six.moves import xrange
-from . import logging, Element
-from errors import ConnectionError, ProtocolError, ScriptError
-import action_handlers
-import exception_thread
-import pubsub
+from six.moves import queue, xrange
+from pyppeteer import action_handlers, Element, exception_thread, logging, pubsub
+from pyppeteer.errors import ConnectionError, ProtocolError, ScriptError
 
 _DEFAULT_NAVIGATION_TIMEOUT = 3
 _DEFAULT_SCRIPT_TIMEOUT = 10 * 1000
@@ -25,7 +21,7 @@ class Session(object):
         self.target_id = target_id
 
         self._message_id = 0
-        self._messages = Queue.Queue()
+        self._messages = queue.Queue()
         self._locks = {}
         self._results = {}
         self._navigations = pubsub.PubSub()
@@ -60,7 +56,7 @@ class Session(object):
             self._navigations.publish(message['params']['frame']['id'])
 
     def close(self):
-        for message_id in self._locks.keys():
+        for message_id in list(self._locks.keys()):
             self._results[message_id] = ConnectionError(
                 'Command interrupted by closing connection'
             )
@@ -99,12 +95,20 @@ class Session(object):
         return result['result']
 
     def evaluate(self, source):
+        '''Execute a string as a JavaScript expression.
+
+        :param source: the JavaScript source text to evaluate
+        :returns: an object describing the evaluated result [1]. This is
+                  limited to primitive JavaScript values.
+
+        [1] https://chromedevtools.github.io/devtools-protocol/tot/Runtime#method-evaluate'''
         result = self._send('Runtime.evaluate', {  # API status: stable
             'expression': source
         })
 
         if 'exceptionDetails' in result:
             details = result['exceptionDetails']
+
             try:
                 self._send('Runtime.releaseObject', {  # API status: stable
                     'objectId': details['exception']['objectId']
@@ -122,6 +126,9 @@ class Session(object):
         command [1] using the Chrome Debugger protocol's "Runtime.evaluate"
         method [2]
 
+        :param source: the JavaScript source text to evaluate
+        :returns: the evaluated result
+
         [1] https://w3c.github.io/webdriver/#execute-async-script
         [2] https://chromedevtools.github.io/devtools-protocol/tot/Runtime#method-evaluate'''
 
@@ -130,9 +137,13 @@ class Session(object):
         # as guaranteed by WebDriver.
         as_expression = '''(function() {{
           return new Promise(function(resolve) {{
-              return (function() {{
+              var result = (function() {{
                   {source}
                 }}(resolve));
+
+              if (result && typeof result.then === 'function') {{
+                resolve(result);
+              }}
             }});
         }}())'''.format(source=source)
 
@@ -160,6 +171,9 @@ class Session(object):
 
         This method approximates the W3C Webdriver "Execute Script" command [1]
         using the Chrome Debugger protocol's "Runtime.evaluate" method [2]
+
+        :param source: the JavaScript source text to evaluate
+        :returns: the evaluated result
 
         [1] https://w3c.github.io/webdriver/#execute-script
         [2] https://chromedevtools.github.io/devtools-protocol/tot/Runtime#method-evaluate'''
@@ -196,7 +210,11 @@ class Session(object):
         return self._send('Target.getTargets')['targetInfos']  # API status: stable
 
     def navigate(self, url):
-        result_store = Queue.Queue()
+        '''Transition to a given URL and wait for the operation to complete.
+
+        :param url: the location to which to navigate
+        '''
+        result_store = queue.Queue()
 
         def wait_for_navigation(frame_id):
             self._navigations.wait_for(frame_id)
@@ -245,7 +263,7 @@ class Session(object):
         # distinct "tick."
         ticks = list(zip(*two_dimensional))
 
-        exceptions = Queue.Queue()
+        exceptions = queue.Queue()
 
         def create_thread(action, exceptions):
             handler = getattr(action_handlers, action['type'])
@@ -270,12 +288,17 @@ class Session(object):
 
             try:
                 thread_exception = exceptions.get(block=False)
-            except Queue.Empty:
+            except queue.Empty:
                 pass
             else:
                 raise thread_exception
 
     def query_selector_all(self, selector):
+        '''Query the DOM for elements which match a given CSS selector.
+
+        :param selector: a CSS selector
+        :returns: a list of references to the matched element(s)
+        '''
         document_object = self.evaluate(
             'Array.from(document.querySelectorAll(%s))' % json.dumps(selector)
         )
@@ -297,13 +320,27 @@ class Session(object):
         return [Element(self, node_id) for node_id in node_ids]
 
     def screenshot(self):
+        '''Capture the visual state of the document.
+
+        :returns: an object whose "data" property is a Base64-encoded png
+
+        https://chromedevtools.github.io/devtools-protocol/1-3/Page#method-captureScreenshot
+        '''
         return self._send('Page.captureScreenshot', {})  # API status: stable
 
     def set_window_bounds(self, bounds):
+        '''Set position and/or size of the browser window.
+
+        :param bounds: an object with numeric "left", "top", "width", and
+                       "height" properties
+
+        https://chromedevtools.github.io/devtools-protocol/tot/Browser#method-setWindowBounds
+        '''
         result = self._send(
             'Browser.getWindowForTarget',  # API status: experimental
             {'targetId': self.target_id}
         )
+
         return self._send(
             'Browser.setWindowBounds',  # API status: experimental
             {

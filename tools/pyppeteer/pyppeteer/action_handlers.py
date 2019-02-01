@@ -1,4 +1,4 @@
-import element
+from pyppeteer import element
 
 def pause(session, action):
     pass

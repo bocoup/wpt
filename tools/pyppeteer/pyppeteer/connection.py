@@ -1,18 +1,18 @@
 import json
-import Queue
 import threading
 
 import lomond
 from lomond.persist import persist
+from six.moves import queue
 
-from . import logging, Session
-from errors import ConnectionError, ProtocolError, PyppeteerError
+from pyppeteer import logging, Session
+from pyppeteer.errors import ConnectionError, ProtocolError
 
 class Connection(object):
     def __init__(self, url):
         self._websocket = lomond.WebSocket(url)
         self._message_id = 0
-        self._messages = Queue.Queue()
+        self._messages = queue.Queue()
         self._locks = {}
         self._results = {}
         self._open_event = threading.Event()
@@ -75,7 +75,7 @@ class Connection(object):
                     self._websocket.send_text(
                         u'{}'.format(json.dumps(message), 'utf-8')
                     )
-                except Queue.Empty:
+                except queue.Empty:
                     pass
             elif socket_event.name == 'ready':
                 self._open_event.set()
@@ -95,17 +95,17 @@ class Connection(object):
 
     def close(self):
         if self._polling_thread is None:
-            raise PyppeteerError('Connection is not open')
+            raise ConnectionError('Connection is not open')
 
         self.logger.info('closing')
 
-        for message_id in self._locks.keys():
+        for message_id in list(self._locks.keys()):
             self._results[message_id] = ConnectionError(
                 'Command interrupted by closing connection'
             )
             self._locks.pop(message_id).release()
 
-        for target_id in self._sessions.keys():
+        for target_id in list(self._sessions.keys()):
             session = self._sessions.pop(target_id)
             session.close()
 
@@ -119,7 +119,7 @@ class Connection(object):
 
     def open(self):
         if self._polling_thread:
-            raise PyppeteerError('Connection is already open')
+            raise ConnectionError('Connection is already open')
 
         self.logger.info('opening')
         self._polling_thread = threading.Thread(target=lambda: self._poll())
@@ -154,6 +154,9 @@ class Connection(object):
         return self._sessions[target_id]
 
     def send(self, method, params={}):
+        if self._polling_thread is None:
+            raise ConnectionError('Connection is not open')
+
         self._message_id += 1
         message_id = self._message_id
         lock = threading.Lock()
