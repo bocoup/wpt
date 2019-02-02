@@ -2,7 +2,7 @@ import json
 import threading
 
 from six.moves import queue, xrange
-from pyppeteer import action_handlers, Element, exception_thread, logging, pubsub
+from pyppeteer import action_handlers, Element, exclusive_ops, logging
 from pyppeteer.errors import ConnectionError, ProtocolError, ScriptError
 
 _DEFAULT_NAVIGATION_TIMEOUT = 3
@@ -24,7 +24,7 @@ class Session(object):
         self._messages = queue.Queue()
         self._locks = {}
         self._results = {}
-        self._navigations = pubsub.PubSub()
+        self._navigations = exclusive_ops.ExclusiveOps()
         self._navigation_timeout = _DEFAULT_NAVIGATION_TIMEOUT
         self._script_timeout = _DEFAULT_SCRIPT_TIMEOUT
 
@@ -53,7 +53,13 @@ class Session(object):
             self._results[message['id']] = message
             self._locks.pop(message['id']).release()
         elif message['method'] == 'Page.frameNavigated':
-            self._navigations.publish(message['params']['frame']['id'])
+            frame_id = message['params']['frame']['id']
+
+            try:
+                self._navigations.complete(frame_id)
+            except exclusive_ops.NameError:
+                # Ignore script-triggered navigations
+                pass
 
     def close(self):
         for message_id in list(self._locks.keys()):
@@ -214,37 +220,10 @@ class Session(object):
 
         :param url: the location to which to navigate
         '''
-        result_store = queue.Queue()
-
-        def wait_for_navigation(frame_id):
-            self._navigations.wait_for(frame_id)
-
-        def request_navigation(result_store, url):
-            result_store.put(
-                self._send('Page.navigate', {'url': url})  # API status: stable
-            )
-
         frame_id = self._send('Page.getFrameTree')['frameTree']['frame']['id']
 
-        threads = [
-            exception_thread.ExceptionThread(
-                target=wait_for_navigation, args=(frame_id,)
-            ),
-            exception_thread.ExceptionThread(
-                target=request_navigation, args=(result_store, url)
-            )
-        ]
-
-        for thread in threads:
-            thread.start()
-
-        for thread in threads:
-            thread.join_and_raise(self._navigation_timeout)
-
-            if thread.is_alive():
-                raise Exception('Navigation timeout')
-
-        return result_store.get_nowait()
+        with self._navigations.start(frame_id):
+            self._send('Page.navigate', {'url': url})  # API status: stable
 
     def perform(self, actions):
         # Restructure the WebDriver actions object into a two-dimensional list.
