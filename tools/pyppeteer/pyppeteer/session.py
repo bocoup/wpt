@@ -1,5 +1,6 @@
 import json
 import threading
+import time
 
 from six.moves import queue, xrange
 from pyppeteer import action_handlers, Element, exclusive_ops, logging
@@ -246,10 +247,14 @@ class Session(object):
 
         def create_thread(action, exceptions):
             handler = getattr(action_handlers, action['type'])
+            duration = action.get('duration', 0) / 1000
 
             def target():
+                start = time.time()
                 try:
                     handler(self, action)
+
+                    time.sleep(max(0, duration - (time.time() - start)))
                 except Exception as e:
                     exceptions.put(e)
 
