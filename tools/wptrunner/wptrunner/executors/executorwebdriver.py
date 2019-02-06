@@ -464,7 +464,7 @@ class WebDriverRefTestExecutor(RefTestExecutor):
         return self.protocol.is_alive()
 
     def do_test(self, test):
-        width_offset, height_offset = self.protocol.webdriver.execute_script(
+        width_offset, height_offset = self.protocol.session.execute_script(
             """return [window.outerWidth - window.innerWidth,
                        window.outerHeight - window.innerHeight];"""
         )
