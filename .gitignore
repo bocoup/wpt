@@ -30,3 +30,6 @@ scratch
 .vscode/
 .DS_Store
 *.rej
+
+# Documentation
+_build/
