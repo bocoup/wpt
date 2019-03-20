@@ -55,20 +55,9 @@ href="https://www.w3.org/TR/CSS21/colors.html#background-properties" />
   <th>Description</th>
 </tr>
 <tr>
-  <td>animated</td>
-  <td>Test is animated in final state. (Cannot be verified using
-    reftests/screenshots.)</td>
-</tr>
-<tr>
   <td>asis</td>
   <td>The test has particular markup formatting requirements and
     cannot be re-serialized.</td>
-</tr>
-<tr>
-  <td>font</td>
-  <td>Requires a specific font to be installed at the OS level. (A link to the
-      font to be installed must be provided; this is not needed if only web
-      fonts are used.)</td>
 </tr>
 <tr>
   <td>history</td>
@@ -78,11 +67,6 @@ href="https://www.w3.org/TR/CSS21/colors.html#background-properties" />
 <tr>
   <td>HTMLonly</td>
   <td>Test case is only valid for HTML</td>
-</tr>
-<tr>
-  <td>interact</td>
-  <td>Requires human interaction (such as for testing scrolling
-    behavior)</td>
 </tr>
 <tr>
   <td>invalid</td>
@@ -116,6 +100,33 @@ href="https://www.w3.org/TR/CSS21/colors.html#background-properties" />
   <td>speech</td>
   <td>Device supports audio output. Text-to-speech (TTS) engine
     installed</td>
+</tr>
+</table>
+
+The following flags are **deprecated** and should not be declared by new tests.
+Tests which satisfy the described criteria should simply be designated as
+"manual" using [the `-manual` file name flag][file-name-flags].
+
+<table>
+<tr>
+  <th>Token</th>
+  <th>Description</th>
+</tr>
+<tr>
+  <td>animated</td>
+  <td>Test is animated in final state. (Cannot be verified using
+    reftests/screenshots.)</td>
+</tr>
+<tr>
+  <td>font</td>
+  <td>Requires a specific font to be installed at the OS level. (A link to the
+      font to be installed must be provided; this is not needed if only web
+      fonts are used.)</td>
+</tr>
+<tr>
+  <td>interact</td>
+  <td>Requires human interaction (such as for testing scrolling
+    behavior)</td>
 </tr>
 <tr>
   <td>userstyle</td>
@@ -181,3 +192,5 @@ Examples of good test assertions:
 * "This test checks that 'text-indent' affects only the first line
   of a block container if that line is also the first formatted line
   of an element."
+
+[file-name-flags]: {{ site.baseurl }}{% link _writing-tests/file-names.md %}
