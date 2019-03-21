@@ -5,7 +5,7 @@ web-platform-tests documentation
    :maxdepth: 2
 
    docs/_running-tests/index
-
+   docs/_writing-tests/index
 
 For infrastructure maintainers:
 

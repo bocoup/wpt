@@ -372,10 +372,13 @@ class Webidl2Regexp(Regexp):
     description = "Legacy webidl2.js script used"
 
 class ConsoleRegexp(Regexp):
+    """Test-file line has a ``console.*(...)`` call"""
     pattern = b"console\.[a-zA-Z]+\s*\("
     error = "CONSOLE"
     file_extensions = [".html", ".htm", ".js", ".xht", ".xhtml", ".svg"]
     description = "Console logging API used"
+    fix = """remove the ``console.*(...)`` call (and in some cases, consider
+    adding an ``assert_*`` of some kind in place of it). """
 
 class GenerateTestsRegexp(Regexp):
     pattern = b"generate_tests\s*\("

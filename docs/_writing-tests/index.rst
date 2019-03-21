@@ -1,15 +1,13 @@
----
-layout: page
-title: Writing Tests
-order: -1
----
+Writing Tests
+=============
 
 If you haven't already, it's strongly recommended to read
 the [introduction][] first, as it introduces the various test types.
 
 There's also a load of [general guidelines][] that apply to all tests.
 
-## Test Type
+Test Type
+---------
 
 There are four main test types:
 
@@ -48,11 +46,12 @@ tests, which are used exclusively for testing the WebDriver protocol
 itself. There is currently no documentation about these tests,
 however.
 
-## Submitting Tests
+Submitting Tests
+----------------
 
 Once you've written tests, please submit them using
 the [typical GitHub Pull Request workflow][submission-process]; please
-make sure you run the [`lint` script][lint-tool] before opening a pull request!
+make sure you run the :doc:`lint-tool` before opening a pull request!
 
 [introduction]: {{ site.baseurl }}{% link introduction.md %}
 [file names]: {{ site.baseurl }}{% link _writing-tests/file-names.md %}
@@ -63,4 +62,3 @@ make sure you run the [`lint` script][lint-tool] before opening a pull request!
 [visual]: {{ site.baseurl }}{% link _writing-tests/visual.md %}
 [manual]: {{ site.baseurl }}{% link _writing-tests/manual.md %}
 [submission-process]: {{ site.baseurl }}{% link _writing-tests/submission-process.md %}
-[lint-tool]: {{ site.baseurl }}{% link _writing-tests/lint-tool.md %}

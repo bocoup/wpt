@@ -11,11 +11,28 @@
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
-#
-# import os
-# import sys
-# sys.path.insert(0, os.path.abspath('.'))
 
+import os
+import sys
+sys.path.insert(0, os.path.abspath('.'))
+
+def is_lint_rule(obj):
+    return hasattr(obj, 'fix') and hasattr(obj, 'description')
+
+def autodoc_skip_member(app, what, name, obj, skip, options):
+    return not is_lint_rule(obj)
+
+def autodoc_process_docstring(app, what, name, obj, options, lines):
+    if not is_lint_rule(obj):
+        return
+    lines[:] = ['''
+        ``{error}`` {description}
+        **fix** {fix}'''.format(**vars(obj))
+    ]
+
+def setup(app):
+    app.connect('autodoc-skip-member', autodoc_skip_member)
+    app.connect('autodoc-process-docstring', autodoc_process_docstring)
 
 # -- Project information -----------------------------------------------------
 
@@ -39,6 +56,7 @@ release = u''
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
 extensions = [
+    'sphinx.ext.autodoc'
 ]
 
 # Add any paths that contain templates here, relative to this directory.

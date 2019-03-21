@@ -1,15 +1,11 @@
----
-layout: page
-title: Lint Tool
-order: 9
----
+Lint Tool
+=========
+
 We have a lint tool for catching common mistakes in test files. You can run
-it manually by running the `wpt lint` command from the root of your local
+it manually by running the ``wpt lint`` command from the root of your local
 web-platform-tests working directory like this:
 
-```
 ./wpt lint
-```
 
 The lint tool is also run automatically for every submitted pull request,
 and reviewers will not merge branches with tests that have lint errors, so
@@ -24,6 +20,9 @@ exceptional reason shouldn't prevent the test from being merged; in
 those cases you can [whitelist test files](#updating-the-whiteslist)
 to suppress the errors. In all other cases, follow the instructions
 below to fix all errors reported.
+
+.. automodule:: tools.lint.lint
+   :members:
 
 * **CONSOLE**: Test-file line has a `console.*(...)` call; **fix**: remove
   the `console.*(...)` call (and in some cases, consider adding an
