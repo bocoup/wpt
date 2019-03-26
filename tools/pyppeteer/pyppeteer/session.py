@@ -272,6 +272,11 @@ class Session(object):
 
             for thread in threads:
                 thread.start()
+                # TODO(jugglinmike): rewrite each action to block for its
+                # non-interruptible work (this is all of the event for
+                # everything except `pointerMove`)
+                #
+                # https://github.com/w3c/webdriver/pull/1323
             for thread in threads:
                 thread.join()
 
