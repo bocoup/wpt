@@ -60,11 +60,6 @@ href="https://www.w3.org/TR/CSS21/colors.html#background-properties" />
     cannot be re-serialized.</td>
 </tr>
 <tr>
-  <td>history</td>
-  <td>User agent session history is required. Testing :visited is a
-    good example where this may be used.</td>
-</tr>
-<tr>
   <td>HTMLonly</td>
   <td>Test case is only valid for HTML</td>
 </tr>
@@ -96,11 +91,6 @@ href="https://www.w3.org/TR/CSS21/colors.html#background-properties" />
   <td>Behavior tested is RECOMMENDED, but not REQUIRED. <a
     href="https://www.ietf.org/rfc/rfc2119.txt">[RFC2119]</a></td>
 </tr>
-<tr>
-  <td>speech</td>
-  <td>Device supports audio output. Text-to-speech (TTS) engine
-    installed</td>
-</tr>
 </table>
 
 The following flags are **deprecated** and should not be declared by new tests.
@@ -124,9 +114,19 @@ Tests which satisfy the described criteria should simply be designated as
       fonts are used.)</td>
 </tr>
 <tr>
+  <td>history</td>
+  <td>User agent session history is required. Testing :visited is a
+    good example where this may be used.</td>
+</tr>
+<tr>
   <td>interact</td>
   <td>Requires human interaction (such as for testing scrolling
     behavior)</td>
+</tr>
+<tr>
+  <td>speech</td>
+  <td>Device supports audio output. Text-to-speech (TTS) engine
+    installed</td>
 </tr>
 <tr>
   <td>userstyle</td>
