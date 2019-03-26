@@ -321,9 +321,6 @@ class ChromeCDP(BrowserSetup):
     browser_cls = browser.ChromeCDP
 
     def setup_kwargs(self, kwargs):
-        if kwargs["webdriver_binary"]:
-            raise WptrunError("chrome_cdp does not interface with a WebDriver server")
-
         Chrome.setup_binary_args(kwargs)
 
 
