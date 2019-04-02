@@ -9,15 +9,56 @@
 <input type="text" id="text">Text Input</button>
 
 <script>
-async_test(t => {
+promise_test(t => {
   let input_text = "Hello, wpt!";
   let text_box = document.getElementById("text");
-  test_driver
+  return test_driver
     .send_keys(text_box, input_text)
     .then(() => {
       assert_true(text_box.value == input_text);
-      t.done();
-    })
-    .catch(t.unreached_func("send keys failed"));
-});
+    });
+}, "many characters");
+
+function test_key(codePoint, key) {
+  const next_press = new Promise((resolve) => {
+    document.body.addEventListener("keydown", resolve);
+  });
+
+  return Promise.all([
+      test_driver.send_keys(document.body, codePoint),
+      next_press
+    ])
+    .then(([, event]) => {
+      assert_equals(event.key, key);
+    });
+}
+
+
+// Expectations derived from the WebDriver "keyboard actions" specification [1]
+// and
+//
+// https://w3c.github.io/webdriver/#keyboard-actions
+promise_test(() => test_key_code("\ue001", 3), "Cancel");
+promise_test(() => test_key_code("\ue002", 6), "Help");
+promise_test(() => test_key_code("\ue003", 8), "Backspace");
+promise_test(() => test_key_code("\ue004", 9), "Tab");
+promise_test(() => test_key_code("\ue005", 12), "Clear");
+promise_test(() => test_key_code("\ue006", 13), "Return");
+promise_test(() => test_key_code("\ue007", 13), "Enter");
+promise_test(() => test_key_code("\ue008", 16), "Shift");
+promise_test(() => test_key_code("\ue009", 17), "Control");
+promise_test(() => test_key_code("\ue00a", 18), "Alt");
+promise_test(() => test_key_code("\ue00b", 19), "Pause");
+promise_test(() => test_key_code("\ue00c", 27), "Escape");
+promise_test(() => test_key_code("\ue00d", 32), "Space (' ')");
+promise_test(() => test_key_code("\ue00e", 33), "PageUp");
+promise_test(() => test_key_code("\ue00f", 34), "PageDown");
+promise_test(() => test_key_code("\ue010", 35), "End");
+promise_test(() => test_key_code("\ue011", 36), "Home");
+promise_test(() => test_key_code("\ue012", 37), "ArrowLeft");
+promise_test(() => test_key_code("\ue013", 38), "ArrowUp");
+promise_test(() => test_key_code("\ue014", 39), "ArrowRight");
+promise_test(() => test_key_code("\ue015", 40), "ArrowDown");
+promise_test(() => test_key_code("\ue016", 45), "Insert");
+promise_test(() => test_key_code("\ue017", 46), "Delete");
 </script>
