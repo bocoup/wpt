@@ -6,7 +6,9 @@ order: 11
 
 A font called [Ahem][ahem-readme] has been developed which consists of
 some very well defined glyphs of precise sizes and shapes; it is
-especially useful for testing font and text properties.
+especially useful for testing font and text properties. Installation
+instructions are available in [Running Tests from the Local
+System][run-from-local-system].
 
 The font's em-square is exactly square. Its ascent and descent
 combined is exactly the size of the em square; this means that the
@@ -70,20 +72,5 @@ div {
 }
 ```
 
-## Installing Ahem
-
-After [downloading][download-ahem] the font, installation instructions
-vary between platforms:
-
-On Windows, right-click the downloaded file in File Explorer/Windows
-Explorer (depending on Windows version) and select "Install" from the
-menu.
-
-On macOS, open the downloaded file in Font Book (the default
-application for font files) and then click install.
-
-On Linux, copy the file to `~/.local/share/fonts` and then run
-`fc-cache`.
-
 [ahem-readme]: https://www.w3.org/Style/CSS/Test/Fonts/Ahem/README
-[download-ahem]: https://github.com/web-platform-tests/wpt/raw/master/fonts/Ahem.ttf
+[run-from-local-system]: {{ site.baseurl }}{% link _running-tests/from-local-system.md %}
