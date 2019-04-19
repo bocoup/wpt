@@ -1936,6 +1936,23 @@ policies and contribution forms [3].
           // Ignore.
         }
 
+        if (is_service_worker(remote)) {
+            remote.addEventListener('statechange',
+                                    function(e)
+                                    {
+                                        if (e.target.state !== "redundant") {
+                                            return;
+                                        }
+
+                                        // This is probably too late, since
+                                        // some tests may have already been
+                                        // transmitted.
+                                        this_obj.remote_error(
+                                            new Error("Service Worker entered the redundant state.")
+                                        );
+                                    });
+        }
+
         // Keeping a reference to the remote object and the message handler until
         // remote_done() is seen prevents the remote object and its message channel
         // from going away before all the messages are dispatched.
