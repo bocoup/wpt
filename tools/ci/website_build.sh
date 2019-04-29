@@ -67,6 +67,13 @@ git rm -r .
 cd ../..
 pip install -r requirements.txt
 make html
+
+if [ "$?" != "0" ] ; then
+  echo Website build failed. 1>&2
+
+  exit 1
+fi
+
 cd _build/html
 # Configure DNS
 echo web-platform-tests.org > CNAME
