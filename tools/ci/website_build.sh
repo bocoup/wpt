@@ -79,7 +79,4 @@ git add .
 git commit --message "Build documentation
 
 These files were generated from commit ${source_revision}"
-
-git log
-
 git push --force ${remote_url} HEAD:gh-pages
