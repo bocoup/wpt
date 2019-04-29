@@ -79,4 +79,11 @@ git add .
 git commit --message "Build documentation
 
 These files were generated from commit ${source_revision}"
+
+if [ "$?" != "0" ] ; then
+  echo No change to the website contents. Exiting without publishing.
+
+  exit ${neutral_status}
+fi
+
 git push --force ${remote_url} HEAD:gh-pages
