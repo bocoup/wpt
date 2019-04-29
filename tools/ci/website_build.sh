@@ -54,33 +54,29 @@ fi
 git config --global user.email "wpt-pr-bot@users.noreply.github.com"
 git config --global user.name "wpt-pr-bot"
 
-cd docs
-
-pip install -r requirements.txt
-
-make html
-
-cd _build/html
-
+# Prepare the output directory so that the new build can be pushed to the
+# repository as an incremental change to the prior build.
+mkdir --parents docs/_build/html
+cd docs/_build/html
 git init
-
 git fetch --depth 1 ${remote_url} gh-pages
-
 git checkout FETCH_HEAD
-
 git rm -r .
 
+# Build the website
+cd ../..
+pip install -r requirements.txt
+make html
+cd _build/html
 # Configure DNS
 echo web-platform-tests.org > CNAME
-
 # Disable Jekyll
 # https://github.blog/2009-12-29-bypassing-jekyll-on-github-pages/
 touch .nojekyll
 
+# Publish the website by pushing the built contents to the `gh-pages` branch
 git add .
-
 git commit --message "Build documentation
 
 These files were generated from commit ${source_revision}"
-
 git push --force ${remote_url} HEAD:gh-pages
