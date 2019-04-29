@@ -64,7 +64,7 @@ cd _build/html
 
 git init
 
-git fetch --depth 1 ${remote_url}
+git fetch --depth 1 ${remote_url} gh-pages
 
 git checkout FETCH_HEAD
 
