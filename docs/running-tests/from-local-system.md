@@ -4,6 +4,14 @@ The tests are designed to be run from your local computer.
 
 ## System Setup
 
+Download the project using git by executing the following command:
+
+    git clone git@github.com:web-platform-tests/wpt.git
+
+Note: because of the frequent creation and deletion of branches in this repo,
+it is recommended to "prune" stale branches when fetching updates, i.e. use
+`git pull --prune`.
+
 The test environment requires [Python 2.7+](http://www.python.org/downloads)
 (but not Python 3.x).
 
@@ -11,11 +19,22 @@ On Windows, be sure to add the Python directory (`c:\python2x`, by default) to
 your `%Path%` [Environment Variable](http://www.computerhope.com/issues/ch000549.htm),
 and read the [Windows Notes](#windows-notes) section below.
 
+The `wpt` command provides a frontend to a variety of tools for
+working with and running web-platform-tests. Some of the most useful
+commands are:
+
+* `wpt serve` - For starting the wpt http server
+* `wpt run` - For running tests in a browser
+* `wpt lint` - For running the lint against all tests
+* `wpt manifest` - For updating or generating a `MANIFEST.json` test manifest
+* `wpt install` - For installing the latest release of a browser or
+  webdriver server on the local machine.
+
 To get the tests running, you need to set up the test domains in your
 [`hosts` file](http://en.wikipedia.org/wiki/Hosts_%28file%29%23Location_in_the_file_system).
 
 The necessary content can be generated with `./wpt make-hosts-file`; on
-Windows, you will need to preceed the prior command with `python` or
+Windows, you will need to precede the prior command with `python` or
 the path to the Python binary (`python wpt make-hosts-file`).
 
 For example, on most UNIX-like systems, you can setup the hosts file with:
@@ -69,14 +88,28 @@ port definitions of your choice e.g.:
 After your `hosts` file is configured, the servers will be locally accessible at:
 
 http://web-platform.test:8000/<br>
-https://web-platform.test:8443/ *
+https://web-platform.test:8443/
+
+To prevent browser SSL warnings when running HTTPS tests locally, the
+web-platform-tests Root CA file `cacert.pem` in [tools/certs](tools/certs)
+must be added as a trusted certificate in your OS/browser. If you wish to
+generate new certificates, see [this guide](generating-certificates).
+
+**NOTE**: The CA should not be installed in any browser profile used
+outside of tests, since it may be used to generate fake
+certificates. For browsers that use the OS certificate store, tests
+should therefore not be run manually outside a dedicated OS instance
+(e.g. a VM). To avoid this problem when running tests in Chrome or
+Firefox use `wpt run`, which disables certificate checks and therefore
+doesn't require the root CA to be trusted.
 
 This server has all the capabilities of the publicly-deployed version--see
 [Running the Tests from the Web](from-web).
 
-\**See [Trusting Root CA](https://github.com/web-platform-tests/wpt/blob/master/README.md#trusting-root-ca)*
-
 ## Via the command line
+
+The `certutil` tool is required to run tests in Firefox. See [this
+guide](certutil) for instructions on installing `certutil`.
 
 Many tests can be automatically executed in a new browser instance using
 
