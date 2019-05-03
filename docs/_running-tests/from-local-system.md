@@ -14,6 +14,13 @@ On Windows, be sure to add the Python directory (`c:\python2x`, by default) to
 your `%Path%` [Environment Variable](http://www.computerhope.com/issues/ch000549.htm),
 and read the [Windows Notes](#windows-notes) section below.
 
+Install `virtualenv` using the following commands:
+
+```bash
+easy_install pip
+pip install --user virtualenv
+```
+
 To get the tests running, you need to set up the test domains in your
 [`hosts` file](http://en.wikipedia.org/wiki/Hosts_%28file%29%23Location_in_the_file_system).
 
