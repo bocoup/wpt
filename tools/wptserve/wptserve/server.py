@@ -239,6 +239,11 @@ class BaseWebTestRequestHandler(BaseHTTPServer.BaseHTTPRequestHandler):
             return
 
         self.logger.debug("%s %s" % (request.method, request.request_path))
+
+        if request.request_path == "/die":
+            self.server.shutdown()
+            self.server.server_close()
+
         handler = self.server.router.get_handler(request)
         self.finish_handling(request, response, handler)
 

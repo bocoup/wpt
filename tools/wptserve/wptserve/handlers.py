@@ -52,6 +52,8 @@ class DirectoryHandler(object):
     def __init__(self, base_path=None, url_base="/"):
         self.base_path = base_path
         self.url_base = url_base
+        import uuid
+        self.uuid = uuid.uuid4()
 
     def __repr__(self):
         return "<%s base_path:%s url_base:%s>" % (self.__class__.__name__, self.base_path, self.url_base)
@@ -68,7 +70,7 @@ class DirectoryHandler(object):
 
         assert os.path.isdir(path)
 
-        response.headers = [("Content-Type", "text/html")]
+        response.headers = [("Content-Type", "text/html"), ("WPT-Server-Id", str(self.uuid))]
         response.content = """<!doctype html>
 <meta name="viewport" content="width=device-width">
 <title>Directory listing for %(path)s</title>
