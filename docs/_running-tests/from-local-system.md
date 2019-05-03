@@ -7,12 +7,18 @@ The tests are designed to be run from your local computer.
 
 ## System Setup
 
-The test environment requires [Python 2.7+](http://www.python.org/downloads)
+The test environment requires [Python 2.7.9 or later](http://www.python.org/downloads)
 (but not Python 3.x).
 
 On Windows, be sure to add the Python directory (`c:\python2x`, by default) to
 your `%Path%` [Environment Variable](http://www.computerhope.com/issues/ch000549.htm),
 and read the [Windows Notes](#windows-notes) section below.
+
+Install `virtualenv` using the following command:
+
+```bash
+pip install virtualenv
+```
 
 To get the tests running, you need to set up the test domains in your
 [`hosts` file](http://en.wikipedia.org/wiki/Hosts_%28file%29%23Location_in_the_file_system).
