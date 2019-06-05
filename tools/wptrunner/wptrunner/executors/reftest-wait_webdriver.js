@@ -27,6 +27,78 @@ function ready_for_screenshot() {
 
   requestAnimationFrame(function() {
     requestAnimationFrame(function() {
+
+
+function a(node) {
+  var next = a;
+  if (getComputedStyle(node).display === 'flex') {
+    next = b;
+  }
+  for (const child of node.children) {
+    if (next(child)) {
+	  return true;
+	}
+  }
+
+  return false;
+}
+function b(node) {
+  var next = b;
+  if (getComputedStyle(node).display !== 'flex') {
+    next = c;
+  }
+  for (const child of node.children) {
+	if (next(child)) {
+	  return true;
+	}
+  }
+
+  return false;
+}
+
+function c(node) {
+  var next = c;
+  if (getComputedStyle(node).display !== 'flex') {
+    next = d;
+  }
+  for (const child of node.children) {
+	if (next(child)) {
+	  return true;
+	}
+  }
+
+  return false;
+}
+function d(node) {
+  if (getComputedStyle(node).display === 'flex') {
+	return true;
+  }
+  for (const child of node.children) {
+	if (c(child)) {
+	  return true;
+	}
+  }
+  return false;
+}
+function hasComplexFlex() {
+  if (typeof document === 'undefined') {
+    return false;
+  }
+  return a(document.body);
+}
+if (hasComplexFlex()) {
+    var xhr = new XMLHttpRequest();
+    xhr.open(
+        'GET',
+        '/encrypted-media/log.py?name=x',
+        false
+    );
+    xhr.send(null);
+}
+
+
+
+
       callback();
     });
   });
