@@ -155,7 +155,7 @@ class HTMLItem(pytest.Item, pytest.Collector):
 
         summarized = self._summarize(actual)
 
-        assert summarized[u'summarized_status'][u'status_string'] == u'OK', json.dumps(summarized, indent=2)
+        assert summarized[u'summarized_status'][u'status_string'] == u'OK', summarized[u'summarized_status'][u'message']
         for test in summarized[u'summarized_tests']:
             msg = "%s\n%s" % (test[u'name'], test[u'message'])
             assert test[u'status_string'] == u'PASS', msg
