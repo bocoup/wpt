@@ -55,7 +55,7 @@ class WPTLintRules(Directive):
     def run(self):
         definition_list = nodes.definition_list()
 
-        for rule in self._get_rules():
+        for rule in sorted(self._get_rules(), key=lambda rule: rule['name']):
             item = nodes.definition_list_item()
             definition = nodes.definition()
             term = nodes.term()
@@ -64,7 +64,7 @@ class WPTLintRules(Directive):
             definition_list += item
 
             term += nodes.literal(text=rule["name"])
-            definition += nodes.paragraph(text=rule["description"])
+            definition += WPTLintRules._parse_markdown(rule["description"])
 
             if rule["to_fix"]:
                 definition += nodes.strong(text="To fix:")
