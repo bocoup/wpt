@@ -55,6 +55,7 @@ class MissingLink(Rule):
 class PathLength(Rule):
     name = "PATH LENGTH"
     description = "/%s longer than maximum path length (%d > 150)"
+    to_fix = "use shorter filename to rename the test file"
 
 
 class FileType(Rule):
@@ -108,6 +109,9 @@ class SupportWrongDir(Rule):
 class ParseFailed(Rule):
     name = "PARSE-FAILED"
     description = "Unable to parse file"
+    to_fix = """
+        examine the file to find the causes of any parse errors, and fix them.
+    """
 
 
 class ContentManual(Rule):
@@ -140,26 +144,42 @@ class NonexistentRef(Rule):
 class MultipleTimeout(Rule):
     name = "MULTIPLE-TIMEOUT"
     description = "More than one meta name='timeout'"
+    to_fix = """
+        ensure each test file has only one instance of a `<meta
+        name="timeout"...>` element
+    """
 
 
 class InvalidTimeout(Rule):
     name = "INVALID-TIMEOUT"
-    description = "Invalid timeout value %s"
+    description = """
+        Test file with `<meta name='timeout'...>` element that has a `content`
+        attribute whose value is not `long`: %s
+    """
+    to_fix = "replace the value of the `content` attribute with `long`"
 
 
 class MultipleTestharness(Rule):
     name = "MULTIPLE-TESTHARNESS"
-    description = "More than one <script src='/resources/testharness.js'>"
+    description = "More than one `<script src='/resources/testharness.js'>`"
+    to_fix = """
+        ensure each test has only one `<script
+        src='/resources/testharnessreport.js'>` instance
+    """
 
 
 class MissingTestharnessReport(Rule):
     name = "MISSING-TESTHARNESSREPORT"
-    description = "Missing <script src='/resources/testharnessreport.js'>"
+    description = "Missing `<script src='/resources/testharnessreport.js'>`"
+    to_fix = """
+        ensure each test file contains `<script
+        src='/resources/testharnessreport.js'>`
+    """
 
 
 class MultipleTestharnessReport(Rule):
     name = "MULTIPLE-TESTHARNESSREPORT"
-    description = "More than one <script src='/resources/testharnessreport.js'>"
+    description = "More than one `<script src='/resources/testharnessreport.js'>`"
 
 
 class PresentTestharnessCSS(Rule):
@@ -169,38 +189,58 @@ class PresentTestharnessCSS(Rule):
 
 class VariantMissing(Rule):
     name = "VARIANT-MISSING"
-    description = "<meta name=variant> missing 'content' attribute"
+    description = """
+        Test file with a `<meta name='variant'...>` element that's missing a
+        `content` attribute
+    """
+    to_fix = """
+        add a `content` attribute with an appropriate value to the `<meta
+        name='variant'...>` element
+    """
 
 
 class MalformedVariant(Rule):
     name = "MALFORMED-VARIANT"
-    description = ("%s <meta name=variant> 'content' attribute must be the "
+    description = ("%s `<meta name=variant>` 'content' attribute must be the "
         "empty string or start with '?' or '#'")
 
 
 class LateTimeout(Rule):
     name = "LATE-TIMEOUT"
-    description = "<meta name=timeout> seen after testharness.js script"
+    description = "`<meta name=timeout>` seen after testharness.js script"
+    description = """
+        Test file with `<meta name="timeout"...>` element after `<script
+        src='/resources/testharnessreport.js'>` element
+    """
+    to_fix = """
+        move the `<meta name="timeout"...>` element to precede the `script`
+        element.
+    """
 
 
 class EarlyTestharnessReport(Rule):
     name = "EARLY-TESTHARNESSREPORT"
-    description = "testharnessreport.js script seen before testharness.js script"
+    description = """
+      Test file has an instance of
+      `<script src='/resources/testharnessreport.js'>` prior to
+      `<script src='/resources/testharness.js'>`
+    """
+    to_fix = "flip the order"
 
 
 class MultipleTestdriver(Rule):
     name = "MULTIPLE-TESTDRIVER"
-    description = "More than one <script src='/resources/testdriver.js'>"
+    description = "More than one `<script src='/resources/testdriver.js'>`"
 
 
 class MissingTestdriverVendor(Rule):
     name = "MISSING-TESTDRIVER-VENDOR"
-    description = "Missing <script src='/resources/testdriver-vendor.js'>"
+    description = "Missing `<script src='/resources/testdriver-vendor.js'>`"
 
 
 class MultipleTestdriverVendor(Rule):
     name = "MULTIPLE-TESTDRIVER-VENDOR"
-    description = "More than one <script src='/resources/testdriver-vendor.js'>"
+    description = "More than one `<script src='/resources/testdriver-vendor.js'>`"
 
 
 class TestharnessPath(Rule):
@@ -298,23 +338,35 @@ class Regexp(six.with_metaclass(abc.ABCMeta)):
 class TabsRegexp(Regexp):
     pattern = b"^\t"
     name = "INDENT TABS"
-    description = "Tabs used for indentation"
+    description = "Test-file line starts with one or more tab characters"
+    to_fix = "use spaces to replace any tab characters at beginning of lines"
 
 class CRRegexp(Regexp):
     pattern = b"\r$"
     name = "CR AT EOL"
-    description = "CR character in line separator"
+    description = "Test-file line ends with CR (U+000D) character"
+    to_fix = """
+        reformat file so each line just has LF (U+000A) line ending (standard,
+        cross-platform "Unix" line endings instead of, e.g., DOS line endings).
+    """
 
 class SetTimeoutRegexp(Regexp):
     pattern = br"setTimeout\s*\("
     name = "SET TIMEOUT"
     file_extensions = [".html", ".htm", ".js", ".xht", ".xhtml", ".svg"]
-    description = "setTimeout used; step_timeout should typically be used instead"
+    description = "setTimeout used"
+    to_fix = """
+        replace all `setTimeout(...)` calls with `step_timeout(...)` calls
+    """
 
 class W3CTestOrgRegexp(Regexp):
     pattern = br"w3c\-test\.org"
     name = "W3C-TEST.ORG"
-    description = "External w3c-test.org domain used"
+    description = "Test-file line has the string `w3c-test.org`"
+    to_fix = """
+        either replace the `w3c-test.org` string with the expression
+        `{{host}}:{{ports[http][0]}}` or a generic hostname like `example.org`
+    """
 
 class WebPlatformTestRegexp(Regexp):
     pattern = br"web\-platform\.test"
@@ -330,19 +382,30 @@ class ConsoleRegexp(Regexp):
     pattern = br"console\.[a-zA-Z]+\s*\("
     name = "CONSOLE"
     file_extensions = [".html", ".htm", ".js", ".xht", ".xhtml", ".svg"]
-    description = "Console logging API used"
+    description = "Test-file line has a `console.*(...)` call"
+    to_fix = """
+        remove the `console.*(...)` call (and in some cases, consider adding an
+        `assert_*` of some kind in place of it)
+    """
 
 class GenerateTestsRegexp(Regexp):
     pattern = br"generate_tests\s*\("
     name = "GENERATE_TESTS"
     file_extensions = [".html", ".htm", ".js", ".xht", ".xhtml", ".svg"]
-    description = "generate_tests used"
+    description = "Test file line has a generate_tests call"
+    to_fix = "remove the call and call `test()` a number of times instead"
 
 class PrintRegexp(Regexp):
     pattern = br"print(?:\s|\s*\()"
     name = "PRINT STATEMENT"
     file_extensions = [".py"]
-    description = "Print function used"
+    description = """
+        A server-side python support file contains a `print` statement
+    """
+    to_fix = """
+        remove the `print` statement or replace it with something else that
+        achieves the intended effect (e.g., a logging call)
+    """
 
 class LayoutTestsRegexp(Regexp):
     pattern = br"(eventSender|testRunner|internals)\."
