@@ -147,10 +147,10 @@ class MultipleTimeout(Rule):
 
 class InvalidTimeout(Rule):
     name = "INVALID-TIMEOUT"
-    description = """
-        Test file with `<meta name='timeout'...>` element that has a `content`
-        attribute whose value is not `long`: %s
-    """
+    description = (
+        "Test file with `<meta name='timeout'...>` element that has a `content` "
+        "attribute whose value is not `long`: %s"
+    )
     to_fix = "replace the value of the `content` attribute with `long`"
 
 
@@ -184,10 +184,10 @@ class PresentTestharnessCSS(Rule):
 
 class VariantMissing(Rule):
     name = "VARIANT-MISSING"
-    description = """
-        Test file with a `<meta name='variant'...>` element that's missing a
-        `content` attribute
-    """
+    description = (
+        "Test file with a `<meta name='variant'...>` element that's missing a "
+        "`content` attribute"
+    )
     to_fix = """
         add a `content` attribute with an appropriate value to the `<meta
         name='variant'...>` element
@@ -203,10 +203,10 @@ class MalformedVariant(Rule):
 class LateTimeout(Rule):
     name = "LATE-TIMEOUT"
     description = "`<meta name=timeout>` seen after testharness.js script"
-    description = """
-        Test file with `<meta name="timeout"...>` element after `<script
-        src='/resources/testharnessreport.js'>` element
-    """
+    description = (
+        "Test file with `<meta name='timeout'...>` element after `<script "
+        "src='/resources/testharnessreport.js'>` element"
+    )
     to_fix = """
         move the `<meta name="timeout"...>` element to precede the `script`
         element.
@@ -215,11 +215,11 @@ class LateTimeout(Rule):
 
 class EarlyTestharnessReport(Rule):
     name = "EARLY-TESTHARNESSREPORT"
-    description = """
-      Test file has an instance of
-      `<script src='/resources/testharnessreport.js'>` prior to
-      `<script src='/resources/testharness.js'>`
-    """
+    description = (
+      "Test file has an instance of "
+      "`<script src='/resources/testharnessreport.js'>` prior to "
+      "`<script src='/resources/testharness.js'>`"
+    )
     to_fix = "flip the order"
 
 
@@ -394,9 +394,9 @@ class PrintRegexp(Regexp):
     pattern = br"print(?:\s|\s*\()"
     name = "PRINT STATEMENT"
     file_extensions = [".py"]
-    description = """
-        A server-side python support file contains a `print` statement
-    """
+    description = (
+        "A server-side python support file contains a `print` statement"
+    )
     to_fix = """
         remove the `print` statement or replace it with something else that
         achieves the intended effect (e.g., a logging call)
