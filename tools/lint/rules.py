@@ -221,9 +221,9 @@ class LateTimeout(Rule):
 class EarlyTestharnessReport(Rule):
     name = "EARLY-TESTHARNESSREPORT"
     description = (
-      "Test file has an instance of "
-      "`<script src='/resources/testharnessreport.js'>` prior to "
-      "`<script src='/resources/testharness.js'>`"
+        "Test file has an instance of "
+        "`<script src='/resources/testharnessreport.js'>` prior to "
+        "`<script src='/resources/testharness.js'>`"
     )
     to_fix = "flip the order"
 

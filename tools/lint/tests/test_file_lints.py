@@ -249,8 +249,14 @@ def test_meta_timeout():
         if kind in ["web-lax", "web-strict"]:
             assert errors == [
                 ("MULTIPLE-TIMEOUT", "More than one meta name='timeout'", filename, None),
-                ("INVALID-TIMEOUT", "Test file with `<meta name='timeout'...>` element that has a `content` attribute whose value is not `long`: ", filename, None),
-                ("INVALID-TIMEOUT", "Test file with `<meta name='timeout'...>` element that has a `content` attribute whose value is not `long`: short", filename, None),
+                ("INVALID-TIMEOUT",
+                    "Test file with `<meta name='timeout'...>` element that has a `content` attribute whose value is not `long`: ",
+                    filename,
+                    None),
+                ("INVALID-TIMEOUT",
+                    "Test file with `<meta name='timeout'...>` element that has a `content` attribute whose value is not `long`: short",
+                    filename,
+                    None),
             ]
         elif kind == "python":
             assert errors == [
@@ -272,7 +278,12 @@ def test_early_testharnessreport():
 
         if kind in ["web-lax", "web-strict"]:
             assert errors == [
-                ("EARLY-TESTHARNESSREPORT","Test file has an instance of `<script src='/resources/testharnessreport.js'>` prior to `<script src='/resources/testharness.js'>`", filename, None),
+                ("EARLY-TESTHARNESSREPORT",
+                    "Test file has an instance of "
+                    "`<script src='/resources/testharnessreport.js'>` "
+                    "prior to `<script src='/resources/testharness.js'>`",
+                    filename,
+                    None),
             ]
         elif kind == "python":
             assert errors == [
@@ -585,7 +596,10 @@ def test_variant_missing():
             ]
         elif kind == "web-lax":
             assert errors == [
-                ("VARIANT-MISSING", "Test file with a `<meta name='variant'...>` element that's missing a `content` attribute", filename, None)
+                ("VARIANT-MISSING",
+                    "Test file with a `<meta name='variant'...>` element that's missing a `content` attribute",
+                    filename,
+                    None)
             ]
 
 
@@ -635,7 +649,10 @@ def test_late_timeout():
             ]
         elif kind == "web-lax":
             assert errors == [
-                ("LATE-TIMEOUT", "Test file with `<meta name='timeout'...>` element after `<script src='/resources/testharnessreport.js'>` element", filename, None)
+                ("LATE-TIMEOUT",
+                    "Test file with `<meta name='timeout'...>` element after `<script src='/resources/testharnessreport.js'>` element",
+                    filename,
+                    None)
             ]
 
 
