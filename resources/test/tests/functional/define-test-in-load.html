@@ -1,0 +1,47 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="variant" content="">
+<meta name="variant" content="?keep-promise">
+<title>Test defined during `load` event</title>
+<script src="../../variants.js"></script>
+</head>
+<body>
+<div id="log"></div>
+<script src="/resources/testharness.js"></script>
+<script src="/resources/testharnessreport.js"></script>
+<p>
+Ensure that the harness waits for processing of the "load" event to complete
+before determining if the test is complete.
+</p>
+<script>
+test(function() {}, 'test defined synchronously');
+
+onload = function() {
+  test(function() {}, 'test defined during `onload` event');
+};
+</script>
+<script type="text/json" id="expected">
+{
+  "summarized_status": {
+    "status_string": "OK",
+    "message": null
+  },
+  "summarized_tests": [{
+    "status_string": "PASS",
+    "name": "test defined synchronously",
+    "message": null,
+    "properties": {}
+  }, {
+    "status_string": "PASS",
+    "name": "test defined during `onload` event",
+    "message": null,
+    "properties": {}
+  }],
+  "type": "complete"
+}
+</script>
+</body>
+</html>
+

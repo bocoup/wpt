@@ -65,6 +65,7 @@ policies and contribution forms [3].
         var this_obj = this;
         this.message_events = [];
         this.dispatched_messages = [];
+        this.load_handlers = [];
 
         this.message_functions = {
             start: [add_start_callback, remove_start_callback,
@@ -99,6 +100,12 @@ policies and contribution forms [3].
         }
 
         on_event(window, 'load', function() {
+            forEach(this_obj.load_handlers,
+                    function(handler) {
+                        handler();
+                    });
+            this_obj.load_handlers.length = 0;
+
             this_obj.all_loaded = true;
         });
 
@@ -226,7 +233,7 @@ policies and contribution forms [3].
     };
 
     WindowTestEnvironment.prototype.add_on_loaded_callback = function(callback) {
-        on_event(window, 'load', callback);
+        this.load_handlers.push(callback);
     };
 
     WindowTestEnvironment.prototype.test_timeout = function() {
