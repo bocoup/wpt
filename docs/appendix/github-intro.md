@@ -49,7 +49,7 @@ request (more on this [below](#submit)).
 
 1.  In the browser, go to [web-platform-tests on GitHub][main-repo].
 
-2.  Click the ![fork](/assets/forkbtn.png) button in the upper right.
+2.  Click the ![fork](../assets/forkbtn.png) button in the upper right.
 
 3.  The fork will take several seconds, then you will be redirected to your
     GitHub page for this forked repository.
@@ -285,7 +285,7 @@ on the test but you should delete your branch. This can easily be done in
 the GitHub user interface by navigating to the pull request and clicking the
 "Delete Branch" button.
 
-![pull request accepted delete branch](/assets/praccepteddelete.png)
+![pull request accepted delete branch](../assets/praccepteddelete.png)
 
 Alternatively, you can delete the branch on the command line.
 

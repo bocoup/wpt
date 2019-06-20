@@ -2,9 +2,9 @@
 #
 
 # You can set these variables from the command line.
-SPHINXOPTS    = -W -n
+SPHINXOPTS    = -W -n -c .
 SPHINXBUILD   = sphinx-build
-SOURCEDIR     = .
+SOURCEDIR     = ..
 BUILDDIR      = _build
 
 # Put it first so that "make" without argument is like "make help".
