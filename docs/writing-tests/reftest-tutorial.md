@@ -51,6 +51,7 @@ Here's one way to demonstrate the feature:
 <title>CSS Color: the "fuchsia" keyword</title>
 <link rel="author" title="Sam Smith">
 <link rel="help" href="https://www.w3.org/TR/css-color-3/#html4">
+<meta name="assert" content="the keyword is interpreted as a valid color value">
 <style>body { color: fuchsia; }</style>
 
 <body>
@@ -92,6 +93,22 @@ That's pretty dense! Let's break it down:
   feature outside of CSS, feel free to omit this metadata.
 
 - ```html
+  <meta name="assert" content="the keyword is interpreted as a valid color value">
+  ```
+
+  The "assert" metadata is a structured way for you to describe exactly what
+  you want your reftest to verify. For a direct test like the one we're writing
+  here, it might seem a liitle superfluous. It's much more helpful for more
+  involved tests where reviewers might need some help understanding your
+  intentions.
+
+  This tag is optional, so you can skip it if you think it's unnecessary. We
+  recommend using it for your first few tests since it may let reviewers give
+  you more helpful feedback. As you get more familiar with WPT and the
+  specifications, you'll get a sense for when and where it's better to leave it
+  out.
+
+- ```html
   <style>body { color: fuchsia; }</style>
   <body>
     Test passes if this text is fuchsia.
@@ -122,15 +139,13 @@ reference file is what allows the test to be run by a computer--the computer
 can verify that the color of each pixel in the test document exactly matches
 the color of the corresponding pixel in the reference document.
 
-Make a new file in the same `/css/css-color/` directory name
+Make a new file in the same `/css/css-color/` directory named
 `fuchsia-ref.html`, and save the following markup into it:
 
 ```html
 <!DOCTYPE html>
 <meta charset="utf-8">
-<title>CSS Color: the "fuchsia" keyword</title>
-<link rel="author" title="Sam Smith">
-<link rel="help" href="https://www.w3.org/TR/css-color-3/#html4">
+<title>fuchsia text reference</title>
 <style>body { color: #ff00ff; }</style>
 
 <body>
