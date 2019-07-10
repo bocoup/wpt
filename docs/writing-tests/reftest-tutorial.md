@@ -1,0 +1,206 @@
+# Writing a reftest
+
+Let's say you've discovered that WPT doesn't have any tests for the CSS color
+`fuchsia`. This tutorial will guide you through the process of writing and
+submitting a test. It assumes that you've already [configured your system to
+contribute to WPT](../running-tests/from-local-system). Although it includes
+some very brief instructions on using git, you can find more guidance in [the
+tutorial for git and GitHub](../appendix/github-intro).
+
+WPT's reftests are great for testing web platform features that have some
+visual effect. [The reftests reference page](reftests) describes them in the
+abstract, but for the purposes of this guide, we'll take it for granted that
+the reftest is the perfect way to test for CSS colors.
+
+```eval_rst
+.. contents::
+   :local:
+```
+
+## Setting up your workspace
+
+To make sure you have the latest code, first type the following into a terminal
+located in the root of the WPT git repository:
+
+    $ git fetch git@github.com:web-platform-tests/wpt.git
+
+Next, create a new branch named `reftest-for-fuchsia` from that revision:
+
+    $ git checkout -b reftest-for-fuchsia FETCH_HEAD
+
+Now you're ready to create your patch.
+
+## Writing the test file
+
+First, we'll create a file that demonstrates the "feature under test." That is:
+we'll write an HTML document that applies the `fuchsia` keyword to some text.
+
+WPT has thousands of tests, so it can be daunting to decide where to put a new
+one. Generally speaking, [test files should be placed in directories
+corresponding to the specification text they are verifying](../introduction).
+`fushsia` is defined in [CSS Color Module Level
+4](https://drafts.csswg.org/css-color/), so we'll want to create our new test
+in the directory `css/css-color/`. Create a file named `fuschia.html` and open
+it in your text editor.
+
+Here's one way to demonstrate the feature:
+
+```html
+<!DOCTYPE html>
+<meta charset="utf-8">
+<title>CSS Color: the "fuchsia" keyword</title>
+<link rel="author" title="Sam Smith">
+<link rel="help" href="https://www.w3.org/TR/css-color-3/#html4">
+<style>body { color: fuchsia; }</style>
+
+<body>
+  Test passes if this text is fuchsia.
+</body>
+```
+
+That's pretty dense! Let's break it down:
+
+- ```html
+  <!DOCTYPE html>
+  <meta charset="utf-8">
+  ```
+
+  We explicitly set the DOCTYPE and character set to be sure that browsers
+  don't infer them to be something we aren't expecting. Note that we're
+  omitting the `<html>` and `<head>` tags. That's a common practice in WPT,
+  preferred because it helps make tests more concise.
+
+- ```html
+  <title>CSS Color: the "fuchsia" keyword</title>
+  ```
+  The document's title should succinctly describe the feature under test.
+
+- ```html
+  <link rel="author" title="Sam Smith">
+  ```
+
+  You should replace "Sam Smith" with your own name. This can help others learn
+  who to contact with questions about this test. The git history will do the
+  same thing, so you can leave this out if you prefer.
+
+- ```html
+  <link rel="help" href="https://www.w3.org/TR/css-color-3/#html4">
+  ```
+
+  [The CSS Working Group requires that all tests include a reference to the
+  specification under test.](css-metadata) If you're writing a reftest for a
+  feature outside of CSS, feel free to omit this metadata.
+
+- ```html
+  <style>body { color: fuchsia; }</style>
+  <body>
+    Test passes if this text is fuchsia.
+  </body>
+  ```
+
+  This is the real focus of the test. We're defining a CSS rule that uses the
+  `fuchsia` keyword, and we're including some markup that matches the rule's
+  selector. In other words: we're demonstrating the feature under test.
+
+Since this page doesn't rely on any [special WPT server
+features](server-features), we can view it by loading the HTML file directly.
+There are a bunch of ways to do this; one is to navigate to the
+`css/css-colors` directory in a file browser and drag the new `fuschia.html`
+file into an open web browser window.
+
+Sighted people can open that document and verify whether or not the stated
+expectation is satisfied. If we were writing a [manual test](manual), we'd be
+done. However, it's time consuming for a human to run tests, so we should
+prefer making tests automatic whenever possible. Remember that we set out to
+write a "reference test." Now it's time to write the reference file.
+
+## Writing a "match" reference
+
+The "match" reference file describes what the test file is supposed to look
+like. Critically, it *must not* use the technology that we are testing. The
+reference file is what allows the test to be run by a computer--the computer
+can verify that the color of each pixel in the test document exactly matches
+the color of the corresponding pixel in the reference document.
+
+Make a new file in the same `/css/css-color/` directory name
+`fuchsia-ref.html`, and save the following markup into it:
+
+```html
+<!DOCTYPE html>
+<meta charset="utf-8">
+<title>CSS Color: the "fuchsia" keyword</title>
+<link rel="author" title="Sam Smith">
+<link rel="help" href="https://www.w3.org/TR/css-color-3/#html4">
+<style>body { color: #ff00ff; }</style>
+
+<body>
+  Test passes if this text is fuchsia.
+</body>
+```
+
+
+
+```diff
+ <!DOCTYPE html>
+ <meta charset="utf-8">
+ <title>CSS Color: the "fuchsia" keyword</title>
+ <link rel="author" title="Sam Smith">
+ <link rel="help" href="https://www.w3.org/TR/css-color-3/#html4">
++<link rel="match" href="fuchsia-ref.html">
+ <style>body { color: fuchsia; }</style>
+
+ <body>
+   Test passes if this text is fuchsia.
+ </body>
+```
+
+## Writing a "mismatch" reference
+
+```diff
+ <!DOCTYPE html>
+ <meta charset="utf-8">
+ <title>CSS Color: the "fuchsia" keyword</title>
+ <link rel="author" title="Sam Smith">
+ <link rel="help" href="https://www.w3.org/TR/css-color-3/#html4">
+ <link rel="match" href="fuchsia-ref.html">
++<link rel="mismatch" href="fuchsia-notref.html">
+ <style>body { color: fuchsia; }</style>
+
+ <body>
+   Test passes if this text is fuchsia.
+ </body>
+```
+
+## Verifying our work
+
+- ~~run the WPT server and visit the test files manually~~
+- run from the filesystem
+- run in `wpt serve`
+
+## Submitting the test
+
+First, let's stage the new files for committing:
+
+    $ git add css/css-color/fuchsia.html
+    $ git add css/css-color/fuchsia-ref.html
+    $ git add css/css-color/fuchsia-notref.html
+
+We can make sure the commit has everything we want to submit (and nothing we
+don't) using `git diff`:
+
+    $ git diff --staged
+
+On most systems, you can use the arrow keys to navigate through the changes,
+and you can press the `q` key when you're done reviewing.
+
+Next, we'll create a commit with the staged changes:
+
+    $ git commit -m '[css-color] Add test for `fuschia` keyword'
+
+And now we can push the commit to our fork of WPT:
+
+    $ git push origin reftest-for-fuchsia
+
+The last step is to submit the test for review. We do this by creating a pull
+request on GitHub. [The guide on git and GitHub](../appendix/github-intro) has
+all the details on how to do that.
