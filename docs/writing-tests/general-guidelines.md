@@ -37,11 +37,10 @@ on [file names][file-name-flags].
 
 #### Support Files
 
-Various support files are available in in the `/common/` and `/media/`
-directories (web-platform-tests) and `/support/` (in css/). Reusing
-existing resources is encouraged where possible, as is adding
-generally useful files to these common areas rather than to specific
-testsuites.
+Various support files are available in in the directories named `/common/`,
+`/media/`, and `/css/support/`. Reusing existing resources is encouraged where
+possible, as is adding generally useful files to these common areas rather than
+to specific testsuites.
 
 
 #### Tools
