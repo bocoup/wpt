@@ -139,7 +139,7 @@ reference file is what allows the test to be run by a computer--the computer
 can verify that the color of each pixel in the test document exactly matches
 the color of the corresponding pixel in the reference document.
 
-Make a new file in the same `/css/css-color/` directory named
+Make a new file in the same `css/css-color/` directory named
 `fuchsia-ref.html`, and save the following markup into it:
 
 ```html
@@ -153,7 +153,20 @@ Make a new file in the same `/css/css-color/` directory named
 </body>
 ```
 
+This is like a stripped-down version of the test file. In order to produce a
+visual rendering which is the same as the expected rendering, it uses the
+hexadecimal notation to specify the fuchsia color. That way, if the browser
+doesn't support the `fuchsia` keyword, this file will still (hopefully) have
+colored text.
 
+This file is also completely functional without the WPT server, so you can open
+it in a browser directly from your hard drive.
+
+Currently, there's no way for a human operator or an automated script to know
+that the two files we've created are supposed to match visually. We'll need to
+add one more piece of metadata to the test file we created earlier. Open
+`css/css-colors/fuchsia.html` in your text editor and add another `<link>` tag
+as described by the following change summary:
 
 ```diff
  <!DOCTYPE html>
@@ -169,7 +182,44 @@ Make a new file in the same `/css/css-color/` directory named
  </body>
 ```
 
+Now, anyone (human or computer) reviewing the test file will know where to find
+the associated reference file.
+
 ## Writing a "mismatch" reference
+
+With a test file and a reference file, we've completed both of the necessary
+components of a WPT reftest. However, what we've created so far is susceptible
+to "false positives." Put differently: browsers could pass this test without
+actually doing what we expect. For example, a browser would produce identical
+renderings for both of the new files if it always presented text in black. A
+browser that did that definitely shouldn't pass our test.
+
+Fortunately, WPT reftests offer another feature which lets us guard against
+false positives: "mismatch" files. We can add a file that demonstrates what the
+test should *not* look like, and that will help catch cases where the test and
+the reference match for the wrong reason.
+
+For our example, we can make a new document which intentionally sets the text
+color to black. We'll save it in `css/css-colors/fuchsia-notref.html`:
+
+```html
+<!DOCTYPE html>
+<meta charset="utf-8">
+<title>fuchsia text mismatch</title>
+<style>body { color: #000000; }</style>
+
+<body>
+  Test passes if this text is fuchsia.
+</body>
+```
+
+The statement is a little confusing in this context since we actually expect
+the text to be black. In order to catch those false positives, it's important
+that we don't change anything except the aspect we're verifying.
+
+Just like with the reference document, we'll need to add some metadata to the
+test document so it's clear how this new file should be interpreted. Note that
+we're using `rel="mismatch"` this time:
 
 ```diff
  <!DOCTYPE html>
@@ -185,6 +235,17 @@ Make a new file in the same `/css/css-color/` directory named
    Test passes if this text is fuchsia.
  </body>
 ```
+
+Now, if the test and the reference match for the wrong reason, the test will
+still fail because the file we've said shouldn't match will actually render
+identically.
+
+There are many ways a test could fail, so there are many different "mismatch"
+files we could create. It can be hard to know what kind of "mismatch" files
+would be most likely to catch bugs. Just like with the `assert` metadata, this
+is something you'll develop an understanding of as you learn more about the
+specification you're testing. In the mean time, the people reviewing your tests
+can give you advice.
 
 ## Verifying our work
 
