@@ -2,10 +2,11 @@
 
 Let's say you've discovered that WPT doesn't have any tests for the CSS color
 `fuchsia`. This tutorial will guide you through the process of writing and
-submitting a test. It assumes that you've already [configured your system to
-contribute to WPT](../running-tests/from-local-system). Although it includes
-some very brief instructions on using git, you can find more guidance in [the
-tutorial for git and GitHub](../appendix/github-intro).
+submitting a test. You'll need to [configure your system to use WPT's
+tools](../running-tests/from-local-system), but you won't need them until
+towards the end of this tutorial. Although it includes some very brief
+instructions on using git, you can find more guidance in [the tutorial for git
+and GitHub](../appendix/github-intro).
 
 WPT's reftests are great for testing web platform features that have some
 visual effect. [The reftests reference page](reftests) describes them in the
@@ -122,7 +123,7 @@ That's pretty dense! Let's break it down:
 Since this page doesn't rely on any [special WPT server
 features](server-features), we can view it by loading the HTML file directly.
 There are a bunch of ways to do this; one is to navigate to the
-`css/css-colors` directory in a file browser and drag the new `fuschia.html`
+`css/css-color` directory in a file browser and drag the new `fuschia.html`
 file into an open web browser window.
 
 Sighted people can open that document and verify whether or not the stated
@@ -165,7 +166,7 @@ it in a browser directly from your hard drive.
 Currently, there's no way for a human operator or an automated script to know
 that the two files we've created are supposed to match visually. We'll need to
 add one more piece of metadata to the test file we created earlier. Open
-`css/css-colors/fuchsia.html` in your text editor and add another `<link>` tag
+`css/css-color/fuchsia.html` in your text editor and add another `<link>` tag
 as described by the following change summary:
 
 ```diff
@@ -189,10 +190,10 @@ the associated reference file.
 
 With a test file and a reference file, we've completed both of the necessary
 components of a WPT reftest. However, what we've created so far is susceptible
-to "false positives." Put differently: browsers could pass this test without
-actually doing what we expect. For example, a browser would produce identical
-renderings for both of the new files if it always presented text in black. A
-browser that did that definitely shouldn't pass our test.
+to "false positives." Web browsers could pass this test without actually doing
+what we expect. For example, a browser would produce identical renderings for
+both of the new files if it always presented text in black. A browser like that
+definitely shouldn't pass our test.
 
 Fortunately, WPT reftests offer another feature which lets us guard against
 false positives: "mismatch" files. We can add a file that demonstrates what the
@@ -200,7 +201,7 @@ test should *not* look like, and that will help catch cases where the test and
 the reference match for the wrong reason.
 
 For our example, we can make a new document which intentionally sets the text
-color to black. We'll save it in `css/css-colors/fuchsia-notref.html`:
+color to black. We'll save it in `css/css-color/fuchsia-notref.html`:
 
 ```html
 <!DOCTYPE html>
@@ -249,9 +250,33 @@ can give you advice.
 
 ## Verifying our work
 
-- ~~run the WPT server and visit the test files manually~~
-- run from the filesystem
-- run in `wpt serve`
+We're done writing the test, but we should make sure it fits in with the rest
+of WPT before we submit it. This involves using some of the project's tools, so
+this is the point you'll need to [configure your system to run
+WPT](../running-tests/from-local-system).
+
+[The lint tool]() can detect some of the common mistakes people make when
+contributing to WPT. To run it, open a command-line terminal, navigate to the
+root of the WPT repository, and enter the following command:
+
+    python ./wpt lint
+
+If this recognizes any of those common mistakes in the new files, it will tell
+you where they are and how to fix them. If you do have changes to make, you can
+run the command again to make sure you got them right.
+
+Now, we'll run the test using the automated pixel-by-pixel comparison approach
+mentioned earlier. This is important for reftests because the test and the
+reference may differ in very subtle ways that are hard to catch with the naked
+eye. That''s not to say your test has to pass in all browsers (or even in *any*
+browser). But if we expect the test to pass, then running it this way will help
+us catch other kinds of mistakes. Additional things to look out for are if the
+test doesn't run at all or if the browser crashes.
+
+The tools support running the tests in many different browsers, but we'll use Firefox
+here.
+
+    python ./wpt run firefox css/css-color/fuchsia.html
 
 ## Submitting the test
 
