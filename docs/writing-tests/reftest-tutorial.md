@@ -126,6 +126,8 @@ There are a bunch of ways to do this; one is to navigate to the
 `css/css-color` directory in a file browser and drag the new `fuschia.html`
 file into an open web browser window.
 
+![](/assets/reftest-tutorial-test-screenshot.png "screen shot of the new test")
+
 Sighted people can open that document and verify whether or not the stated
 expectation is satisfied. If we were writing a [manual test](manual), we'd be
 done. However, it's time consuming for a human to run tests, so we should
@@ -218,19 +220,16 @@ The statement is a little confusing in this context since we actually expect
 the text to be black. In order to catch those false positives, it's important
 that we don't change anything except the aspect we're verifying.
 
-Just like with the reference document, we'll need to add some metadata to the
-test document so it's clear how this new file should be interpreted. Note that
-we're using `rel="mismatch"` this time:
+We'll need to add some more metadata (this time to the reference document) so
+it's clear how this new file should be interpreted. Note that we're using
+`rel="mismatch"` this time:
 
 ```diff
  <!DOCTYPE html>
  <meta charset="utf-8">
- <title>CSS Color: the "fuchsia" keyword</title>
- <link rel="author" title="Sam Smith">
- <link rel="help" href="https://www.w3.org/TR/css-color-3/#html4">
- <link rel="match" href="fuchsia-ref.html">
+ <title>fuchsia text reference</title>
 +<link rel="mismatch" href="fuchsia-notref.html">
- <style>body { color: fuchsia; }</style>
+ <style>body { color: #ff00ff; }</style>
 
  <body>
    Test passes if this text is fuchsia.
@@ -255,11 +254,11 @@ of WPT before we submit it. This involves using some of the project's tools, so
 this is the point you'll need to [configure your system to run
 WPT](../running-tests/from-local-system).
 
-[The lint tool]() can detect some of the common mistakes people make when
-contributing to WPT. To run it, open a command-line terminal, navigate to the
-root of the WPT repository, and enter the following command:
+[The lint tool](lint-tool) can detect some of the common mistakes people make
+when contributing to WPT. To run it, open a command-line terminal, navigate to
+the root of the WPT repository, and enter the following command:
 
-    python ./wpt lint
+    python ./wpt lint css/color
 
 If this recognizes any of those common mistakes in the new files, it will tell
 you where they are and how to fix them. If you do have changes to make, you can
@@ -268,13 +267,13 @@ run the command again to make sure you got them right.
 Now, we'll run the test using the automated pixel-by-pixel comparison approach
 mentioned earlier. This is important for reftests because the test and the
 reference may differ in very subtle ways that are hard to catch with the naked
-eye. That''s not to say your test has to pass in all browsers (or even in *any*
+eye. That's not to say your test has to pass in all browsers (or even in *any*
 browser). But if we expect the test to pass, then running it this way will help
 us catch other kinds of mistakes. Additional things to look out for are if the
 test doesn't run at all or if the browser crashes.
 
-The tools support running the tests in many different browsers, but we'll use Firefox
-here.
+The tools support running the tests in many different browsers. We'll use
+Firefox this time:
 
     python ./wpt run firefox css/css-color/fuchsia.html
 
