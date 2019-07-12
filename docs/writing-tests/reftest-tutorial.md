@@ -41,8 +41,8 @@ we'll write an HTML document that displays some text using a `<bdo>` element.
 WPT has thousands of tests, so it can be daunting to decide where to put a new
 one. Generally speaking, [test files should be placed in directories
 corresponding to the specification text they are
-verifying](../test-suite-design). `<bdo>` is defined in [the text-level
-semantics chapter of the HTML
+verifying](../test-suite-design). `<bdo>` is defined in [the "text-level
+semantics" chapter of the HTML
 specification](https://html.spec.whatwg.org/multipage/text-level-semantics.html),
 so we'll want to create our new test in the directory
 `html/semantics/text-level-semantics/the-bdo-element/`. Create a file named
@@ -115,13 +115,17 @@ That's pretty dense! Let's break it down:
 
 - ```html
   <p>Test passes if WAS is displayed below.</p>
+  ```
+
+  We're communicating the "pass" condition in plain English to make the test
+  self-describing.
+
+- ```html
   <bdo dir="rtl">SAW</bdo>
   ```
 
-  This is the real focus of the test. We're communicating the "pass" condition
-  in plain English to make the test self-describing, and we're including some
-  text inside a `<bdo>` element. In other words: we're demonstrating the
-  feature under test.
+  This is the real focus of the test. We're including some text inside a
+  `<bdo>` element in order to demonstrate the feature under test.
 
 Since this page doesn't rely on any [special WPT server
 features](server-features), we can view it by loading the HTML file directly.
