@@ -50,7 +50,7 @@ Here's one way to demonstrate the feature:
 <!DOCTYPE html>
 <meta charset="utf-8">
 <title>CSS Color: the "fuchsia" keyword</title>
-<link rel="author" title="Sam Smith">
+<link rel="author" title="Sam Smith" href="mailto:sam@example.com">
 <link rel="help" href="https://www.w3.org/TR/css-color-3/#html4">
 <meta name="assert" content="the keyword is interpreted as a valid color value">
 <style>body { color: fuchsia; }</style>
@@ -68,9 +68,9 @@ That's pretty dense! Let's break it down:
   ```
 
   We explicitly set the DOCTYPE and character set to be sure that browsers
-  don't infer them to be something we aren't expecting. Note that we're
-  omitting the `<html>` and `<head>` tags. That's a common practice in WPT,
-  preferred because it helps make tests more concise.
+  don't infer them to be something we aren't expecting. We're omitting the
+  `<html>` and `<head>` tags. That's a common practice in WPT, preferred
+  because it makes tests more concise.
 
 - ```html
   <title>CSS Color: the "fuchsia" keyword</title>
@@ -78,11 +78,12 @@ That's pretty dense! Let's break it down:
   The document's title should succinctly describe the feature under test.
 
 - ```html
-  <link rel="author" title="Sam Smith">
+  <link rel="author" title="Sam Smith" href="mailto:sam@example.com">
   ```
 
-  You should replace "Sam Smith" with your own name. This can help others learn
-  who to contact with questions about this test. The git history will do the
+  You should replace the value of the `title` and `href` attributes with your
+  name and e-mail, respectively. This can help others learn who to contact with
+  questions about this test. The git history will do the
   same thing, so you can leave this out if you prefer.
 
 - ```html
@@ -175,7 +176,7 @@ as described by the following change summary:
  <!DOCTYPE html>
  <meta charset="utf-8">
  <title>CSS Color: the "fuchsia" keyword</title>
- <link rel="author" title="Sam Smith">
+ <link rel="author" title="Sam Smith" href="mailto:sam@example.com">
  <link rel="help" href="https://www.w3.org/TR/css-color-3/#html4">
 +<link rel="match" href="fuchsia-ref.html">
  <style>body { color: fuchsia; }</style>
@@ -269,13 +270,23 @@ mentioned earlier. This is important for reftests because the test and the
 reference may differ in very subtle ways that are hard to catch with the naked
 eye. That's not to say your test has to pass in all browsers (or even in *any*
 browser). But if we expect the test to pass, then running it this way will help
-us catch other kinds of mistakes. Additional things to look out for are if the
-test doesn't run at all or if the browser crashes.
+us catch other kinds of mistakes.
 
 The tools support running the tests in many different browsers. We'll use
 Firefox this time:
 
     python ./wpt run firefox css/css-color/fuchsia.html
+
+We expect this test to pass, so if it does, we're ready to submit it. If we
+were testing a web platform feature that Firefox didn't support, we would
+expect the test to fail instead.
+
+There are a few problems to look out for in addition to passing/failing status.
+The report will describe fewer tests than we expect if the isn't run at all.
+That's usually a sign of a formatting mistake, so you'll want to make sure
+you've used the right file names and metadata. Separately, the web browser
+might crash. That's often a sign of a browser bug, so you should consider
+reporting it to the browser's maintainers!
 
 ## Submitting the test
 
