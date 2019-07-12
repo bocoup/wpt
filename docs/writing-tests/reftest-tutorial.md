@@ -189,65 +189,6 @@ as described by the following change summary:
 Now, anyone (human or computer) reviewing the test file will know where to find
 the associated reference file.
 
-## Writing a "mismatch" reference
-
-With a test file and a reference file, we've completed both of the necessary
-components of a WPT reftest. However, what we've created so far is susceptible
-to "false positives." Web browsers could pass this test without actually doing
-what we expect. For example, a browser would produce identical renderings for
-both of the new files if it always presented text in black. A browser like that
-definitely shouldn't pass our test.
-
-Fortunately, WPT reftests offer another feature which lets us guard against
-false positives: "mismatch" files. We can add a file that demonstrates what the
-test should *not* look like, and that will help catch cases where the test and
-the reference match for the wrong reason.
-
-For our example, we can make a new document which intentionally sets the text
-color to black. We'll save it in `css/css-color/fuchsia-notref.html`:
-
-```html
-<!DOCTYPE html>
-<meta charset="utf-8">
-<title>fuchsia text mismatch</title>
-<style>body { color: #000000; }</style>
-
-<body>
-  Test passes if this text is fuchsia.
-</body>
-```
-
-The statement is a little confusing in this context since we actually expect
-the text to be black. In order to catch those false positives, it's important
-that we don't change anything except the aspect we're verifying.
-
-We'll need to add some more metadata (this time to the reference document) so
-it's clear how this new file should be interpreted. Note that we're using
-`rel="mismatch"` this time:
-
-```diff
- <!DOCTYPE html>
- <meta charset="utf-8">
- <title>fuchsia text reference</title>
-+<link rel="mismatch" href="fuchsia-notref.html">
- <style>body { color: #ff00ff; }</style>
-
- <body>
-   Test passes if this text is fuchsia.
- </body>
-```
-
-Now, if the test and the reference match for the wrong reason, the test will
-still fail because the file we've said shouldn't match will actually render
-identically.
-
-There are many ways a test could fail, so there are many different "mismatch"
-files we could create. It can be hard to know what kind of "mismatch" files
-would be most likely to catch bugs. Just like with the `assert` metadata, this
-is something you'll develop an understanding of as you learn more about the
-specification you're testing. In the mean time, the people reviewing your tests
-can give you advice.
-
 ## Verifying our work
 
 We're done writing the test, but we should make sure it fits in with the rest
@@ -294,7 +235,6 @@ First, let's stage the new files for committing:
 
     $ git add css/css-color/fuchsia.html
     $ git add css/css-color/fuchsia-ref.html
-    $ git add css/css-color/fuchsia-notref.html
 
 We can make sure the commit has everything we want to submit (and nothing we
 don't) using `git diff`:
