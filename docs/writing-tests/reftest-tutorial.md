@@ -38,11 +38,11 @@ we'll write an HTML document that applies the `fuchsia` keyword to some text.
 
 WPT has thousands of tests, so it can be daunting to decide where to put a new
 one. Generally speaking, [test files should be placed in directories
-corresponding to the specification text they are verifying](../introduction).
-`fushsia` is defined in [CSS Color Module Level
-4](https://drafts.csswg.org/css-color/), so we'll want to create our new test
-in the directory `css/css-color/`. Create a file named `fuschia.html` and open
-it in your text editor.
+corresponding to the specification text they are
+verifying](../test-suite-design). `fushsia` is defined in [CSS Color Module
+Level 4](https://drafts.csswg.org/css-color/), so we'll want to create our new
+test in the directory `css/css-color/`. Create a file named `fuschia.html` and
+open it in your text editor.
 
 Here's one way to demonstrate the feature:
 
