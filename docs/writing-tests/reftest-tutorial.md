@@ -1,8 +1,10 @@
 # Writing a reftest
 
-Let's say you've discovered that WPT doesn't have any tests for the CSS color
-`fuchsia`. This tutorial will guide you through the process of writing and
-submitting a test. You'll need to [configure your system to use WPT's
+Let's say you've discovered that WPT doesn't have any tests for the `dir`
+attribute of [the `<bdo>`
+element](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/bdo). This
+tutorial will guide you through the process of writing and submitting a test.
+You'll need to [configure your system to use WPT's
 tools](../running-tests/from-local-system), but you won't need them until
 towards the end of this tutorial. Although it includes some very brief
 instructions on using git, you can find more guidance in [the tutorial for git
@@ -11,7 +13,7 @@ and GitHub](../appendix/github-intro).
 WPT's reftests are great for testing web platform features that have some
 visual effect. [The reftests reference page](reftests) describes them in the
 abstract, but for the purposes of this guide, we'll take it for granted that
-the reftest is the perfect way to test for CSS colors.
+the reftest is the perfect way to test for bidirectional text overrides.
 
 ```eval_rst
 .. contents::
@@ -25,39 +27,39 @@ located in the root of the WPT git repository:
 
     $ git fetch git@github.com:web-platform-tests/wpt.git
 
-Next, create a new branch named `reftest-for-fuchsia` from that revision:
+Next, create a new branch named `reftest-for-bdo` from that revision:
 
-    $ git checkout -b reftest-for-fuchsia FETCH_HEAD
+    $ git checkout -b reftest-for-bdo FETCH_HEAD
 
 Now you're ready to create your patch.
 
 ## Writing the test file
 
 First, we'll create a file that demonstrates the "feature under test." That is:
-we'll write an HTML document that applies the `fuchsia` keyword to some text.
+we'll write an HTML document that displays some text using a `<bdo>` element.
 
 WPT has thousands of tests, so it can be daunting to decide where to put a new
 one. Generally speaking, [test files should be placed in directories
 corresponding to the specification text they are
-verifying](../test-suite-design). `fushsia` is defined in [CSS Color Module
-Level 4](https://drafts.csswg.org/css-color/), so we'll want to create our new
-test in the directory `css/css-color/`. Create a file named `fuschia.html` and
-open it in your text editor.
+verifying](../test-suite-design). `<bdo>` is defined in [the text-level
+semantics chapter of the HTML
+specification](https://html.spec.whatwg.org/multipage/text-level-semantics.html),
+so we'll want to create our new test in the directory
+`html/semantics/text-level-semantics/the-bdo-element/`. Create a file named
+`rtl.html` and open it in your text editor.
 
 Here's one way to demonstrate the feature:
 
 ```html
 <!DOCTYPE html>
 <meta charset="utf-8">
-<title>CSS Color: the "fuchsia" keyword</title>
+<title>BDO element dir=rtl</title>
 <link rel="author" title="Sam Smith" href="mailto:sam@example.com">
-<link rel="help" href="https://www.w3.org/TR/css-color-3/#html4">
-<meta name="assert" content="the keyword is interpreted as a valid color value">
-<style>body { color: fuchsia; }</style>
+<link rel="help" href="https://html.spec.whatwg.org/#the-bdo-element">
+<meta name="assert" content="BDO element's DIR content attribute renders corrently given value of 'rtl'.">
 
-<body>
-  Test passes if this text is fuchsia.
-</body>
+<p>Test passes if WAS is displayed below.</p>
+<bdo dir="rtl">SAW</bdo>
 ```
 
 That's pretty dense! Let's break it down:
@@ -73,7 +75,7 @@ That's pretty dense! Let's break it down:
   because it makes tests more concise.
 
 - ```html
-  <title>CSS Color: the "fuchsia" keyword</title>
+  <title>BDO element dir=rtl</title>
   ```
   The document's title should succinctly describe the feature under test.
 
@@ -87,15 +89,16 @@ That's pretty dense! Let's break it down:
   same thing, so you can leave this out if you prefer.
 
 - ```html
-  <link rel="help" href="https://www.w3.org/TR/css-color-3/#html4">
+  <link rel="help" href="https://html.spec.whatwg.org/#the-bdo-element">
   ```
 
-  [The CSS Working Group requires that all tests include a reference to the
-  specification under test.](css-metadata) If you're writing a reftest for a
-  feature outside of CSS, feel free to omit this metadata.
+  The "help" metadata should reference the specification under test so that
+  everyone understands the motivation. This is so helpful that [the CSS Working
+  Group requires it for CSS tests](css-metadata)! If you're writing a reftest
+  for a feature outside of CSS, feel free to omit this tag.
 
 - ```html
-  <meta name="assert" content="the keyword is interpreted as a valid color value">
+  <meta name="assert" content="BDO element's DIR content attribute renders corrently given value of 'rtl'.">
   ```
 
   The "assert" metadata is a structured way for you to describe exactly what
@@ -111,21 +114,20 @@ That's pretty dense! Let's break it down:
   out.
 
 - ```html
-  <style>body { color: fuchsia; }</style>
-  <body>
-    Test passes if this text is fuchsia.
-  </body>
+  <p>Test passes if WAS is displayed below.</p>
+  <bdo dir="rtl">SAW</bdo>
   ```
 
-  This is the real focus of the test. We're defining a CSS rule that uses the
-  `fuchsia` keyword, and we're including some markup that matches the rule's
-  selector. In other words: we're demonstrating the feature under test.
+  This is the real focus of the test. We're communicating the "pass" condition
+  in plain English to make the test self-describing, and we're including some
+  text inside a `<bdo>` element. In other words: we're demonstrating the
+  feature under test.
 
 Since this page doesn't rely on any [special WPT server
 features](server-features), we can view it by loading the HTML file directly.
 There are a bunch of ways to do this; one is to navigate to the
-`css/css-color` directory in a file browser and drag the new `fuschia.html`
-file into an open web browser window.
+`html/semantics/text-level-semantics/the-bdo-element/` directory in a file
+browser and drag the new `rtl.html` file into an open web browser window.
 
 ![](/assets/reftest-tutorial-test-screenshot.png "screen shot of the new test")
 
@@ -140,28 +142,27 @@ write a "reference test." Now it's time to write the reference file.
 The "match" reference file describes what the test file is supposed to look
 like. Critically, it *must not* use the technology that we are testing. The
 reference file is what allows the test to be run by a computer--the computer
-can verify that the color of each pixel in the test document exactly matches
-the color of the corresponding pixel in the reference document.
+can verify that each pixel in the test document exactly matches the
+corresponding pixel in the reference document.
 
-Make a new file in the same `css/css-color/` directory named
-`fuchsia-ref.html`, and save the following markup into it:
+Make a new file in the same
+`html/semantics/text-level-semantics/the-bdo-element/` directory named
+`rtl-ref.html`, and save the following markup into it:
 
 ```html
 <!DOCTYPE html>
 <meta charset="utf-8">
-<title>fuchsia text reference</title>
-<style>body { color: #ff00ff; }</style>
+<title>BDO element dir=rtl reference</title>
 
-<body>
-  Test passes if this text is fuchsia.
-</body>
+<p>Test passes if WAS is displayed below.</p>
+<p>WAS</p>
 ```
 
 This is like a stripped-down version of the test file. In order to produce a
-visual rendering which is the same as the expected rendering, it uses the
-hexadecimal notation to specify the fuchsia color. That way, if the browser
-doesn't support the `fuchsia` keyword, this file will still (hopefully) have
-colored text.
+visual rendering which is the same as the expected rendering, it uses a `<p>`
+element whose contents is the characters in right-to-left order. That way, if
+the browser doesn't support the `<bdo>` element, this file will still show text
+in the correct sequence.
 
 This file is also completely functional without the WPT server, so you can open
 it in a browser directly from your hard drive.
@@ -169,21 +170,21 @@ it in a browser directly from your hard drive.
 Currently, there's no way for a human operator or an automated script to know
 that the two files we've created are supposed to match visually. We'll need to
 add one more piece of metadata to the test file we created earlier. Open
-`css/css-color/fuchsia.html` in your text editor and add another `<link>` tag
-as described by the following change summary:
+`html/semantics/text-level-semantics/the-bdo-element/rtl.html` in your text
+editor and add another `<link>` tag as described by the following change
+summary:
 
 ```diff
  <!DOCTYPE html>
  <meta charset="utf-8">
- <title>CSS Color: the "fuchsia" keyword</title>
+ <title>BDO element dir=rtl</title>
  <link rel="author" title="Sam Smith" href="mailto:sam@example.com">
- <link rel="help" href="https://www.w3.org/TR/css-color-3/#html4">
-+<link rel="match" href="fuchsia-ref.html">
- <style>body { color: fuchsia; }</style>
+ <link rel="help" href="https://html.spec.whatwg.org/#the-bdo-element">
++<link rel="match" href="rtl-ref.html">
+ <meta name="assert" content="BDO element's DIR content attribute renders corrently given value of 'rtl'.">
 
- <body>
-   Test passes if this text is fuchsia.
- </body>
+ <p>Test passes if WAS is displayed below.</p>
+ <bdo dir="rtl">SAW</bdo>
 ```
 
 Now, anyone (human or computer) reviewing the test file will know where to find
@@ -200,7 +201,7 @@ WPT](../running-tests/from-local-system).
 when contributing to WPT. To run it, open a command-line terminal, navigate to
 the root of the WPT repository, and enter the following command:
 
-    python ./wpt lint css/color
+    python ./wpt lint html/semantics/text-level-semantics/the-bdo-element
 
 If this recognizes any of those common mistakes in the new files, it will tell
 you where they are and how to fix them. If you do have changes to make, you can
@@ -216,7 +217,7 @@ us catch other kinds of mistakes.
 The tools support running the tests in many different browsers. We'll use
 Firefox this time:
 
-    python ./wpt run firefox css/css-color/fuchsia.html
+    python ./wpt run firefox html/semantics/text-level-semantics/the-bdo-element/rtl.html
 
 We expect this test to pass, so if it does, we're ready to submit it. If we
 were testing a web platform feature that Firefox didn't support, we would
@@ -233,8 +234,8 @@ reporting it to the browser's maintainers!
 
 First, let's stage the new files for committing:
 
-    $ git add css/css-color/fuchsia.html
-    $ git add css/css-color/fuchsia-ref.html
+    $ git add html/semantics/text-level-semantics/the-bdo-element/rtl.html
+    $ git add html/semantics/text-level-semantics/the-bdo-element/rtl-ref.html
 
 We can make sure the commit has everything we want to submit (and nothing we
 don't) using `git diff`:
@@ -246,11 +247,11 @@ and you can press the `q` key when you're done reviewing.
 
 Next, we'll create a commit with the staged changes:
 
-    $ git commit -m '[css-color] Add test for `fuschia` keyword'
+    $ git commit -m '[html] Add test for the `<bdo>` element'
 
 And now we can push the commit to our fork of WPT:
 
-    $ git push origin reftest-for-fuchsia
+    $ git push origin reftest-for-bdo
 
 The last step is to submit the test for review. We do this by creating a pull
 request on GitHub. [The guide on git and GitHub](../appendix/github-intro) has
