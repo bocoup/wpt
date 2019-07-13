@@ -95,6 +95,9 @@ def run(event_data, responses=None):
 
     return child.returncode, server.requests
 
+def to_key(request):
+    return request[:2]
+
 class Requests(object):
     read_collaborator = (
         'GET', '/repos/test-org/test-repo/collaborators/rms', None
@@ -108,6 +111,14 @@ class Requests(object):
         'DELETE',
         '/repos/test-org/test-repo/issues/543/labels/pull-request-has-preview',
         ''
+    )
+    get_ref_open = (
+        'GET', '/repos/test-org/test-repo/git/refs/prs-open/gh-543', None
+    )
+    get_ref_labeled = (
+        'GET',
+        '/repos/test-org/test-repo/git/refs/prs-labeled-for-preview/gh-543',
+        None
     )
     create_ref_open = (
         'POST',
@@ -179,10 +190,9 @@ def test_close_active_with_label_error():
     event_data['pull_request']['labels'].append(
         {'name': 'pull-request-has-preview'}
     )
-    responses = {(
-        'DELETE',
-        '/repos/test-org/test-repo/issues/543/labels/pull-request-has-preview'
-    ): (500, '{}')}
+    responses = {
+        to_key(Requests.delete_label): (500, '{}')
+    }
 
     returncode, requests = run(event_data, responses)
 
@@ -215,11 +225,9 @@ def test_open_with_label():
 def test_open_without_label_for_collaborator():
     event_data = default_data('opened')
     responses = {
-        ('GET', '/repos/test-org/test-repo/collaborators/rms'): (204, ''),
-        ('GET', '/repos/test-org/test-repo/git/refs/prs-open/gh-543'):
-            (404, '{}'),
-        ('GET', '/repos/test-org/test-repo/git/refs/prs-labeled-for-preview/gh-543'):
-            (404, '{}')
+        to_key(Requests.read_collaborator): (204, ''),
+        to_key(Requests.get_ref_open): (404, '{}'),
+        to_key(Requests.get_ref_labeled): (404, '{}'),
     }
 
     returncode, requests = run(event_data, responses)
@@ -260,10 +268,8 @@ def test_add_active_label():
         {'name': 'pull-request-has-preview'}
     )
     responses = {
-        ('GET', '/repos/test-org/test-repo/git/refs/prs-open/gh-543'):
-            (404, '{}'),
-        ('GET', '/repos/test-org/test-repo/git/refs/prs-labeled-for-preview/gh-543'):
-            (404, '{}'),
+        to_key(Requests.get_ref_open): (404, '{}'),
+        to_key(Requests.get_ref_labeled): (404, '{}')
     }
 
     returncode, requests = run(event_data, responses)
@@ -287,7 +293,7 @@ def test_remove_active_label():
     event_data = default_data('unlabeled')
     event_data['label'] = {'name': 'pull-request-has-preview'}
     responses = {
-        Requests.delete_ref_labeled[:2]: (204, '')
+        to_key(Requests.delete_ref_labeled): (204, '')
     }
 
     returncode, requests = run(event_data, responses)
