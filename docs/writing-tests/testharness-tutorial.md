@@ -37,6 +37,15 @@ With that out of the way, you're ready to create your patch.
 
 ## Writing a subtest
 
+<style>blockquote { font-style: italic; }</style>
+
+> Goals:
+>
+> - demonstrate asynchronous testing with Promises
+> - motivate non-trivial integration with WPT server
+> - use a web technology likely to be familiar to web developers (both widely
+>   used and widely supported)
+
 The first thing we'll do is configure the server to respond to a certain request
 by setting a cookie. Once that's done, we'll be able to make the request with
 `fetch` and verify that it interpreted the response correctly.
@@ -76,8 +85,8 @@ promise_test(function() {
 </script>
 ```
 
-If you run the server according to the instructions in the guide for local
-configuration, you can access the test at
+If you run the server according to the instructions in [the guide for local
+configuration](../running-tests/from-local-system), you can access the test at
 http://web-platform.test:8000/fetch/api/basic/set-cookie.html. You should see
 something like this:
 
@@ -85,16 +94,14 @@ something like this:
 
 ## Refining the subtest
 
-```diff
- promise_test(function() {
-   return fetch('thing.asis')
-     .then(function() {
-         assert_equals(document.cookie, 'test1=t1');
+> Goals:
+>
+> - explain motivation for "clean up" logic and demonstrate usage
 
-+        document.cookie = 'test1=;expires=Thu, 01 Jan 1970 00:00:01 GMT;';
-       });
- });
-```
+First, we should remove the cookie after the subtest is complete. This ensures
+a consistent state for any additional subtests we may add and also for any
+tests that follow. We'll use the `add_cleanup` method to ensure that the cookie
+is deleted even if the test fails.
 
 ```diff
 -promise_test(function() {
@@ -106,11 +113,14 @@ something like this:
    return fetch('thing.asis')
      .then(function() {
          assert_equals(document.cookie, 'test1=t1');
--
--        document.cookie = 'test1=;expires=Thu, 01 Jan 1970 00:00:01 GMT;';
        });
  });
 ```
+
+Although we'd prefer it if there were no other cookies defined during our test,
+we probably shouldn't take that for granted. We'll use slightly more
+complicated logic to test for the presence of the expected cookie.
+
 
 ```diff
  promise_test(function(t) {
@@ -127,6 +137,31 @@ something like this:
 ```
 
 ## Writing a second subtest
+
+> Goals:
+>
+> - demonstrate how to verify promise rejection
+> - demonstrate additional assertion functions
+> - motivate explicit test naming
+
+```js
+promise_test(function(t) {
+  t.add_cleanup(function() {
+    document.cookie = 'test1=;expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+  });
+
+  var operation = fetch('thing.asis');
+
+  window.stop();
+
+  return operation
+    .then(function() {
+        assert_unreached('The promise for the aborted fetch operation should reject.');
+      }, function() {
+        assert_false(/(^|; )test1=t1($|;)/.test(document.cookie);
+      });
+}, 'no cookie is set for aborted fetch operations');
+```
 
 ## Verifying our work
 
