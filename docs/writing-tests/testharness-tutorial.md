@@ -232,19 +232,9 @@ Goals of this section:
 
 There are many things we might want to verify about how `fetch` sets cookies.
 For instance, it should *not* set a cookie if the request fails due to
-cross-origin security restrictions. Let's write a test which verifies that.
+cross-origin security restrictions. Let's write a subtest which verifies that.
 
-It's tempting to add another call to `fetch` immediately after the assertion in
-our existing subtest. That could work, but it would also mean that if a browser
-failed the first part, it would never run the second part.
-
-Luckily, a testharness.js test can have many subtests, If we verify this
-behavior using a second subtest, then each subtest can pass or fail
-independently. That will give the browser maintainers a much clearer picture of
-the problem if they ever fail our new test.
-
-The first thing we'll do is add another support file designed to help with
-cross-domain testing:
+We'll add another `<script>` tag for a JavaScript support file:
 
 ```diff
  <!DOCTYPE html>
@@ -255,8 +245,9 @@ cross-domain testing:
 +<script src="/common/get-host-info.sub.js"></script>
 ```
 
-`get-host-info.sub.js` is stored in WPT's `common/` directory, so tests from
-all sorts of specifications rely on it.
+`get-host-info.sub.js` is a general-purpose script provided by WPT. It's
+designed to help with testing cross-domain functionality. Since it's stored in
+WPT's `common/` directory, tests from all sorts of specifications rely on it.
 
 Next, we'll define the new subtest inside the same `<script>` tag that holds
 our first subtest.
@@ -286,9 +277,9 @@ differences.
     '/fetch/api/basic/set-cookie.asis';
   ```
 
-  We're requesting the same resource, but we're using an alternate host name.
-  This makes the request a cross-origin request, and that's an interesting
-  edge case for the Fetch API and cookies.
+  We're requesting the same resource, but we're referring to it with an
+  alternate host name. The name of the host depends on how the WPT server has
+  been configured, so we rely on the helper to provide an appropriate value.
 
 - ```js
   return fetch(url)
@@ -301,9 +292,10 @@ differences.
 
   We're returning a Promise value, just like the first subtest. This time, we
   expect the operation to fail, so the Promise should be rejected. To express
-  this, we've used `assert_unreached` *in the fulfillment handler*. That's a
-  testharness.js utility function which always throws an error. With this in
-  place, if fetch does *not* produce an error, then this subtest will fail.
+  this, we've used `assert_unreached` *in the fulfillment handler*.
+  `assert_unreached` is a testharness.js utility function which always throws
+  an error. With this in place, if fetch does *not* produce an error, then this
+  subtest will fail.
 
   We've moved the assertion about the cookie to the rejection handler. We also
   switched from `assert_true` to `assert_false` because the test should only
@@ -326,23 +318,22 @@ work with WPT](../running-tests/from-local-system). To run it, open a
 command-line terminal, navigate to the root of the WPT repository, and enter
 the following command:
 
-    python ./wpt lint html/semantics/text-level-semantics/the-bdo-element
+    python ./wpt lint fetch/api/basic
 
 If this recognizes any of those common mistakes in the new files, it will tell
 you where they are and how to fix them. If you do have changes to make, you can
 run the command again to make sure you got them right.
 
-Now, we'll run the test using the automated pixel-by-pixel comparison approach
-mentioned earlier. This is important for reftests because the test and the
-reference may differ in very subtle ways that are hard to catch with the naked
-eye. That's not to say your test has to pass in all browsers (or even in *any*
-browser). But if we expect the test to pass, then running it this way will help
-us catch other kinds of mistakes.
+Now, we'll run the test using the automated test runner. This is important for
+testharness.js tests because there are subtleties of the automated test runner
+which can influence how the test behaves. That's not to say your test has to
+pass in all browsers (or even in *any* browser). But if we expect the test to
+pass, then running it this way will help us catch other kinds of mistakes.
 
 The tools support running the tests in many different browsers. We'll use
 Firefox this time:
 
-    python ./wpt run firefox html/semantics/text-level-semantics/the-bdo-element/rtl.html
+    python ./wpt run firefox fetch/api/basic/set-cookie.html
 
 We expect this test to pass, so if it does, we're ready to submit it. If we
 were testing a web platform feature that Firefox didn't support, we would
@@ -359,8 +350,8 @@ reporting it to the browser's maintainers!
 
 First, let's stage the new files for committing:
 
-    $ git add html/semantics/text-level-semantics/the-bdo-element/rtl.html
-    $ git add html/semantics/text-level-semantics/the-bdo-element/rtl-ref.html
+    $ git add fetch/api/basic/set-cookie.asis
+    $ git add fetch/api/basic/set-cookie.html
 
 We can make sure the commit has everything we want to submit (and nothing we
 don't) by using `git diff`:
@@ -372,25 +363,25 @@ and you can press the `q` key when you're done reviewing.
 
 Next, we'll create a commit with the staged changes:
 
-    $ git commit -m '[html] Add test for the `<bdo>` element'
+    $ git commit -m '[fetch] Add test for setting cookies'
 
 And now we can push the commit to our fork of WPT:
 
-    $ git push origin reftest-for-bdo
+    $ git push origin fetch-cookie
 
 The last step is to submit the test for review. WPT doesn't actually need the
-test we wrote, but if we wanted to submit it for inclusion in the repository,
-we would create a pull request on GitHub. [The guide on git and
+test we wrote in this tutorial, but if we wanted to submit it for inclusion in
+the repository, we would create a pull request on GitHub. [The guide on git and
 GitHub](../appendix/github-intro) has all the details on how to do that.
 
 ## More practice
 
-Here are some ideas for ways you can keep practicing with this test:
+Here are some ways you can keep experimenting with WPT using this test:
 
 - Improve the test's readability by defining helper functions like
   `cookieIsSet` and `deleteCookie`
 - Improve the test's coverage by refactoring it into [a "multi-global"
   test](testharness)
-- Improve the test's coverage by writing more subtests (e.g. aborted fetch
-  operations from calling `window.stop`, or the behavior when the HTTP response
-  sets multiple cookies)
+- Improve the test's coverage by writing more subtests (e.g. the behavior when
+  the fetch operation is aborted by `window.stop`, or the behavior when the
+  HTTP response sets multiple cookies)
