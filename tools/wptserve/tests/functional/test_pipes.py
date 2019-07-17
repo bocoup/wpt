@@ -57,7 +57,7 @@ class TestSlice(TestUsingServer):
 class TestSub(TestUsingServer):
     def test_sub_config(self):
         resp = self.request("/sub.txt", query="pipe=sub")
-        expected = b"localhost localhost %i" % self.server.port
+        expected = b"localhost localhost %i 127.0.0.1" % self.server.port
         self.assertEqual(resp.read().rstrip(), expected)
 
     def test_sub_file_hash(self):

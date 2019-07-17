@@ -42,6 +42,8 @@ Substitutions are marked in a file using a block delimited by `{{`
 and `}}`. Inside the block the following variables are available:
 
 - `{{host}}` - The host name of the server excluding any subdomain part.
+- `{{alt_host}}` - The alternate host name of the server excluding any subdomain
+  part.
 - `{{domains[]}}` - The domain name of a particular subdomain e.g.
   `{{domains[www]}}` for the `www` subdomain.
 - `{{ports[][]}}` - The port number of servers, by protocol e.g.

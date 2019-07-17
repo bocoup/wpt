@@ -114,7 +114,9 @@ class ConfigBuilder(object):
 
     _default = {
         "browser_host": "localhost",
-        "alternate_hosts": {},
+        "alternate_hosts": {
+            "alt": "127.0.0.1"
+        },
         "doc_root": os.path.dirname("__file__"),
         "server_host": None,
         "ports": {"http": [8000]},

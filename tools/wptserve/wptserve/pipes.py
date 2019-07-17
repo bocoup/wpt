@@ -480,6 +480,8 @@ def template(request, content, escape_type="html"):
             value = request.server.config.all_domains[""]
         elif field == "host":
             value = request.server.config["browser_host"]
+        elif field == "alt_host":
+            value = request.server.config["alternate_hosts"]["alt"]
         elif field in request.server.config:
             value = request.server.config[field]
         elif field == "location":
