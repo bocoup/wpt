@@ -1,10 +1,21 @@
 # testharness.js tutorial
 
+<!--
+Note to maintainers:
+
+This tutorial is designed to be an authentic depiction of the WPT contribution
+experience. It is not intended to be comprehensive; it's scope is intentionally
+limited in order to demonstrate authoring a complete test without overwhelming
+the reader with features. This should be updated as typical WPT usage patterns
+change, but please weigh extensions against the demotivating effect that a
+lengthy guide can have on new contributors.
+-->
+
 Let's say you've discovered that WPT doesn't have any tests for how [the Fetch
-API](https://fetch.spec.whatwg.org/) sets cookies specified by HTTP responses.
-This tutorial will guide you through the process of writing and submitting a
-test. Although it includes some very brief instructions on using git, you can
-find more guidance in [the tutorial for git and
+API](https://fetch.spec.whatwg.org/) sets cookies from an HTTP response. This
+tutorial will guide you through the process of writing and submitting a test
+for exactly that. Although it includes some very brief instructions on using
+git, you can find more guidance in [the tutorial for git and
 GitHub](../appendix/github-intro).
 
 WPT's testharness.js is a framework designed to help people write tests for the
@@ -29,7 +40,7 @@ Next, create a new branch named `fetch-cookie` from that revision:
 
     $ git checkout -b fetch-cookie FETCH_HEAD
 
-The tests we're going to write will rely on special abilities of the wpt
+The tests we're going to write will rely on special abilities of the WPT
 server, so you'll also need to [configure your system to run
 WPT](../running-tests/from-local-system) before you continue.
 
@@ -37,23 +48,23 @@ With that out of the way, you're ready to create your patch.
 
 ## Writing a subtest
 
-<style>blockquote { font-style: italic; }</style>
+<!--
+Goals of this section:
 
-> Goals:
->
-> - demonstrate asynchronous testing with Promises
-> - motivate non-trivial integration with WPT server
-> - use a web technology likely to be familiar to web developers (both widely
->   used and widely supported)
+- demonstrate asynchronous testing with Promises
+- motivate non-trivial integration with WPT server
+- use web technology likely to be familiar to web developers
+- use web technology likely to be supported in the reader's browser
+-->
 
 The first thing we'll do is configure the server to respond to a certain request
 by setting a cookie. Once that's done, we'll be able to make the request with
 `fetch` and verify that it interpreted the response correctly.
 
 We'll configure the server with an "asis" file. That's the WPT convention for
-controlling the precise contents of an HTTP response. [You can read more about
-it here](server-features), but for now, we'll save the following text into a
-file named `set-cookie.asis` in the `fetch/api/basic/` directory of WPT:
+controlling the contents of an HTTP response. [You can read more about it
+here](server-features), but for now, we'll save the following text into a file
+named `set-cookie.asis` in the `fetch/api/basic/` directory of WPT:
 
 ```
 HTTP/1.1 204 No Content
@@ -70,14 +81,12 @@ same directory and insert the following text:
 <!DOCTYPE html>
 <meta charset="utf-8">
 <title>fetch: setting cookies</title>
-<link rel="author" title="Sam Smith" href="mailto:sam@example.com">
-<link rel="help" href="https://fetch.spec.whatwg.org/">
 <script src="/resources/testharness.js"></script>
 <script src="/resources/testharnessreport.js"></script>
 
 <script>
 promise_test(function() {
-  return fetch('thing.asis')
+  return fetch('set-cookie.asis')
     .then(function() {
         assert_equals(document.cookie, 'test1=t1');
       });
@@ -85,23 +94,79 @@ promise_test(function() {
 </script>
 ```
 
+Let's step through each part of this file.
+
+- ```html
+  <!DOCTYPE html>
+  <meta charset="utf-8">
+  ```
+
+  We explicitly set the DOCTYPE and character set to be sure that browsers
+  don't infer them to be something we aren't expecting. We're omitting the
+  `<html>` and `<head>` tags. That's a common practice in WPT, preferred
+  because it makes tests more concise.
+
+- ```html
+  <title>fetch: setting cookies</title>
+  ```
+  The document's title should succinctly describe the feature under test.
+
+- ```html
+  <script src="/resources/testharness.js"></script>
+  <script src="/resources/testharnessreport.js"></script>
+  ```
+
+  These two `<script>` tags retrieve the code that powers testharness.js. A
+  testharness.js test can't run without them!
+
+- ```html
+  <script>
+  promise_test(function() {
+    return fetch('thing.asis')
+      .then(function() {
+          assert_equals(document.cookie, 'test1=t1');
+        });
+  });
+  </script>
+  ```
+
+  This script uses the testharness.js function `promise_test` to define a
+  "subtest". We're using that because the behavior we're testing is
+  asynchronous. By returning a Promise value, we tell the harness to wait until
+  that Promise settles. The harness will report that the test has passed if
+  the Promise is fulfilled, and it will report that the test has failed if the
+  Promise is rejected.
+
+  We invoke the global `fetch` function to exercise the "behavior under test,"
+  and in the fulfillment handler, we verify that the expected cookie is set.
+  We're using the testharness.js `assert_equals` function to verify that the
+  value is correct; the function will throw an error otherwise. That will cause
+  the Promise to be rejected, and *that* will cause the harness to report a
+  failure.
+
 If you run the server according to the instructions in [the guide for local
 configuration](../running-tests/from-local-system), you can access the test at
-http://web-platform.test:8000/fetch/api/basic/set-cookie.html. You should see
-something like this:
+[http://web-platform.test:8000/fetch/api/basic/set-cookie.html](http://web-platform.test:8000/fetch/api/basic/set-cookie.html.).
+You should see something like this:
 
-![](TODO screen shot of testharness.js reporting the test results)
+![](../assets/testharness-tutorial-test-screenshot-1.png "screen shot of testharness.js reporting the test results")
 
 ## Refining the subtest
 
-> Goals:
->
-> - explain motivation for "clean up" logic and demonstrate usage
+<!--
+Goals of this section:
 
-First, we should remove the cookie after the subtest is complete. This ensures
-a consistent state for any additional subtests we may add and also for any
-tests that follow. We'll use the `add_cleanup` method to ensure that the cookie
-is deleted even if the test fails.
+- explain the motivation for "clean up" logic and demonstrate its usage
+- motivate explicit test naming
+-->
+
+We'd like to test a little more about `fetch` and cookies, but before we do,
+there are some improvements we can make to what we've written so far.
+
+For instance, we should remove the cookie after the subtest is complete. This
+ensures a consistent state for any additional subtests we may add and also for
+any tests that follow. We'll use the `add_cleanup` method to ensure that the
+cookie is deleted even if the test fails.
 
 ```diff
 -promise_test(function() {
@@ -118,7 +183,8 @@ is deleted even if the test fails.
 ```
 
 Although we'd prefer it if there were no other cookies defined during our test,
-we probably shouldn't take that for granted. We'll use slightly more
+we shouldn't take that for granted. As written, the test will fail if the
+`document.cookie` includes additional cookies. We'll use slightly more
 complicated logic to test for the presence of the expected cookie.
 
 
@@ -136,43 +202,129 @@ complicated logic to test for the presence of the expected cookie.
  });
 ```
 
+In the screen shot above, the subtest's result was reported using the
+document's title, "fetch: setting cookies". Since we expect to add another
+subtest, we should give this one a more specific name:
+
+```diff
+ promise_test(function(t) {
+   t.add_cleanup(function() {
+     document.cookie = 'test1=;expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+   });
+
+   return fetch('thing.asis')
+     .then(function() {
+         assert_true(/(^|; )test1=t1($|;)/.test(document.cookie));
+       });
+-});
++}, 'cookie set for successful request');
+```
+
 ## Writing a second subtest
 
-> Goals:
->
-> - demonstrate how to verify promise rejection
-> - demonstrate additional assertion functions
-> - motivate explicit test naming
+<!--
+Goals of this section:
+
+- introduce the concept of cross-domain testing and the associated tooling
+- demonstrate how to verify promise rejection
+- demonstrate additional assertion functions
+-->
+
+There are many things we might want to verify about how `fetch` sets cookies.
+For instance, it should *not* set a cookie if the request fails due to
+cross-origin security restrictions. Let's write a test which verifies that.
+
+It's tempting to add another call to `fetch` immediately after the assertion in
+our existing subtest. That could work, but it would also mean that if a browser
+failed the first part, it would never run the second part.
+
+Luckily, a testharness.js test can have many subtests, If we verify this
+behavior using a second subtest, then each subtest can pass or fail
+independently. That will give the browser maintainers a much clearer picture of
+the problem if they ever fail our new test.
+
+The first thing we'll do is add another support file designed to help with
+cross-domain testing:
+
+```diff
+ <!DOCTYPE html>
+ <meta charset="utf-8">
+ <title>fetch: setting cookies</title>
+ <script src="/resources/testharness.js"></script>
+ <script src="/resources/testharnessreport.js"></script>
++<script src="/common/get-host-info.sub.js"></script>
+```
+
+`get-host-info.sub.js` is stored in WPT's `common/` directory, so tests from
+all sorts of specifications rely on it.
+
+Next, we'll define the new subtest inside the same `<script>` tag that holds
+our first subtest.
 
 ```js
 promise_test(function(t) {
   t.add_cleanup(function() {
     document.cookie = 'test1=;expires=Thu, 01 Jan 1970 00:00:01 GMT;';
   });
+  const url = get_host_info().HTTP_NOTSAMESITE_ORIGIN +
+    '/fetch/api/basic/set-cookie.asis';
 
-  var operation = fetch('thing.asis');
-
-  window.stop();
-
-  return operation
+  return fetch(url)
     .then(function() {
         assert_unreached('The promise for the aborted fetch operation should reject.');
       }, function() {
-        assert_false(/(^|; )test1=t1($|;)/.test(document.cookie);
+        assert_false(/(^|; )test1=t1($|;)/.test(document.cookie));
       });
-}, 'no cookie is set for aborted fetch operations');
+}, 'no cookie is set for cross-domain fetch operations');
 ```
+
+This may look familiar from the previous subtest, but there are some important
+differences.
+
+- ```js
+  const url = get_host_info().HTTP_NOTSAMESITE_ORIGIN +
+    '/fetch/api/basic/set-cookie.asis';
+  ```
+
+  We're requesting the same resource, but we're using an alternate host name.
+  This makes the request a cross-origin request, and that's an interesting
+  edge case for the Fetch API and cookies.
+
+- ```js
+  return fetch(url)
+    .then(function() {
+        assert_unreached('The promise for the aborted fetch operation should reject.');
+      }, function() {
+        assert_false(/(^|; )test1=t1($|;)/.test(document.cookie));
+      });
+  ```
+
+  We're returning a Promise value, just like the first subtest. This time, we
+  expect the operation to fail, so the Promise should be rejected. To express
+  this, we've used `assert_unreached` *in the fulfillment handler*. That's a
+  testharness.js utility function which always throws an error. With this in
+  place, if fetch does *not* produce an error, then this subtest will fail.
+
+  We've moved the assertion about the cookie to the rejection handler. We also
+  switched from `assert_true` to `assert_false` because the test should only
+  pass if the cookie is *not* set. It's a good thing we have the cleanup logic
+  in the previous subtest, right?
+
+If you run the test in your browser now, you can expect to see both tests
+reported as passing with their distinct names.
+
+![](../assets/testharness-tutorial-test-screenshot-2.png "screen shot of testharness.js reporting the test results")
 
 ## Verifying our work
 
 We're done writing the test, but we should make sure it fits in with the rest
-of WPT before we submit it. This involves using some of the project's tools, so
-this is the point you'll need to [configure your system to run
-WPT](../running-tests/from-local-system).
+of WPT before we submit it.
 
 [The lint tool](lint-tool) can detect some of the common mistakes people make
-when contributing to WPT. To run it, open a command-line terminal, navigate to
-the root of the WPT repository, and enter the following command:
+when contributing to WPT. You enabled it when you [configured your system to
+work with WPT](../running-tests/from-local-system). To run it, open a
+command-line terminal, navigate to the root of the WPT repository, and enter
+the following command:
 
     python ./wpt lint html/semantics/text-level-semantics/the-bdo-element
 
@@ -226,6 +378,19 @@ And now we can push the commit to our fork of WPT:
 
     $ git push origin reftest-for-bdo
 
-The last step is to submit the test for review. We do this by creating a pull
-request on GitHub. [The guide on git and GitHub](../appendix/github-intro) has
-all the details on how to do that.
+The last step is to submit the test for review. WPT doesn't actually need the
+test we wrote, but if we wanted to submit it for inclusion in the repository,
+we would create a pull request on GitHub. [The guide on git and
+GitHub](../appendix/github-intro) has all the details on how to do that.
+
+## More practice
+
+Here are some ideas for ways you can keep practicing with this test:
+
+- Improve the test's readability by defining helper functions like
+  `cookieIsSet` and `deleteCookie`
+- Improve the test's coverage by refactoring it into [a "multi-global"
+  test](testharness)
+- Improve the test's coverage by writing more subtests (e.g. aborted fetch
+  operations from calling `window.stop`, or the behavior when the HTTP response
+  sets multiple cookies)
