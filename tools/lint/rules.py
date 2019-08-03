@@ -1,6 +1,7 @@
 from __future__ import unicode_literals
 
 import abc
+import inspect
 import os
 import re
 
@@ -11,6 +12,10 @@ if MYPY:
     # MYPY is set to True when run under Mypy.
     from typing import Any, List, Match, Optional, Pattern, Text, Tuple, cast
     Error = Tuple[Text, Text, Text, Optional[int]]
+
+
+def collapse(string):
+    return inspect.cleandoc(string).replace("\n", " ")
 
 
 class Rule(six.with_metaclass(abc.ABCMeta)):
@@ -65,8 +70,9 @@ class FileType(Rule):
 
 class WorkerCollision(Rule):
     name = "WORKER COLLISION"
-    description = ("path ends with %s which collides with generated tests "
-        "from %s files")
+    description = collapse("""
+        path ends with %s which collides with generated tests from %s files
+    """)
 
 
 class GitIgnoreFile(Rule):
@@ -82,8 +88,10 @@ class AhemCopy(Rule):
 # TODO: Add tests for this rule
 class IgnoredPath(Rule):
     name = "IGNORED PATH"
-    description = ("%s matches an ignore filter in .gitignore - "
-        "please add a .gitignore exception")
+    description = collapse("""
+        %s matches an ignore filter in .gitignore - please add a .gitignore
+        exception
+    """)
 
 
 class CSSCollidingTestName(Rule):
@@ -126,8 +134,10 @@ class ContentVisual(Rule):
 
 class AbsoluteUrlRef(Rule):
     name = "ABSOLUTE-URL-REF"
-    description = ("Reference test with a reference file specified via an "
-        "absolute URL: '%s'")
+    description = collapse("""
+        Reference test with a reference file specified via an absolute URL:
+        '%s'
+    """)
 
 
 class SameFileRef(Rule):
@@ -137,8 +147,9 @@ class SameFileRef(Rule):
 
 class NonexistentRef(Rule):
     name = "NON-EXISTENT-REF"
-    description = ("Reference test with a non-existent '%s' relationship "
-        "reference: '%s'")
+    description = collapse("""
+        Reference test with a non-existent '%s' relationship reference: '%s'
+    """)
 
 
 class MultipleTimeout(Rule):
@@ -152,10 +163,10 @@ class MultipleTimeout(Rule):
 
 class InvalidTimeout(Rule):
     name = "INVALID-TIMEOUT"
-    description = (
-        "Test file with `<meta name='timeout'...>` element that has a `content` "
-        "attribute whose value is not `long`: %s"
-    )
+    description = collapse("""
+        Test file with `<meta name='timeout'...>` element that has a `content`
+        attribute whose value is not `long`: %s
+    """)
     to_fix = "replace the value of the `content` attribute with `long`"
 
 
@@ -189,10 +200,10 @@ class PresentTestharnessCSS(Rule):
 
 class VariantMissing(Rule):
     name = "VARIANT-MISSING"
-    description = (
-        "Test file with a `<meta name='variant'...>` element that's missing a "
-        "`content` attribute"
-    )
+    description = collapse("""
+        Test file with a `<meta name='variant'...>` element that's missing a
+        `content` attribute
+    """)
     to_fix = """
         add a `content` attribute with an appropriate value to the `<meta
         name='variant'...>` element
@@ -201,17 +212,19 @@ class VariantMissing(Rule):
 
 class MalformedVariant(Rule):
     name = "MALFORMED-VARIANT"
-    description = ("%s `<meta name=variant>` 'content' attribute must be the "
-        "empty string or start with '?' or '#'")
+    description = collapse("""
+        %s `<meta name=variant>` 'content' attribute must be the empty string
+        or start with '?' or '#'
+    """)
 
 
 class LateTimeout(Rule):
     name = "LATE-TIMEOUT"
     description = "`<meta name=timeout>` seen after testharness.js script"
-    description = (
-        "Test file with `<meta name='timeout'...>` element after `<script "
-        "src='/resources/testharnessreport.js'>` element"
-    )
+    description = collapse("""
+        Test file with `<meta name='timeout'...>` element after `<script
+        src='/resources/testharnessreport.js'>` element
+    """)
     to_fix = """
         move the `<meta name="timeout"...>` element to precede the `script`
         element.
@@ -220,11 +233,11 @@ class LateTimeout(Rule):
 
 class EarlyTestharnessReport(Rule):
     name = "EARLY-TESTHARNESSREPORT"
-    description = (
-        "Test file has an instance of "
-        "`<script src='/resources/testharnessreport.js'>` prior to "
-        "`<script src='/resources/testharness.js'>`"
-    )
+    description = collapse("""
+        Test file has an instance of
+        `<script src='/resources/testharnessreport.js'>` prior to
+        `<script src='/resources/testharness.js'>`
+    """)
     to_fix = "flip the order"
 
 
@@ -399,9 +412,9 @@ class PrintRegexp(Regexp):
     pattern = br"print(?:\s|\s*\()"
     name = "PRINT STATEMENT"
     file_extensions = [".py"]
-    description = (
-        "A server-side python support file contains a `print` statement"
-    )
+    description = collapse("""
+        A server-side python support file contains a `print` statement
+    """)
     to_fix = """
         remove the `print` statement or replace it with something else that
         achieves the intended effect (e.g., a logging call)
