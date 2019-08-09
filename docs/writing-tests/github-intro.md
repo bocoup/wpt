@@ -249,7 +249,7 @@ GitHub UI.  Below is one method and others can be found on
 4. Wait for feedback on your pull request and once your pull request is
 accepted, delete your branch (see '[When Pull Request is Accepted](#cleanup)').
 
-[This page on the submissions process](submissions-process) has more detail
+[This page on the submissions process](submission-process) has more detail
 about what to expect when contributing code to WPT.
 
 ## Refine
