@@ -322,11 +322,8 @@ class FirstWrapper(object):
 
 
 @pipe(opt(nullable(str)))
-def sub(request, response, escape_type="html"):
+def sub(request, response):
     """Substitute environment information about the server and request into the script.
-
-    :param escape_type: String detailing the type of escaping to use. Known values are
-                        "html" and "none", with "html" the default for historic reasons.
 
     The format is a very limited template language. Substitutions are
     enclosed by {{ and }}. There are several available substitutions:
@@ -383,7 +380,7 @@ def sub(request, response, escape_type="html"):
     """
     content = resolve_content(response)
 
-    new_content = template(request, content, escape_type=escape_type)
+    new_content = template(request, content)
 
     response.content = new_content
     return response
@@ -441,7 +438,7 @@ class SubFunctions(object):
     def header_or_default(request, name, default):
         return request.headers.get(name, default)
 
-def template(request, content, escape_type="html"):
+def template(request, content):
     #TODO: There basically isn't any error handling here
     tokenizer = ReplacementTokenizer()
 
@@ -515,9 +512,6 @@ def template(request, content, escape_type="html"):
         if variable is not None:
             variables[variable] = value
 
-        escape_func = {"html": lambda x:escape(x, quote=True),
-                       "none": lambda x:x}[escape_type]
-
         # Should possibly support escaping for other contexts e.g. script
         # TODO: read the encoding of the response
         # cgi.escape() only takes text strings in Python 3.
@@ -525,7 +519,7 @@ def template(request, content, escape_type="html"):
             value = value.decode("utf-8")
         elif isinstance(value, int):
             value = text_type(value)
-        return escape_func(value).encode("utf-8")
+        return escape(value, quote=True).encode("utf-8")
 
     template_regexp = re.compile(br"{{([^}]*)}}")
     new_content = template_regexp.sub(config_replacement, content)
