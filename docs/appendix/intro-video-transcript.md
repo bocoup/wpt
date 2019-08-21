@@ -13,7 +13,7 @@
 > Hello, and welcome to the Web Platform Tests!
 >
 > The goal of this project is to ensure that all web browsers present websites
-> in exactly the way the websites' authors intended.
+> in exactly the way the authors intended.
 >
 > But what is the web platform, exactly? You can think of it as having three
 > main parts.
@@ -35,7 +35,10 @@ lower-left corner of the sheet.
 
 > These documents define how the browsers are supposed to behave.
 
-**A recording of a browser visiting https://platform.html5.org/**
+**A screen recording of a web browser**
+
+`https://platform.html5.org` is entered into the location bar, and the browser
+loads the page.
 
 > That includes everything from how text is rendered to how augmented reality
 > apps are built. Specifying it all takes a huge amount of work!
@@ -88,7 +91,7 @@ the tests.
 > That's pretty abstract, though! Let's take a quick look at the tests
 > themselves.
 
-**A recording of a web browser**
+**A screen recording of a web browser**
 
 `http://web-platform-tests.live` is entered into the location bar, and the
 browser loads the page.
