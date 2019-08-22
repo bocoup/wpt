@@ -10,29 +10,43 @@
 
 **Still image of the WPT logo**
 
+> <!-- time 00:00:00,000 00:00:02,500 -->
+>
 > Hello, and welcome to the Web Platform Tests!
+>
+> <!-- time 00:00:02,500 00:00:08,000 -->
 >
 > The goal of this project is to ensure that all web browsers present websites
 > in exactly the way the authors intended.
+>
+> <!-- time 00:00:09,000 00:00:14,000 -->
 >
 > But what is the web platform, exactly? You can think of it as having three
 > main parts.
 
 **A top-down shot of a blank sheet of graph paper**
 
+> <!-- time 00:00:15,000 00:00:17,000 -->
+>
 > First, there are the web browsers.
 
 A hand places a paper cutout depicting a browser window in the lower-right
 corner of the sheet.
 
+> <!-- time 00:00:17,000 00:00:23,000 -->
+>
 > Applications like Firefox, Chrome, and Safari allow people to interact with
 > pages and with each other.
+>
+> <!-- time 00:00:24,500 00:00:27,000 -->
 >
 > Second, there are the web standards.
 
 A hand places a paper cutout depicting a scroll of parchment paper in the
 lower-left corner of the sheet.
 
+> <!-- time 00:00:27,000 00:00:31,000 -->
+>
 > These documents define how the browsers are supposed to behave.
 
 **A screen recording of a web browser**
@@ -40,11 +54,15 @@ lower-left corner of the sheet.
 `https://platform.html5.org` is entered into the location bar, and the browser
 loads the page.
 
+> <!-- time 00:00:38,000 00:00:46,000 -->
+>
 > That includes everything from how text is rendered to how augmented reality
 > apps are built. Specifying it all takes a lot of work!
 
 The browser clicks through to the Fetch standard and begins scrolling.
 
+> <!-- time 00:00:46,000 00:00:49,500 -->
+>
 > And as you might expect, the standards can get really complicated.
 
 **Return to the graph paper**
@@ -52,6 +70,8 @@ The browser clicks through to the Fetch standard and begins scrolling.
 A hand draws an arrow from the cutout of the scroll to the cutout of the
 browser window.
 
+> <!-- time 00:00:49,500 00:01:01,500 -->
+>
 > The people who build the browsers use the specifications as a blue print for
 > their work. A shared set of generic instructions like these make it possible
 > for people to choose between different browsers, but only if the browsers get
@@ -60,33 +80,46 @@ browser window.
 A hand places a cutout representing a stack of papers on the top-center of the
 sheet and draws an arrow from that cutout to the cutout of the browser window.
 
+> <!-- time 00:01:01,500 00:01:08,000 -->
 > To verify their work, the browser maintainers rely on the third part of the
 > web platform: conformance tests.
 
 A hand draws an arrow from the cutout of the scroll to the cutout of the tests.
 
+> <!-- time 00:01:14,000 00:01:20,000 -->
+>
 > We author tests to describe the same behavior as the standards, just
 > formatted in a way that a computer can understand.
 
 A hand draws an arrow from the cutout of the browser window to the cutout of
 the scroll.
 
+> <!-- time 00:01:20,000 00:01:27,000 -->
+>
 > In the process, the maintainers sometimes uncover problems in the design of
 > the specifications, and they recommend changes to fix them.
 
 A hand draws an arrow from the cutout of the tests to the cutout of the scroll.
 
+> <!-- time 00:01:27,000 00:01:31,000 -->
+>
 > Test authors also find and fix these so-called "spec bugs."
 
 A hand draws an arrow from the cutout of the browser window to the cutout of
 the tests.
 
+> <!-- time 00:01:31,000 00:01:37,500 -->
+>
 > ...and as they implement the standards, the maintainers of each browser
 > frequently write new tests that can be shared with the others.
+>
+> <!-- time 00:01:37,500 00:01:48,500 -->
 >
 > This is how thousands of people coordinate to build the cohesive programming
 > platform that we call the world wide web. The web-platform-tests project is
 > one of the test suites that make this possible.
+>
+> <!-- time 00:01:48,500 00:01:52,500 -->
 >
 > That's pretty abstract, though! Let's take a quick look at the tests
 > themselves.
@@ -96,19 +129,27 @@ the tests.
 `http://web-platform-tests.live` is entered into the location bar, and the
 browser loads the page.
 
+> <!-- time 00:01:52,500 00:01:59,500 -->
+>
 > The latest version of the tests are publicly hosted in executable form on the
 > web at web-platform-tests.live.
 
 The browser begins scrolling through the enormous list of directories.
 
+> <!-- time 00:01:59,500 00:02:04,000 -->
+>
 > There, were can navigate among all the tests for all the different web
 > technologies.
+>
+> <!-- time 00:02:04,000 00:02:07,000 -->
 >
 > Let's take a look at a typical test.
 
 The browser stops scrolling, and a mouse cursor clicks on `fetch`, then `api`,
 then `headers`, and finally `headers-basic.html`.
 
+> <!-- time 00:02:11,000 00:02:27,000 -->
+>
 > This test is written with the web-platform-tests's testing framework,
 > testharness.js. The test completes almost instantly, and testharness.js
 > reports that this browser passes all but one subtest. To understand the
@@ -117,6 +158,8 @@ then `headers`, and finally `headers-basic.html`.
 The mouse opens a context menu, selects "View Source", and scrolls to the
 source of the failing test.
 
+> <!-- time 00:02:31,000 00:02:42,000 -->
+>
 > It looks like the failing subtest is for what happens when a `Headers`
 > instance has a custom JavaScript iterator method. That's a strange edge case,
 > but it's important for browsers to agree on every detail!
@@ -126,21 +169,31 @@ directory structure to the test at
 `css/css-transforms/transform-transformed-tr-contains-fixed-position.html`. It
 displays text rendered at an angle.
 
+> <!-- time 00:02:42,000 00:02:48,000 -->
+>
 > Many tests don't use testharness.js at all. Let's take a look at a couple
 > other test types.
+>
+> <!-- time 00:02:48,000 00:03:00,000 -->
 >
 > When it comes to the visual appearance of a page, it can be hard to verify
 > the intended behavior using JavaScript alone. For these situations, the
 > web-platform-tests uses what's known as a reftest.
 >
+> <!-- time 00:03:04,500 00:03:09,000 -->
+>
 > Short for "reference test", this type of test uses at least two different web
 > pages.
+>
+> <!-- time 00:03:09,500 00:03:13,000 -->
 >
 > The first page demonstrates the feature under test.
 
 The mouse opens a context menu, selects "View Source", and clicks on the `href`
 value for the matching reference. It looks identical to the previous page.
 
+> <!-- time 00:03:14,500 00:03:29,500 -->
+>
 > Inside of it, we'll find a link to a second page. This second page is the
 > reference page. It's designed to use a different approach to produce the same
 > output.
@@ -148,6 +201,8 @@ value for the matching reference. It looks identical to the previous page.
 The mouse clicks back and forth between the browser tabs displaying the test
 page and the reference page.
 
+> <!-- time 00:03:29,500 00:03:35,500 -->
+>
 > When tests like these are run automatically, a computer verifies that
 > screenshots of the two pages are identical.
 
@@ -158,9 +213,13 @@ text, "Test passes if there is a filled color square with 'Filler Text', whose
 color gradually changes in the order: YELLOW to GREEN." It also includes the
 described animated square.
 
+> <!-- time 00:03:37,500 00:03:48,000 -->
+>
 > Even with testharness.js and reftests, there are many web platform features
 > that a computer can't automatically verify. In cases like these, we fall back
 > to using manual tests.
+>
+> <!-- time 00:03:51,000 00:04:02,000 -->
 >
 > Manual tests can only be verified by a living, breathing human. They describe
 > their expectations in plain English so that a human operator can easily
@@ -169,6 +228,8 @@ described animated square.
 `https://web-platform-tests.org` is entered into the location bar, and the
 browser loads the page.
 
+> <!-- time 00:04:04,500 00:04:12,000 -->
+>
 > You can read more about
 > all the test types in the project documentation at
 > [web-platform-tests.org](https://web-platform-tests.org).
@@ -176,18 +237,24 @@ browser loads the page.
 `https://wpt.fyi` is entered into the location bar, and the browser loads the
 page.
 
+> <!-- time 00:04:15,000 00:04:22,500 -->
+>
 > [wpt.fyi](https://wpt.fyi) is a great way to see how today's browsers are
 > performing on the web-platform-tests.
 
 The browser scrolls to `fetch`, and a mouse cursor clicks on `fetch`, then
 `api`, then `headers`, and finally `headers-basic.html`.
 
+> <!-- time 00:04:24,000 00:04:29,000 -->
+>
 > Here, you'll find all the same tests, just presented with the results from
 > various browsers.
 
 `https://web-platform-tests.live/LICENSE.md` is entered into the location bar,
 and the browser loads the page.
 
+> <!-- time 00:04:47,500 00:04:59,000 -->
+>
 > The web-platform-tests project is free and open source software. From bug
 > reports to documentation improvements and brand new tests, we welcome all
 > sorts of contributions from everyone.
@@ -195,12 +262,16 @@ and the browser loads the page.
 `https://github.com/web-platform-tests/wpt` is entered into the location bar,
 and the browser loads the page.
 
+> <!-- time 00:05:01,500 00:05:06,000 -->
+>
 > To get involved, you can visit the project management website hosted on
 > GitHub.com.
 
 The browser navigates to the project's "issues" list and filters the list for
 just the ones labeled as "good first issue."
 
+> <!-- time 00:05:09,000 00:05:19,000 -->
+>
 > Some issues are more difficult than others, but many are perfect for people who
 > are just getting started with the project. When we come across an issue like
 > that, we label it as a "good first issue."
@@ -208,6 +279,8 @@ just the ones labeled as "good first issue."
 `https://lists.w3.org/Archives/Public/public-test-infra` is entered into the
 location bar, and the browser loads the page.
 
+> <!-- time 00:05:23,500 00:05:28,500 -->
+>
 > You can also join the mailing list to receive e-mail with announcements and
 > discussion about the project.
 
@@ -215,6 +288,8 @@ location bar, and the browser loads the page.
 the page. `web4all` is entered as the Nickname, and `#testing` is entered as
 the channel name. A mouse clicks on the "Connect" button.
 
+> <!-- time 00:05:41,500 00:05:47,500 -->
+>
 > For more immediate communication, you can join the "testing" channel on the
 > IRC server run by the W3C.
 
@@ -226,4 +301,6 @@ cutouts.
 
 ![](../assets/web-platform.png "The diagram drawn in the video")
 
+> <!-- time 00:05:58,000 00:06:00,000 -->
+>
 > We're looking forward to working with you!
