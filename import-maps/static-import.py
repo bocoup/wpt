@@ -1,2 +1,5 @@
 def main(request, response):
-    return 'import "{}";\n'.format(request.GET.first('url'))
+    return (
+        (('Content-Type', 'text/javascript'),),
+        'import "{}";\n'.format(request.GET.first('url'))
+    )
