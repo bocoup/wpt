@@ -14,8 +14,9 @@ if MYPY:
     Error = Tuple[Text, Text, Text, Optional[int]]
 
 
-def collapse(string):
-    return inspect.cleandoc(string).replace("\n", " ")
+def collapse(text):
+    # type: (Text) -> Text
+    return inspect.cleandoc(str(text)).replace("\n", " ")
 
 
 class Rule(six.with_metaclass(abc.ABCMeta)):
