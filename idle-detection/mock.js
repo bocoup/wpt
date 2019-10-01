@@ -61,6 +61,10 @@ function expect(call) {
 }
 
 function intercept() {
+  if (typeof mojo === "undefined") {
+    return;
+  }
+
   let result = new FakeIdleMonitor();
 
   let binding = new mojo.Binding(blink.mojom.IdleManager, result);

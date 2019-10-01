@@ -1,6 +1,7 @@
 // META: global=worker,jsshell
 // META: script=../resources/test-utils.js
 'use strict';
+// not_single_test
 
 const WritableStreamDefaultWriter = new WritableStream().getWriter().constructor;
 const WriterProto = WritableStreamDefaultWriter.prototype;

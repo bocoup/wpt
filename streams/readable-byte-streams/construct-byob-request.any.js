@@ -1,6 +1,7 @@
 // META: global=worker,jsshell
 // META: script=../resources/rs-utils.js
 'use strict';
+// not_single_test
 
 // Prior to whatwg/stream#870 it was possible to construct a ReadableStreamBYOBRequest directly. This made it possible
 // to construct requests that were out-of-sync with the state of the ReadableStream. They could then be used to call

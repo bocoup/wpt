@@ -21,7 +21,8 @@
 
   <div id="log"></div>
   <script>
-    setup({allow_uncaught_exception:true});
+    // not_single_test
+    setup({allow_uncaught_exception:true, explicit_done: true});
     var error_count = 0;
     window.onerror = function(msg, url, lineno) {
       ++error_count;
@@ -35,6 +36,7 @@
   <script>
   test(function() {assert_equals(error_count, 1)},
        "correct number of calls to window.onerror");
+  done();
   </script>
  </body>
 </html>

@@ -1,5 +1,5 @@
 // META: global=worker
-
+// not_single_test
 'use strict';
 
 const classes = [

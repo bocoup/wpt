@@ -1,6 +1,7 @@
 // META: script=support-promises.js
 // META: title=Indexed DB and Structured Serializing/Deserializing
 // META: timeout=long
+// not_single_test
 
 // Tests Indexed DB coverage of HTML's Safe "passing of structured data"
 // https://html.spec.whatwg.org/multipage/structured-data.html

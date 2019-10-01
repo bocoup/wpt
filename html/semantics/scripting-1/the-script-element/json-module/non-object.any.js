@@ -1,4 +1,5 @@
 // META: global=window,worker
+// not_single_test
 
 for (const value of [null, true, false, "string"]) {
   promise_test(async t => {

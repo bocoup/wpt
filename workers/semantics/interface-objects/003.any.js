@@ -1,6 +1,6 @@
 // META: global=!default,sharedworker
 
-var expected = [
+var unexpected = [
   // https://html.spec.whatwg.org/
   "ApplicationCache",
   "WorkerGlobalScope",
