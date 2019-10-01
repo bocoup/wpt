@@ -1,8 +1,8 @@
 <!DOCTYPE HTML>
 <script src="/resources/testharness.js"></script>
 <script src="/resources/testharnessreport.js"></script>
+<div id="log"></div>
 <script>
-// not_single_test
 var srgbPixels =
     [[155,27,27,128, "srgbRed"],  [27,155,27,128, "srgbGreen"],
      [27,27,155,128, "srgbBlue"], [27,27,27,128, "srgbBlack"]];
@@ -112,7 +112,7 @@ function PreparePredefinedImageDataObjects() {
     }
 }
 
-PreparePredefinedImageDataObjects();
+setup(PreparePredefinedImageDataObjects);
 var imageDataColorSettingsSet = [
   {name: "SRGB U8", colorSettings: {colorSpace: "srgb", storageFormat: "uint8"},
       imageData: srgbImageDataU8},
