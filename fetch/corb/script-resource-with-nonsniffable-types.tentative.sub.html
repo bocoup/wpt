@@ -16,6 +16,8 @@
 setup({allow_uncaught_exception : true});
 
 function test(mime_type, is_blocking_expected) {
+  var action = is_blocking_expected ? "blocks" : "does not block";
+
   async_test(function(t) {
     var script = document.createElement("script")
 
@@ -44,10 +46,10 @@ function test(mime_type, is_blocking_expected) {
     // rather than cross-*site* URL below (e.g. s/hosts[alt]/domains/g).
     // See also https://crbug.com/918660 for more context.
     var src_prefix = "http://{{hosts[alt][www1]}}:{{ports[http][0]}}/fetch/corb/resources/sniffable-resource.py";
-    body = "window.script_has_run = true;"
+    var body = "window.script_has_run = true;"
     script.src = src_prefix + "?type=" + mime_type + "&body=" + encodeURIComponent(body);
     document.body.appendChild(script)
-  }, "CORB-blocks '" + mime_type + "' that starts with the following JSON parser breaker: " + body);
+  }, "CORB " + action + " '" + mime_type + "'");
 }
 
 // Some mime types should be protected by CORB without any kind
