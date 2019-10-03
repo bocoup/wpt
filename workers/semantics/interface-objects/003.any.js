@@ -1,6 +1,6 @@
 // META: global=!default,sharedworker
 
-var unexpected = [
+var expected = [
   // https://html.spec.whatwg.org/
   "ApplicationCache",
   "WorkerGlobalScope",
@@ -76,8 +76,8 @@ var unexpected = [
   "IDBTransaction",
 ];
 
-for (var i = 0; i < unexpected.length; ++i) {
+for (var i = 0; i < expected.length; ++i) {
   test(function() {
-    assert_true(unexpected[i] in self);
-  }, "The " + unexpected[i] + " interface object should not be exposed");
+    assert_true(expected[i] in self);
+  }, "The " + expected[i] + " interface object should be exposed");
 }
