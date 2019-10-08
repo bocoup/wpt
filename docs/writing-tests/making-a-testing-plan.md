@@ -111,8 +111,8 @@ the overall algorithm. This makes it easier for implementations to diverge.
 The most common example may be input validation. Many algorithms for JavaScript
 APIs begin by verifying that the input (function parameters, global state,
 etc.) meets some criteria. This may involve many independent checks. The
-precise order of the checks isn't normally important for the overall algorithm,
-but it is well-defined and observable, so it's important to verify.
+precise order of the checks may not influence result of the overall algorithm,
+but the order is well-defined and observable, so it's important to verify.
 
 *Example* The following algorithm from [the DOM
 specification](https://dom.spec.whatwg.org) describes how the
@@ -136,22 +136,23 @@ specification](https://dom.spec.whatwg.org) describes how the
 >    the [context object](https://dom.spec.whatwg.org/#context-object).
 
 This algorithm begins by ensuring that the context object isn't an HTML
-document. Then, it verifies that the first argument doesn't have a certain
-string. Implementations that verify those things in the opposite order would
-achieve a similar result (i.e. they'd reject invalid input), but that slight
-difference could cause interoperability bugs on the web.
+document. Then, it verifies that the first argument doesn't include a certain
+sequence of characters. Implementations that verify those things in the
+opposite order would achieve a similar result (i.e. they'd reject invalid
+input), but that slight difference could cause interoperability bugs on the
+web.
 
 If we prepare input that violates *both* steps, then we can verify that they're
 taken in the correct order. We can call `createCDATASection` on an HTML
 document and pass the string "`]]>`"; that should produce a
 `NotSupportedError`. If it produces a `InvalidCharacterError` instead, we'll
-know that the implementation is incorrectly running the second step before the
+know that the implementation has incorrectly placed the second step before the
 first.
 
 ## Exercising Restraint
 
-When writing conformance tests, the choosing what *not* to test is sometimes
-just as hard.
+When writing conformance tests, choosing what *not* to test is sometimes just
+as hard as finding what needs testing.
 
 ### Skip ambiguity
 
@@ -237,10 +238,10 @@ are expecting.
 It's definitely important to test exhaustively, but it's just as important to
 do so in a structured way. Reach out to the test suite's maintainers to learn
 if and how they have already tested those algorithms. In many cases, it's
-acceptable to test them just once (and maybe through a different API entirely),
-and rely only on surface-level testing elsewhere. While it's always possible
-for more tests to uncover new bugs, the chances may be slim. The time we spend
-writing tests is highly valuable, so we have to be efficient!
+acceptable to test them in just one place (and maybe through a different API
+entirely), and rely only on surface-level testing everywhere else. While it's
+always possible for more tests to uncover new bugs, the chances may be slim.
+The time we spend writing tests is highly valuable, so we have to be efficient!
 
 *Example* The following algorithm from [the DOM
 standard](https://dom.spec.whatwg.org/) powers
@@ -292,8 +293,8 @@ than a handful of carefully-chosen test cases. So although the risks of dynamic
 test generation may be tolerable in some specific cases, it's usually best to
 select the most interesting edge cases and move on.
 
-*Example* We can see appreciate this consideration in the very first step of
-the `Response` constructor from [the Fetch
+*Example* We can see this consideration in the very first step of the
+`Response` constructor from [the Fetch
 standard](https://fetch.spec.whatwg.org/)
 
 > The `Response`(*body*, *init*) constructor, when invoked, must run these
@@ -304,11 +305,12 @@ standard](https://fetch.spec.whatwg.org/)
 >
 > [...]
 
-This function accepts exactly 400 values for the "status." Many test frameworks
-make it easy to dynamically create one test for each value. Unless we have
-reason to believe that a browser may exhibit drastically different behavior for
-any of those values (e.g. correctly accepting `546` but incorrectly rejecting
-`547`), then the complexity of testing those cases probably isn't warranted.
+This function accepts exactly 400 values for the "status." With WPT's
+testharness.js, it's easy to dynamically create one test for each value. Unless
+we have reason to believe that a browser may exhibit drastically different
+behavior for any of those values (e.g. correctly accepting `546` but
+incorrectly rejecting `547`), then the complexity of testing those cases
+probably isn't warranted.
 
 Instead, focus on writing declarative tests for specific values which are novel
 in the context of the algorithm. For ranges like in this example, testing the
