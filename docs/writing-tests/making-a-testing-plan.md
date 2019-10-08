@@ -320,6 +320,35 @@ the feature to choose additional values. In this case, HTTP response status
 codes are classified by the "hundred" order of magnitude, so we might also want
 to test a "3xx" value and a "4xx" value.
 
+## Assessing coverage
+
+It's very likely that WPT already has some tests for the feature (or at least
+the specification) that you're interesting in testing. In that case, you'll
+have to study what's already been done before starting to write new tests.
+Understanding the design of existing tests will let you avoid duplicating
+effort, and it will also help you integrate your work more logically.
+
+Even if the feature you're testing does *not* have any tests, you should still
+keep these guidelines in mind. Sooner or later, someone else will want to
+extend your work, so you should give them a good starting point!
+
+### File names
+
+[This page on the design of WPT](../test-suite-design) goes into detail about
+how files are generally laid out in the repository.
+
+---
+
+If the feature you're testing does *not* have any tests, then you won't have to
+study existing coverage. In some ways, this makes contributing easier (even
+though it also means there are more tests to write). The
+
+
+Instead, you'll be responsible for organizing your contribution so that future
+contributors can
+
+Organization is crucial for the long-term health of the project,
+
 ---
 
 - Understanding the "testing surface" (what makes a test "interesting" or
