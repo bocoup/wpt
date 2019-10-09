@@ -334,47 +334,156 @@ extend your work, so you should give them a good starting point!
 
 ### File names
 
-[This page on the design of WPT](../test-suite-design) goes into detail about
-how files are generally laid out in the repository.
+The names of existing files and folders in the repository can help you find
+tests that are relevant to your work. [This page on the design of
+WPT](../test-suite-design) goes into detail about how files are generally laid
+out in the repository.
 
----
+Generally speaking, every conformance tests is stored in a subdirectory
+dedicated to the specification it verifies. The structure of these
+subdirectories vary. Some organize tests in directories related to algorithms
+or behaviors. Others have a more "flat" layout, where all tests are listed
+together.
 
-If the feature you're testing does *not* have any tests, then you won't have to
-study existing coverage. In some ways, this makes contributing easier (even
-though it also means there are more tests to write). The
+Whatever the case, test authors try to choose names that communicate the
+behavior under test, so you can use them to make an educated guess about where
+your tests should go.
 
+*Example* Imagine you wanted to write a test to verify that headers were made
+immutable by the `Request.error` method defined in [the Fetch
+standard](https://fetch.spec.whatwg.org). Here's the algorithm:
 
-Instead, you'll be responsible for organizing your contribution so that future
-contributors can
+> The static error() method, when invoked, must run these steps:
+>
+> 1. Let *r* be a new [Response](https://fetch.spec.whatwg.org/#response)
+>    object, whose
+>    [response](https://fetch.spec.whatwg.org/#concept-response-response) is a
+>    new [network error](https://fetch.spec.whatwg.org/#concept-network-error).
+> 2. Set *r*'s [headers](https://fetch.spec.whatwg.org/#response-headers) to a
+>    new [Headers](https://fetch.spec.whatwg.org/#headers) object whose
+>    [guard](https://fetch.spec.whatwg.org/#concept-headers-guard) is
+>    "`immutable`".
+> 3. Return *r*.
 
-Organization is crucial for the long-term health of the project,
+In order to figure out where to write the test (and whether it was needed at
+all), you could review the contents of the `fetch/` directory in WPT. Here's
+how that looks on a UNIX-like command line:
 
----
+    $ ls fetch
+    api/                           data-urls/   range/
+    content-encoding/              http-cache/  README.md
+    content-length/                images/      redirect-navigate/
+    content-type/                  metadata/    security/
+    corb/                          META.yml     stale-while-revalidate/
+    cors-rfc1918/                  nosniff/
+    cross-origin-resource-policy/  origin/
 
-- Understanding the "testing surface" (what makes a test "interesting" or
-  "helpful"?)
-  - observability (some things cannot be tested)
-  - branches (defined in algorithm structure and also in the prose itself--e.g.
-    "if present, do X, otherwise do Y")
-  - sequence (verify that steps occur in the specified order, particularly when
-    the order isn't relevant for the overall algorithm, e.g. input validation)
-  - input values
-    - sources
-      - formal parameters
-      - global state (e.g. the document, the window, etc.)
-        https://notifications.spec.whatwg.org/#constructors
-    - types
-      - scalars - "middle ground" case, "edge cases", "unspecified" case (where
-        applicable), and any other values you might think of based on your
-        knowledge of implementations (e.g. the current width of the viewport)
-- Exercising restraint
-  - intentional ambiguity (some things should not be tested)
-  - don't dive too deep (it may not be appropriate to test all the boundary
-    conditions of a complex internal algorithm if it's used in many other
-    places)
-  - breadth can be more trouble than it's worth (e.g. procedurally testing
-    hundreds of number values)
-- Assessing coverage
-  - file names
-  - file contents (GitHub.com search, or `grep` and regular expressions)
-  - failures on wpt.fyi
+This test is for a behavior directly exposed through the API, so we should look
+in the `api/` directory:
+
+    $ ls fetch/api
+    abort/  cors/         headers/           policies/  request/    response/
+    basic/  credentials/  idlharness.any.js  redirect/  resources/
+
+And since this is a static method on the `Response` constructor, we would
+expect the test to belong in the `response/` directory:
+
+    $ ls -w 80 -p fetch/api/response
+    multi-globals/                   response-static-error.html
+    response-cancel-stream.html      response-static-redirect.html
+    response-clone.html              response-stream-disturbed-1.html
+    response-consume-empty.html      response-stream-disturbed-2.html
+    response-consume.html            response-stream-disturbed-3.html
+    response-consume-stream.html     response-stream-disturbed-4.html
+    response-error-from-stream.html  response-stream-disturbed-5.html
+    response-error.html              response-stream-disturbed-6.html
+    response-from-stream.any.js      response-stream-with-broken-then.any.js
+    response-init-001.html           response-trailer.html
+    response-init-002.html
+
+There seems to be a test file for the `error` method:
+`response-static-error.html`. We can open that to decide if the behavior is
+already covered. If not, then we know where to write the test!
+
+### Failures on wpt.fyi
+
+There are many behaviors that are difficult to describe in a succinct file
+name. That's commonly the case with low-level rendering details of CSS
+specifications. Test authors frequently resort to use a generic number-based
+naming scheme for their files, e.g. `feature-001.html`, `feature-002.html`,
+etc.
+
+This makes it difficult to determine if a test case exists judging only by the
+names of files. If the behavior you want to test is demonstrated by some
+browsers but not by others, you may be able to use the *results* of the tests
+to locate the relevant test.
+
+[wpt.fyi](https://wpt.fyi) is a website which publishes results of WPT in
+various browsers. Because most browsers pass most tests, the pass/fail
+characteristics of the behavior you're testing can help you filter through a
+large number of highly similar tests.
+
+*Example* Imagine you've found a bug in the way Apple Safari renders the top
+CSS border of tables. Using the approach discussed earlier in this guide,
+you've determined the probable location for the test: the `css/CSS2/borders/`
+directory. However, there are *three hundred* files that begin with
+`border-top-`!
+
+Luckily, you also know that Firefox and Chrome do not exhibit this bug. You
+look at the results on [wpt.fyi](https://wpt.fyi), and you find that only three
+of those tests fail in Safari but pass in Firefox and Chrome:
+
+- `border-top-applies-to-005.xht`
+- `border-top-color-applies-to-005.xht`
+- `border-top-width-applies-to-005.xht`
+
+These may not describe the behavior you're interested in testing; the only way
+to know for sure is to review their contents. However, this is a much more
+manageable set to work with!
+
+### Querying file contents
+
+Some web platform features are enabled with a predictable pattern. For example,
+HTML attributes follow a fairly consistent format. If you're interested in
+testing a feature like this, you may be able to learn where your tests belong
+by querying the contents of the files in WPT.
+
+You may be able to preform such a search on the web. WPT is hosted on
+GitHub.com, and GitHub offers some basic functionality for querying code.
+However, to search effectively, you may need to use [regular
+expressions](https://www.regular-expressions.info/). For that, you can
+[download the WPT
+repository](https://web-platform-tests.org/writing-tests/github-intro.html) and
+use [git](https://git-scm.com) to perform more powerful searches.
+
+Bear in mind that searches like this are not necessarily exhaustive. Depending
+on the feature, it may be difficult (or even impossible) to write a query that
+correctly identifies all relevant tests. This strategy can give a helpful
+guide, but the results may not be conclusive.
+
+*Example* Imagine you're interested in testing how the `src` attribute of the
+`iframe` element works with `javascript:` URLs. Judging only from the names of
+directories, you've found a lot of potential locations for such a test. Worse,
+you know many tests use `javascript:` URLs without describing that in their
+name.
+
+You can design a regular expression that matches many cases where a
+`javascript:` URL is assigned to the `src` property in HTML. You can use the
+`git grep` command to query the contents of the `html/` directory:
+
+    $ git grep -lE "src\s*=\s*[\"']?javascript:" html
+    html/browsers/browsing-the-web/navigating-across-documents/javascript-url-query-fragment-components.html
+    html/browsers/browsing-the-web/navigating-across-documents/javascript-url-return-value-handling.html
+    html/dom/documents/dom-tree-accessors/Document.currentScript.html
+    html/dom/self-origin.sub.html
+    html/editing/dnd/target-origin/114-manual.html
+    html/semantics/embedded-content/media-elements/track/track-element/cloneNode.html
+    html/semantics/scripting-1/the-script-element/execution-timing/040.html
+    html/semantics/scripting-1/the-script-element/execution-timing/080.html
+    html/semantics/scripting-1/the-script-element/execution-timing/108.html
+    html/semantics/scripting-1/the-script-element/execution-timing/109.html
+    html/webappapis/dynamic-markup-insertion/opening-the-input-stream/document-open-cancels-javascript-url-navigation.html
+
+You will still have to review the contents to know which are relevant for your
+purposes (if any), but compared to the 5,000 files in the `html/` directory,
+this list is far more approachable!
