@@ -13,11 +13,11 @@ Many people come to WPT with a general testing goal in mind:
 - web developers often want to test discrepancies between browsers on their web
   applications
 
-But if you don't have any particular goal, we can still help you get started.
-Check out [the issues labeled with `type:missing-coverage` on
+(If you don't have any particular goal, we can help you get started. Check out
+[the issues labeled with `type:missing-coverage` on
 GitHub.com](https://github.com/web-platform-tests/wpt/labels/type%3Amissing-coverage).
 Leave a comment if you'd like to get started with one, and don't hesitate to
-ask clarifying questions!
+ask clarifying questions!)
 
 This guide will:
 
@@ -29,11 +29,12 @@ This guide will:
 
 ## Understanding the "testing surface"
 
-The specifications are instructions about how a feature should work. They're
-critical for implementers to "build the right thing," but they are also
-important for us test authors. We can use the same instructions to infer what
-kinds of tests would be likely to detect mistakes. Here are a few common
-patterns in specification text and the kind of tests they suggest.
+[The web platform specifications](https://platform.html5.org/) are instructions
+about how a feature should work. They're critical for implementers to "build
+the right thing," but they are also important for anyone writing tests. We can
+use the same instructions to infer what kinds of tests would be likely to
+detect mistakes. Here are a few common patterns in specification text and the
+kind of tests they suggest.
 
 ### Input sources
 
@@ -65,8 +66,9 @@ Notifications standard](https://notifications.spec.whatwg.org/#constructors):
 
 A thorough test suite for this constructor will include tests for the behavior
 of many different values of the *title* parameter and the *options* parameter.
-The type of "the current global object" is also a form of input, the test suite
-should also include tests which execute with different global objects.
+The type of "the current global object" is also a form of input, so the test
+suite should also include tests which execute with different types of global
+objects.
 
 ### Branches
 
@@ -109,10 +111,10 @@ sometimes, the order of two steps isn't particularly relevant to the result of
 the overall algorithm. This makes it easier for implementations to diverge.
 
 The most common example may be input validation. Many algorithms for JavaScript
-APIs begin by verifying that the input (function parameters, global state,
-etc.) meets some criteria. This may involve many independent checks. The
-precise order of the checks may not influence result of the overall algorithm,
-but the order is well-defined and observable, so it's important to verify.
+APIs begin by verifying that the input meets some criteria. This may involve
+many independent checks. The precise order of the checks may not influence
+result of the overall algorithm, but the order is well-defined and observable,
+so it's important to verify.
 
 *Example* The following algorithm from [the DOM
 specification](https://dom.spec.whatwg.org) describes how the
@@ -220,9 +222,9 @@ test.
 
 It's important to read these sections carefully, though, because the
 distinction between "mandatory" behavior and "optional" behavior can be quite
-nuanced. In this case, the behavior is not allowed if the document's type has
-changed. That makes for a valid conformance test, one that verifies browsers
-never return the same result when the document's type changes.
+nuanced. In this case, the optional behavior is never allowed if the document's
+type has changed. That makes for a valid conformance test, one that verifies
+browsers don't return the same result when the document's type changes.
 
 ### Don't dive too deep
 
@@ -232,7 +234,7 @@ exhaustively testing one of those "nested" algorithms, especially when they are
 shared by many different APIs.
 
 In general, you should start by writing only "surface tests" for the nested
-algorithms. That means, only verify that they exhibit the basic behavior you
+algorithms. That means only verifying that they exhibit the basic behavior you
 are expecting.
 
 It's definitely important to test exhaustively, but it's just as important to
@@ -265,10 +267,10 @@ standard](https://dom.spec.whatwg.org/) powers
 >    root](https://drafts.csswg.org/selectors-4/#scoping-root) *node*.
 >    [[SELECTORS4]](https://dom.spec.whatwg.org/#biblio-selectors4).
 
-As described earlier in this guide, we'd definitely want to test the branch
-regarding the parsing failure. But there are many ways a string might fail to
-parse--should we verify them all in the tests for `document.querySelector`? And
-what about `document.querySelectorAll`--should we test them all there, too?
+As described earlier in this guide, we'd certainly want to test the branch
+regarding the parsing failure. However, there are many ways a string might fail
+to parse--should we verify them all in the tests for `document.querySelector`?
+What about `document.querySelectorAll`? Should we test them all there, too?
 
 The answers depend on the current state of the test suite: whether or not tests
 for selector parsing exist and where they are located. That's why it's best to
@@ -289,7 +291,7 @@ not be obvious--they may not cause failures, and they may exercise fewer cases
 than intended.
 
 Generally speaking, such exhaustive approaches are unlikely to catch more bugs
-than a handful of carefully-chosen test cases. So although the risks of dynamic
+than a handful of carefully-chosen test cases. Although the risks of dynamic
 test generation may be tolerable in some specific cases, it's usually best to
 select the most interesting edge cases and move on.
 
@@ -305,12 +307,12 @@ standard](https://fetch.spec.whatwg.org/)
 >
 > [...]
 
-This function accepts exactly 400 values for the "status." With WPT's
-testharness.js, it's easy to dynamically create one test for each value. Unless
-we have reason to believe that a browser may exhibit drastically different
-behavior for any of those values (e.g. correctly accepting `546` but
-incorrectly rejecting `547`), then the complexity of testing those cases
-probably isn't warranted.
+This function accepts exactly 400 values for the "status." With [WPT's
+testharness.js](./testharness), it's easy to dynamically create one test for
+each value. Unless we have reason to believe that a browser may exhibit
+drastically different behavior for any of those values (e.g. correctly
+accepting `546` but incorrectly rejecting `547`), then the complexity of
+testing those cases probably isn't warranted.
 
 Instead, focus on writing declarative tests for specific values which are novel
 in the context of the algorithm. For ranges like in this example, testing the
@@ -330,7 +332,7 @@ effort, and it will also help you integrate your work more logically.
 
 Even if the feature you're testing does *not* have any tests, you should still
 keep these guidelines in mind. Sooner or later, someone else will want to
-extend your work, so you should give them a good starting point!
+extend your work, so you ought to give them a good starting point!
 
 ### File names
 
@@ -365,9 +367,9 @@ standard](https://fetch.spec.whatwg.org). Here's the algorithm:
 >    "`immutable`".
 > 3. Return *r*.
 
-In order to figure out where to write the test (and whether it was needed at
-all), you could review the contents of the `fetch/` directory in WPT. Here's
-how that looks on a UNIX-like command line:
+In order to figure out where to write the test (and whether it's needed at
+all), you can review the contents of the `fetch/` directory in WPT. Here's how
+that looks on a UNIX-like command line:
 
     $ ls fetch
     api/                           data-urls/   range/
@@ -388,7 +390,7 @@ in the `api/` directory:
 And since this is a static method on the `Response` constructor, we would
 expect the test to belong in the `response/` directory:
 
-    $ ls -w 80 -p fetch/api/response
+    $ ls fetch/api/response
     multi-globals/                   response-static-error.html
     response-cancel-stream.html      response-static-redirect.html
     response-clone.html              response-stream-disturbed-1.html
@@ -403,20 +405,21 @@ expect the test to belong in the `response/` directory:
 
 There seems to be a test file for the `error` method:
 `response-static-error.html`. We can open that to decide if the behavior is
-already covered. If not, then we know where to write the test!
+already covered. If not, then we know where to [write the
+test](https://github.com/web-platform-tests/wpt/pull/19601)!
 
 ### Failures on wpt.fyi
 
 There are many behaviors that are difficult to describe in a succinct file
 name. That's commonly the case with low-level rendering details of CSS
-specifications. Test authors frequently resort to use a generic number-based
-naming scheme for their files, e.g. `feature-001.html`, `feature-002.html`,
-etc.
+specifications. Test authors may resort to generic number-based naming schemes
+for their files, e.g. `feature-001.html`, `feature-002.html`, etc. This makes
+it difficult to determine if a test case exists judging only by the names of
+files.
 
-This makes it difficult to determine if a test case exists judging only by the
-names of files. If the behavior you want to test is demonstrated by some
-browsers but not by others, you may be able to use the *results* of the tests
-to locate the relevant test.
+If the behavior you want to test is demonstrated by some browsers but not by
+others, you may be able to use the *results* of the tests to locate the
+relevant test.
 
 [wpt.fyi](https://wpt.fyi) is a website which publishes results of WPT in
 various browsers. Because most browsers pass most tests, the pass/fail
@@ -424,10 +427,11 @@ characteristics of the behavior you're testing can help you filter through a
 large number of highly similar tests.
 
 *Example* Imagine you've found a bug in the way Apple Safari renders the top
-CSS border of tables. Using the approach discussed earlier in this guide,
+CSS border of HTML tables. By searching through directory names and file names,
 you've determined the probable location for the test: the `css/CSS2/borders/`
 directory. However, there are *three hundred* files that begin with
-`border-top-`!
+`border-top-`! None of the names mention the `<table>` element, so any one of
+the files may already be testing the case you found.
 
 Luckily, you also know that Firefox and Chrome do not exhibit this bug. You
 look at the results on [wpt.fyi](https://wpt.fyi), and you find that only three
@@ -449,8 +453,9 @@ testing a feature like this, you may be able to learn where your tests belong
 by querying the contents of the files in WPT.
 
 You may be able to preform such a search on the web. WPT is hosted on
-GitHub.com, and GitHub offers some basic functionality for querying code.
-However, to search effectively, you may need to use [regular
+GitHub.com, and [GitHub offers some basic functionality for querying
+code](https://help.github.com/en/articles/about-searching-on-github). However,
+to search effectively, you may need to use [regular
 expressions](https://www.regular-expressions.info/). For that, you can
 [download the WPT
 repository](https://web-platform-tests.org/writing-tests/github-intro.html) and
@@ -463,9 +468,9 @@ guide, but the results may not be conclusive.
 
 *Example* Imagine you're interested in testing how the `src` attribute of the
 `iframe` element works with `javascript:` URLs. Judging only from the names of
-directories, you've found a lot of potential locations for such a test. Worse,
-you know many tests use `javascript:` URLs without describing that in their
-name.
+directories, you've found a lot of potential locations for such a test. You
+also know many tests use `javascript:` URLs without describing that in their
+name. How can you find where to contribute new tests?
 
 You can design a regular expression that matches many cases where a
 `javascript:` URL is assigned to the `src` property in HTML. You can use the
