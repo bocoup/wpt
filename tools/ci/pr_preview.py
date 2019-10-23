@@ -32,6 +32,11 @@ POLLING_PERIOD = 5
 # https://developer.github.com/v4/enum/commentauthorassociation/ (equivalent
 # documentation for the REST API was not available at the time of writing)
 TRUSTED_AUTHOR_ASSOCIATIONS = ('COLLABORATOR', 'MEMBER', 'OWNER')
+# These GitHub accounts are not associated with individuals, and the Pull
+# Requests they submit rarely require a preview.
+AUTOMATION_GITHUB_USERS = (
+    'chromium-wpt-export-bot', 'moz-wptsync-bot', 'servo-wpt-sync'
+)
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -239,9 +244,12 @@ def has_label(pull_request):
     return False
 
 def should_be_mirrored(pull_request):
-    return is_open(pull_request) and (
-        pull_request['author_association'] in TRUSTED_AUTHOR_ASSOCIATIONS or
-        has_label(pull_request)
+    return (
+        is_open(pull_request) and
+        pull_request['user']['login'] not in AUTOMATION_GITHUB_USERS and (
+            pull_request['author_association'] in TRUSTED_AUTHOR_ASSOCIATIONS or
+            has_label(pull_request)
+        )
     )
 
 def is_deployed(host, deployment):

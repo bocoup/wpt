@@ -1,4 +1,4 @@
-name: Detect Pull Request Preview
+name: pr-preview-detect
 on: deployment
 jobs:
   detect-deployment:

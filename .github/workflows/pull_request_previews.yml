@@ -1,4 +1,4 @@
-name: Synchronize Pull Request Previews
+name: pr-preview-sync
 on:
   schedule:
     - cron: 0/5 * * * *
