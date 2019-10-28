@@ -22,7 +22,7 @@ import requests
 API_RATE_LIMIT_THRESHOLD = 0.2
 # The GitHub Pull Request label which indicates that a Pull Request is expected
 # to be actively mirrored by the preview server
-LABEL = 'pull-request-has-preview'
+LABEL = 'safelisted-for-preview'
 # The number of seconds to wait between attempts to verify that a submission
 # preview is available on the Pull Request preview server
 POLLING_PERIOD = 5
@@ -120,17 +120,6 @@ class Project(object):
             raise Exception('Incomplete results')
 
         return data['items']
-
-    @guard('core')
-    def add_label(self, pull_request, name):
-        number = pull_request['number']
-        url = '{}/repos/{}/issues/{}/labels'.format(
-            self._host, self._github_project, number
-        )
-
-        logger.info('Adding label "%s" to Pull Request #%d', name, number)
-
-        gh_request('POST', url, {'labels': [name]})
 
     @guard('core')
     def create_ref(self, refspec, revision):
@@ -277,26 +266,23 @@ def synchronize(host, github_project, window):
     for pull_request in pull_requests:
         logger.info('Processing Pull Request #%(number)d', pull_request)
 
-        refspec_labeled = 'prs-labeled-for-preview/{number}'.format(
+        refspec_trusted = 'prs-trusted-for-preview/{number}'.format(
             **pull_request
         )
         refspec_open = 'prs-open/{number}'.format(**pull_request)
         revision_latest = remote.get_revision(
             'pull/{number}/head'.format(**pull_request)
         )
-        revision_labeled = remote.get_revision(refspec_labeled)
+        revision_trusted = remote.get_revision(refspec_trusted)
         revision_open = remote.get_revision(refspec_open)
 
         if should_be_mirrored(pull_request):
             logger.info('Pull Request should be mirrored')
 
-            if not has_label(pull_request):
-                project.add_label(pull_request, LABEL)
-
-            if revision_labeled is None:
-                project.create_ref(refspec_labeled, revision_latest)
-            elif revision_labeled != revision_latest:
-                project.update_ref(refspec_labeled, revision_latest)
+            if revision_trusted is None:
+                project.create_ref(refspec_trusted, revision_latest)
+            elif revision_trusted != revision_latest:
+                project.update_ref(refspec_trusted, revision_latest)
 
             if revision_open is None:
                 project.create_ref(refspec_open, revision_latest)
@@ -310,8 +296,8 @@ def synchronize(host, github_project, window):
         else:
             logger.info('Pull Request should not be mirrored')
 
-            if not has_label(pull_request) and revision_labeled is not None:
-                remote.delete_ref(refspec_labeled)
+            if not has_label(pull_request) and revision_trusted is not None:
+                remote.delete_ref(refspec_trusted)
 
             if revision_open is not None and not is_open(pull_request):
                 remote.delete_ref(refspec_open)
