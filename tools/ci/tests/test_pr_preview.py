@@ -5,18 +5,21 @@ except ImportError:
     from http.server import BaseHTTPRequestHandler, HTTPServer
 import json
 import os
+import re
+import shutil
 import subprocess
 import tempfile
 import threading
 
 subject = os.path.join(
-    os.path.dirname(os.path.abspath(__file__)), '..', 'update_pr_preview.py'
+    os.path.dirname(os.path.abspath(__file__)), '..', 'pr_preview.py'
 )
 test_host = 'localhost'
 
 
 class MockHandler(BaseHTTPRequestHandler, object):
     def do_all(self):
+        request_query = None
         request_body = None
 
         if 'Content-Length' in self.headers:
@@ -27,13 +30,17 @@ class MockHandler(BaseHTTPRequestHandler, object):
             if self.headers.get('Content-Type') == 'application/json':
                 request_body = json.loads(request_body)
 
-        request = (self.command, self.path, request_body)
+        path_parts = self.path.split('?')
+        path = path_parts[0]
+        if len(path_parts) > 1:
+            request_query = path_parts[1]
+        request = (self.command, path, request_query, request_body)
 
         self.server.requests.append(request)
-        status_code, body = self.server.responses.get(request[:2], (200, '{}'))
+        status_code, body = self.server.responses.get(request[:2], (400, '{}'))
         self.send_response(status_code)
         self.end_headers()
-        self.wfile.write(body.encode('utf-8'))
+        self.wfile.write(json.dumps(body).encode('utf-8'))
 
     def do_DELETE(self):
         return self.do_all()
@@ -62,311 +69,366 @@ def assert_success(returncode):
     assert returncode == 0
 
 
-def assert_neutral(returncode):
-    assert returncode == 0
-
-
 def assert_fail(returncode):
-    assert returncode not in (0, 78)
+    assert returncode != 0
 
 
-def run(event_data, responses=None):
-    fd, event_data_file = tempfile.mkstemp(text=True)
-    handle = os.fdopen(fd, 'w')
-    try:
-        json.dump(event_data, handle)
-    finally:
-        handle.close()
+def synchronize(responses=None, refs=[]):
     env = {
-        'GITHUB_EVENT_PATH': event_data_file,
-        'GITHUB_REPOSITORY': 'test-org/test-repo'
+        'GITHUB_TOKEN': 'c0ffee'
     }
     env.update(os.environ)
     server = MockServer((test_host, 0), responses)
     test_port = server.server_address[1]
     threading.Thread(target=lambda: server.serve_forever()).start()
+    local_repo = tempfile.mkdtemp()
+    remote_repo = tempfile.mkdtemp()
+    remote_refs = {}
+
+    subprocess.check_call(['git', 'init'], cwd=local_repo)
+    subprocess.check_call(['git', 'init'], cwd=remote_repo)
+    subprocess.check_call(
+        ['git', 'config', 'user.name', 'example'],
+        cwd=remote_repo
+    )
+    subprocess.check_call(
+        ['git', 'config', 'user.email', 'example@example.com'],
+        cwd=remote_repo
+    )
+    subprocess.check_call(
+        ['git', 'commit', '--allow-empty', '-m', 'm'],
+        cwd=remote_repo
+    )
+    subprocess.check_call(
+        ['git', 'remote', 'add', 'origin', remote_repo], cwd=local_repo
+    )
+
+    for ref in refs:
+        subprocess.check_call(
+            ['git', 'update-ref', ref, 'HEAD'],
+            cwd=remote_repo
+        )
 
     try:
         child = subprocess.Popen(
-            ['python', subject, 'http://{}:{}'.format(test_host, test_port)],
+            [
+                'python',
+                subject,
+                '--host',
+                'http://{}:{}'.format(test_host, test_port),
+                '--github-project',
+                'test-org/test-repo',
+                'synchronize',
+                '--window',
+                '3000'
+            ],
+            cwd=local_repo,
             env=env
         )
 
         child.communicate()
+        lines = subprocess.check_output(
+            ['git', 'ls-remote', 'origin'], cwd=local_repo
+        )
+        for line in lines.strip().split('\n'):
+            revision, ref = line.split()
+
+            if not ref or ref in ('HEAD', 'refs/heads/master'):
+                continue
+
+            remote_refs[ref] = revision
     finally:
+        shutil.rmtree(local_repo)
+        shutil.rmtree(remote_repo)
         server.shutdown()
-        os.remove(event_data_file)
 
-    return child.returncode, server.requests
-
-def to_key(request):
-    return request[:2]
-
-class Requests(object):
-    read_collaborator = (
-        'GET', '/repos/test-org/test-repo/collaborators/rms', None
-    )
-    create_label = (
-        'POST',
-        '/repos/test-org/test-repo/issues/543/labels',
-        {'labels': ['pull-request-has-preview']}
-    )
-    delete_label = (
-        'DELETE',
-        '/repos/test-org/test-repo/issues/543/labels/pull-request-has-preview',
-        ''
-    )
-    get_ref_open = (
-        'GET', '/repos/test-org/test-repo/git/refs/prs-open/gh-543', None
-    )
-    get_ref_labeled = (
-        'GET',
-        '/repos/test-org/test-repo/git/refs/prs-labeled-for-preview/gh-543',
-        None
-    )
-    create_ref_open = (
-        'POST',
-        '/repos/test-org/test-repo/git/refs',
-        {'ref': 'refs/prs-open/gh-543', 'sha': 'deadbeef'}
-    )
-    create_ref_labeled = (
-        'POST',
-        '/repos/test-org/test-repo/git/refs',
-        {'ref': 'refs/prs-labeled-for-preview/gh-543', 'sha': 'deadbeef'}
-    )
-    delete_ref_open = (
-        'DELETE', '/repos/test-org/test-repo/git/refs/prs-open/gh-543', ''
-    )
-    delete_ref_labeled = (
-        'DELETE',
-        '/repos/test-org/test-repo/git/refs/prs-labeled-for-preview/gh-543', ''
-    )
-    update_ref_open = (
-        'PATCH',
-        '/repos/test-org/test-repo/git/refs/prs-open/gh-543',
-        {'force': True, 'sha': 'deadbeef'}
-    )
-    update_ref_labeled = (
-        'PATCH',
-        '/repos/test-org/test-repo/git/refs/prs-labeled-for-preview/gh-543',
-        {'force': True, 'sha': 'deadbeef'}
-    )
+    return child.returncode, server.requests, remote_refs
 
 
-def default_data(action):
-    return {
-        'pull_request': {
-            'number': 543,
-            'closed_at': None,
-            'head': {
-                'sha': 'deadbeef'
-            },
-            'user': {
-                'login': 'rms'
-            },
-            'labels': [
-                {'name': 'foo'},
-                {'name': 'bar'}
-            ]
+class Endpoints(object):
+    rate_limit = '/rate_limit'
+    search = '/search/issues'
+    git_refs = '/repos/test-org/test-repo/git/refs'
+    deployments = '/repos/test-org/test-repo/deployments'
+
+
+def _find_match(requests, verb, endpoint, query=None):
+    for request in requests:
+        if request[0] == verb and request[1] == endpoint:
+            break
+    else:
+        return 'No {} request made to {}'.format(verb, endpoint)
+
+    if query:
+        if not re.compile(query).search(request[2]):
+            return '{} request to {} query did not match {}'.format(
+                    verb, endpoint, query
+            )
+
+def assert_match(*args, **kwargs):
+    result = _find_match(*args, **kwargs)
+    if result:
+        raise AssertionError(result)
+
+def assert_no_match(*args, **kwargs):
+    result = _find_match(*args, **kwargs)
+
+    if not result:
+        raise AssertionError(
+            'Expected to find zero matches, but a match was found'
+        )
+
+
+no_limit = {
+    'resources': {
+        'search': {
+            'remaining': 100,
+            'limit': 100
         },
-        'action': action
+        'core': {
+            'remaining': 100,
+            'limit': 100
+        }
+    }
+}
+
+
+def test_synchronize_zero_results():
+    responses = {
+        ('GET', Endpoints.rate_limit): (200, no_limit),
+        ('GET', Endpoints.search): (
+            200,
+            {
+                'items': [],
+                'incomplete_results': False
+            }
+        )
     }
 
-
-def test_close_active_with_label():
-    event_data = default_data('closed')
-    event_data['pull_request']['closed_at'] = '2019-07-05'
-    event_data['pull_request']['labels'].append(
-        {'name': 'pull-request-has-preview'}
-    )
-
-    returncode, requests = run(event_data)
+    returncode, requests, remote_refs = synchronize(responses)
 
     assert_success(returncode)
-    assert Requests.delete_label in requests
-    assert Requests.delete_ref_open in requests
-    assert Requests.delete_ref_labeled not in requests
+    assert_match(requests, 'GET', Endpoints.rate_limit)
+    assert_match(requests, 'GET', Endpoints.search, query=r'repo:test-org/test-repo')
 
-
-def test_close_active_with_label_error():
-    event_data = default_data('closed')
-    event_data['pull_request']['closed_at'] = '2019-07-05'
-    event_data['pull_request']['labels'].append(
-        {'name': 'pull-request-has-preview'}
-    )
+def test_synchronize_fail_search_throttled():
     responses = {
-        to_key(Requests.delete_label): (500, '{}')
+        ('GET', Endpoints.rate_limit): (
+            200,
+            {
+                'resources': {
+                    'search': {
+                        'remaining': 1,
+                        'limit': 10
+                    }
+                }
+            }
+        )
     }
 
-    returncode, requests = run(event_data, responses)
+    returncode, requests, remote_refs = synchronize(responses)
 
     assert_fail(returncode)
+    assert_match(requests, 'GET', Endpoints.rate_limit)
+    assert_no_match(requests, 'GET', Endpoints.search)
 
-
-def test_close_active_without_label():
-    event_data = default_data('closed')
-    event_data['pull_request']['closed_at'] = '2019-07-05'
-
-    returncode, requests = run(event_data)
-
-    assert_success(returncode)
-    assert [Requests.delete_ref_open] == requests
-
-
-def test_open_with_label():
-    event_data = default_data('opened')
-    event_data['pull_request']['labels'].append(
-        {'name': 'pull-request-has-preview'}
-    )
-
-    returncode, requests = run(event_data)
-
-    assert_success(returncode)
-    assert Requests.update_ref_open in requests
-    assert Requests.update_ref_labeled in requests
-
-
-def test_open_without_label_for_collaborator():
-    event_data = default_data('opened')
+def test_synchronize_fail_incomplete_results():
     responses = {
-        to_key(Requests.read_collaborator): (204, ''),
-        to_key(Requests.get_ref_open): (404, '{}'),
-        to_key(Requests.get_ref_labeled): (404, '{}'),
+        ('GET', Endpoints.rate_limit): (200, no_limit),
+        ('GET', Endpoints.search): (
+            200,
+            {
+                'items': [],
+                'incomplete_results': True
+            }
+        )
     }
 
-    returncode, requests = run(event_data, responses)
+    returncode, requests, remove_refs = synchronize(responses)
 
-    assert_success(returncode)
-    assert Requests.create_label in requests
-    assert Requests.create_ref_open in requests
-    assert Requests.create_ref_labeled in requests
+    assert_fail(returncode)
+    assert_match(requests, 'GET', Endpoints.rate_limit)
+    assert_match(requests, 'GET', Endpoints.search)
 
-
-def test_open_without_label_for_non_collaborator():
-    event_data = default_data('opened')
+def test_synchronize_ignore_closed():
     responses = {
-        ('GET', '/repos/test-org/test-repo/collaborators/rms'): (404, '{}')
+        ('GET', Endpoints.rate_limit): (200, no_limit),
+        ('GET', Endpoints.search): (
+            200,
+            {
+                'items': [
+                    {
+                        'number': 23,
+                        'labels': [],
+                        'closed_at': '2019-10-28',
+                        'user': {'login': 'grace'},
+                        'author_association': 'COLLABORATOR'
+                    }
+                ],
+                'incomplete_results': False
+            }
+        )
     }
 
-    returncode, requests = run(event_data, responses)
+    returncode, requests, remote_refs = synchronize(responses)
 
-    assert_neutral(returncode)
-    assert [Requests.read_collaborator] == requests
+    assert_success(returncode)
+    assert_match(requests, 'GET', Endpoints.rate_limit)
+    assert_match(requests, 'GET', Endpoints.search)
 
-
-def test_add_unrelated_label():
-    event_data = default_data('labeled')
-    event_data['label'] = {'name': 'foobar'}
-    event_data['pull_request']['labels'].append({'name': 'foobar'})
-
-    returncode, requests = run(event_data)
-
-    assert_neutral(returncode)
-    assert len(requests) == 0
-
-
-def test_add_active_label():
-    event_data = default_data('labeled')
-    event_data['label'] = {'name': 'pull-request-has-preview'}
-    event_data['pull_request']['labels'].append(
-        {'name': 'pull-request-has-preview'}
-    )
+def test_synchronize_sync_collaborator():
     responses = {
-        to_key(Requests.get_ref_open): (404, '{}'),
-        to_key(Requests.get_ref_labeled): (404, '{}')
+        ('GET', Endpoints.rate_limit): (200, no_limit),
+        ('GET', Endpoints.search): (
+            200,
+            {
+                'items': [
+                    {
+                        'number': 23,
+                        'labels': [],
+                        'closed_at': None,
+                        'user': {'login': 'grace'},
+                        'author_association': 'COLLABORATOR'
+                    }
+                ],
+                'incomplete_results': False
+            }
+        ),
+        ('POST', Endpoints.git_refs): (200, {}),
+        ('GET', Endpoints.deployments): (200, {}),
+        ('POST', Endpoints.deployments): (200, {})
     }
 
-    returncode, requests = run(event_data, responses)
+    returncode, requests, remote_refs = synchronize(responses)
 
     assert_success(returncode)
-    assert Requests.create_ref_open not in requests
-    assert Requests.create_ref_labeled in requests
+    assert_match(requests, 'GET', Endpoints.rate_limit)
+    assert_match(requests, 'GET', Endpoints.search)
+    assert_match(requests, 'POST', Endpoints.git_refs)
+    assert_match(requests, 'GET', Endpoints.deployments)
+    assert_match(requests, 'POST', Endpoints.deployments)
 
-
-def test_add_active_label_to_closed():
-    event_data = default_data('labeled')
-    event_data['pull_request']['closed_at'] = '2019-07-05'
-    event_data['label'] = {'name': 'pull-request-has-preview'}
-    event_data['pull_request']['labels'].append(
-        {'name': 'pull-request-has-preview'}
-    )
+def test_synchronize_ignore_collaborator_bot():
     responses = {
-        to_key(Requests.get_ref_open): (404, '{}'),
-        to_key(Requests.get_ref_labeled): (404, '{}')
+        ('GET', Endpoints.rate_limit): (200, no_limit),
+        ('GET', Endpoints.search): (
+            200,
+            {
+                'items': [
+                    {
+                        'number': 23,
+                        'labels': [],
+                        'closed_at': None,
+                        'user': {'login': 'chromium-wpt-export-bot'},
+                        'author_association': 'COLLABORATOR'
+                    }
+                ],
+                'incomplete_results': False
+            }
+        ),
+        ('GET', Endpoints.deployments): (200, {})
     }
 
-    returncode, requests = run(event_data, responses)
+    returncode, requests, remote_refs = synchronize(responses)
 
     assert_success(returncode)
-    assert Requests.create_ref_open not in requests
-    assert Requests.create_ref_labeled in requests
+    assert_match(requests, 'GET', Endpoints.rate_limit)
+    assert_match(requests, 'GET', Endpoints.search)
+    assert_no_match(requests, 'POST', Endpoints.git_refs)
+    assert_no_match(requests, 'POST', Endpoints.deployments)
 
-
-def test_remove_unrelated_label():
-    event_data = default_data('unlabeled')
-    event_data['label'] = {'name': 'foobar'}
-
-    returncode, requests = run(event_data)
-
-    assert_neutral(returncode)
-    assert len(requests) == 0
-
-
-def test_remove_active_label():
-    event_data = default_data('unlabeled')
-    event_data['label'] = {'name': 'pull-request-has-preview'}
+def test_synchronize_ignore_untrusted_contributor():
     responses = {
-        to_key(Requests.delete_ref_labeled): (204, '')
+        ('GET', Endpoints.rate_limit): (200, no_limit),
+        ('GET', Endpoints.search): (
+            200,
+            {
+                'items': [
+                    {
+                        'number': 23,
+                        'labels': [],
+                        'closed_at': None,
+                        'user': {'login': 'grace'},
+                        'author_association': 'CONTRIBUTOR'
+                    }
+                ],
+                'incomplete_results': False
+            }
+        ),
+        ('GET', Endpoints.deployments): (200, {})
     }
 
-    returncode, requests = run(event_data, responses)
+    returncode, requests, remote_refs = synchronize(responses)
 
     assert_success(returncode)
-    assert Requests.delete_ref_labeled in requests
-    assert Requests.delete_ref_open not in requests
+    assert_match(requests, 'GET', Endpoints.rate_limit)
+    assert_match(requests, 'GET', Endpoints.search)
+    assert_no_match(requests, 'POST', Endpoints.git_refs)
+    assert_no_match(requests, 'POST', Endpoints.deployments)
 
-
-def test_remove_active_label_from_closed():
-    event_data = default_data('unlabeled')
-    event_data['pull_request']['closed_at'] = '2019-07-05'
-    event_data['label'] = {'name': 'pull-request-has-preview'}
+def test_synchronize_sync_trusted_contributor():
     responses = {
-        to_key(Requests.delete_ref_labeled): (204, '')
+        ('GET', Endpoints.rate_limit): (200, no_limit),
+        ('GET', Endpoints.search): (
+            200,
+            {
+                'items': [
+                    {
+                        'number': 23,
+                        'labels': [{'name': 'safelisted-for-preview'}],
+                        'closed_at': None,
+                        'user': {'login': 'Hexcles'},
+                        'author_association': 'CONTRIBUTOR'
+                    }
+                ],
+                'incomplete_results': False
+            }
+        ),
+        ('POST', Endpoints.git_refs): (200, {}),
+        ('GET', Endpoints.deployments): (200, {}),
+        ('POST', Endpoints.deployments): (200, {})
     }
 
-    returncode, requests = run(event_data, responses)
+    returncode, requests, remote_refs = synchronize(responses)
 
     assert_success(returncode)
-    assert Requests.delete_ref_labeled in requests
-    assert Requests.delete_ref_open not in requests
+    assert_match(requests, 'GET', Endpoints.rate_limit)
+    assert_match(requests, 'GET', Endpoints.search)
+    assert_match(requests, 'POST', Endpoints.git_refs)
+    assert_match(requests, 'GET', Endpoints.deployments)
+    assert_match(requests, 'POST', Endpoints.deployments)
 
+def test_synchronize_update_collaborator():
+    responses = {
+        ('GET', Endpoints.rate_limit): (200, no_limit),
+        ('GET', Endpoints.search): (
+            200,
+            {
+                'items': [
+                    {
+                        'number': 23,
+                        'labels': [],
+                        'closed_at': None,
+                        'user': {'login': 'grace'},
+                        'author_association': 'COLLABORATOR'
+                    }
+                ],
+                'incomplete_results': False
+            }
+        ),
+        ('POST', Endpoints.git_refs): (200, {}),
+        ('GET', Endpoints.deployments): (200, {}),
+        ('POST', Endpoints.deployments): (200, {})
+    }
+    refs = ['refs/pull/23/head', 'refs/prs-trusted-for-preview/23']
 
-def test_synchronize_without_label():
-    event_data = default_data('synchronize')
-
-    returncode, requests = run(event_data)
-
-    assert_neutral(returncode)
-    assert len(requests) == 0
-
-
-def test_synchronize_with_label():
-    event_data = default_data('synchronize')
-    event_data['pull_request']['labels'].append(
-        {'name': 'pull-request-has-preview'}
-    )
-
-    returncode, requests = run(event_data)
+    returncode, requests, remote_refs = synchronize(responses, refs)
 
     assert_success(returncode)
-    assert Requests.update_ref_open in requests
-    assert Requests.update_ref_labeled in requests
+    assert_match(requests, 'GET', Endpoints.rate_limit)
+    assert_match(requests, 'GET', Endpoints.search)
+    assert_match(requests, 'POST', Endpoints.git_refs)
+    assert_match(requests, 'GET', Endpoints.deployments)
+    assert_match(requests, 'POST', Endpoints.deployments)
 
 
-def test_unrecognized_action():
-    event_data = default_data('assigned')
-
-    returncode, requests = run(event_data)
-
-    assert_neutral(returncode)
-    assert len(requests) == 0

@@ -198,15 +198,15 @@ class Remote(object):
         # The repository in the GitHub Actions environment is configured with
         # a remote whose URL uses unauthenticated HTTPS, making it unsuitable
         # for pushing changes.
-        self._url = 'https://{}@github.com/{}.git'.format(
-            os.environ.get('GITHUB_TOKEN'), github_project
-        )
+        self._token = os.environ.get('GITHUB_TOKEN')
 
     def get_revision(self, refspec):
         output = subprocess.check_output([
             'git',
+            '-c',
+            'http.extraheader="AUTHORIZATION: basic {}"'.format(self._token),
             'ls-remote',
-            self._url,
+            'origin',
             'refs/{}'.format(refspec)
         ])
 
@@ -220,7 +220,15 @@ class Remote(object):
 
         logger.info('Deleting ref "%s"', refspec)
 
-        subprocess.check_call(['git', 'push', self._url, '--delete', full_ref])
+        subprocess.check_call([
+            'git',
+            '-c',
+            'http.extraheader="AUTHORIZATION: basic {}"'.format(self._token),
+            'push',
+            'origin',
+            '--delete',
+            full_ref
+        ])
 
 def is_open(pull_request):
     return not pull_request['closed_at']
