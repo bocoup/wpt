@@ -345,8 +345,6 @@ class Chrome(BrowserSetup):
         if browser_channel in ("dev", "canary"):
             logger.info("Automatically turning on experimental features for Chrome Dev/Canary")
             kwargs["binary_args"].append("--enable-experimental-web-platform-features")
-            # HACK(Hexcles): work around https://github.com/web-platform-tests/wpt/issues/16448
-            kwargs["webdriver_args"].append("--disable-build-check")
 
 
 class ChromeAndroid(BrowserSetup):
