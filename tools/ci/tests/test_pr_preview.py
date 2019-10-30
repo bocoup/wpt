@@ -73,7 +73,7 @@ def assert_fail(returncode):
     assert returncode != 0
 
 
-def synchronize(responses=None, refs=[]):
+def synchronize(responses=None, refs={}):
     env = {
         'GITHUB_TOKEN': 'c0ffee'
     }
@@ -96,16 +96,20 @@ def synchronize(responses=None, refs=[]):
         cwd=remote_repo
     )
     subprocess.check_call(
-        ['git', 'commit', '--allow-empty', '-m', 'm'],
+        ['git', 'commit', '--allow-empty', '-m', 'first'],
+        cwd=remote_repo
+    )
+    subprocess.check_call(
+        ['git', 'commit', '--allow-empty', '-m', 'second'],
         cwd=remote_repo
     )
     subprocess.check_call(
         ['git', 'remote', 'add', 'origin', remote_repo], cwd=local_repo
     )
 
-    for ref in refs:
+    for name, value in refs.items():
         subprocess.check_call(
-            ['git', 'update-ref', ref, 'HEAD'],
+            ['git', 'update-ref', name, value],
             cwd=remote_repo
         )
 
@@ -149,31 +153,44 @@ class Endpoints(object):
     rate_limit = '/rate_limit'
     search = '/search/issues'
     git_refs = '/repos/test-org/test-repo/git/refs'
+    git_ref = '/repos/test-org/test-repo/git/refs/%s'
     deployments = '/repos/test-org/test-repo/deployments'
 
 
-def _find_match(requests, verb, endpoint, query=None):
+def _find_match(requests, verb, endpoint, query, body):
+    matches = []
     for request in requests:
-        if request[0] == verb and request[1] == endpoint:
-            break
-    else:
-        return 'No {} request made to {}'.format(verb, endpoint)
+        if request[0] != verb:
+            continue
+        if request[1] != endpoint:
+            continue
+        if query and not re.compile(query).search(request[2]):
+            continue
+        if body:
+            all_keys_match = True
 
-    if query:
-        if not re.compile(query).search(request[2]):
-            return '{} request to {} query did not match {}'.format(
-                    verb, endpoint, query
-            )
+            for key in body:
+                all_keys_match &= body[key] == request[3].get(key)
 
-def assert_match(*args, **kwargs):
-    result = _find_match(*args, **kwargs)
-    if result:
-        raise AssertionError(result)
+            if not all_keys_match:
+                continue
 
-def assert_no_match(*args, **kwargs):
-    result = _find_match(*args, **kwargs)
+        matches.append(request)
 
-    if not result:
+    return matches
+
+def assert_match(requests, verb, endpoint, query=None, body=None):
+    matches = _find_match(requests, verb, endpoint, query, body)
+
+    if not matches:
+        raise AssertionError(
+            'No matching {} request to {} found'.format(verb, endpoint)
+        )
+
+def assert_no_match(requests, verb, endpoint, query=None, body=None):
+    matches = _find_match(requests, verb, endpoint, query, body)
+
+    if matches:
         raise AssertionError(
             'Expected to find zero matches, but a match was found'
         )
@@ -355,7 +372,7 @@ def test_synchronize_ignore_untrusted_contributor():
                 'incomplete_results': False
             }
         ),
-        ('GET', Endpoints.deployments): (200, {})
+        ('GET', Endpoints.deployments): (200, [])
     }
 
     returncode, requests, remote_refs = synchronize(responses)
@@ -385,7 +402,7 @@ def test_synchronize_sync_trusted_contributor():
             }
         ),
         ('POST', Endpoints.git_refs): (200, {}),
-        ('GET', Endpoints.deployments): (200, {}),
+        ('GET', Endpoints.deployments): (200, []),
         ('POST', Endpoints.deployments): (200, {})
     }
 
@@ -394,7 +411,12 @@ def test_synchronize_sync_trusted_contributor():
     assert_success(returncode)
     assert_match(requests, 'GET', Endpoints.rate_limit)
     assert_match(requests, 'GET', Endpoints.search)
-    assert_match(requests, 'POST', Endpoints.git_refs)
+    assert_match(
+        requests, 'POST', Endpoints.git_refs, body={'ref':'refs/prs-open/23'}
+    )
+    assert_match(
+        requests, 'POST', Endpoints.git_refs, body={'ref':'refs/prs-trusted-for-preview/23'}
+    )
     assert_match(requests, 'GET', Endpoints.deployments)
     assert_match(requests, 'POST', Endpoints.deployments)
 
@@ -416,19 +438,18 @@ def test_synchronize_update_collaborator():
                 'incomplete_results': False
             }
         ),
-        ('POST', Endpoints.git_refs): (200, {}),
-        ('GET', Endpoints.deployments): (200, {}),
-        ('POST', Endpoints.deployments): (200, {})
+        ('GET', Endpoints.deployments): (200, [{}]),
+        ('PATCH', Endpoints.git_ref % 'prs-trusted-for-preview/23'): (200, {}),
+        ('PATCH', Endpoints.git_ref % 'prs-open/23'): (200, {})
     }
-    refs = ['refs/pull/23/head', 'refs/prs-trusted-for-preview/23']
+    refs = {
+        'refs/pull/23/head': 'HEAD',
+        'refs/prs-open/23': 'HEAD~',
+        'refs/prs-trusted-for-preview/23': 'HEAD~'
+    }
 
     returncode, requests, remote_refs = synchronize(responses, refs)
 
     assert_success(returncode)
-    assert_match(requests, 'GET', Endpoints.rate_limit)
-    assert_match(requests, 'GET', Endpoints.search)
-    assert_match(requests, 'POST', Endpoints.git_refs)
-    assert_match(requests, 'GET', Endpoints.deployments)
-    assert_match(requests, 'POST', Endpoints.deployments)
-
-
+    assert_match(requests, 'PATCH', Endpoints.git_ref % 'prs-trusted-for-preview/23')
+    assert_match(requests, 'PATCH', Endpoints.git_ref % 'prs-open/23')
