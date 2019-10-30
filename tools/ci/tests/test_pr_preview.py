@@ -16,10 +16,12 @@ subject = os.path.join(
 )
 test_host = 'localhost'
 
+def Request(method, path, body={}):
+    return (method, path, body)
 
 class MockHandler(BaseHTTPRequestHandler, object):
     def do_all(self):
-        request_query = None
+        path = self.path.split('?')[0]
         request_body = None
 
         if 'Content-Length' in self.headers:
@@ -30,14 +32,23 @@ class MockHandler(BaseHTTPRequestHandler, object):
             if self.headers.get('Content-Type') == 'application/json':
                 request_body = json.loads(request_body)
 
-        path_parts = self.path.split('?')
-        path = path_parts[0]
-        if len(path_parts) > 1:
-            request_query = path_parts[1]
-        request = (self.command, path, request_query, request_body)
+        for request, response in self.server.expected_traffic:
+            if request[0] != self.command:
+                continue
+            if request[1] != path:
+                continue
+            body_matches = True
+            for key in request[2]:
+                body_matches &= request[2][key] == request_body.get(key)
+            if not body_matches:
+                continue
+            self.server.actual_traffic.append((request, response))
+            status_code, body = response
+            break
+        else:
+            status_code = 400
+            body = {}
 
-        self.server.requests.append(request)
-        status_code, body = self.server.responses.get(request[:2], (400, '{}'))
         self.send_response(status_code)
         self.end_headers()
         self.wfile.write(json.dumps(body).encode('utf-8'))
@@ -59,10 +70,10 @@ class MockServer(HTTPServer, object):
     '''HTTP server that responds to all requests with status code 200 and body
     '{}' unless an alternative status code and body are specified for the given
     method and path in the `responses` parameter.'''
-    def __init__(self, address, responses=None):
+    def __init__(self, address, expected_traffic):
         super(MockServer, self).__init__(address, MockHandler)
-        self.responses = responses or {}
-        self.requests = []
+        self.expected_traffic = expected_traffic
+        self.actual_traffic = []
 
 
 def assert_success(returncode):
@@ -73,12 +84,12 @@ def assert_fail(returncode):
     assert returncode != 0
 
 
-def synchronize(responses=None, refs={}):
+def synchronize(expected_traffic, refs={}):
     env = {
         'GITHUB_TOKEN': 'c0ffee'
     }
     env.update(os.environ)
-    server = MockServer((test_host, 0), responses)
+    server = MockServer((test_host, 0), expected_traffic)
     test_port = server.server_address[1]
     threading.Thread(target=lambda: server.serve_forever()).start()
     local_repo = tempfile.mkdtemp()
@@ -146,7 +157,7 @@ def synchronize(responses=None, refs={}):
         shutil.rmtree(remote_repo)
         server.shutdown()
 
-    return child.returncode, server.requests, remote_refs
+    return child.returncode, server.actual_traffic, remote_refs
 
 
 class Endpoints(object):
@@ -155,46 +166,6 @@ class Endpoints(object):
     git_refs = '/repos/test-org/test-repo/git/refs'
     git_ref = '/repos/test-org/test-repo/git/refs/%s'
     deployments = '/repos/test-org/test-repo/deployments'
-
-
-def _find_match(requests, verb, endpoint, query, body):
-    matches = []
-    for request in requests:
-        if request[0] != verb:
-            continue
-        if request[1] != endpoint:
-            continue
-        if query and not re.compile(query).search(request[2]):
-            continue
-        if body:
-            all_keys_match = True
-
-            for key in body:
-                all_keys_match &= body[key] == request[3].get(key)
-
-            if not all_keys_match:
-                continue
-
-        matches.append(request)
-
-    return matches
-
-def assert_match(requests, verb, endpoint, query=None, body=None):
-    matches = _find_match(requests, verb, endpoint, query, body)
-
-    if not matches:
-        raise AssertionError(
-            'No matching {} request to {} found'.format(verb, endpoint)
-        )
-
-def assert_no_match(requests, verb, endpoint, query=None, body=None):
-    matches = _find_match(requests, verb, endpoint, query, body)
-
-    if matches:
-        raise AssertionError(
-            'Expected to find zero matches, but a match was found'
-        )
-
 
 no_limit = {
     'resources': {
@@ -384,9 +355,13 @@ def test_synchronize_ignore_untrusted_contributor():
     assert_no_match(requests, 'POST', Endpoints.deployments)
 
 def test_synchronize_sync_trusted_contributor():
-    responses = {
-        ('GET', Endpoints.rate_limit): (200, no_limit),
-        ('GET', Endpoints.search): (
+    expected_traffic = [
+        (Request('GET', Endpoints.rate_limit), (200, no_limit)),
+        (Request('GET', Endpoints.rate_limit), (200, no_limit)),
+        (Request('GET', Endpoints.rate_limit), (200, no_limit)),
+        (Request('GET', Endpoints.rate_limit), (200, no_limit)),
+        (Request('GET', Endpoints.rate_limit), (200, no_limit)),
+        (Request('GET', Endpoints.search), (
             200,
             {
                 'items': [
@@ -400,31 +375,31 @@ def test_synchronize_sync_trusted_contributor():
                 ],
                 'incomplete_results': False
             }
+        )),
+        (
+            Request('POST', Endpoints.git_refs, {'ref':'refs/prs-open/23'}),
+            (200, {})
         ),
-        ('POST', Endpoints.git_refs): (200, {}),
-        ('GET', Endpoints.deployments): (200, []),
-        ('POST', Endpoints.deployments): (200, {})
-    }
+        (
+            Request('POST', Endpoints.git_refs, {'ref':'refs/prs-trusted-for-preview/23'}),
+            (200, {})
+        ),
+        (Request('GET', Endpoints.deployments), (200, [])),
+        (Request('POST', Endpoints.deployments), (200, {}))
+    ]
 
-    returncode, requests, remote_refs = synchronize(responses)
+    returncode, actual_traffic, remote_refs = synchronize(expected_traffic)
 
     assert_success(returncode)
-    assert_match(requests, 'GET', Endpoints.rate_limit)
-    assert_match(requests, 'GET', Endpoints.search)
-    assert_match(
-        requests, 'POST', Endpoints.git_refs, body={'ref':'refs/prs-open/23'}
-    )
-    assert_match(
-        requests, 'POST', Endpoints.git_refs, body={'ref':'refs/prs-trusted-for-preview/23'}
-    )
-    assert_match(requests, 'GET', Endpoints.deployments)
-    assert_match(requests, 'POST', Endpoints.deployments)
+    assert sorted(expected_traffic) == sorted(actual_traffic)
 
 def test_synchronize_update_collaborator():
-    responses = {
-        ('GET', Endpoints.rate_limit): (200, no_limit),
-        ('GET', Endpoints.search): (
-            200,
+    expected_traffic = [
+        (Request('GET', Endpoints.rate_limit), (200, no_limit)),
+        (Request('GET', Endpoints.rate_limit), (200, no_limit)),
+        (Request('GET', Endpoints.rate_limit), (200, no_limit)),
+        (Request('GET', Endpoints.rate_limit), (200, no_limit)),
+        (Request('GET', Endpoints.search), (200,
             {
                 'items': [
                     {
@@ -437,19 +412,49 @@ def test_synchronize_update_collaborator():
                 ],
                 'incomplete_results': False
             }
-        ),
-        ('GET', Endpoints.deployments): (200, [{}]),
-        ('PATCH', Endpoints.git_ref % 'prs-trusted-for-preview/23'): (200, {}),
-        ('PATCH', Endpoints.git_ref % 'prs-open/23'): (200, {})
-    }
+        )),
+        (Request('GET', Endpoints.deployments), (200, [{}])),
+        (Request('PATCH', Endpoints.git_ref % 'prs-trusted-for-preview/23'),
+            (200, {})),
+        (Request('PATCH', Endpoints.git_ref % 'prs-open/23'), (200, {}))
+    ]
     refs = {
         'refs/pull/23/head': 'HEAD',
         'refs/prs-open/23': 'HEAD~',
         'refs/prs-trusted-for-preview/23': 'HEAD~'
     }
 
-    returncode, requests, remote_refs = synchronize(responses, refs)
+    returncode, actual_traffic, remote_refs = synchronize(expected_traffic, refs)
 
     assert_success(returncode)
-    assert_match(requests, 'PATCH', Endpoints.git_ref % 'prs-trusted-for-preview/23')
-    assert_match(requests, 'PATCH', Endpoints.git_ref % 'prs-open/23')
+    assert sorted(expected_traffic) == sorted(actual_traffic)
+
+def test_synchronize_delete_collaborator():
+    expected_traffic = [
+        (Request('GET', Endpoints.rate_limit), (200, no_limit)),
+        (Request('GET', Endpoints.search), (200,
+            {
+                'items': [
+                    {
+                        'number': 23,
+                        'labels': [],
+                        'closed_at': '2019-10-30',
+                        'user': {'login': 'grace'},
+                        'author_association': 'COLLABORATOR'
+                    }
+                ],
+                'incomplete_results': False
+            }
+        ))
+    ]
+    refs = {
+        'refs/pull/23/head': 'HEAD',
+        'refs/prs-open/23': 'HEAD~',
+        'refs/prs-trusted-for-preview/23': 'HEAD~'
+    }
+
+    returncode, actual_traffic, remote_refs = synchronize(expected_traffic, refs)
+
+    assert_success(returncode)
+    assert sorted(expected_traffic) == sorted(actual_traffic)
+    assert remote_refs.keys() == ['refs/pull/23/head']
