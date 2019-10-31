@@ -73,6 +73,13 @@ class MockServer(HTTPServer, object):
         self.expected_traffic = expected_traffic
         self.actual_traffic = []
 
+    def __enter__(self):
+        threading.Thread(target=lambda: self.serve_forever()).start()
+        return self
+
+    def __exit__(self, *args):
+        self.shutdown()
+
 
 class Requests(object):
     get_rate = ('GET', '/rate_limit', {})
@@ -140,10 +147,9 @@ def synchronize(expected_traffic, refs={}):
     env.update(os.environ)
     server = MockServer((test_host, 0), expected_traffic)
     test_port = server.server_address[1]
-    threading.Thread(target=lambda: server.serve_forever()).start()
     remote_refs = {}
 
-    with temp_repo() as local_repo, temp_repo() as remote_repo:
+    with temp_repo() as local_repo, temp_repo() as remote_repo, server:
         subprocess.check_call(
             ['git', 'commit', '--allow-empty', '-m', 'first'],
             cwd=remote_repo
@@ -162,36 +168,33 @@ def synchronize(expected_traffic, refs={}):
                 cwd=remote_repo
             )
 
-        try:
-            child = subprocess.Popen(
-                [
-                    'python',
-                    subject,
-                    '--host',
-                    'http://{}:{}'.format(test_host, test_port),
-                    '--github-project',
-                    'test-org/test-repo',
-                    'synchronize',
-                    '--window',
-                    '3000'
-                ],
-                cwd=local_repo,
-                env=env
-            )
+        child = subprocess.Popen(
+            [
+                'python',
+                subject,
+                '--host',
+                'http://{}:{}'.format(test_host, test_port),
+                '--github-project',
+                'test-org/test-repo',
+                'synchronize',
+                '--window',
+                '3000'
+            ],
+            cwd=local_repo,
+            env=env
+        )
 
-            child.communicate()
-            lines = subprocess.check_output(
-                ['git', 'ls-remote', 'origin'], cwd=local_repo
-            )
-            for line in lines.strip().split('\n'):
-                revision, ref = line.split()
+        child.communicate()
+        lines = subprocess.check_output(
+            ['git', 'ls-remote', 'origin'], cwd=local_repo
+        )
+        for line in lines.strip().split('\n'):
+            revision, ref = line.split()
 
-                if not ref or ref in ('HEAD', 'refs/heads/master'):
-                    continue
+            if not ref or ref in ('HEAD', 'refs/heads/master'):
+                continue
 
-                remote_refs[ref] = revision
-        finally:
-            server.shutdown()
+            remote_refs[ref] = revision
 
     return child.returncode, server.actual_traffic, remote_refs
 
