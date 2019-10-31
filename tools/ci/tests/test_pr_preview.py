@@ -159,12 +159,6 @@ def synchronize(expected_traffic, refs={}):
     return child.returncode, server.actual_traffic, remote_refs
 
 
-class Endpoints(object):
-    rate_limit = '/rate_limit'
-    search = '/search/issues'
-    git_refs = '/repos/test-org/test-repo/git/refs'
-    git_ref = '/repos/test-org/test-repo/git/refs/%s'
-    deployments = '/repos/test-org/test-repo/deployments'
 
 no_limit = {
     'resources': {
@@ -181,26 +175,25 @@ no_limit = {
 
 
 def test_synchronize_zero_results():
-    responses = {
-        ('GET', Endpoints.rate_limit): (200, no_limit),
-        ('GET', Endpoints.search): (
+    expected_traffic = [
+        (Requests.get_rate, (200, no_limit)),
+        (Requests.search, (
             200,
             {
                 'items': [],
                 'incomplete_results': False
             }
-        )
-    }
+        ))
+    ]
 
-    returncode, requests, remote_refs = synchronize(responses)
+    returncode, actual_traffic, remote_refs = synchronize(expected_traffic)
 
     assert_success(returncode)
-    assert_match(requests, 'GET', Endpoints.rate_limit)
-    assert_match(requests, 'GET', Endpoints.search, query=r'repo:test-org/test-repo')
+    assert sorted(expected_traffic) == sorted(actual_traffic)
 
 def test_synchronize_fail_search_throttled():
-    responses = {
-        ('GET', Endpoints.rate_limit): (
+    expected_traffic = [
+        (Requests.get_rate, (
             200,
             {
                 'resources': {
@@ -210,37 +203,35 @@ def test_synchronize_fail_search_throttled():
                     }
                 }
             }
-        )
-    }
+        ))
+    ]
 
-    returncode, requests, remote_refs = synchronize(responses)
+    returncode, actual_traffic, remote_refs = synchronize(expected_traffic)
 
     assert_fail(returncode)
-    assert_match(requests, 'GET', Endpoints.rate_limit)
-    assert_no_match(requests, 'GET', Endpoints.search)
+    assert sorted(expected_traffic) == sorted(actual_traffic)
 
 def test_synchronize_fail_incomplete_results():
-    responses = {
-        ('GET', Endpoints.rate_limit): (200, no_limit),
-        ('GET', Endpoints.search): (
+    expected_traffic = [
+        (Requests.get_rate, (200, no_limit)),
+        (Requests.search, (
             200,
             {
                 'items': [],
                 'incomplete_results': True
             }
-        )
-    }
+        ))
+    ]
 
-    returncode, requests, remove_refs = synchronize(responses)
+    returncode, actual_traffic, remove_refs = synchronize(expected_traffic)
 
     assert_fail(returncode)
-    assert_match(requests, 'GET', Endpoints.rate_limit)
-    assert_match(requests, 'GET', Endpoints.search)
+    assert sorted(expected_traffic) == sorted(actual_traffic)
 
 def test_synchronize_ignore_closed():
-    responses = {
-        ('GET', Endpoints.rate_limit): (200, no_limit),
-        ('GET', Endpoints.search): (
+    expected_traffic = [
+        (Requests.get_rate, (200, no_limit)),
+        (Requests.search, (
             200,
             {
                 'items': [
@@ -254,19 +245,22 @@ def test_synchronize_ignore_closed():
                 ],
                 'incomplete_results': False
             }
-        )
-    }
+        ))
+    ]
 
-    returncode, requests, remote_refs = synchronize(responses)
+    returncode, actual_traffic, remote_refs = synchronize(expected_traffic)
 
     assert_success(returncode)
-    assert_match(requests, 'GET', Endpoints.rate_limit)
-    assert_match(requests, 'GET', Endpoints.search)
+    assert sorted(expected_traffic) == sorted(actual_traffic)
 
 def test_synchronize_sync_collaborator():
-    responses = {
-        ('GET', Endpoints.rate_limit): (200, no_limit),
-        ('GET', Endpoints.search): (
+    expected_traffic = [
+        (Requests.get_rate, (200, no_limit)),
+        (Requests.get_rate, (200, no_limit)),
+        (Requests.get_rate, (200, no_limit)),
+        (Requests.get_rate, (200, no_limit)),
+        (Requests.get_rate, (200, no_limit)),
+        (Requests.search, (
             200,
             {
                 'items': [
@@ -280,25 +274,22 @@ def test_synchronize_sync_collaborator():
                 ],
                 'incomplete_results': False
             }
-        ),
-        ('POST', Endpoints.git_refs): (200, {}),
-        ('GET', Endpoints.deployments): (200, {}),
-        ('POST', Endpoints.deployments): (200, {})
-    }
+        )),
+        (Requests.ref_create_open, (200, {})),
+        (Requests.ref_create_trusted, (200, {})),
+        (Requests.deployment_get, (200, {})),
+        (Requests.deployment_create, (200, {}))
+    ]
 
-    returncode, requests, remote_refs = synchronize(responses)
+    returncode, actual_traffic, remote_refs = synchronize(expected_traffic)
 
     assert_success(returncode)
-    assert_match(requests, 'GET', Endpoints.rate_limit)
-    assert_match(requests, 'GET', Endpoints.search)
-    assert_match(requests, 'POST', Endpoints.git_refs)
-    assert_match(requests, 'GET', Endpoints.deployments)
-    assert_match(requests, 'POST', Endpoints.deployments)
+    assert sorted(expected_traffic) == sorted(actual_traffic)
 
 def test_synchronize_ignore_collaborator_bot():
-    responses = {
-        ('GET', Endpoints.rate_limit): (200, no_limit),
-        ('GET', Endpoints.search): (
+    expected_traffic = [
+        (Requests.get_rate, (200, no_limit)),
+        (Requests.search, (
             200,
             {
                 'items': [
@@ -312,22 +303,18 @@ def test_synchronize_ignore_collaborator_bot():
                 ],
                 'incomplete_results': False
             }
-        ),
-        ('GET', Endpoints.deployments): (200, {})
-    }
+        ))
+    ]
 
-    returncode, requests, remote_refs = synchronize(responses)
+    returncode, actual_traffic, remote_refs = synchronize(expected_traffic)
 
     assert_success(returncode)
-    assert_match(requests, 'GET', Endpoints.rate_limit)
-    assert_match(requests, 'GET', Endpoints.search)
-    assert_no_match(requests, 'POST', Endpoints.git_refs)
-    assert_no_match(requests, 'POST', Endpoints.deployments)
+    assert sorted(expected_traffic) == sorted(actual_traffic)
 
 def test_synchronize_ignore_untrusted_contributor():
-    responses = {
-        ('GET', Endpoints.rate_limit): (200, no_limit),
-        ('GET', Endpoints.search): (
+    expected_traffic = [
+        (Requests.get_rate, (200, no_limit)),
+        (Requests.search, (
             200,
             {
                 'items': [
@@ -341,26 +328,42 @@ def test_synchronize_ignore_untrusted_contributor():
                 ],
                 'incomplete_results': False
             }
-        ),
-        ('GET', Endpoints.deployments): (200, [])
-    }
+        ))
+    ]
 
-    returncode, requests, remote_refs = synchronize(responses)
+    returncode, actual_traffic, remote_refs = synchronize(expected_traffic)
 
     assert_success(returncode)
-    assert_match(requests, 'GET', Endpoints.rate_limit)
-    assert_match(requests, 'GET', Endpoints.search)
-    assert_no_match(requests, 'POST', Endpoints.git_refs)
-    assert_no_match(requests, 'POST', Endpoints.deployments)
+    assert sorted(expected_traffic) == sorted(actual_traffic)
+
+class Requests(object):
+    get_rate = ('GET', '/rate_limit', {})
+    search = ('GET', '/search/issues', {})
+    ref_create_open = (
+        'POST', '/repos/test-org/test-repo/git/refs', {'ref':'refs/prs-open/23'}
+    )
+    ref_create_trusted = (
+        'POST',
+        '/repos/test-org/test-repo/git/refs',
+        {'ref':'refs/prs-trusted-for-preview/23'}
+    )
+    ref_update_open = (
+        'PATCH', '/repos/test-org/test-repo/git/refs/prs-open/23', {}
+    )
+    ref_update_trusted = (
+        'PATCH', '/repos/test-org/test-repo/git/refs/prs-trusted-for-preview/23', {}
+    )
+    deployment_get = ('GET', '/repos/test-org/test-repo/deployments', {})
+    deployment_create = ('POST', '/repos/test-org/test-repo/deployments', {})
 
 def test_synchronize_sync_trusted_contributor():
     expected_traffic = [
-        (Request('GET', Endpoints.rate_limit), (200, no_limit)),
-        (Request('GET', Endpoints.rate_limit), (200, no_limit)),
-        (Request('GET', Endpoints.rate_limit), (200, no_limit)),
-        (Request('GET', Endpoints.rate_limit), (200, no_limit)),
-        (Request('GET', Endpoints.rate_limit), (200, no_limit)),
-        (Request('GET', Endpoints.search), (
+        (Requests.get_rate, (200, no_limit)),
+        (Requests.get_rate, (200, no_limit)),
+        (Requests.get_rate, (200, no_limit)),
+        (Requests.get_rate, (200, no_limit)),
+        (Requests.get_rate, (200, no_limit)),
+        (Requests.search, (
             200,
             {
                 'items': [
@@ -375,16 +378,10 @@ def test_synchronize_sync_trusted_contributor():
                 'incomplete_results': False
             }
         )),
-        (
-            Request('POST', Endpoints.git_refs, {'ref':'refs/prs-open/23'}),
-            (200, {})
-        ),
-        (
-            Request('POST', Endpoints.git_refs, {'ref':'refs/prs-trusted-for-preview/23'}),
-            (200, {})
-        ),
-        (Request('GET', Endpoints.deployments), (200, [])),
-        (Request('POST', Endpoints.deployments), (200, {}))
+        (Requests.ref_create_open, (200, {})),
+        (Requests.ref_create_trusted, (200, {})),
+        (Requests.deployment_get, (200, [])),
+        (Requests.deployment_create, (200, {}))
     ]
 
     returncode, actual_traffic, remote_refs = synchronize(expected_traffic)
@@ -394,11 +391,12 @@ def test_synchronize_sync_trusted_contributor():
 
 def test_synchronize_update_collaborator():
     expected_traffic = [
-        (Request('GET', Endpoints.rate_limit), (200, no_limit)),
-        (Request('GET', Endpoints.rate_limit), (200, no_limit)),
-        (Request('GET', Endpoints.rate_limit), (200, no_limit)),
-        (Request('GET', Endpoints.rate_limit), (200, no_limit)),
-        (Request('GET', Endpoints.search), (200,
+        (Requests.get_rate, (200, no_limit)),
+        (Requests.get_rate, (200, no_limit)),
+        (Requests.get_rate, (200, no_limit)),
+        (Requests.get_rate, (200, no_limit)),
+        (Requests.get_rate, (200, no_limit)),
+        (Requests.search, (200,
             {
                 'items': [
                     {
@@ -412,10 +410,10 @@ def test_synchronize_update_collaborator():
                 'incomplete_results': False
             }
         )),
-        (Request('GET', Endpoints.deployments), (200, [{}])),
-        (Request('PATCH', Endpoints.git_ref % 'prs-trusted-for-preview/23'),
-            (200, {})),
-        (Request('PATCH', Endpoints.git_ref % 'prs-open/23'), (200, {}))
+        (Requests.deployment_get, (200, [])),
+        (Requests.ref_update_open, (200, {})),
+        (Requests.ref_update_trusted, (200, {})),
+        (Requests.deployment_create, (200, {}))
     ]
     refs = {
         'refs/pull/23/head': 'HEAD',
@@ -430,8 +428,8 @@ def test_synchronize_update_collaborator():
 
 def test_synchronize_delete_collaborator():
     expected_traffic = [
-        (Request('GET', Endpoints.rate_limit), (200, no_limit)),
-        (Request('GET', Endpoints.search), (200,
+        (Requests.get_rate, (200, no_limit)),
+        (Requests.search, (200,
             {
                 'items': [
                     {
