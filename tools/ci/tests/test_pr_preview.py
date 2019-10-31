@@ -6,7 +6,6 @@ except ImportError:
 import contextlib
 import json
 import os
-import re
 import shutil
 import subprocess
 import tempfile
@@ -489,7 +488,6 @@ def test_synchronize_update_collaborator():
     assert returncode == 0
     assert sorted(expected_traffic) == sorted(actual_traffic)
 
-
 def test_synchronize_update_member():
     expected_traffic = [
         (Requests.get_rate, Responses.no_limit),
@@ -525,7 +523,6 @@ def test_synchronize_update_member():
     assert returncode == 0
     assert sorted(expected_traffic) == sorted(actual_traffic)
 
-
 def test_synchronize_delete_collaborator():
     expected_traffic = [
         (Requests.get_rate, Responses.no_limit),
@@ -555,7 +552,6 @@ def test_synchronize_delete_collaborator():
     assert returncode == 0
     assert sorted(expected_traffic) == sorted(actual_traffic)
     assert remote_refs.keys() == ['refs/pull/23/head']
-
 
 def test_detect_ignore_unknown_env():
     expected_github_traffic = []
@@ -633,7 +629,6 @@ def test_detect_success():
     assert actual_github_traffic == expected_github_traffic
     assert actual_preview_traffic == expected_preview_traffic
 
-
 def test_detect_timeout_missing():
     expected_github_traffic = [
         (Requests.get_rate, Responses.no_limit),
@@ -661,7 +656,6 @@ def test_detect_timeout_missing():
     ping_count = len(actual_preview_traffic)
     assert ping_count > 0
     assert actual_preview_traffic == expected_preview_traffic * ping_count
-
 
 def test_detect_timeout_wrong_revision():
     expected_github_traffic = [
