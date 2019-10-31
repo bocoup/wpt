@@ -3,6 +3,7 @@ try:
 except ImportError:
     # Python 3 case
     from http.server import BaseHTTPRequestHandler, HTTPServer
+import contextlib
 import json
 import os
 import re
@@ -109,6 +110,29 @@ class Responses(object):
     })
 
 
+@contextlib.contextmanager
+def temp_repo():
+    directory = tempfile.mkdtemp()
+
+    try:
+        subprocess.check_call(['git', 'init'], cwd=directory)
+        subprocess.check_call(
+            ['git', 'config', 'user.name', 'example'],
+            cwd=directory
+        )
+        subprocess.check_call(
+            ['git', 'config', 'user.email', 'example@example.com'],
+            cwd=directory
+        )
+        subprocess.check_call(
+            ['git', 'commit', '--allow-empty', '-m', 'first'],
+            cwd=directory
+        )
+
+        yield directory
+    finally:
+        shutil.rmtree(directory)
+
 def synchronize(expected_traffic, refs={}):
     env = {
         'GITHUB_TOKEN': 'c0ffee'
@@ -117,70 +141,57 @@ def synchronize(expected_traffic, refs={}):
     server = MockServer((test_host, 0), expected_traffic)
     test_port = server.server_address[1]
     threading.Thread(target=lambda: server.serve_forever()).start()
-    local_repo = tempfile.mkdtemp()
-    remote_repo = tempfile.mkdtemp()
     remote_refs = {}
 
-    subprocess.check_call(['git', 'init'], cwd=local_repo)
-    subprocess.check_call(['git', 'init'], cwd=remote_repo)
-    subprocess.check_call(
-        ['git', 'config', 'user.name', 'example'],
-        cwd=remote_repo
-    )
-    subprocess.check_call(
-        ['git', 'config', 'user.email', 'example@example.com'],
-        cwd=remote_repo
-    )
-    subprocess.check_call(
-        ['git', 'commit', '--allow-empty', '-m', 'first'],
-        cwd=remote_repo
-    )
-    subprocess.check_call(
-        ['git', 'commit', '--allow-empty', '-m', 'second'],
-        cwd=remote_repo
-    )
-    subprocess.check_call(
-        ['git', 'remote', 'add', 'origin', remote_repo], cwd=local_repo
-    )
-
-    for name, value in refs.items():
+    with temp_repo() as local_repo, temp_repo() as remote_repo:
         subprocess.check_call(
-            ['git', 'update-ref', name, value],
+            ['git', 'commit', '--allow-empty', '-m', 'first'],
             cwd=remote_repo
         )
-
-    try:
-        child = subprocess.Popen(
-            [
-                'python',
-                subject,
-                '--host',
-                'http://{}:{}'.format(test_host, test_port),
-                '--github-project',
-                'test-org/test-repo',
-                'synchronize',
-                '--window',
-                '3000'
-            ],
-            cwd=local_repo,
-            env=env
+        subprocess.check_call(
+            ['git', 'commit', '--allow-empty', '-m', 'second'],
+            cwd=remote_repo
+        )
+        subprocess.check_call(
+            ['git', 'remote', 'add', 'origin', remote_repo], cwd=local_repo
         )
 
-        child.communicate()
-        lines = subprocess.check_output(
-            ['git', 'ls-remote', 'origin'], cwd=local_repo
-        )
-        for line in lines.strip().split('\n'):
-            revision, ref = line.split()
+        for name, value in refs.items():
+            subprocess.check_call(
+                ['git', 'update-ref', name, value],
+                cwd=remote_repo
+            )
 
-            if not ref or ref in ('HEAD', 'refs/heads/master'):
-                continue
+        try:
+            child = subprocess.Popen(
+                [
+                    'python',
+                    subject,
+                    '--host',
+                    'http://{}:{}'.format(test_host, test_port),
+                    '--github-project',
+                    'test-org/test-repo',
+                    'synchronize',
+                    '--window',
+                    '3000'
+                ],
+                cwd=local_repo,
+                env=env
+            )
 
-            remote_refs[ref] = revision
-    finally:
-        shutil.rmtree(local_repo)
-        shutil.rmtree(remote_repo)
-        server.shutdown()
+            child.communicate()
+            lines = subprocess.check_output(
+                ['git', 'ls-remote', 'origin'], cwd=local_repo
+            )
+            for line in lines.strip().split('\n'):
+                revision, ref = line.split()
+
+                if not ref or ref in ('HEAD', 'refs/heads/master'):
+                    continue
+
+                remote_refs[ref] = revision
+        finally:
+            server.shutdown()
 
     return child.returncode, server.actual_traffic, remote_refs
 
