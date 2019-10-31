@@ -16,8 +16,6 @@ subject = os.path.join(
 )
 test_host = 'localhost'
 
-def Request(method, path, body=None):
-    return (method, path, body if body else {})
 
 class MockHandler(BaseHTTPRequestHandler, object):
     def do_all(self):
@@ -81,6 +79,42 @@ def assert_success(returncode):
 
 def assert_fail(returncode):
     assert returncode != 0
+
+
+class Requests(object):
+    get_rate = ('GET', '/rate_limit', {})
+    search = ('GET', '/search/issues', {})
+    ref_create_open = (
+        'POST', '/repos/test-org/test-repo/git/refs', {'ref':'refs/prs-open/23'}
+    )
+    ref_create_trusted = (
+        'POST',
+        '/repos/test-org/test-repo/git/refs',
+        {'ref':'refs/prs-trusted-for-preview/23'}
+    )
+    ref_update_open = (
+        'PATCH', '/repos/test-org/test-repo/git/refs/prs-open/23', {}
+    )
+    ref_update_trusted = (
+        'PATCH', '/repos/test-org/test-repo/git/refs/prs-trusted-for-preview/23', {}
+    )
+    deployment_get = ('GET', '/repos/test-org/test-repo/deployments', {})
+    deployment_create = ('POST', '/repos/test-org/test-repo/deployments', {})
+
+
+class Responses(object):
+    no_limit = (200, {
+        'resources': {
+            'search': {
+                'remaining': 100,
+                'limit': 100
+            },
+            'core': {
+                'remaining': 100,
+                'limit': 100
+            }
+        }
+    })
 
 
 def synchronize(expected_traffic, refs={}):
@@ -160,23 +194,9 @@ def synchronize(expected_traffic, refs={}):
 
 
 
-no_limit = {
-    'resources': {
-        'search': {
-            'remaining': 100,
-            'limit': 100
-        },
-        'core': {
-            'remaining': 100,
-            'limit': 100
-        }
-    }
-}
-
-
 def test_synchronize_zero_results():
     expected_traffic = [
-        (Requests.get_rate, (200, no_limit)),
+        (Requests.get_rate, Responses.no_limit),
         (Requests.search, (
             200,
             {
@@ -213,7 +233,7 @@ def test_synchronize_fail_search_throttled():
 
 def test_synchronize_fail_incomplete_results():
     expected_traffic = [
-        (Requests.get_rate, (200, no_limit)),
+        (Requests.get_rate, Responses.no_limit),
         (Requests.search, (
             200,
             {
@@ -230,7 +250,7 @@ def test_synchronize_fail_incomplete_results():
 
 def test_synchronize_ignore_closed():
     expected_traffic = [
-        (Requests.get_rate, (200, no_limit)),
+        (Requests.get_rate, Responses.no_limit),
         (Requests.search, (
             200,
             {
@@ -255,11 +275,11 @@ def test_synchronize_ignore_closed():
 
 def test_synchronize_sync_collaborator():
     expected_traffic = [
-        (Requests.get_rate, (200, no_limit)),
-        (Requests.get_rate, (200, no_limit)),
-        (Requests.get_rate, (200, no_limit)),
-        (Requests.get_rate, (200, no_limit)),
-        (Requests.get_rate, (200, no_limit)),
+        (Requests.get_rate, Responses.no_limit),
+        (Requests.get_rate, Responses.no_limit),
+        (Requests.get_rate, Responses.no_limit),
+        (Requests.get_rate, Responses.no_limit),
+        (Requests.get_rate, Responses.no_limit),
         (Requests.search, (
             200,
             {
@@ -288,7 +308,7 @@ def test_synchronize_sync_collaborator():
 
 def test_synchronize_ignore_collaborator_bot():
     expected_traffic = [
-        (Requests.get_rate, (200, no_limit)),
+        (Requests.get_rate, Responses.no_limit),
         (Requests.search, (
             200,
             {
@@ -313,7 +333,7 @@ def test_synchronize_ignore_collaborator_bot():
 
 def test_synchronize_ignore_untrusted_contributor():
     expected_traffic = [
-        (Requests.get_rate, (200, no_limit)),
+        (Requests.get_rate, Responses.no_limit),
         (Requests.search, (
             200,
             {
@@ -336,33 +356,13 @@ def test_synchronize_ignore_untrusted_contributor():
     assert_success(returncode)
     assert sorted(expected_traffic) == sorted(actual_traffic)
 
-class Requests(object):
-    get_rate = ('GET', '/rate_limit', {})
-    search = ('GET', '/search/issues', {})
-    ref_create_open = (
-        'POST', '/repos/test-org/test-repo/git/refs', {'ref':'refs/prs-open/23'}
-    )
-    ref_create_trusted = (
-        'POST',
-        '/repos/test-org/test-repo/git/refs',
-        {'ref':'refs/prs-trusted-for-preview/23'}
-    )
-    ref_update_open = (
-        'PATCH', '/repos/test-org/test-repo/git/refs/prs-open/23', {}
-    )
-    ref_update_trusted = (
-        'PATCH', '/repos/test-org/test-repo/git/refs/prs-trusted-for-preview/23', {}
-    )
-    deployment_get = ('GET', '/repos/test-org/test-repo/deployments', {})
-    deployment_create = ('POST', '/repos/test-org/test-repo/deployments', {})
-
 def test_synchronize_sync_trusted_contributor():
     expected_traffic = [
-        (Requests.get_rate, (200, no_limit)),
-        (Requests.get_rate, (200, no_limit)),
-        (Requests.get_rate, (200, no_limit)),
-        (Requests.get_rate, (200, no_limit)),
-        (Requests.get_rate, (200, no_limit)),
+        (Requests.get_rate, Responses.no_limit),
+        (Requests.get_rate, Responses.no_limit),
+        (Requests.get_rate, Responses.no_limit),
+        (Requests.get_rate, Responses.no_limit),
+        (Requests.get_rate, Responses.no_limit),
         (Requests.search, (
             200,
             {
@@ -391,11 +391,11 @@ def test_synchronize_sync_trusted_contributor():
 
 def test_synchronize_update_collaborator():
     expected_traffic = [
-        (Requests.get_rate, (200, no_limit)),
-        (Requests.get_rate, (200, no_limit)),
-        (Requests.get_rate, (200, no_limit)),
-        (Requests.get_rate, (200, no_limit)),
-        (Requests.get_rate, (200, no_limit)),
+        (Requests.get_rate, Responses.no_limit),
+        (Requests.get_rate, Responses.no_limit),
+        (Requests.get_rate, Responses.no_limit),
+        (Requests.get_rate, Responses.no_limit),
+        (Requests.get_rate, Responses.no_limit),
         (Requests.search, (200,
             {
                 'items': [
@@ -428,7 +428,7 @@ def test_synchronize_update_collaborator():
 
 def test_synchronize_delete_collaborator():
     expected_traffic = [
-        (Requests.get_rate, (200, no_limit)),
+        (Requests.get_rate, Responses.no_limit),
         (Requests.search, (200,
             {
                 'items': [
