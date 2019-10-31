@@ -73,14 +73,6 @@ class MockServer(HTTPServer, object):
         self.actual_traffic = []
 
 
-def assert_success(returncode):
-    assert returncode == 0
-
-
-def assert_fail(returncode):
-    assert returncode != 0
-
-
 class Requests(object):
     get_rate = ('GET', '/rate_limit', {})
     search = ('GET', '/search/issues', {})
@@ -208,7 +200,7 @@ def test_synchronize_zero_results():
 
     returncode, actual_traffic, remote_refs = synchronize(expected_traffic)
 
-    assert_success(returncode)
+    assert returncode == 0
     assert sorted(expected_traffic) == sorted(actual_traffic)
 
 def test_synchronize_fail_search_throttled():
@@ -228,7 +220,7 @@ def test_synchronize_fail_search_throttled():
 
     returncode, actual_traffic, remote_refs = synchronize(expected_traffic)
 
-    assert_fail(returncode)
+    assert returncode != 0
     assert sorted(expected_traffic) == sorted(actual_traffic)
 
 def test_synchronize_fail_incomplete_results():
@@ -245,7 +237,7 @@ def test_synchronize_fail_incomplete_results():
 
     returncode, actual_traffic, remove_refs = synchronize(expected_traffic)
 
-    assert_fail(returncode)
+    assert returncode != 0
     assert sorted(expected_traffic) == sorted(actual_traffic)
 
 def test_synchronize_ignore_closed():
@@ -270,7 +262,7 @@ def test_synchronize_ignore_closed():
 
     returncode, actual_traffic, remote_refs = synchronize(expected_traffic)
 
-    assert_success(returncode)
+    assert returncode == 0
     assert sorted(expected_traffic) == sorted(actual_traffic)
 
 def test_synchronize_sync_collaborator():
@@ -303,7 +295,7 @@ def test_synchronize_sync_collaborator():
 
     returncode, actual_traffic, remote_refs = synchronize(expected_traffic)
 
-    assert_success(returncode)
+    assert returncode == 0
     assert sorted(expected_traffic) == sorted(actual_traffic)
 
 def test_synchronize_ignore_collaborator_bot():
@@ -328,7 +320,7 @@ def test_synchronize_ignore_collaborator_bot():
 
     returncode, actual_traffic, remote_refs = synchronize(expected_traffic)
 
-    assert_success(returncode)
+    assert returncode == 0
     assert sorted(expected_traffic) == sorted(actual_traffic)
 
 def test_synchronize_ignore_untrusted_contributor():
@@ -353,7 +345,7 @@ def test_synchronize_ignore_untrusted_contributor():
 
     returncode, actual_traffic, remote_refs = synchronize(expected_traffic)
 
-    assert_success(returncode)
+    assert returncode == 0
     assert sorted(expected_traffic) == sorted(actual_traffic)
 
 def test_synchronize_sync_trusted_contributor():
@@ -386,7 +378,7 @@ def test_synchronize_sync_trusted_contributor():
 
     returncode, actual_traffic, remote_refs = synchronize(expected_traffic)
 
-    assert_success(returncode)
+    assert returncode == 0
     assert sorted(expected_traffic) == sorted(actual_traffic)
 
 def test_synchronize_update_collaborator():
@@ -423,7 +415,7 @@ def test_synchronize_update_collaborator():
 
     returncode, actual_traffic, remote_refs = synchronize(expected_traffic, refs)
 
-    assert_success(returncode)
+    assert returncode == 0
     assert sorted(expected_traffic) == sorted(actual_traffic)
 
 def test_synchronize_delete_collaborator():
@@ -452,6 +444,6 @@ def test_synchronize_delete_collaborator():
 
     returncode, actual_traffic, remote_refs = synchronize(expected_traffic, refs)
 
-    assert_success(returncode)
+    assert returncode == 0
     assert sorted(expected_traffic) == sorted(actual_traffic)
     assert remote_refs.keys() == ['refs/pull/23/head']
