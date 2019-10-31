@@ -100,6 +100,22 @@ class Requests(object):
     )
     deployment_get = ('GET', '/repos/test-org/test-repo/deployments', {})
     deployment_create = ('POST', '/repos/test-org/test-repo/deployments', {})
+    deployment_status_create_pending = (
+        'POST',
+        '/repos/test-org/test-repo/deployments/24601/statuses',
+        {'state':'pending'}
+    )
+    deployment_status_create_error = (
+        'POST',
+        '/repos/test-org/test-repo/deployments/24601/statuses',
+        {'state':'error'}
+    )
+    deployment_status_create_success = (
+        'POST',
+        '/repos/test-org/test-repo/deployments/24601/statuses',
+        {'state':'success'}
+    )
+    preview = ('GET', '/.git/worktrees/gh-45/HEAD', {})
 
 
 class Responses(object):
@@ -197,6 +213,48 @@ def synchronize(expected_traffic, refs={}):
             remote_refs[ref] = revision
 
     return child.returncode, server.actual_traffic, remote_refs
+
+
+def detect(event, expected_github_traffic, expected_preview_traffic):
+    env = {
+        'GITHUB_TOKEN': 'c0ffee'
+    }
+    env.update(os.environ)
+    github_server = MockServer((test_host, 0), expected_github_traffic)
+    github_port = github_server.server_address[1]
+    preview_server = MockServer((test_host, 0), expected_preview_traffic)
+    preview_port = preview_server.server_address[1]
+
+    with temp_repo() as repo, github_server, preview_server:
+        env['GITHUB_EVENT_PATH'] = repo + '/event.json'
+
+        with open(env['GITHUB_EVENT_PATH'], 'w') as handle:
+            handle.write(json.dumps(event))
+
+        child = subprocess.Popen(
+            [
+                'python',
+                subject,
+                '--host',
+                'http://{}:{}'.format(test_host, github_port),
+                '--github-project',
+                'test-org/test-repo',
+                'detect',
+                '--target',
+                'http://{}:{}'.format(test_host, preview_port),
+                '--timeout',
+                '1'
+            ],
+            cwd=repo,
+            env=env
+        )
+        child.communicate()
+
+    return (
+        child.returncode,
+        github_server.actual_traffic,
+        preview_server.actual_traffic
+    )
 
 
 def test_synchronize_zero_results():
@@ -497,3 +555,138 @@ def test_synchronize_delete_collaborator():
     assert returncode == 0
     assert sorted(expected_traffic) == sorted(actual_traffic)
     assert remote_refs.keys() == ['refs/pull/23/head']
+
+
+def test_detect_ignore_unknown_env():
+    expected_github_traffic = []
+    expected_preview_traffic = []
+    event = {
+        'deployment': {
+            'id': 24601,
+            'environment': 'ghosts',
+            'sha': '3232'
+        }
+    }
+
+    returncode, actual_github_traffic, actual_preview_traffic = detect(
+        event, expected_github_traffic, expected_preview_traffic
+    )
+
+    assert returncode == 0
+    assert len(actual_github_traffic) == 0
+    assert len(actual_preview_traffic) == 0
+
+def test_detect_fail_search_throttled():
+    expected_github_traffic = [
+        (Requests.get_rate, (
+            200,
+            {
+                'resources': {
+                    'core': {
+                        'remaining': 1,
+                        'limit': 10
+                    }
+                }
+            }
+        ))
+    ]
+    expected_preview_traffic = []
+    event = {
+        'deployment': {
+            'id': 24601,
+            'environment': 'gh-45',
+            'sha': '3232'
+        }
+    }
+
+    returncode, actual_github_traffic, actual_preview_traffic = detect(
+        event, expected_github_traffic, expected_preview_traffic
+    )
+
+    assert returncode == 1
+    assert actual_github_traffic == expected_github_traffic
+    assert actual_preview_traffic == expected_preview_traffic
+
+def test_detect_success():
+    expected_github_traffic = [
+        (Requests.get_rate, Responses.no_limit),
+        (Requests.deployment_status_create_pending, (200, {})),
+        (Requests.get_rate, Responses.no_limit),
+        (Requests.deployment_status_create_success, (200, {}))
+    ]
+    expected_preview_traffic = [
+        (Requests.preview, (200, 3232))
+    ]
+    event = {
+        'deployment': {
+            'id': 24601,
+            'environment': 'gh-45',
+            'sha': '3232'
+        }
+    }
+
+    returncode, actual_github_traffic, actual_preview_traffic = detect(
+        event, expected_github_traffic, expected_preview_traffic
+    )
+
+    assert returncode == 0
+    assert actual_github_traffic == expected_github_traffic
+    assert actual_preview_traffic == expected_preview_traffic
+
+
+def test_detect_timeout_missing():
+    expected_github_traffic = [
+        (Requests.get_rate, Responses.no_limit),
+        (Requests.deployment_status_create_pending, (200, {})),
+        (Requests.get_rate, Responses.no_limit),
+        (Requests.deployment_status_create_error, (200, {}))
+    ]
+    expected_preview_traffic = [
+        (Requests.preview, (404, {}))
+    ]
+    event = {
+        'deployment': {
+            'id': 24601,
+            'environment': 'gh-45',
+            'sha': '3232'
+        }
+    }
+
+    returncode, actual_github_traffic, actual_preview_traffic = detect(
+        event, expected_github_traffic, expected_preview_traffic
+    )
+
+    assert returncode == 1
+    assert expected_github_traffic == actual_github_traffic
+    ping_count = len(actual_preview_traffic)
+    assert ping_count > 0
+    assert actual_preview_traffic == expected_preview_traffic * ping_count
+
+
+def test_detect_timeout_wrong_revision():
+    expected_github_traffic = [
+        (Requests.get_rate, Responses.no_limit),
+        (Requests.deployment_status_create_pending, (200, {})),
+        (Requests.get_rate, Responses.no_limit),
+        (Requests.deployment_status_create_error, (200, {}))
+    ]
+    expected_preview_traffic = [
+        (Requests.preview, (200, 1234))
+    ]
+    event = {
+        'deployment': {
+            'id': 24601,
+            'environment': 'gh-45',
+            'sha': '3232'
+        }
+    }
+
+    returncode, actual_github_traffic, actual_preview_traffic = detect(
+        event, expected_github_traffic, expected_preview_traffic
+    )
+
+    assert returncode == 1
+    assert expected_github_traffic == actual_github_traffic
+    ping_count = len(actual_preview_traffic)
+    assert ping_count > 0
+    assert actual_preview_traffic == expected_preview_traffic * ping_count
