@@ -16,8 +16,8 @@ subject = os.path.join(
 )
 test_host = 'localhost'
 
-def Request(method, path, body={}):
-    return (method, path, body)
+def Request(method, path, body=None):
+    return (method, path, body if body else {})
 
 class MockHandler(BaseHTTPRequestHandler, object):
     def do_all(self):
@@ -42,16 +42,15 @@ class MockHandler(BaseHTTPRequestHandler, object):
                 body_matches &= request[2][key] == request_body.get(key)
             if not body_matches:
                 continue
-            self.server.actual_traffic.append((request, response))
-            status_code, body = response
             break
         else:
-            status_code = 400
-            body = {}
+            request = (self.command, path, request_body)
+            response = (400, {})
 
-        self.send_response(status_code)
+        self.server.actual_traffic.append((request, response))
+        self.send_response(response[0])
         self.end_headers()
-        self.wfile.write(json.dumps(body).encode('utf-8'))
+        self.wfile.write(json.dumps(response[1]).encode('utf-8'))
 
     def do_DELETE(self):
         return self.do_all()
