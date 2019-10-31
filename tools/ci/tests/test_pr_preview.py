@@ -185,7 +185,6 @@ def synchronize(expected_traffic, refs={}):
     return child.returncode, server.actual_traffic, remote_refs
 
 
-
 def test_synchronize_zero_results():
     expected_traffic = [
         (Requests.get_rate, Responses.no_limit),
@@ -417,6 +416,43 @@ def test_synchronize_update_collaborator():
 
     assert returncode == 0
     assert sorted(expected_traffic) == sorted(actual_traffic)
+
+
+def test_synchronize_update_member():
+    expected_traffic = [
+        (Requests.get_rate, Responses.no_limit),
+        (Requests.get_rate, Responses.no_limit),
+        (Requests.get_rate, Responses.no_limit),
+        (Requests.get_rate, Responses.no_limit),
+        (Requests.search, (200,
+            {
+                'items': [
+                    {
+                        'number': 23,
+                        'labels': [],
+                        'closed_at': None,
+                        'user': {'login': 'grace'},
+                        'author_association': 'MEMBER'
+                    }
+                ],
+                'incomplete_results': False
+            }
+        )),
+        (Requests.deployment_get, (200, [{'some': 'deployment'}])),
+        (Requests.ref_update_open, (200, {})),
+        (Requests.ref_update_trusted, (200, {}))
+    ]
+    refs = {
+        'refs/pull/23/head': 'HEAD',
+        'refs/prs-open/23': 'HEAD~',
+        'refs/prs-trusted-for-preview/23': 'HEAD~'
+    }
+
+    returncode, actual_traffic, remote_refs = synchronize(expected_traffic, refs)
+
+    assert returncode == 0
+    assert sorted(expected_traffic) == sorted(actual_traffic)
+
 
 def test_synchronize_delete_collaborator():
     expected_traffic = [
