@@ -213,7 +213,7 @@ class Remote(object):
         if not output:
             return None
 
-        return output.split()[0]
+        return output.decode('utf-8').split()[0]
 
     def delete_ref(self, refspec):
         full_ref = 'refs/{}'.format(refspec)

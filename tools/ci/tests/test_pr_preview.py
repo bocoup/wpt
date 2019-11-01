@@ -17,6 +17,19 @@ subject = os.path.join(
 test_host = 'localhost'
 
 
+def same_members(a, b):
+    if len(a) != len(b):
+        return False
+    a_copy = list(a)
+    for elem in b:
+        try:
+            a_copy.remove(elem)
+        except ValueError:
+            return False
+
+    return len(a_copy) == 0
+
+
 class MockHandler(BaseHTTPRequestHandler, object):
     def do_all(self):
         path = self.path.split('?')[0]
@@ -203,7 +216,7 @@ def synchronize(expected_traffic, refs={}):
         lines = subprocess.check_output(
             ['git', 'ls-remote', 'origin'], cwd=local_repo
         )
-        for line in lines.strip().split('\n'):
+        for line in lines.decode('utf-8').strip().split('\n'):
             revision, ref = line.split()
 
             if not ref or ref in ('HEAD', 'refs/heads/master'):
@@ -271,7 +284,7 @@ def test_synchronize_zero_results():
     returncode, actual_traffic, remote_refs = synchronize(expected_traffic)
 
     assert returncode == 0
-    assert sorted(expected_traffic) == sorted(actual_traffic)
+    assert same_members(expected_traffic, actual_traffic)
 
 def test_synchronize_fail_search_throttled():
     expected_traffic = [
@@ -291,7 +304,7 @@ def test_synchronize_fail_search_throttled():
     returncode, actual_traffic, remote_refs = synchronize(expected_traffic)
 
     assert returncode != 0
-    assert sorted(expected_traffic) == sorted(actual_traffic)
+    assert same_members(expected_traffic, actual_traffic)
 
 def test_synchronize_fail_incomplete_results():
     expected_traffic = [
@@ -308,7 +321,7 @@ def test_synchronize_fail_incomplete_results():
     returncode, actual_traffic, remove_refs = synchronize(expected_traffic)
 
     assert returncode != 0
-    assert sorted(expected_traffic) == sorted(actual_traffic)
+    assert same_members(expected_traffic, actual_traffic)
 
 def test_synchronize_ignore_closed():
     expected_traffic = [
@@ -333,7 +346,7 @@ def test_synchronize_ignore_closed():
     returncode, actual_traffic, remote_refs = synchronize(expected_traffic)
 
     assert returncode == 0
-    assert sorted(expected_traffic) == sorted(actual_traffic)
+    assert same_members(expected_traffic, actual_traffic)
 
 def test_synchronize_sync_collaborator():
     expected_traffic = [
@@ -366,7 +379,7 @@ def test_synchronize_sync_collaborator():
     returncode, actual_traffic, remote_refs = synchronize(expected_traffic)
 
     assert returncode == 0
-    assert sorted(expected_traffic) == sorted(actual_traffic)
+    assert same_members(expected_traffic, actual_traffic)
 
 def test_synchronize_ignore_collaborator_bot():
     expected_traffic = [
@@ -391,7 +404,7 @@ def test_synchronize_ignore_collaborator_bot():
     returncode, actual_traffic, remote_refs = synchronize(expected_traffic)
 
     assert returncode == 0
-    assert sorted(expected_traffic) == sorted(actual_traffic)
+    assert same_members(expected_traffic, actual_traffic)
 
 def test_synchronize_ignore_untrusted_contributor():
     expected_traffic = [
@@ -416,7 +429,7 @@ def test_synchronize_ignore_untrusted_contributor():
     returncode, actual_traffic, remote_refs = synchronize(expected_traffic)
 
     assert returncode == 0
-    assert sorted(expected_traffic) == sorted(actual_traffic)
+    assert same_members(expected_traffic, actual_traffic)
 
 def test_synchronize_sync_trusted_contributor():
     expected_traffic = [
@@ -449,7 +462,7 @@ def test_synchronize_sync_trusted_contributor():
     returncode, actual_traffic, remote_refs = synchronize(expected_traffic)
 
     assert returncode == 0
-    assert sorted(expected_traffic) == sorted(actual_traffic)
+    assert same_members(expected_traffic, actual_traffic)
 
 def test_synchronize_update_collaborator():
     expected_traffic = [
@@ -486,7 +499,7 @@ def test_synchronize_update_collaborator():
     returncode, actual_traffic, remote_refs = synchronize(expected_traffic, refs)
 
     assert returncode == 0
-    assert sorted(expected_traffic) == sorted(actual_traffic)
+    assert same_members(expected_traffic, actual_traffic)
 
 def test_synchronize_update_member():
     expected_traffic = [
@@ -521,7 +534,7 @@ def test_synchronize_update_member():
     returncode, actual_traffic, remote_refs = synchronize(expected_traffic, refs)
 
     assert returncode == 0
-    assert sorted(expected_traffic) == sorted(actual_traffic)
+    assert same_members(expected_traffic, actual_traffic)
 
 def test_synchronize_delete_collaborator():
     expected_traffic = [
@@ -550,8 +563,8 @@ def test_synchronize_delete_collaborator():
     returncode, actual_traffic, remote_refs = synchronize(expected_traffic, refs)
 
     assert returncode == 0
-    assert sorted(expected_traffic) == sorted(actual_traffic)
-    assert remote_refs.keys() == ['refs/pull/23/head']
+    assert same_members(expected_traffic, actual_traffic)
+    assert list(remote_refs) == ['refs/pull/23/head']
 
 def test_detect_ignore_unknown_env():
     expected_github_traffic = []
