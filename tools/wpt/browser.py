@@ -17,6 +17,10 @@ from utils import call, get, untar, unzip
 
 uname = platform.uname()
 
+# the rootUrl for the firefox-ci deployment of Taskcluster
+# (after November 9, https://firefox-ci-tc.services.mozilla.com/)
+FIREFOX_CI_ROOT_URL = 'https://taskcluster.net'
+
 
 def _get_fileversion(binary, logger=None):
     command = "(Get-Item '%s').VersionInfo.FileVersion" % binary.replace("'", "''")
@@ -285,15 +289,19 @@ class Firefox(Browser):
         return "%s/archive/%s.zip/testing/profiles/" % (repo, tag)
 
     def install_prefs(self, binary, dest=None, channel=None):
-        version, channel_ = self.get_version_and_channel(binary)
-        if channel is not None and channel != channel_:
-            # Beta doesn't always seem to have the b in the version string, so allow the
-            # manually supplied value to override the one from the binary
-            self.logger.warning("Supplied channel doesn't match binary, using supplied channel")
-        elif channel is None:
-            channel = channel_
+        if binary:
+            version, channel_ = self.get_version_and_channel(binary)
+            if channel is not None and channel != channel_:
+                # Beta doesn't always seem to have the b in the version string, so allow the
+                # manually supplied value to override the one from the binary
+                self.logger.warning("Supplied channel doesn't match binary, using supplied channel")
+            elif channel is None:
+                channel = channel_
+        else:
+            version = None
+
         if dest is None:
-            dest = os.pwd
+            dest = os.curdir
 
         dest = os.path.join(dest, "profiles", channel)
         if version:
@@ -416,7 +424,38 @@ class FirefoxAndroid(Browser):
     requirements = "requirements_firefox.txt"
 
     def install(self, dest=None, channel=None):
-        raise NotImplementedError
+        if dest is None:
+            dest = os.pwd
+
+        if FIREFOX_CI_ROOT_URL == 'https://taskcluster.net':
+            # NOTE: this condition can be removed after November 9, 2019
+            TC_QUEUE_BASE = "https://queue.taskcluster.net/v1/"
+            TC_INDEX_BASE = "https://index.taskcluster.net/v1/"
+        else:
+            TC_QUEUE_BASE = FIREFOX_CI_ROOT_URL + "/api/queue/v1/"
+            TC_INDEX_BASE = FIREFOX_CI_ROOT_URL + "/api/index/v1/"
+
+
+        resp = requests.get(TC_INDEX_BASE +
+                            "task/gecko.v2.mozilla-central.latest.mobile.android-x86_64-opt")
+        resp.raise_for_status()
+        index = resp.json()
+        task_id = index["taskId"]
+
+        resp = requests.get(TC_QUEUE_BASE + "task/%s/artifacts/%s" %
+                            (task_id, "public/build/geckoview-androidTest.apk"))
+        resp.raise_for_status()
+
+        apk_path = os.path.join(dest, "geckoview-androidTest.apk")
+
+        with open(apk_path, "wb") as f:
+            f.write(resp.content)
+
+        return apk_path
+
+    def install_prefs(self, binary, dest=None, channel=None):
+        fx_browser = Firefox(self.logger)
+        return fx_browser.install_prefs(binary, dest, channel)
 
     def find_binary(self, venv_path=None, channel=None):
         raise NotImplementedError
@@ -593,6 +632,7 @@ class ChromeAndroidBase(Browser):
 
     def __init__(self, logger):
         super(ChromeAndroidBase, self).__init__(logger)
+        self.device_serial = None
 
     def install(self, dest=None, channel=None):
         raise NotImplementedError
@@ -616,7 +656,10 @@ class ChromeAndroidBase(Browser):
             self.logger.warning("No package name provided.")
             return None
 
-        command = ['adb', 'shell', 'dumpsys', 'package', binary]
+        command = ['adb']
+        if self.device_serial:
+            command.extend(['-s', self.device_serial])
+        command.extend(['shell', 'dumpsys', 'package', binary])
         try:
             output = call(*command)
         except (subprocess.CalledProcessError, OSError):
@@ -657,7 +700,10 @@ class AndroidWebview(ChromeAndroidBase):
         # For WebView, it is not trivial to change the WebView provider, so
         # we will just grab whatever is available.
         # https://chromium.googlesource.com/chromium/src/+/HEAD/android_webview/docs/channels.md
-        command = ['adb', 'shell', 'dumpsys', 'webviewupdate']
+        command = ['adb']
+        if self.device_serial:
+            command.extend(['-s', self.device_serial])
+        command.extend(['shell', 'dumpsys', 'webviewupdate'])
         try:
             output = call(*command)
         except (subprocess.CalledProcessError, OSError):
@@ -837,10 +883,12 @@ class EdgeChromium(Browser):
         if os.path.isfile(edgedriver_path):
             # remove read-only attribute
             os.chmod(edgedriver_path, stat.S_IRWXU | stat.S_IRWXG | stat.S_IRWXO)  # 0777
+            print("Delete %s file" % edgedriver_path)
             os.remove(edgedriver_path)
-            driver_notes_path = os.path.join(dest, "Driver_notes")
-            if os.path.isdir(driver_notes_path):
-                shutil.rmtree(driver_notes_path, ignore_errors=False, onerror=handle_remove_readonly)
+        driver_notes_path = os.path.join(dest, "Driver_notes")
+        if os.path.isdir(driver_notes_path):
+            print("Delete %s folder" % driver_notes_path)
+            shutil.rmtree(driver_notes_path, ignore_errors=False, onerror=handle_remove_readonly)
 
         self.logger.info("Downloading MSEdgeDriver from %s" % url)
         unzip(get(url).raw, dest)
@@ -1071,6 +1119,47 @@ class WebKit(Browser):
         raise NotImplementedError
 
     def version(self, binary=None, webdriver_binary=None):
+        return None
+
+
+class WebKitGTKMiniBrowser(WebKit):
+
+    def find_binary(self, venv_path=None, channel=None):
+        libexecpaths = ["/usr/libexec/webkit2gtk-4.0"]  # Fedora path
+        triplet = "x86_64-linux-gnu"
+        # Try to use GCC to detect this machine triplet
+        gcc = find_executable("gcc")
+        if gcc:
+            try:
+                triplet = call(gcc, "-dumpmachine").strip()
+            except subprocess.CalledProcessError:
+                pass
+        # Add Debian/Ubuntu path
+        libexecpaths.append("/usr/lib/%s/webkit2gtk-4.0" % triplet)
+        if channel == "nightly":
+            libexecpaths.append("/opt/webkitgtk/nightly")
+        return find_executable("MiniBrowser", os.pathsep.join(libexecpaths))
+
+    def find_webdriver(self, channel=None):
+        path = os.environ['PATH']
+        if channel == "nightly":
+            path = "%s:%s" % (path, "/opt/webkitgtk/nightly")
+        return find_executable("WebKitWebDriver", path)
+
+    def version(self, binary=None, webdriver_binary=None):
+        if binary is None:
+            return None
+        try:  # WebKitGTK MiniBrowser before 2.26.0 doesn't support --version
+            output = call(binary, "--version").strip()
+        except subprocess.CalledProcessError:
+            return None
+        # Example output: "WebKitGTK 2.26.1"
+        if output:
+            m = re.match(r"WebKitGTK (.+)", output)
+            if not m:
+                self.logger.warning("Failed to extract version from: %s" % output)
+                return None
+            return m.group(1)
         return None
 
 
