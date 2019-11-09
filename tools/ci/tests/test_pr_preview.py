@@ -4,9 +4,11 @@ except ImportError:
     # Python 3 case
     from http.server import BaseHTTPRequestHandler, HTTPServer
 import contextlib
+import errno
 import json
 import os
 import shutil
+import stat
 import subprocess
 import tempfile
 import threading
@@ -28,6 +30,22 @@ def same_members(a, b):
             return False
 
     return len(a_copy) == 0
+
+
+# When these tests are executed in Windows, files in the temporary git
+# repositories may be marked as "read only" at the moment they are intended to
+# be deleted. The following handler for `shutil.rmtree` accounts for this by
+# making the files writable and attempting to delete them a second time.
+#
+# Source:
+# https://stackoverflow.com/questions/1213706/what-user-do-python-scripts-run-as-in-windows
+def handle_remove_readonly(func, path, exc):
+  excvalue = exc[1]
+  if func in (os.rmdir, os.remove) and excvalue.errno == errno.EACCES:
+      os.chmod(path, stat.S_IRWXU | stat.S_IRWXG | stat.S_IRWXO) # 0777
+      func(path)
+  else:
+      raise
 
 
 class MockHandler(BaseHTTPRequestHandler, object):
@@ -166,7 +184,9 @@ def temp_repo():
 
         yield directory
     finally:
-        shutil.rmtree(directory)
+        shutil.rmtree(
+            directory, ignore_errors=False, onerror=handle_remove_readonly
+        )
 
 def synchronize(expected_traffic, refs={}):
     env = {
