@@ -41,7 +41,8 @@ def same_members(a, b):
 # https://stackoverflow.com/questions/1213706/what-user-do-python-scripts-run-as-in-windows
 def handle_remove_readonly(func, path, exc):
   excvalue = exc[1]
-  if func in (os.rmdir, os.remove) and excvalue.errno == errno.EACCES:
+  candidates = (os.rmdir, os.remove, os.unlink)
+  if func in candidates and excvalue.errno == errno.EACCES:
       os.chmod(path, stat.S_IRWXU | stat.S_IRWXG | stat.S_IRWXO) # 0777
       func(path)
   else:
