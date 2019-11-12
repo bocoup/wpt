@@ -245,16 +245,18 @@ if ('onunhandledrejection' in window) {
         () => {
           setup({ explicit_done: true });
           test(() => {}, 'before');
-          Promise.reject(new Error('this error is expected'));
-          window.addEventListener('unhandledrejection', () => {
-            test(() => {}, 'after');
-            done();
+          window.addEventListener('load', () => {
+            Promise.reject(new Error('this error is expected'));
+            window.addEventListener('unhandledrejection', () => {
+              test(() => {}, 'after');
+              done();
+            });
           });
         }
       ).then(({harness, tests}) => {
         assert_equals(harness, 'ERROR');
         assert_equals(tests.before, 'PASS');
-        assert_true('after' in tests);
+        assert_false('after' in tests);
       });
   }, 'unhandled rejection between tests');
 
@@ -281,16 +283,18 @@ if ('onunhandledrejection' in window) {
         () => {
           setup({ explicit_done: true });
           promise_test(() => Promise.resolve(), 'before');
-          Promise.reject(new Error('this error is expected'));
-          window.addEventListener('unhandledrejection', () => {
-            promise_test(() => Promise.resolve(), 'after');
-            done();
+          window.addEventListener('load', () => {
+            Promise.reject(new Error('this error is expected'));
+            window.addEventListener('unhandledrejection', () => {
+              promise_test(() => Promise.resolve(), 'after');
+              done();
+            });
           });
         }
       ).then(({harness, tests}) => {
         assert_equals(harness, 'ERROR');
         assert_equals(tests.before, 'PASS');
-        assert_true('after' in tests);
+        assert_false('after' in tests);
       });
   }, 'unhandled rejection between promise_tests');
 
