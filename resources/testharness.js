@@ -3647,7 +3647,7 @@ policies and contribution forms [3].
             return META_TITLE;
         }
         if ('location' in global_scope) {
-            return location.pathname.substring(location.pathname.lastIndexOf('/') + 1, location.pathname.indexOf('.'));
+            return location.pathname.substring(location.pathname.lastIndexOf('/') + 1, location.pathname.lastIndexOf('.'));
         }
         return "Untitled";
     }

@@ -174,7 +174,7 @@ class TestEnvironment(object):
         for path, format_args, content_type, route in [
                 ("testharness_runner.html", {}, "text/html", "/testharness_runner.html"),
                 (self.options.get("testharnessreport", "testharnessreport.js"),
-                 {"output": self.pause_after_test,
+                 {"silence": self.pause_after_test,
                   "timeout_multiplier": self.testharness_timeout_multipler,
                   "explicit_timeout": "true" if self.debug_info is not None else "false"},
                  "text/javascript;charset=utf8",
