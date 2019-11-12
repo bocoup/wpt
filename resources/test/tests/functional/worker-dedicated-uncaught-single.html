@@ -20,7 +20,7 @@ test(function(t) {
     },
     "Browser supports Workers");
 
-fetch_tests_from_worker(new Worker("worker-uncaught-single.js"));
+fetch_tests_from_worker(new Worker("resources/worker-uncaught-single.js"));
 
 test(function(t) {
         assert_false(false, "False is false");

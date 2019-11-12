@@ -27,8 +27,8 @@ promise_test(
         // Since the service worker registration could be in an indeterminate
         // state (due to, for example, a previous test run failing), we start by
         // unregstering our service worker and then registering it again.
-        var scope = "service-worker-scope";
-        var worker_url = "worker.js";
+        var scope = "resources/service-worker-scope";
+        var worker_url = "resources/worker.js";
 
         return navigator.serviceWorker.register(worker_url, {scope: scope})
             .then(
