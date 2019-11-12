@@ -22,27 +22,4 @@ test(function(t) {
 
 fetch_tests_from_worker(new Worker("resources/worker-uncaught-allow.js"));
 </script>
-<script type="text/json" id="expected">
-{
-  "summarized_status": {
-    "status_string": "OK",
-    "message": null
-  },
-  "summarized_tests": [
-    {
-      "status_string": "PASS",
-      "name": "Browser supports Workers",
-      "properties": {},
-      "message": null
-    },
-    {
-      "status_string": "PASS",
-      "name": "onerror event is triggered",
-      "properties": {},
-      "message": null
-    }
-  ],
-  "type": "complete"
-}
-</script>
 </body>

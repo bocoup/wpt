@@ -31,34 +31,5 @@ test(function(t) {
 
 test(function() {}, "The test runner is in an unpredictable state #2 ('NOT RUN')");
 </script>
-<script type="text/json" id="expected">
-{
-  "summarized_status": {
-    "status_string": "ERROR",
-    "message": "Test named 'Test that returns a value in three \"cleanup\" functions' specified 6 'cleanup' functions, and 1 failed, and 3 returned a non-undefined value."
-  },
-  "summarized_tests": [
-    {
-      "status_string": "PASS",
-      "name": "Test that returns a value in three \"cleanup\" functions",
-      "properties": {},
-      "message": null
-    },
-    {
-      "status_string": "NOTRUN",
-      "name": "The test runner is in an unpredictable state #1 ('NOT RUN')",
-      "message": null,
-      "properties": {}
-    },
-    {
-      "status_string": "NOTRUN",
-      "name": "The test runner is in an unpredictable state #2 ('NOT RUN')",
-      "message": null,
-      "properties": {}
-    }
-  ],
-  "type": "complete"
-}
-</script>
 </body>
 </html>

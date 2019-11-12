@@ -28,28 +28,5 @@ promise_test(function(t) {
   return Promise.resolve();
 }, "Test with a 'cleanup' function");
 </script>
-<script type="text/json" id="expected">
-{
-  "summarized_status": {
-    "message": null,
-    "status_string": "OK"
-  },
-  "summarized_tests": [
-    {
-      "message": null,
-      "name": "Test with a 'cleanup' function",
-      "status_string": "PASS",
-      "properties": {}
-    },
-    {
-      "message": null,
-      "name": "test defined when no tests are queued, but one test is executing",
-      "status_string": "PASS",
-      "properties": {}
-    }
-  ],
-  "type": "complete"
-}
-</script>
 </body>
 </html>

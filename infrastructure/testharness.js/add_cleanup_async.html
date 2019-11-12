@@ -58,28 +58,5 @@ promise_test(function() {
   return Promise.resolve();
 }, "synchronously-defined promise_test");
 </script>
-<script type="text/json" id="expected">
-{
-  "summarized_status": {
-    "status_string": "OK",
-    "message": null
-  },
-  "summarized_tests": [
-    {
-      "status_string": "PASS",
-      "name": "promise_test with asynchronous cleanup",
-      "message": null,
-      "properties": {}
-    },
-    {
-      "status_string": "PASS",
-      "name": "synchronously-defined promise_test",
-      "message": null,
-      "properties": {}
-    }
-  ],
-  "type": "complete"
-}
-</script>
 </body>
 </html>

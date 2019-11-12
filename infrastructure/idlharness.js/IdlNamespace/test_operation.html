@@ -54,46 +54,5 @@ namespace baz {
 };`);
 idlArray.test();
 </script>
-<script type="text/json" id="expected">
-{
-  "summarized_status": {
-    "status_string": "OK",
-    "message": null
-  },
-  "summarized_tests": [
-    {
-      "name": "bar namespace: operation Truth()",
-      "status_string": "PASS",
-      "properties": {},
-      "message": null
-    },
-    {
-      "name": "baz namespace: operation LongStory(any, DOMString...)",
-      "status_string": "PASS",
-      "properties": {},
-      "message": null
-    },
-    {
-      "name": "baz namespace: operation ShortStory(DOMString...)",
-      "status_string": "PASS",
-      "properties": {},
-      "message": null
-    },
-    {
-      "name": "foo namespace: operation Truth()",
-      "status_string": "PASS",
-      "properties": {},
-      "message": null
-    },
-    {
-      "name": "foo namespace: operation Lies()",
-      "status_string": "FAIL",
-      "properties": {},
-      "message": "assert_own_property: namespace object missing operation \"Lies\" expected property \"Lies\" missing"
-    }
-  ],
-  "type": "complete"
-}
-</script>
 </body>
 </html>

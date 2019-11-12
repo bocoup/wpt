@@ -27,26 +27,3 @@ promise_test(function(t) {
   return Promise.resolve();
 }, "Test that should not be run due to invalid harness state ('NOT RUN')");
 </script>
-<script type="text/json" id="expected">
-{
-  "summarized_status": {
-    "status_string": "ERROR",
-    "message": "Test named 'Test with failing cleanup that completes after DOMContentLoaded event' specified 1 'cleanup' function, and 1 failed."
-  },
-  "summarized_tests": [
-    {
-      "status_string": "NOTRUN",
-      "name": "Test that should not be run due to invalid harness state ('NOT RUN')",
-      "message": null,
-      "properties": {}
-    },
-    {
-      "status_string": "PASS",
-      "name": "Test with failing cleanup that completes after DOMContentLoaded event",
-      "message": null,
-      "properties": {}
-    }
-  ],
-  "type": "complete"
-}
-</script>

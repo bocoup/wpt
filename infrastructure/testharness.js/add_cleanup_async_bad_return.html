@@ -23,28 +23,5 @@ promise_test(function(t) {
 
 promise_test(function() {}, "The test runner is in an unpredictable state ('NOT RUN')");
 </script>
-<script type="text/json" id="expected">
-{
-  "summarized_status": {
-    "status_string": "ERROR",
-    "message": "Test named 'promise_test that returns a non-thenable object in one \"cleanup\" callback' specified 3 'cleanup' functions, and 1 returned a non-thenable value."
-  },
-  "summarized_tests": [
-    {
-      "status_string": "NOTRUN",
-      "name": "The test runner is in an unpredictable state ('NOT RUN')",
-      "message": null,
-      "properties": {}
-    },
-    {
-      "status_string": "PASS",
-      "name": "promise_test that returns a non-thenable object in one \"cleanup\" callback",
-      "message": null,
-      "properties": {}
-    }
-  ],
-  "type": "complete"
-}
-</script>
 </body>
 </html>
