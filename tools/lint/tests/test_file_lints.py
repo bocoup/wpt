@@ -429,6 +429,7 @@ def test_testharness_path():
 <script src="resources/testharness.js"></script>
 <script src="../resources/testharness.js"></script>
 <script src="http://w3c-test.org/resources/testharness.js"></script>
+<script src="/infrastructure/testharness.js/foo.js"></script>
 </html>
 """
     error_map = check_with_files(code)

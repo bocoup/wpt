@@ -538,7 +538,7 @@ def check_parsed(repo_root, path, f):
         def incorrect_path(script, src):
             # type: (Text, Text) -> bool
             return (script == src or
-                ("/%s" % script in src and src != "/resources/%s" % script))
+                (src.endswith("/%s" % script) and src != "/resources/%s" % script))
 
         if incorrect_path("testharness.js", src):
             errors.append(rules.TestharnessPath.error(path))
