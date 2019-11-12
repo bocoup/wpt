@@ -1,6 +1,6 @@
 (function() {
   'use strict';
-  var variantPattern = /^\?.*keep-promise/;
+  var variantPattern = /^\?.*remove-promise/;
   var metaTags = document.getElementsByTagName('meta');
   var hasVariant = false;
   var metaTag, idx;
@@ -21,7 +21,7 @@
     );
   }
 
-  if (variantPattern.test(location.search)) {
+  if (!variantPattern.test(location.search)) {
     return;
   }
 
