@@ -66,10 +66,15 @@ window.__wptrunner_process_next_event = function() {
 };
 
 (function() {
-  var props = {output: %(output)d,
+  var is_self_test = typeof location !== "undefined" &&
+    /\/testharness\.js\//.test(location);
+  var props = {output: is_self_test || %(silence)d,
                timeout_multiplier: %(timeout_multiplier)s,
-               explicit_timeout: %(explicit_timeout)s,
-               message_events: ["completion"]};
+               explicit_timeout: %(explicit_timeout)s};
+
+  if (!is_self_test) {
+    props.message_events = ["completion"];
+  }
 
   add_completion_callback(function(tests, harness_status) {
     __wptrunner_message_queue.push({
