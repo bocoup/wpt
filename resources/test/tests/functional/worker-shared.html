@@ -23,7 +23,7 @@ test(
     },
     "Browser supports SharedWorkers");
 
-fetch_tests_from_worker(new SharedWorker("worker.js",
+fetch_tests_from_worker(new SharedWorker("resources/worker.js",
                                          "My shared worker"));
 </script>
 <script type="text/json" id="expected">

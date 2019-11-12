@@ -20,9 +20,9 @@ test(function(t) {
     },
     "Browser supports Workers");
 
-fetch_tests_from_worker(new Worker("worker.js"));
+fetch_tests_from_worker(new Worker("resources/worker.js"));
 
-fetch_tests_from_worker(new Worker("worker-error.js"));
+fetch_tests_from_worker(new Worker("resources/worker-error.js"));
 
 test(function(t) {
         assert_false(false, "False is false");
