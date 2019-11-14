@@ -6,8 +6,7 @@
 importScripts("/resources/testharness.js");
 importScripts("/2dcontext/resources/canvas-tests.js");
 
-var t = async_test("restore() with an empty stack has no effect");
-t.step(function() {
+promise_test(function(t) {
 
 var offscreenCanvas = new OffscreenCanvas(100, 50);
 var ctx = offscreenCanvas.getContext('2d');
@@ -18,7 +17,6 @@ ctx.lineWidth = 0.5;
 ctx.restore();
 _assertSame(ctx.lineWidth, 0.5, "ctx.lineWidth", "0.5");
 
-t.done();
-
-});
+return Promise.resolve();
+}, "restore() with an empty stack has no effect");
 done();

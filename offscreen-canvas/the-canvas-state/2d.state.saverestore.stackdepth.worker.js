@@ -6,8 +6,7 @@
 importScripts("/resources/testharness.js");
 importScripts("/2dcontext/resources/canvas-tests.js");
 
-var t = async_test("save()/restore() stack depth is not unreasonably limited");
-t.step(function() {
+promise_test(function(t) {
 
 var offscreenCanvas = new OffscreenCanvas(100, 50);
 var ctx = offscreenCanvas.getContext('2d');
@@ -24,7 +23,6 @@ for (var i = limit-1; i > 0; --i)
     ctx.restore();
 }
 
-t.done();
-
-});
+return Promise.resolve();
+}, "save()/restore() stack depth is not unreasonably limited");
 done();

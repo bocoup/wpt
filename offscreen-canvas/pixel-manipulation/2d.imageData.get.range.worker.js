@@ -6,8 +6,7 @@
 importScripts("/resources/testharness.js");
 importScripts("/2dcontext/resources/canvas-tests.js");
 
-var t = async_test("getImageData() returns values in the range [0, 255]");
-t.step(function() {
+promise_test(function(t) {
 
 var offscreenCanvas = new OffscreenCanvas(100, 50);
 var ctx = offscreenCanvas.getContext('2d');
@@ -21,7 +20,6 @@ _assertSame(imgdata1.data[0], 0, "imgdata1.data[\""+(0)+"\"]", "0");
 var imgdata2 = ctx.getImageData(30, 15, 1, 1);
 _assertSame(imgdata2.data[0], 255, "imgdata2.data[\""+(0)+"\"]", "255");
 
-t.done();
-
-});
+return Promise.resolve();
+}, "getImageData() returns values in the range [0, 255]");
 done();

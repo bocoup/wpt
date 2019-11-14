@@ -6,8 +6,7 @@
 importScripts("/resources/testharness.js");
 importScripts("/2dcontext/resources/canvas-tests.js");
 
-var t = async_test("isPointInPath() works on unclosed subpaths");
-t.step(function() {
+promise_test(function(t) {
 
 var offscreenCanvas = new OffscreenCanvas(100, 50);
 var ctx = offscreenCanvas.getContext('2d');
@@ -19,7 +18,6 @@ ctx.lineTo(0, 20);
 _assertSame(ctx.isPointInPath(10, 10), true, "ctx.isPointInPath(10, 10)", "true");
 _assertSame(ctx.isPointInPath(30, 10), false, "ctx.isPointInPath(30, 10)", "false");
 
-t.done();
-
-});
+return Promise.resolve();
+}, "isPointInPath() works on unclosed subpaths");
 done();

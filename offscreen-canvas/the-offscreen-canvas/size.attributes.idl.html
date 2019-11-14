@@ -10,8 +10,7 @@
 
 
 <script>
-var t = async_test("Getting/setting width/height IDL attributes");
-t.step(function() {
+promise_test(function(t) {
 
 var offscreenCanvas = new OffscreenCanvas(100, 50);
 var ctx = offscreenCanvas.getContext('2d');
@@ -33,7 +32,6 @@ offscreenCanvas.height = "foo";
 _assertSame(offscreenCanvas.width, 0, "offscreenCanvas.width", "0");
 _assertSame(offscreenCanvas.height, 0, "offscreenCanvas.height", "0");
 
-t.done();
-
-});
+return Promise.resolve();
+}, "Getting/setting width/height IDL attributes");
 </script>

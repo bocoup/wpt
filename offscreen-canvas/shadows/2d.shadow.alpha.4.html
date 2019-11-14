@@ -10,8 +10,7 @@
 
 
 <script>
-var t = async_test("Shadows with alpha components are correctly affected by globalAlpha");
-t.step(function() {
+promise_test(function(t) {
 
 var offscreenCanvas = new OffscreenCanvas(100, 50);
 var ctx = offscreenCanvas.getContext('2d');
@@ -25,7 +24,6 @@ ctx.globalAlpha = 0.707;
 ctx.fillRect(0, -50, 100, 50);
 _assertPixelApprox(offscreenCanvas, 50,25, 127,0,127,255, "50,25", "127,0,127,255", 2);
 
-t.done();
-
-});
+return Promise.resolve();
+}, "Shadows with alpha components are correctly affected by globalAlpha");
 </script>

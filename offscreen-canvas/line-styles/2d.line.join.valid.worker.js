@@ -6,8 +6,7 @@
 importScripts("/resources/testharness.js");
 importScripts("/2dcontext/resources/canvas-tests.js");
 
-var t = async_test("Setting lineJoin to valid values works");
-t.step(function() {
+promise_test(function(t) {
 
 var offscreenCanvas = new OffscreenCanvas(100, 50);
 var ctx = offscreenCanvas.getContext('2d');
@@ -19,7 +18,6 @@ _assertSame(ctx.lineJoin, 'round', "ctx.lineJoin", "'round'");
 ctx.lineJoin = 'miter';
 _assertSame(ctx.lineJoin, 'miter', "ctx.lineJoin", "'miter'");
 
-t.done();
-
-});
+return Promise.resolve();
+}, "Setting lineJoin to valid values works");
 done();

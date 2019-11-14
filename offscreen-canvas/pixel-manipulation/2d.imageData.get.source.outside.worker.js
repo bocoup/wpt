@@ -6,8 +6,7 @@
 importScripts("/resources/testharness.js");
 importScripts("/2dcontext/resources/canvas-tests.js");
 
-var t = async_test("getImageData() returns transparent black outside the canvas");
-t.step(function() {
+promise_test(function(t) {
 
 var offscreenCanvas = new OffscreenCanvas(100, 50);
 var ctx = offscreenCanvas.getContext('2d');
@@ -66,7 +65,6 @@ _assertSame(imgdata7.data[20*4+1], 0, "imgdata7.data[20*4+1]", "0");
 _assertSame(imgdata7.data[20*4+2], 0, "imgdata7.data[20*4+2]", "0");
 _assertSame(imgdata7.data[20*4+3], 0, "imgdata7.data[20*4+3]", "0");
 
-t.done();
-
-});
+return Promise.resolve();
+}, "getImageData() returns transparent black outside the canvas");
 done();

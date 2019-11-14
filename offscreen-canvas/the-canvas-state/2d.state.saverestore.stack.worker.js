@@ -6,8 +6,7 @@
 importScripts("/resources/testharness.js");
 importScripts("/2dcontext/resources/canvas-tests.js");
 
-var t = async_test("save()/restore() can be nested as a stack");
-t.step(function() {
+promise_test(function(t) {
 
 var offscreenCanvas = new OffscreenCanvas(100, 50);
 var ctx = offscreenCanvas.getContext('2d');
@@ -23,7 +22,6 @@ _assertSame(ctx.lineWidth, 2, "ctx.lineWidth", "2");
 ctx.restore();
 _assertSame(ctx.lineWidth, 1, "ctx.lineWidth", "1");
 
-t.done();
-
-});
+return Promise.resolve();
+}, "save()/restore() can be nested as a stack");
 done();

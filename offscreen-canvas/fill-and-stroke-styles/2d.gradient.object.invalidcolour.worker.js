@@ -6,8 +6,7 @@
 importScripts("/resources/testharness.js");
 importScripts("/2dcontext/resources/canvas-tests.js");
 
-var t = async_test("");
-t.step(function() {
+promise_test(function(t) {
 
 var offscreenCanvas = new OffscreenCanvas(100, 50);
 var ctx = offscreenCanvas.getContext('2d');
@@ -19,7 +18,6 @@ assert_throws("SYNTAX_ERR", function() { g.addColorStop(0, 'undefined'); });
 assert_throws("SYNTAX_ERR", function() { g.addColorStop(0, null); });
 assert_throws("SYNTAX_ERR", function() { g.addColorStop(0, undefined); });
 
-t.done();
-
-});
+return Promise.resolve();
+}, "");
 done();

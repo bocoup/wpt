@@ -6,8 +6,7 @@
 importScripts("/resources/testharness.js");
 importScripts("/2dcontext/resources/canvas-tests.js");
 
-var t = async_test("Shadows are drawn for stroke caps");
-t.step(function() {
+promise_test(function(t) {
 
 var offscreenCanvas = new OffscreenCanvas(100, 50);
 var ctx = offscreenCanvas.getContext('2d');
@@ -27,7 +26,6 @@ _assertPixel(offscreenCanvas, 1,25, 0,255,0,255, "1,25", "0,255,0,255");
 _assertPixel(offscreenCanvas, 50,25, 0,255,0,255, "50,25", "0,255,0,255");
 _assertPixel(offscreenCanvas, 98,25, 0,255,0,255, "98,25", "0,255,0,255");
 
-t.done();
-
-});
+return Promise.resolve();
+}, "Shadows are drawn for stroke caps");
 done();

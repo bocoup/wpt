@@ -6,8 +6,7 @@
 importScripts("/resources/testharness.js");
 importScripts("/2dcontext/resources/canvas-tests.js");
 
-var t = async_test("getImageData() works with negative width and height, and returns top-to-bottom left-to-right");
-t.step(function() {
+promise_test(function(t) {
 
 var offscreenCanvas = new OffscreenCanvas(100, 50);
 var ctx = offscreenCanvas.getContext('2d');
@@ -31,7 +30,6 @@ _assertSame(imgdata2.data[1], 0, "imgdata2.data[\""+(1)+"\"]", "0");
 _assertSame(imgdata2.data[2], 0, "imgdata2.data[\""+(2)+"\"]", "0");
 _assertSame(imgdata2.data[3], 0, "imgdata2.data[\""+(3)+"\"]", "0");
 
-t.done();
-
-});
+return Promise.resolve();
+}, "getImageData() works with negative width and height, and returns top-to-bottom left-to-right");
 done();

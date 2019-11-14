@@ -6,8 +6,7 @@
 importScripts("/resources/testharness.js");
 importScripts("/2dcontext/resources/canvas-tests.js");
 
-var t = async_test("The 2D context is implemented");
-t.step(function() {
+promise_test(function(t) {
 
 var offscreenCanvas = new OffscreenCanvas(100, 50);
 var ctx = offscreenCanvas.getContext('2d');
@@ -15,7 +14,6 @@ var ctx = offscreenCanvas.getContext('2d');
 var offscreenCanvas2 = new OffscreenCanvas(100, 50);
 _assertDifferent(offscreenCanvas2.getContext('2d'), null, "offscreenCanvas2.getContext('2d')", "null");
 
-t.done();
-
-});
+return Promise.resolve();
+}, "The 2D context is implemented");
 done();

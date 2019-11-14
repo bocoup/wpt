@@ -6,8 +6,7 @@
 importScripts("/resources/testharness.js");
 importScripts("/2dcontext/resources/canvas-tests.js");
 
-var t = async_test("save()/restore() works for fillStyle");
-t.step(function() {
+promise_test(function(t) {
 
 var offscreenCanvas = new OffscreenCanvas(100, 50);
 var ctx = offscreenCanvas.getContext('2d');
@@ -28,7 +27,6 @@ ctx.save();
 _assertSame(ctx.fillStyle, old, "ctx.fillStyle", "old");
 ctx.restore();
 
-t.done();
-
-});
+return Promise.resolve();
+}, "save()/restore() works for fillStyle");
 done();

@@ -6,8 +6,7 @@
 importScripts("/resources/testharness.js");
 importScripts("/2dcontext/resources/canvas-tests.js");
 
-var t = async_test("isPointInPath() works on Bezier curves");
-t.step(function() {
+promise_test(function(t) {
 
 var offscreenCanvas = new OffscreenCanvas(100, 50);
 var ctx = offscreenCanvas.getContext('2d');
@@ -35,7 +34,6 @@ _assertSame(ctx.isPointInPath(70, 30), true, "ctx.isPointInPath(70, 30)", "true"
 _assertSame(ctx.isPointInPath(75, 20), false, "ctx.isPointInPath(75, 20)", "false");
 _assertSame(ctx.isPointInPath(75, 30), false, "ctx.isPointInPath(75, 30)", "false");
 
-t.done();
-
-});
+return Promise.resolve();
+}, "isPointInPath() works on Bezier curves");
 done();

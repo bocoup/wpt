@@ -10,8 +10,7 @@
 
 
 <script>
-var t = async_test("");
-t.step(function() {
+promise_test(function(t) {
 
 var offscreenCanvas = new OffscreenCanvas(100, 50);
 var ctx = offscreenCanvas.getContext('2d');
@@ -34,7 +33,6 @@ promise.then(function(response) {
     _assertPixelApprox(offscreenCanvas, 50,25, 2,253,0,255, "50,25", "2,253,0,255", 2);
 });
 
-t.done();
-
-});
+return Promise.resolve();
+}, "");
 </script>

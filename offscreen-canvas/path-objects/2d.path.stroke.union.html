@@ -10,8 +10,7 @@
 
 
 <script>
-var t = async_test("Strokes in opposite directions are unioned, not subtracted");
-t.step(function() {
+promise_test(function(t) {
 
 var offscreenCanvas = new OffscreenCanvas(100, 50);
 var ctx = offscreenCanvas.getContext('2d');
@@ -27,7 +26,6 @@ ctx.lineTo(0, 40);
 ctx.stroke();
 _assertPixel(offscreenCanvas, 50,25, 0,255,0,255, "50,25", "0,255,0,255");
 
-t.done();
-
-});
+return Promise.resolve();
+}, "Strokes in opposite directions are unioned, not subtracted");
 </script>

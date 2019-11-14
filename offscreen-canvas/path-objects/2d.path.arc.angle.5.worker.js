@@ -6,8 +6,7 @@
 importScripts("/resources/testharness.js");
 importScripts("/2dcontext/resources/canvas-tests.js");
 
-var t = async_test("arc() wraps angles mod 2pi when clockwise and start > end+2pi");
-t.step(function() {
+promise_test(function(t) {
 
 var offscreenCanvas = new OffscreenCanvas(100, 50);
 var ctx = offscreenCanvas.getContext('2d');
@@ -21,7 +20,6 @@ ctx.arc(100, 0, 150, (1024-1)*Math.PI, (512+1/2)*Math.PI, false);
 ctx.fill();
 _assertPixel(offscreenCanvas, 50,25, 0,255,0,255, "50,25", "0,255,0,255");
 
-t.done();
-
-});
+return Promise.resolve();
+}, "arc() wraps angles mod 2pi when clockwise and start > end+2pi");
 done();

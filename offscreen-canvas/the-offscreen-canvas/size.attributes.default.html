@@ -10,8 +10,7 @@
 
 
 <script>
-var t = async_test("Default width/height when attributes are missing");
-t.step(function() {
+promise_test(function(t) {
 
 var offscreenCanvas = new OffscreenCanvas(100, 50);
 var ctx = offscreenCanvas.getContext('2d');
@@ -19,7 +18,6 @@ var ctx = offscreenCanvas.getContext('2d');
 _assertSame(offscreenCanvas.width, 100, "offscreenCanvas.width", "100");
 _assertSame(offscreenCanvas.height, 50, "offscreenCanvas.height", "50");
 
-t.done();
-
-});
+return Promise.resolve();
+}, "Default width/height when attributes are missing");
 </script>

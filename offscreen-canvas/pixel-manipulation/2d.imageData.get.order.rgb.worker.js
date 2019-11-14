@@ -6,8 +6,7 @@
 importScripts("/resources/testharness.js");
 importScripts("/2dcontext/resources/canvas-tests.js");
 
-var t = async_test("getImageData() returns R then G then B");
-t.step(function() {
+promise_test(function(t) {
 
 var offscreenCanvas = new OffscreenCanvas(100, 50);
 var ctx = offscreenCanvas.getContext('2d');
@@ -24,7 +23,6 @@ _assertSame(imgdata.data[5], 0x88, "imgdata.data[\""+(5)+"\"]", "0x88");
 _assertSame(imgdata.data[6], 0xCC, "imgdata.data[\""+(6)+"\"]", "0xCC");
 _assertSame(imgdata.data[7], 255, "imgdata.data[\""+(7)+"\"]", "255");
 
-t.done();
-
-});
+return Promise.resolve();
+}, "getImageData() returns R then G then B");
 done();

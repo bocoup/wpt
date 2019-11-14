@@ -6,8 +6,7 @@
 importScripts("/resources/testharness.js");
 importScripts("/2dcontext/resources/canvas-tests.js");
 
-var t = async_test("isPointInPath() uses the non-zero winding number rule");
-t.step(function() {
+promise_test(function(t) {
 
 var offscreenCanvas = new OffscreenCanvas(100, 50);
 var ctx = offscreenCanvas.getContext('2d');
@@ -33,7 +32,6 @@ _assertSame(ctx.isPointInPath(5, 45), true, "ctx.isPointInPath(5, 45)", "true");
 _assertSame(ctx.isPointInPath(25, 45), true, "ctx.isPointInPath(25, 45)", "true");
 _assertSame(ctx.isPointInPath(45, 45), true, "ctx.isPointInPath(45, 45)", "true");
 
-t.done();
-
-});
+return Promise.resolve();
+}, "isPointInPath() uses the non-zero winding number rule");
 done();

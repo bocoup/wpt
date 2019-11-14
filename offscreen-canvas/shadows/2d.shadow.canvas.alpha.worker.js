@@ -6,8 +6,7 @@
 importScripts("/resources/testharness.js");
 importScripts("/2dcontext/resources/canvas-tests.js");
 
-var t = async_test("Shadows are drawn correctly for partially-transparent canvases");
-t.step(function() {
+promise_test(function(t) {
 
 var offscreenCanvas = new OffscreenCanvas(100, 50);
 var ctx = offscreenCanvas.getContext('2d');
@@ -23,7 +22,6 @@ ctx.shadowColor = '#00f';
 ctx.drawImage(offscreenCanvas2, 0, -50);
 _assertPixelApprox(offscreenCanvas, 50,25, 127,0,127,255, "50,25", "127,0,127,255", 2);
 
-t.done();
-
-});
+return Promise.resolve();
+}, "Shadows are drawn correctly for partially-transparent canvases");
 done();

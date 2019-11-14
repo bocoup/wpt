@@ -6,8 +6,7 @@
 importScripts("/resources/testharness.js");
 importScripts("/2dcontext/resources/canvas-tests.js");
 
-var t = async_test("isPointInPath() handles transformations correctly");
-t.step(function() {
+promise_test(function(t) {
 
 var offscreenCanvas = new OffscreenCanvas(100, 50);
 var ctx = offscreenCanvas.getContext('2d');
@@ -19,7 +18,6 @@ _assertSame(ctx.isPointInPath(60, 10), false, "ctx.isPointInPath(60, 10)", "fals
 _assertSame(ctx.isPointInPath(110, 10), true, "ctx.isPointInPath(110, 10)", "true");
 _assertSame(ctx.isPointInPath(110, 60), false, "ctx.isPointInPath(110, 60)", "false");
 
-t.done();
-
-});
+return Promise.resolve();
+}, "isPointInPath() handles transformations correctly");
 done();

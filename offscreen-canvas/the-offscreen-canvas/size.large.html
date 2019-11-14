@@ -10,8 +10,7 @@
 
 <p class="notes">Not sure how reasonable this is, but the spec doesn't say there's an upper limit on the size.
 <script>
-var t = async_test("");
-t.step(function() {
+promise_test(function(t) {
 
 var offscreenCanvas = new OffscreenCanvas(100, 50);
 var ctx = offscreenCanvas.getContext('2d');
@@ -22,7 +21,6 @@ offscreenCanvas.height = n;
 _assertSame(offscreenCanvas.width, n, "offscreenCanvas.width", "n");
 _assertSame(offscreenCanvas.height, n, "offscreenCanvas.height", "n");
 
-t.done();
-
-});
+return Promise.resolve();
+}, "");
 </script>

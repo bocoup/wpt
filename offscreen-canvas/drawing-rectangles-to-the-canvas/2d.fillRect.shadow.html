@@ -10,8 +10,7 @@
 
 
 <script>
-var t = async_test("fillRect draws shadows");
-t.step(function() {
+promise_test(function(t) {
 
 var offscreenCanvas = new OffscreenCanvas(100, 50);
 var ctx = offscreenCanvas.getContext('2d');
@@ -25,7 +24,6 @@ ctx.shadowOffsetY = 50;
 ctx.fillRect(0, -50, 100, 50);
 _assertPixel(offscreenCanvas, 50,25, 0,255,0,255, "50,25", "0,255,0,255");
 
-t.done();
-
-});
+return Promise.resolve();
+}, "fillRect draws shadows");
 </script>

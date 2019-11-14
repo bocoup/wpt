@@ -6,15 +6,13 @@
 importScripts("/resources/testharness.js");
 importScripts("/2dcontext/resources/canvas-tests.js");
 
-var t = async_test("createImageData(sw, sh) exists and returns something");
-t.step(function() {
+promise_test(function(t) {
 
 var offscreenCanvas = new OffscreenCanvas(100, 50);
 var ctx = offscreenCanvas.getContext('2d');
 
 _assertDifferent(ctx.createImageData(1, 1), null, "ctx.createImageData(1, 1)", "null");
 
-t.done();
-
-});
+return Promise.resolve();
+}, "createImageData(sw, sh) exists and returns something");
 done();

@@ -6,8 +6,7 @@
 importScripts("/resources/testharness.js");
 importScripts("/2dcontext/resources/canvas-tests.js");
 
-var t = async_test("arcTo() draws a straight line to P1 if P1 = P2");
-t.step(function() {
+promise_test(function(t) {
 
 var offscreenCanvas = new OffscreenCanvas(100, 50);
 var ctx = offscreenCanvas.getContext('2d');
@@ -22,7 +21,6 @@ ctx.arcTo(100, 25, 100, 25, 1);
 ctx.stroke();
 _assertPixel(offscreenCanvas, 50,25, 0,255,0,255, "50,25", "0,255,0,255");
 
-t.done();
-
-});
+return Promise.resolve();
+}, "arcTo() draws a straight line to P1 if P1 = P2");
 done();

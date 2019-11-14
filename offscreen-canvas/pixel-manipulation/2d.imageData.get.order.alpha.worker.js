@@ -6,8 +6,7 @@
 importScripts("/resources/testharness.js");
 importScripts("/2dcontext/resources/canvas-tests.js");
 
-var t = async_test("getImageData() returns A in the fourth component");
-t.step(function() {
+promise_test(function(t) {
 
 var offscreenCanvas = new OffscreenCanvas(100, 50);
 var ctx = offscreenCanvas.getContext('2d');
@@ -18,7 +17,6 @@ var imgdata = ctx.getImageData(0, 0, 10, 10);
 _assert(imgdata.data[3] < 200, "imgdata.data[\""+(3)+"\"] < 200");
 _assert(imgdata.data[3] > 100, "imgdata.data[\""+(3)+"\"] > 100");
 
-t.done();
-
-});
+return Promise.resolve();
+}, "getImageData() returns A in the fourth component");
 done();

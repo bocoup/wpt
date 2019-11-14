@@ -10,8 +10,7 @@
 
 
 <script>
-var t = async_test("arc() adds the end point of the arc to the subpath");
-t.step(function() {
+promise_test(function(t) {
 
 var offscreenCanvas = new OffscreenCanvas(100, 50);
 var ctx = offscreenCanvas.getContext('2d');
@@ -27,7 +26,6 @@ ctx.lineTo(100, 25);
 ctx.stroke();
 _assertPixel(offscreenCanvas, 50,25, 0,255,0,255, "50,25", "0,255,0,255");
 
-t.done();
-
-});
+return Promise.resolve();
+}, "arc() adds the end point of the arc to the subpath");
 </script>

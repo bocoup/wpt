@@ -6,8 +6,7 @@
 importScripts("/resources/testharness.js");
 importScripts("/2dcontext/resources/canvas-tests.js");
 
-var t = async_test("textAlign left is the left of the first em square (not the bounding box)");
-t.step(function() {
+promise_test(function(t) {
 
 var offscreenCanvas = new OffscreenCanvas(100, 50);
 var ctx = offscreenCanvas.getContext('2d');
@@ -28,7 +27,6 @@ step_timeout(t.step_func_done(function () {
     _assertPixelApprox(offscreenCanvas, 95,45, 0,255,0,255, "95,45", "0,255,0,255", 2);
 }), 500);
 
-t.done();
-
-});
+return Promise.resolve();
+}, "textAlign left is the left of the first em square (not the bounding box)");
 done();

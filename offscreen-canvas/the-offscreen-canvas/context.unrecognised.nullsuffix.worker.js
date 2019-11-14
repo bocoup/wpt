@@ -6,8 +6,7 @@
 importScripts("/resources/testharness.js");
 importScripts("/2dcontext/resources/canvas-tests.js");
 
-var t = async_test("Context name \"2d\" plus a \"\\0\" suffix is unrecognised");
-t.step(function() {
+promise_test(function(t) {
 
 var offscreenCanvas = new OffscreenCanvas(100, 50);
 var ctx = offscreenCanvas.getContext('2d');
@@ -15,7 +14,6 @@ var ctx = offscreenCanvas.getContext('2d');
 var offscreenCanvas2 = new OffscreenCanvas(100, 50);
 assert_throws(new TypeError(), function() { offscreenCanvas2.getContext("2d\0"); });
 
-t.done();
-
-});
+return Promise.resolve();
+}, "Context name \"2d\" plus a \"\\0\" suffix is unrecognised");
 done();

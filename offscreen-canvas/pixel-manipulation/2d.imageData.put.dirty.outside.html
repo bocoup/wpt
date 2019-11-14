@@ -10,8 +10,7 @@
 
 
 <script>
-var t = async_test("putImageData() handles dirty rectangles outside the canvas correctly");
-t.step(function() {
+promise_test(function(t) {
 
 var offscreenCanvas = new OffscreenCanvas(100, 50);
 var ctx = offscreenCanvas.getContext('2d');
@@ -33,7 +32,6 @@ _assertPixelApprox(offscreenCanvas, 1,5, 0,255,0,255, "1,5", "0,255,0,255", 2);
 _assertPixelApprox(offscreenCanvas, 1,25, 0,255,0,255, "1,25", "0,255,0,255", 2);
 _assertPixelApprox(offscreenCanvas, 1,45, 0,255,0,255, "1,45", "0,255,0,255", 2);
 
-t.done();
-
-});
+return Promise.resolve();
+}, "putImageData() handles dirty rectangles outside the canvas correctly");
 </script>

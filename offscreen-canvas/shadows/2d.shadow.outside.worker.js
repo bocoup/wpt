@@ -6,8 +6,7 @@
 importScripts("/resources/testharness.js");
 importScripts("/2dcontext/resources/canvas-tests.js");
 
-var t = async_test("Shadows of shapes outside the visible area can be offset onto the visible area");
-t.step(function() {
+promise_test(function(t) {
 
 var offscreenCanvas = new OffscreenCanvas(100, 50);
 var ctx = offscreenCanvas.getContext('2d');
@@ -29,7 +28,6 @@ _assertPixel(offscreenCanvas, 87,25, 0,255,0,255, "87,25", "0,255,0,255");
 _assertPixel(offscreenCanvas, 50,12, 0,255,0,255, "50,12", "0,255,0,255");
 _assertPixel(offscreenCanvas, 50,37, 0,255,0,255, "50,37", "0,255,0,255");
 
-t.done();
-
-});
+return Promise.resolve();
+}, "Shadows of shapes outside the visible area can be offset onto the visible area");
 done();

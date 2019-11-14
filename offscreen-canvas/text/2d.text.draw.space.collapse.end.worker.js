@@ -6,8 +6,7 @@
 importScripts("/resources/testharness.js");
 importScripts("/2dcontext/resources/canvas-tests.js");
 
-var t = async_test("Space characters at the end of a line are collapsed (per CSS)");
-t.step(function() {
+promise_test(function(t) {
 
 var offscreenCanvas = new OffscreenCanvas(100, 50);
 var ctx = offscreenCanvas.getContext('2d');
@@ -24,7 +23,6 @@ step_timeout(t.step_func_done(function () {
     _assertPixelApprox(offscreenCanvas, 75,25, 0,255,0,255, "75,25", "0,255,0,255", 2);
 }), 500);
 
-t.done();
-
-});
+return Promise.resolve();
+}, "Space characters at the end of a line are collapsed (per CSS)");
 done();

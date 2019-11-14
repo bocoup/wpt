@@ -10,8 +10,7 @@
 
 
 <script>
-var t = async_test("arc() draws nothing when startAngle = endAngle and clockwise");
-t.step(function() {
+promise_test(function(t) {
 
 var offscreenCanvas = new OffscreenCanvas(100, 50);
 var ctx = offscreenCanvas.getContext('2d');
@@ -25,7 +24,6 @@ ctx.arc(50, 25, 50, 0, 0, false);
 ctx.stroke();
 _assertPixel(offscreenCanvas, 50,20, 0,255,0,255, "50,20", "0,255,0,255");
 
-t.done();
-
-});
+return Promise.resolve();
+}, "arc() draws nothing when startAngle = endAngle and clockwise");
 </script>

@@ -6,8 +6,7 @@
 importScripts("/resources/testharness.js");
 importScripts("/2dcontext/resources/canvas-tests.js");
 
-var t = async_test("lineJoin 'miter' is rendered correctly");
-t.step(function() {
+promise_test(function(t) {
 
 var offscreenCanvas = new OffscreenCanvas(100, 50);
 var ctx = offscreenCanvas.getContext('2d');
@@ -47,7 +46,6 @@ _assertPixel(offscreenCanvas, 90,10, 0,255,0,255, "90,10", "0,255,0,255");
 _assertPixel(offscreenCanvas, 91,9, 0,255,0,255, "91,9", "0,255,0,255");
 _assertPixel(offscreenCanvas, 92,8, 0,255,0,255, "92,8", "0,255,0,255");
 
-t.done();
-
-});
+return Promise.resolve();
+}, "lineJoin 'miter' is rendered correctly");
 done();

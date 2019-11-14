@@ -6,8 +6,7 @@
 importScripts("/resources/testharness.js");
 importScripts("/2dcontext/resources/canvas-tests.js");
 
-var t = async_test("Shadows are drawn for stroke joins");
-t.step(function() {
+promise_test(function(t) {
 
 var offscreenCanvas = new OffscreenCanvas(100, 50);
 var ctx = offscreenCanvas.getContext('2d');
@@ -31,7 +30,6 @@ _assertPixel(offscreenCanvas, 48,48, 0,255,0,255, "48,48", "0,255,0,255");
 _assertPixel(offscreenCanvas, 50,25, 0,255,0,255, "50,25", "0,255,0,255");
 _assertPixel(offscreenCanvas, 98,48, 0,255,0,255, "98,48", "0,255,0,255");
 
-t.done();
-
-});
+return Promise.resolve();
+}, "Shadows are drawn for stroke joins");
 done();

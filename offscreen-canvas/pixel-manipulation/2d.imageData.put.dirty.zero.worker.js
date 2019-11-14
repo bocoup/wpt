@@ -6,8 +6,7 @@
 importScripts("/resources/testharness.js");
 importScripts("/2dcontext/resources/canvas-tests.js");
 
-var t = async_test("putImageData() with zero-sized dirty rectangle puts nothing");
-t.step(function() {
+promise_test(function(t) {
 
 var offscreenCanvas = new OffscreenCanvas(100, 50);
 var ctx = offscreenCanvas.getContext('2d');
@@ -20,7 +19,6 @@ ctx.fillRect(0, 0, 100, 50)
 ctx.putImageData(imgdata, 0, 0, 0, 0, 0, 0);
 _assertPixelApprox(offscreenCanvas, 50,25, 0,255,0,255, "50,25", "0,255,0,255", 2);
 
-t.done();
-
-});
+return Promise.resolve();
+}, "putImageData() with zero-sized dirty rectangle puts nothing");
 done();

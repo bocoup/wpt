@@ -6,8 +6,7 @@
 importScripts("/resources/testharness.js");
 importScripts("/2dcontext/resources/canvas-tests.js");
 
-var t = async_test("Setting lineWidth to valid values works");
-t.step(function() {
+promise_test(function(t) {
 
 var offscreenCanvas = new OffscreenCanvas(100, 50);
 var ctx = offscreenCanvas.getContext('2d');
@@ -21,7 +20,6 @@ _assertSame(ctx.lineWidth, 1/1024, "ctx.lineWidth", "1/1024");
 ctx.lineWidth = 1000;
 _assertSame(ctx.lineWidth, 1000, "ctx.lineWidth", "1000");
 
-t.done();
-
-});
+return Promise.resolve();
+}, "Setting lineWidth to valid values works");
 done();

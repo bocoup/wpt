@@ -6,8 +6,7 @@
 importScripts("/resources/testharness.js");
 importScripts("/2dcontext/resources/canvas-tests.js");
 
-var t = async_test("Shadows can be offset with negative x");
-t.step(function() {
+promise_test(function(t) {
 
 var offscreenCanvas = new OffscreenCanvas(100, 50);
 var ctx = offscreenCanvas.getContext('2d');
@@ -21,7 +20,6 @@ ctx.fillRect(50, 0, 50, 50);
 _assertPixel(offscreenCanvas, 25,25, 0,255,0,255, "25,25", "0,255,0,255");
 _assertPixel(offscreenCanvas, 75,25, 0,255,0,255, "75,25", "0,255,0,255");
 
-t.done();
-
-});
+return Promise.resolve();
+}, "Shadows can be offset with negative x");
 done();

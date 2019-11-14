@@ -10,8 +10,7 @@
 
 
 <script>
-var t = async_test("");
-t.step(function() {
+promise_test(function(t) {
 
 var offscreenCanvas = new OffscreenCanvas(100, 50);
 var ctx = offscreenCanvas.getContext('2d');
@@ -37,7 +36,6 @@ ctx.shadowOffsetY = 1e6;
 _assertSame(ctx.shadowOffsetX, 1e6, "ctx.shadowOffsetX", "1e6");
 _assertSame(ctx.shadowOffsetY, 1e6, "ctx.shadowOffsetY", "1e6");
 
-t.done();
-
-});
+return Promise.resolve();
+}, "");
 </script>

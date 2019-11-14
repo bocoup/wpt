@@ -6,8 +6,7 @@
 importScripts("/resources/testharness.js");
 importScripts("/2dcontext/resources/canvas-tests.js");
 
-var t = async_test("isPointInPath() returns false for non-finite arguments");
-t.step(function() {
+promise_test(function(t) {
 
 var offscreenCanvas = new OffscreenCanvas(100, 50);
 var ctx = offscreenCanvas.getContext('2d');
@@ -21,7 +20,6 @@ _assertSame(ctx.isPointInPath(0, -Infinity), false, "ctx.isPointInPath(0, -Infin
 _assertSame(ctx.isPointInPath(0, NaN), false, "ctx.isPointInPath(0, NaN)", "false");
 _assertSame(ctx.isPointInPath(NaN, NaN), false, "ctx.isPointInPath(NaN, NaN)", "false");
 
-t.done();
-
-});
+return Promise.resolve();
+}, "isPointInPath() returns false for non-finite arguments");
 done();

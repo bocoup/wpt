@@ -6,8 +6,7 @@
 importScripts("/resources/testharness.js");
 importScripts("/2dcontext/resources/canvas-tests.js");
 
-var t = async_test("");
-t.step(function() {
+promise_test(function(t) {
 
 var offscreenCanvas = new OffscreenCanvas(100, 50);
 var ctx = offscreenCanvas.getContext('2d');
@@ -17,7 +16,6 @@ _assertSame(ctx.shadowColor, '#00ff00', "ctx.shadowColor", "'#00ff00'");
 ctx.shadowColor = 'RGBA(0,255, 0,0)';
 _assertSame(ctx.shadowColor, 'rgba(0, 255, 0, 0)', "ctx.shadowColor", "'rgba(0, 255, 0, 0)'");
 
-t.done();
-
-});
+return Promise.resolve();
+}, "");
 done();

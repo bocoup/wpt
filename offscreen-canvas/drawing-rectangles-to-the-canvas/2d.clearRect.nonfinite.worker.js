@@ -6,8 +6,7 @@
 importScripts("/resources/testharness.js");
 importScripts("/2dcontext/resources/canvas-tests.js");
 
-var t = async_test("clearRect() with Infinity/NaN is ignored");
-t.step(function() {
+promise_test(function(t) {
 
 var offscreenCanvas = new OffscreenCanvas(100, 50);
 var ctx = offscreenCanvas.getContext('2d');
@@ -39,7 +38,6 @@ ctx.clearRect(0, Infinity, 100, Infinity);
 ctx.clearRect(0, 0, Infinity, Infinity);
 _assertPixel(offscreenCanvas, 50,25, 0,255,0,255, "50,25", "0,255,0,255");
 
-t.done();
-
-});
+return Promise.resolve();
+}, "clearRect() with Infinity/NaN is ignored");
 done();

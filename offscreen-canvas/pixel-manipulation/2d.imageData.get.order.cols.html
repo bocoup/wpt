@@ -10,8 +10,7 @@
 
 
 <script>
-var t = async_test("getImageData() returns leftmost columns first");
-t.step(function() {
+promise_test(function(t) {
 
 var offscreenCanvas = new OffscreenCanvas(100, 50);
 var ctx = offscreenCanvas.getContext('2d');
@@ -25,7 +24,6 @@ _assertSame(imgdata.data[0], 0, "imgdata.data[\""+(0)+"\"]", "0");
 _assertSame(imgdata.data[Math.round(imgdata.width/2*4)], 255, "imgdata.data[Math.round(imgdata.width/2*4)]", "255");
 _assertSame(imgdata.data[Math.round((imgdata.height/2)*imgdata.width*4)], 0, "imgdata.data[Math.round((imgdata.height/2)*imgdata.width*4)]", "0");
 
-t.done();
-
-});
+return Promise.resolve();
+}, "getImageData() returns leftmost columns first");
 </script>

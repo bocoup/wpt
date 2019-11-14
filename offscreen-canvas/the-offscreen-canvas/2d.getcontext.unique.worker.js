@@ -6,8 +6,7 @@
 importScripts("/resources/testharness.js");
 importScripts("/2dcontext/resources/canvas-tests.js");
 
-var t = async_test("getContext('2d') returns the same object");
-t.step(function() {
+promise_test(function(t) {
 
 var offscreenCanvas = new OffscreenCanvas(100, 50);
 var ctx = offscreenCanvas.getContext('2d');
@@ -15,7 +14,6 @@ var ctx = offscreenCanvas.getContext('2d');
 var offscreenCanvas2 = new OffscreenCanvas(100, 50);
 _assertSame(offscreenCanvas2.getContext('2d'), offscreenCanvas2.getContext('2d'), "offscreenCanvas2.getContext('2d')", "offscreenCanvas2.getContext('2d')");
 
-t.done();
-
-});
+return Promise.resolve();
+}, "getContext('2d') returns the same object");
 done();

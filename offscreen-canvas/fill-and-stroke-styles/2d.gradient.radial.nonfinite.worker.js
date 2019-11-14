@@ -6,8 +6,7 @@
 importScripts("/resources/testharness.js");
 importScripts("/2dcontext/resources/canvas-tests.js");
 
-var t = async_test("createRadialGradient() throws TypeError if arguments are not finite");
-t.step(function() {
+promise_test(function(t) {
 
 var offscreenCanvas = new OffscreenCanvas(100, 50);
 var ctx = offscreenCanvas.getContext('2d');
@@ -88,7 +87,6 @@ assert_throws(new TypeError(), function() { ctx.createRadialGradient(0, 0, 1, In
 assert_throws(new TypeError(), function() { ctx.createRadialGradient(0, 0, 1, Infinity, 0, Infinity); });
 assert_throws(new TypeError(), function() { ctx.createRadialGradient(0, 0, 1, 0, Infinity, Infinity); });
 
-t.done();
-
-});
+return Promise.resolve();
+}, "createRadialGradient() throws TypeError if arguments are not finite");
 done();

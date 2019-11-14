@@ -6,8 +6,7 @@
 importScripts("/resources/testharness.js");
 importScripts("/2dcontext/resources/canvas-tests.js");
 
-var t = async_test("The empty string has zero width for OffscreenCanvas");
-t.step(function() {
+promise_test(function(t) {
 
 var offscreenCanvas = new OffscreenCanvas(100, 50);
 var ctx = offscreenCanvas.getContext('2d');
@@ -23,7 +22,6 @@ fonts.ready.then(() => {
     }), 500);
 });
 
-t.done();
-
-});
+return Promise.resolve();
+}, "The empty string has zero width for OffscreenCanvas");
 done();

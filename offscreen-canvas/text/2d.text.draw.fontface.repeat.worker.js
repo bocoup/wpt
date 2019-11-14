@@ -6,8 +6,7 @@
 importScripts("/resources/testharness.js");
 importScripts("/2dcontext/resources/canvas-tests.js");
 
-var t = async_test("Draw with the font immediately, then wait a bit until and draw again. (This crashes some version of WebKit.)");
-t.step(function() {
+promise_test(function(t) {
 
 var offscreenCanvas = new OffscreenCanvas(100, 50);
 var ctx = offscreenCanvas.getContext('2d');
@@ -26,7 +25,6 @@ step_timeout(t.step_func_done(function () {
     _assertPixelApprox(offscreenCanvas, 75,25, 0,255,0,255, "75,25", "0,255,0,255", 2);
 }), 500);
 
-t.done();
-
-});
+return Promise.resolve();
+}, "Draw with the font immediately, then wait a bit until and draw again. (This crashes some version of WebKit.)");
 done();

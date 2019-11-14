@@ -6,8 +6,7 @@
 importScripts("/resources/testharness.js");
 importScripts("/2dcontext/resources/canvas-tests.js");
 
-var t = async_test("Setting miterLimit to valid values works");
-t.step(function() {
+promise_test(function(t) {
 
 var offscreenCanvas = new OffscreenCanvas(100, 50);
 var ctx = offscreenCanvas.getContext('2d');
@@ -21,7 +20,6 @@ _assertSame(ctx.miterLimit, 1/1024, "ctx.miterLimit", "1/1024");
 ctx.miterLimit = 1000;
 _assertSame(ctx.miterLimit, 1000, "ctx.miterLimit", "1000");
 
-t.done();
-
-});
+return Promise.resolve();
+}, "Setting miterLimit to valid values works");
 done();

@@ -6,8 +6,7 @@
 importScripts("/resources/testharness.js");
 importScripts("/2dcontext/resources/canvas-tests.js");
 
-var t = async_test("Non-space characters are not converted to U+0020 and collapsed");
-t.step(function() {
+promise_test(function(t) {
 
 var offscreenCanvas = new OffscreenCanvas(100, 50);
 var ctx = offscreenCanvas.getContext('2d');
@@ -23,7 +22,6 @@ step_timeout(t.step_func_done(function () {
     _assertPixelApprox(offscreenCanvas, 75,25, 0,255,0,255, "75,25", "0,255,0,255", 2);
 }), 500);
 
-t.done();
-
-});
+return Promise.resolve();
+}, "Non-space characters are not converted to U+0020 and collapsed");
 done();

@@ -10,8 +10,7 @@
 
 
 <script>
-var t = async_test("");
-t.step(function() {
+promise_test(function(t) {
 
 var offscreenCanvas = new OffscreenCanvas(100, 50);
 var ctx = offscreenCanvas.getContext('2d');
@@ -20,7 +19,6 @@ ctx.globalCompositeOperation = 'xor';
 ctx.globalCompositeOperation = 'over';
 _assertSame(ctx.globalCompositeOperation, 'xor', "ctx.globalCompositeOperation", "'xor'");
 
-t.done();
-
-});
+return Promise.resolve();
+}, "");
 </script>

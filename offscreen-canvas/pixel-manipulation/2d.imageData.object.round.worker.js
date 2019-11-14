@@ -6,8 +6,7 @@
 importScripts("/resources/testharness.js");
 importScripts("/2dcontext/resources/canvas-tests.js");
 
-var t = async_test("ImageData.data rounds numbers with round-to-zero");
-t.step(function() {
+promise_test(function(t) {
 
 var offscreenCanvas = new OffscreenCanvas(100, 50);
 var ctx = offscreenCanvas.getContext('2d');
@@ -42,7 +41,6 @@ _assertSame(imgdata.data[0], 0, "imgdata.data[\""+(0)+"\"]", "0");
 imgdata.data[0] = -1.5;
 _assertSame(imgdata.data[0], 0, "imgdata.data[\""+(0)+"\"]", "0");
 
-t.done();
-
-});
+return Promise.resolve();
+}, "ImageData.data rounds numbers with round-to-zero");
 done();

@@ -11,8 +11,7 @@
 
 
 <script>
-var t = async_test("drawImage with zero-sized source rectangle from image throws INDEX_SIZE_ERR");
-t.step(function() {
+promise_test(function(t) {
 
 var offscreenCanvas = new OffscreenCanvas(100, 50);
 var ctx = offscreenCanvas.getContext('2d');
@@ -35,7 +34,6 @@ promise.then(function(response) {
     _assertPixel(offscreenCanvas, 50,25, 0,255,0,255, "50,25", "0,255,0,255");
 });
 
-t.done();
-
-});
+return Promise.resolve();
+}, "drawImage with zero-sized source rectangle from image throws INDEX_SIZE_ERR");
 </script>

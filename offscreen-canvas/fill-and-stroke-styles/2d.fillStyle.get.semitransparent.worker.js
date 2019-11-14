@@ -6,8 +6,7 @@
 importScripts("/resources/testharness.js");
 importScripts("/2dcontext/resources/canvas-tests.js");
 
-var t = async_test("");
-t.step(function() {
+promise_test(function(t) {
 
 var offscreenCanvas = new OffscreenCanvas(100, 50);
 var ctx = offscreenCanvas.getContext('2d');
@@ -15,7 +14,6 @@ var ctx = offscreenCanvas.getContext('2d');
 ctx.fillStyle = 'rgba(255,255,255,0.45)';
 assert_regexp_match(ctx.fillStyle, /^rgba\(255, 255, 255, 0\.4\d+\)$/);
 
-t.done();
-
-});
+return Promise.resolve();
+}, "");
 done();

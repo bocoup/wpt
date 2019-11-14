@@ -6,8 +6,7 @@
 importScripts("/resources/testharness.js");
 importScripts("/2dcontext/resources/canvas-tests.js");
 
-var t = async_test("Setting lineJoin to invalid values is ignored");
-t.step(function() {
+promise_test(function(t) {
 
 var offscreenCanvas = new OffscreenCanvas(100, 50);
 var ctx = offscreenCanvas.getContext('2d');
@@ -33,7 +32,6 @@ ctx.lineJoin = 'bevel';
 ctx.lineJoin = 'butt';
 _assertSame(ctx.lineJoin, 'bevel', "ctx.lineJoin", "'bevel'");
 
-t.done();
-
-});
+return Promise.resolve();
+}, "Setting lineJoin to invalid values is ignored");
 done();

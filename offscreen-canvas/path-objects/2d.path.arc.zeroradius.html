@@ -10,8 +10,7 @@
 
 
 <script>
-var t = async_test("arc() with zero radius draws a line to the start point");
-t.step(function() {
+promise_test(function(t) {
 
 var offscreenCanvas = new OffscreenCanvas(100, 50);
 var ctx = offscreenCanvas.getContext('2d');
@@ -26,7 +25,6 @@ ctx.arc(200, 25, 0, 0, Math.PI, true);
 ctx.stroke();
 _assertPixel(offscreenCanvas, 50,25, 0,255,0,255, "50,25", "0,255,0,255");
 
-t.done();
-
-});
+return Promise.resolve();
+}, "arc() with zero radius draws a line to the start point");
 </script>

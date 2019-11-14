@@ -6,8 +6,7 @@
 importScripts("/resources/testharness.js");
 importScripts("/2dcontext/resources/canvas-tests.js");
 
-var t = async_test("canvas is readonly");
-t.step(function() {
+promise_test(function(t) {
 
 var offscreenCanvas = new OffscreenCanvas(100, 50);
 var ctx = offscreenCanvas.getContext('2d');
@@ -18,7 +17,6 @@ _assertDifferent(offscreenCanvas2, d, "offscreenCanvas2", "d");
 ctx.canvas = offscreenCanvas2;
 _assertSame(ctx.canvas, d, "ctx.canvas", "d");
 
-t.done();
-
-});
+return Promise.resolve();
+}, "canvas is readonly");
 done();

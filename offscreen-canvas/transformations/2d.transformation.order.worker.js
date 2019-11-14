@@ -6,8 +6,7 @@
 importScripts("/resources/testharness.js");
 importScripts("/2dcontext/resources/canvas-tests.js");
 
-var t = async_test("Transformations are applied in the right order");
-t.step(function() {
+promise_test(function(t) {
 
 var offscreenCanvas = new OffscreenCanvas(100, 50);
 var ctx = offscreenCanvas.getContext('2d');
@@ -20,7 +19,6 @@ ctx.fillStyle = '#0f0';
 ctx.fillRect(0, -50, 50, 50);
 _assertPixel(offscreenCanvas, 75,25, 0,255,0,255, "75,25", "0,255,0,255");
 
-t.done();
-
-});
+return Promise.resolve();
+}, "Transformations are applied in the right order");
 done();

@@ -6,8 +6,7 @@
 importScripts("/resources/testharness.js");
 importScripts("/2dcontext/resources/canvas-tests.js");
 
-var t = async_test("drawImage() of a canvas with no context draws pixels as (0,0,0,0), and does not leave the pixels unchanged.");
-t.step(function() {
+promise_test(function(t) {
 
 var offscreenCanvas = new OffscreenCanvas(100, 50);
 var ctx = offscreenCanvas.getContext('2d');
@@ -20,7 +19,6 @@ var offscreenCanvas2 = new OffscreenCanvas(100, 50);
 ctx.drawImage(offscreenCanvas2, 0, 0);
 _assertPixelApprox(offscreenCanvas, 50,25, 0,0,0,0, "50,25", "0,0,0,0", 5);
 
-t.done();
-
-});
+return Promise.resolve();
+}, "drawImage() of a canvas with no context draws pixels as (0,0,0,0), and does not leave the pixels unchanged.");
 done();

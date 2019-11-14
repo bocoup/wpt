@@ -6,8 +6,7 @@
 importScripts("/resources/testharness.js");
 importScripts("/2dcontext/resources/canvas-tests.js");
 
-var t = async_test("strokeText draws stroked text");
-t.step(function() {
+promise_test(function(t) {
 
 var offscreenCanvas = new OffscreenCanvas(100, 50);
 var ctx = offscreenCanvas.getContext('2d');
@@ -20,7 +19,6 @@ ctx.lineWidth = 1;
 ctx.font = '35px Arial, sans-serif';
 ctx.strokeText('PASS', 5, 35);
 
-t.done();
-
-});
+return Promise.resolve();
+}, "strokeText draws stroked text");
 done();

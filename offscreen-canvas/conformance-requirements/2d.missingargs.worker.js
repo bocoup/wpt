@@ -6,8 +6,7 @@
 importScripts("/resources/testharness.js");
 importScripts("/2dcontext/resources/canvas-tests.js");
 
-var t = async_test("Missing arguments cause TypeError");
-t.step(function() {
+promise_test(function(t) {
 
 var offscreenCanvas = new OffscreenCanvas(100, 50);
 var ctx = offscreenCanvas.getContext('2d');
@@ -109,7 +108,6 @@ var g = ctx.createLinearGradient(0, 0, 0, 0);
 assert_throws(new TypeError(), function() { g.addColorStop(); });
 assert_throws(new TypeError(), function() { g.addColorStop(0); });
 
-t.done();
-
-});
+return Promise.resolve();
+}, "Missing arguments cause TypeError");
 done();

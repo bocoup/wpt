@@ -6,8 +6,7 @@
 importScripts("/resources/testharness.js");
 importScripts("/2dcontext/resources/canvas-tests.js");
 
-var t = async_test("");
-t.step(function() {
+promise_test(function(t) {
 
 var offscreenCanvas = new OffscreenCanvas(100, 50);
 var ctx = offscreenCanvas.getContext('2d');
@@ -18,7 +17,6 @@ offscreenCanvas.height = n;
 _assertSame(offscreenCanvas.width, n, "offscreenCanvas.width", "n");
 _assertSame(offscreenCanvas.height, n, "offscreenCanvas.height", "n");
 
-t.done();
-
-});
+return Promise.resolve();
+}, "");
 done();

@@ -6,15 +6,13 @@
 importScripts("/resources/testharness.js");
 importScripts("/2dcontext/resources/canvas-tests.js");
 
-var t = async_test("isPointInPath() works when there is no path");
-t.step(function() {
+promise_test(function(t) {
 
 var offscreenCanvas = new OffscreenCanvas(100, 50);
 var ctx = offscreenCanvas.getContext('2d');
 
 _assertSame(ctx.isPointInPath(0, 0), false, "ctx.isPointInPath(0, 0)", "false");
 
-t.done();
-
-});
+return Promise.resolve();
+}, "isPointInPath() works when there is no path");
 done();

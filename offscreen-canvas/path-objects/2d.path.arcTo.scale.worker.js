@@ -6,8 +6,7 @@
 importScripts("/resources/testharness.js");
 importScripts("/2dcontext/resources/canvas-tests.js");
 
-var t = async_test("arcTo scales the curve, not just the control points");
-t.step(function() {
+promise_test(function(t) {
 
 var offscreenCanvas = new OffscreenCanvas(100, 50);
 var ctx = offscreenCanvas.getContext('2d');
@@ -32,7 +31,6 @@ _assertPixel(offscreenCanvas, 0,49, 0,255,0,255, "0,49", "0,255,0,255");
 _assertPixel(offscreenCanvas, 50,49, 0,255,0,255, "50,49", "0,255,0,255");
 _assertPixel(offscreenCanvas, 99,49, 0,255,0,255, "99,49", "0,255,0,255");
 
-t.done();
-
-});
+return Promise.resolve();
+}, "arcTo scales the curve, not just the control points");
 done();

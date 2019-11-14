@@ -6,8 +6,7 @@
 importScripts("/resources/testharness.js");
 importScripts("/2dcontext/resources/canvas-tests.js");
 
-var t = async_test("strokeRect of Nx0 pixels draws a closed line with no caps");
-t.step(function() {
+promise_test(function(t) {
 
 var offscreenCanvas = new OffscreenCanvas(100, 50);
 var ctx = offscreenCanvas.getContext('2d');
@@ -18,7 +17,6 @@ ctx.lineCap = 'round';
 ctx.strokeRect(100, 25, 100, 0);
 _assertPixel(offscreenCanvas, 50,25, 0,0,0,0, "50,25", "0,0,0,0");
 
-t.done();
-
-});
+return Promise.resolve();
+}, "strokeRect of Nx0 pixels draws a closed line with no caps");
 done();

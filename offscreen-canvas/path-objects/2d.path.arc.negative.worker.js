@@ -6,15 +6,13 @@
 importScripts("/resources/testharness.js");
 importScripts("/2dcontext/resources/canvas-tests.js");
 
-var t = async_test("arc() with negative radius throws INDEX_SIZE_ERR");
-t.step(function() {
+promise_test(function(t) {
 
 var offscreenCanvas = new OffscreenCanvas(100, 50);
 var ctx = offscreenCanvas.getContext('2d');
 
 assert_throws("INDEX_SIZE_ERR", function() { ctx.arc(0, 0, -1, 0, 0, true); });
 
-t.done();
-
-});
+return Promise.resolve();
+}, "arc() with negative radius throws INDEX_SIZE_ERR");
 done();

@@ -6,8 +6,7 @@
 importScripts("/resources/testharness.js");
 importScripts("/2dcontext/resources/canvas-tests.js");
 
-var t = async_test("createImageData(w, h) is rounded the same as getImageData(0, 0, w, h)");
-t.step(function() {
+promise_test(function(t) {
 
 var offscreenCanvas = new OffscreenCanvas(100, 50);
 var ctx = offscreenCanvas.getContext('2d');
@@ -17,7 +16,6 @@ var imgdata2 = ctx.getImageData(0, 0, 10.01, 10.99);
 _assertSame(imgdata1.width, imgdata2.width, "imgdata1.width", "imgdata2.width");
 _assertSame(imgdata1.height, imgdata2.height, "imgdata1.height", "imgdata2.height");
 
-t.done();
-
-});
+return Promise.resolve();
+}, "createImageData(w, h) is rounded the same as getImageData(0, 0, w, h)");
 done();

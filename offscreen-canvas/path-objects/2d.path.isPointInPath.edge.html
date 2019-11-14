@@ -10,8 +10,7 @@
 
 
 <script>
-var t = async_test("isPointInPath() counts points on the path as being inside");
-t.step(function() {
+promise_test(function(t) {
 
 var offscreenCanvas = new OffscreenCanvas(100, 50);
 var ctx = offscreenCanvas.getContext('2d');
@@ -30,7 +29,6 @@ _assertSame(ctx.isPointInPath(10, 20.01), false, "ctx.isPointInPath(10, 20.01)",
 _assertSame(ctx.isPointInPath(-0.01, 10), false, "ctx.isPointInPath(-0.01, 10)", "false");
 _assertSame(ctx.isPointInPath(20.01, 10), false, "ctx.isPointInPath(20.01, 10)", "false");
 
-t.done();
-
-});
+return Promise.resolve();
+}, "isPointInPath() counts points on the path as being inside");
 </script>

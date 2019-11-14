@@ -6,8 +6,7 @@
 importScripts("/resources/testharness.js");
 importScripts("/2dcontext/resources/canvas-tests.js");
 
-var t = async_test("getImageData() returns a correctly-sized Uint8ClampedArray");
-t.step(function() {
+promise_test(function(t) {
 
 var offscreenCanvas = new OffscreenCanvas(100, 50);
 var ctx = offscreenCanvas.getContext('2d');
@@ -15,7 +14,6 @@ var ctx = offscreenCanvas.getContext('2d');
 var imgdata = ctx.getImageData(0, 0, 10, 10);
 _assertSame(imgdata.data.length, imgdata.width*imgdata.height*4, "imgdata.data.length", "imgdata.width*imgdata.height*4");
 
-t.done();
-
-});
+return Promise.resolve();
+}, "getImageData() returns a correctly-sized Uint8ClampedArray");
 done();

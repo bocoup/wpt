@@ -6,8 +6,7 @@
 importScripts("/resources/testharness.js");
 importScripts("/2dcontext/resources/canvas-tests.js");
 
-var t = async_test("putImageData() puts modified image data correctly");
-t.step(function() {
+promise_test(function(t) {
 
 var offscreenCanvas = new OffscreenCanvas(100, 50);
 var ctx = offscreenCanvas.getContext('2d');
@@ -25,7 +24,6 @@ for (var i = 0, len = imgdata.width*imgdata.height*4; i < len; i += 4)
 ctx.putImageData(imgdata, 45, 20);
 _assertPixelApprox(offscreenCanvas, 50,25, 0,255,0,255, "50,25", "0,255,0,255", 2);
 
-t.done();
-
-});
+return Promise.resolve();
+}, "putImageData() puts modified image data correctly");
 done();

@@ -6,8 +6,7 @@
 importScripts("/resources/testharness.js");
 importScripts("/2dcontext/resources/canvas-tests.js");
 
-var t = async_test("createImageData(imgdata) returns transparent black data of the right size");
-t.step(function() {
+promise_test(function(t) {
 
 var offscreenCanvas = new OffscreenCanvas(100, 50);
 var ctx = offscreenCanvas.getContext('2d');
@@ -25,7 +24,6 @@ for (var i = 0; i < imgdata2.data.length; ++i)
         isTransparentBlack = false;
 _assert(isTransparentBlack, "isTransparentBlack");
 
-t.done();
-
-});
+return Promise.resolve();
+}, "createImageData(imgdata) returns transparent black data of the right size");
 done();

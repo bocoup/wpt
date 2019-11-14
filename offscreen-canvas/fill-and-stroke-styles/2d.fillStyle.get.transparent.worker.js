@@ -6,8 +6,7 @@
 importScripts("/resources/testharness.js");
 importScripts("/2dcontext/resources/canvas-tests.js");
 
-var t = async_test("");
-t.step(function() {
+promise_test(function(t) {
 
 var offscreenCanvas = new OffscreenCanvas(100, 50);
 var ctx = offscreenCanvas.getContext('2d');
@@ -15,7 +14,6 @@ var ctx = offscreenCanvas.getContext('2d');
 ctx.fillStyle = 'rgba(0,0,0,0)';
 _assertSame(ctx.fillStyle, 'rgba(0, 0, 0, 0)', "ctx.fillStyle", "'rgba(0, 0, 0, 0)'");
 
-t.done();
-
-});
+return Promise.resolve();
+}, "");
 done();

@@ -6,8 +6,7 @@
 importScripts("/resources/testharness.js");
 importScripts("/2dcontext/resources/canvas-tests.js");
 
-var t = async_test("Shadows are not drawn for transparent parts of images");
-t.step(function() {
+promise_test(function(t) {
 
 var offscreenCanvas = new OffscreenCanvas(100, 50);
 var ctx = offscreenCanvas.getContext('2d');
@@ -36,7 +35,6 @@ promise.then(function(response) {
     _assertPixel(offscreenCanvas, 75,25, 0,255,0,255, "75,25", "0,255,0,255");
 });
 
-t.done();
-
-});
+return Promise.resolve();
+}, "Shadows are not drawn for transparent parts of images");
 done();

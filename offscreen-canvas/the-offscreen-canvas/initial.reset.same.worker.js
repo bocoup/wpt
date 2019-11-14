@@ -6,8 +6,7 @@
 importScripts("/resources/testharness.js");
 importScripts("/2dcontext/resources/canvas-tests.js");
 
-var t = async_test("Setting size (not changing the value) resets canvas to transparent black");
-t.step(function() {
+promise_test(function(t) {
 
 var offscreenCanvas = new OffscreenCanvas(100, 50);
 var ctx = offscreenCanvas.getContext('2d');
@@ -19,7 +18,6 @@ _assertPixel(offscreenCanvas, 20,20, 255,0,0,255, "20,20", "255,0,0,255");
 offscreenCanvas.width = 100;
 _assertPixel(offscreenCanvas, 20,20, 0,0,0,0, "20,20", "0,0,0,0");
 
-t.done();
-
-});
+return Promise.resolve();
+}, "Setting size (not changing the value) resets canvas to transparent black");
 done();

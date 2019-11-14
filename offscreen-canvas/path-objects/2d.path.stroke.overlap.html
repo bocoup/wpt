@@ -10,8 +10,7 @@
 
 
 <script>
-var t = async_test("Stroked subpaths are combined before being drawn");
-t.step(function() {
+promise_test(function(t) {
 
 var offscreenCanvas = new OffscreenCanvas(100, 50);
 var ctx = offscreenCanvas.getContext('2d');
@@ -27,7 +26,6 @@ ctx.lineTo(100, 30);
 ctx.stroke();
 _assertPixelApprox(offscreenCanvas, 50,25, 0,127,0,255, "50,25", "0,127,0,255", 1);
 
-t.done();
-
-});
+return Promise.resolve();
+}, "Stroked subpaths are combined before being drawn");
 </script>

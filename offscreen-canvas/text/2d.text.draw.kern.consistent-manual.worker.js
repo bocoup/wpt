@@ -6,8 +6,7 @@
 importScripts("/resources/testharness.js");
 importScripts("/2dcontext/resources/canvas-tests.js");
 
-var t = async_test("Stroked and filled text should have exactly the same kerning so it overlaps");
-t.step(function() {
+promise_test(function(t) {
 
 var offscreenCanvas = new OffscreenCanvas(100, 50);
 var ctx = offscreenCanvas.getContext('2d');
@@ -23,7 +22,6 @@ ctx.fillText('ToToToToToToTo', -50, 45);
 ctx.strokeText('VAVAVAVAVAVAVA', -50, 25);
 ctx.strokeText('ToToToToToToTo', -50, 45);
 
-t.done();
-
-});
+return Promise.resolve();
+}, "Stroked and filled text should have exactly the same kerning so it overlaps");
 done();

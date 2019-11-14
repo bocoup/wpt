@@ -6,8 +6,7 @@
 importScripts("/resources/testharness.js");
 importScripts("/2dcontext/resources/canvas-tests.js");
 
-var t = async_test("isPointInPath() uses the current path, not just the subpath");
-t.step(function() {
+promise_test(function(t) {
 
 var offscreenCanvas = new OffscreenCanvas(100, 50);
 var ctx = offscreenCanvas.getContext('2d');
@@ -21,7 +20,6 @@ _assertSame(ctx.isPointInPath(10, 10), false, "ctx.isPointInPath(10, 10)", "fals
 _assertSame(ctx.isPointInPath(30, 10), true, "ctx.isPointInPath(30, 10)", "true");
 _assertSame(ctx.isPointInPath(50, 10), true, "ctx.isPointInPath(50, 10)", "true");
 
-t.done();
-
-});
+return Promise.resolve();
+}, "isPointInPath() uses the current path, not just the subpath");
 done();

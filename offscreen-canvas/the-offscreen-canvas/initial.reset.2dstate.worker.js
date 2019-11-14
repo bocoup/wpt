@@ -6,8 +6,7 @@
 importScripts("/resources/testharness.js");
 importScripts("/2dcontext/resources/canvas-tests.js");
 
-var t = async_test("Resetting the canvas state resets 2D state variables");
-t.step(function() {
+promise_test(function(t) {
 
 var offscreenCanvas = new OffscreenCanvas(100, 50);
 var ctx = offscreenCanvas.getContext('2d');
@@ -75,7 +74,6 @@ ctx.globalCompositeOperation = "copy";
 offscreenCanvas.width = 100;
 _assertSame(ctx.globalCompositeOperation, default_val, "ctx.globalCompositeOperation", "default_val");
 
-t.done();
-
-});
+return Promise.resolve();
+}, "Resetting the canvas state resets 2D state variables");
 done();

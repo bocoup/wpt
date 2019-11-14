@@ -6,8 +6,7 @@
 importScripts("/resources/testharness.js");
 importScripts("/2dcontext/resources/canvas-tests.js");
 
-var t = async_test("");
-t.step(function() {
+promise_test(function(t) {
 
 var offscreenCanvas = new OffscreenCanvas(100, 50);
 var ctx = offscreenCanvas.getContext('2d');
@@ -20,7 +19,6 @@ ctx.fillStyle = 'rgba(0, 0, 255, 0.75)';
 ctx.fillRect(0, 0, 100, 50);
 _assertPixelApprox(offscreenCanvas, 50,25, 0,64,191,128, "50,25", "0,64,191,128", 5);
 
-t.done();
-
-});
+return Promise.resolve();
+}, "");
 done();

@@ -6,8 +6,7 @@
 importScripts("/resources/testharness.js");
 importScripts("/2dcontext/resources/canvas-tests.js");
 
-var t = async_test("ImageData.data can be modified");
-t.step(function() {
+promise_test(function(t) {
 
 var offscreenCanvas = new OffscreenCanvas(100, 50);
 var ctx = offscreenCanvas.getContext('2d');
@@ -18,7 +17,6 @@ _assertSame(imgdata.data[0], 100, "imgdata.data[\""+(0)+"\"]", "100");
 imgdata.data[0] = 200;
 _assertSame(imgdata.data[0], 200, "imgdata.data[\""+(0)+"\"]", "200");
 
-t.done();
-
-});
+return Promise.resolve();
+}, "ImageData.data can be modified");
 done();

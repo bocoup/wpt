@@ -6,8 +6,7 @@
 importScripts("/resources/testharness.js");
 importScripts("/2dcontext/resources/canvas-tests.js");
 
-var t = async_test("getContext with unrecognised context name returns null");
-t.step(function() {
+promise_test(function(t) {
 
 var offscreenCanvas = new OffscreenCanvas(100, 50);
 var ctx = offscreenCanvas.getContext('2d');
@@ -15,7 +14,6 @@ var ctx = offscreenCanvas.getContext('2d');
 var offscreenCanvas2 = new OffscreenCanvas(100, 50);
 assert_throws(new TypeError(), function() { offscreenCanvas2.getContext('This is not an implemented context in any real browser'); });
 
-t.done();
-
-});
+return Promise.resolve();
+}, "getContext with unrecognised context name returns null");
 done();

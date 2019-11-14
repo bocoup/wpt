@@ -6,8 +6,7 @@
 importScripts("/resources/testharness.js");
 importScripts("/2dcontext/resources/canvas-tests.js");
 
-var t = async_test("getImageData() works for sizes smaller than one pixel");
-t.step(function() {
+promise_test(function(t) {
 
 var offscreenCanvas = new OffscreenCanvas(100, 50);
 var ctx = offscreenCanvas.getContext('2d');
@@ -17,7 +16,6 @@ _assertSame(imgdata.data.length, imgdata.width*imgdata.height*4, "imgdata.data.l
 _assertSame(imgdata.width, 1, "imgdata.width", "1");
 _assertSame(imgdata.height, 1, "imgdata.height", "1");
 
-t.done();
-
-});
+return Promise.resolve();
+}, "getImageData() works for sizes smaller than one pixel");
 done();

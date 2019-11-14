@@ -6,8 +6,7 @@
 importScripts("/resources/testharness.js");
 importScripts("/2dcontext/resources/canvas-tests.js");
 
-var t = async_test("putImageData() throws TypeError if arguments are not finite");
-t.step(function() {
+promise_test(function(t) {
 
 var offscreenCanvas = new OffscreenCanvas(100, 50);
 var ctx = offscreenCanvas.getContext('2d');
@@ -96,7 +95,6 @@ assert_throws(new TypeError(), function() { ctx.putImageData(imgdata, 10, 10, 10
 assert_throws(new TypeError(), function() { ctx.putImageData(imgdata, 10, 10, 10, Infinity, 10, Infinity); });
 assert_throws(new TypeError(), function() { ctx.putImageData(imgdata, 10, 10, 10, 10, Infinity, Infinity); });
 
-t.done();
-
-});
+return Promise.resolve();
+}, "putImageData() throws TypeError if arguments are not finite");
 done();

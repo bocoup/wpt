@@ -6,8 +6,7 @@
 importScripts("/resources/testharness.js");
 importScripts("/2dcontext/resources/canvas-tests.js");
 
-var t = async_test("Parsing of non-negative integers");
-t.step(function() {
+promise_test(function(t) {
 
 var offscreenCanvas = new OffscreenCanvas(100, 50);
 var ctx = offscreenCanvas.getContext('2d');
@@ -17,7 +16,6 @@ offscreenCanvas.height = '100.999';
 _assertSame(offscreenCanvas.width, 100, "offscreenCanvas.width", "100");
 _assertSame(offscreenCanvas.height, 100, "offscreenCanvas.height", "100");
 
-t.done();
-
-});
+return Promise.resolve();
+}, "Parsing of non-negative integers");
 done();

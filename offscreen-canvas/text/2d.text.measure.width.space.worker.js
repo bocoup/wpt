@@ -6,8 +6,7 @@
 importScripts("/resources/testharness.js");
 importScripts("/2dcontext/resources/canvas-tests.js");
 
-var t = async_test("Space characters are converted to U+0020 and collapsed (per CSS) for OffscreenCanvas");
-t.step(function() {
+promise_test(function(t) {
 
 var offscreenCanvas = new OffscreenCanvas(100, 50);
 var ctx = offscreenCanvas.getContext('2d');
@@ -29,7 +28,6 @@ fonts.ready.then(() => {
     }), 500);
 });
 
-t.done();
-
-});
+return Promise.resolve();
+}, "Space characters are converted to U+0020 and collapsed (per CSS) for OffscreenCanvas");
 done();

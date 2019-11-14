@@ -6,8 +6,7 @@
 importScripts("/resources/testharness.js");
 importScripts("/2dcontext/resources/canvas-tests.js");
 
-var t = async_test("void methods return undefined");
-t.step(function() {
+promise_test(function(t) {
 
 var offscreenCanvas = new OffscreenCanvas(100, 50);
 var ctx = offscreenCanvas.getContext('2d');
@@ -44,7 +43,6 @@ if (ctx.putImageData) {
 _assertSame(ctx.drawImage(offscreenCanvas, 0, 0, 1, 1, 0, 0, 0, 0), undefined, "ctx.drawImage(offscreenCanvas, 0, 0, 1, 1, 0, 0, 0, 0)", "undefined");
 _assertSame(ctx.createLinearGradient(0, 0, 0, 0).addColorStop(0, 'white'), undefined, "ctx.createLinearGradient(0, 0, 0, 0).addColorStop(0, 'white')", "undefined");
 
-t.done();
-
-});
+return Promise.resolve();
+}, "void methods return undefined");
 done();

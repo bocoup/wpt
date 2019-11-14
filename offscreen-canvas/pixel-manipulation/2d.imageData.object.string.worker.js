@@ -6,8 +6,7 @@
 importScripts("/resources/testharness.js");
 importScripts("/2dcontext/resources/canvas-tests.js");
 
-var t = async_test("ImageData.data converts strings to numbers with ToNumber");
-t.step(function() {
+promise_test(function(t) {
 
 var offscreenCanvas = new OffscreenCanvas(100, 50);
 var ctx = offscreenCanvas.getContext('2d');
@@ -23,7 +22,6 @@ imgdata.data[0] = 100;
 imgdata.data[0] = " +130e0 ";
 _assertSame(imgdata.data[0], 130, "imgdata.data[\""+(0)+"\"]", "130");
 
-t.done();
-
-});
+return Promise.resolve();
+}, "ImageData.data converts strings to numbers with ToNumber");
 done();

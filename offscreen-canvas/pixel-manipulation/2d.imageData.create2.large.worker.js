@@ -6,8 +6,7 @@
 importScripts("/resources/testharness.js");
 importScripts("/2dcontext/resources/canvas-tests.js");
 
-var t = async_test("createImageData(sw, sh) works for sizes much larger than the canvas");
-t.step(function() {
+promise_test(function(t) {
 
 var offscreenCanvas = new OffscreenCanvas(100, 50);
 var ctx = offscreenCanvas.getContext('2d');
@@ -22,7 +21,6 @@ for (var i = 0; i < imgdata.data.length; i += 7813) // check ~1024 points (assum
         isTransparentBlack = false;
 _assert(isTransparentBlack, "isTransparentBlack");
 
-t.done();
-
-});
+return Promise.resolve();
+}, "createImageData(sw, sh) works for sizes much larger than the canvas");
 done();

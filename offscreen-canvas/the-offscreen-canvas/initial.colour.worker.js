@@ -6,15 +6,13 @@
 importScripts("/resources/testharness.js");
 importScripts("/2dcontext/resources/canvas-tests.js");
 
-var t = async_test("Initial state is transparent black");
-t.step(function() {
+promise_test(function(t) {
 
 var offscreenCanvas = new OffscreenCanvas(100, 50);
 var ctx = offscreenCanvas.getContext('2d');
 
 _assertPixel(offscreenCanvas, 20,20, 0,0,0,0, "20,20", "0,0,0,0");
 
-t.done();
-
-});
+return Promise.resolve();
+}, "Initial state is transparent black");
 done();

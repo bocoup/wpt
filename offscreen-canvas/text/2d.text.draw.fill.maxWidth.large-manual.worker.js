@@ -6,8 +6,7 @@
 importScripts("/resources/testharness.js");
 importScripts("/2dcontext/resources/canvas-tests.js");
 
-var t = async_test("fillText handles maxWidth correctly");
-t.step(function() {
+promise_test(function(t) {
 
 var offscreenCanvas = new OffscreenCanvas(100, 50);
 var ctx = offscreenCanvas.getContext('2d');
@@ -18,7 +17,6 @@ ctx.fillStyle = '#0f0';
 ctx.font = '35px Arial, sans-serif';
 ctx.fillText('PASS', 5, 35, 200);
 
-t.done();
-
-});
+return Promise.resolve();
+}, "fillText handles maxWidth correctly");
 done();
