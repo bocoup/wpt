@@ -12,8 +12,8 @@ var offscreenCanvas = new OffscreenCanvas(100, 50);
 var ctx = offscreenCanvas.getContext('2d');
 
 ctx.font = '50px CanvasTest';
-deferTest();
-step_timeout(t.step_func_done(function () {
+return new Promise(function(resolve) { step_timeout(resolve, 500); })
+  .then(function() {
     ctx.fillStyle = '#f00';
     ctx.fillRect(0, 0, 100, 50);
     ctx.fillStyle = '#0f0';
@@ -22,7 +22,7 @@ step_timeout(t.step_func_done(function () {
     _assertPixelApprox(offscreenCanvas, 95,5, 0,255,0,255, "95,5", "0,255,0,255", 2);
     _assertPixelApprox(offscreenCanvas, 25,25, 0,255,0,255, "25,25", "0,255,0,255", 2);
     _assertPixelApprox(offscreenCanvas, 75,25, 0,255,0,255, "75,25", "0,255,0,255", 2);
-}), 500);
+  });
 
 return Promise.resolve();
 }, "fillText handles maxWidth based on line size, not bounding box size");

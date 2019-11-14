@@ -31,7 +31,8 @@ var promise2 = new Promise(function(resolve, reject) {
         resolve(xhr.response);
     };
 });
-Promise.all([promise1, promise2]).then(function(response1, response2) {
+return Promise.all([promise1, promise2])
+  .then(function(response1, response2) {
     ctx.drawImage(response2, 1, 1, 1, 1, 0, 0, 100, 50);
     ctx.drawImage(response1, 0, 0, 100, 50, -50, 0, 50, 50);
     ctx.drawImage(response1, 0, 0, 100, 50, 100, 0, 50, 50);
@@ -41,7 +42,7 @@ Promise.all([promise1, promise2]).then(function(response1, response2) {
     _assertPixelApprox(offscreenCanvas, 99,0, 0,255,0,255, "99,0", "0,255,0,255", 2);
     _assertPixelApprox(offscreenCanvas, 0,49, 0,255,0,255, "0,49", "0,255,0,255", 2);
     _assertPixelApprox(offscreenCanvas, 99,49, 0,255,0,255, "99,49", "0,255,0,255", 2);
-});
+  });
 
 return Promise.resolve();
 }, "");

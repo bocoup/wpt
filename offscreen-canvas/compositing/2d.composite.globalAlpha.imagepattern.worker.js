@@ -22,7 +22,7 @@ var promise = new Promise(function(resolve, reject) {
         resolve(xhr.response);
     };
 });
-promise.then(function(response) {
+return promise.then(function(response) {
     ctx.fillStyle = ctx.createPattern(response, 'no-repeat');
     ctx.globalAlpha = 0.01; // avoid any potential alpha=0 optimisations
     ctx.fillRect(0, 0, 100, 50);

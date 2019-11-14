@@ -22,7 +22,7 @@ var promise = new Promise(function(resolve, reject) {
         resolve(xhr.response);
     };
 });
-promise.then(function(response) {
+return promise.then(function(response) {
     assert_throws("INDEX_SIZE_ERR", function() { ctx.drawImage(response, 10, 10, 0, 1, 0, 0, 100, 50); });
     assert_throws("INDEX_SIZE_ERR", function() { ctx.drawImage(response, 10, 10, 1, 0, 0, 0, 100, 50); });
     assert_throws("INDEX_SIZE_ERR", function() { ctx.drawImage(response, 10, 10, 0, 0, 0, 0, 100, 50); });

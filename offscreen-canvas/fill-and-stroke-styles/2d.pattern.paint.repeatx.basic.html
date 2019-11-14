@@ -28,7 +28,7 @@ var promise = new Promise(function(resolve, reject) {
         resolve(xhr.response);
     };
 });
-promise.then(function(response) {
+return promise.then(function(response) {
     var pattern = ctx.createPattern(response, 'repeat-x');
     ctx.fillStyle = pattern;
     ctx.fillRect(0, 0, 100, 50);

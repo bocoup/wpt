@@ -22,7 +22,7 @@ var promise = new Promise(function(resolve, reject) {
         resolve(xhr.response);
     };
 });
-promise.then(function(response) {
+return promise.then(function(response) {
     ctx.drawImage(response, 100, 78, 50, 50, 0, 50, 50, -50);
     ctx.drawImage(response, 100, 128, 50, -50, 100, 50, -50, -50);
     _assertPixelApprox(offscreenCanvas, 1,1, 0,255,0,255, "1,1", "0,255,0,255", 2);

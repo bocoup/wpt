@@ -26,7 +26,7 @@ var promise = new Promise(function(resolve, reject) {
         resolve(xhr.response);
     };
 });
-promise.then(function(response) {
+return promise.then(function(response) {
     ctx.drawImage(response, 50, -50);
     ctx.shadowColor = '#f00';
     ctx.drawImage(response, -50, -50);

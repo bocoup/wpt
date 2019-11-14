@@ -24,7 +24,7 @@ var promise = new Promise(function(resolve, reject) {
         resolve(xhr.response);
     };
 });
-promise.then(function(response) {
+return promise.then(function(response) {
     ctx.fillStyle = ctx.createPattern(response, 'no-repeat');
     ctx.fillRect(0, 50, 100, 50);
     _assertPixelApprox(offscreenCanvas, 50,25, 0,0,0,0, "50,25", "0,0,0,0", 5);

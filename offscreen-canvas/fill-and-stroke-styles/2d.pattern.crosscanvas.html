@@ -24,7 +24,7 @@ var promise = new Promise(function(resolve, reject) {
         resolve(xhr.response);
     };
 });
-promise.then(function(response) {
+return promise.then(function(response) {
     var offscreenCanvas2 = new OffscreenCanvas(100, 50);
     var pattern = offscreenCanvas2.getContext('2d').createPattern(response, 'no-repeat');
     ctx.fillStyle = '#f00';

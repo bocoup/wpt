@@ -560,7 +560,7 @@
             resolve(xhr.response);
         };
     });
-    promise.then(function(response) {
+    return promise.then(function(response) {
         ctx.drawImage(response, 0, 0);
         @assert pixel 50,25 ==~ 2,253,0,255;
     });
@@ -594,7 +594,7 @@
             resolve(xhr.response);
         };
     });
-    promise.then(function(response) {
+    return promise.then(function(response) {
         ctx.fillStyle = ctx.createPattern(response, 'no-repeat');
         ctx.globalAlpha = 0.01; // avoid any potential alpha=0 optimisations
         ctx.fillRect(0, 0, 100, 50);
@@ -723,7 +723,7 @@
             resolve(xhr.response);
         };
     });
-    promise.then(function(response) {
+    return promise.then(function(response) {
         ctx.drawImage(response, 0, 0);
         @assert pixel 50,25 ==~ %s +/- 5;
     });
@@ -749,7 +749,7 @@
             resolve(xhr.response);
         };
     });
-    promise.then(function(response) {
+    return promise.then(function(response) {
         ctx2.drawImage(response, 0, 0);
         ctx.fillStyle = 'rgba%s';
         ctx.fillRect(0, 0, 100, 50);
@@ -804,7 +804,7 @@
             resolve(xhr.response);
         };
     });
-    promise.then(function(response) {
+    return promise.then(function(response) {
         ctx.drawImage(response, 40, 40, 10, 10, 40, 50, 10, 10);
         @assert pixel 15,15 ==~ %s +/- 5;
         @assert pixel 50,25 ==~ %s +/- 5;
@@ -852,7 +852,7 @@
             resolve(xhr.response);
         };
     });
-    promise.then(function(response) {
+    return promise.then(function(response) {
         ctx.fillStyle = ctx.createPattern(response, 'no-repeat');
         ctx.fillRect(0, 50, 100, 50);
         @assert pixel 50,25 ==~ %s +/- 5;
@@ -2024,7 +2024,7 @@
             resolve(xhr.response);
         };
     });
-    promise.then(function(response) {
+    return promise.then(function(response) {
         var pattern = ctx.createPattern(response, 'no-repeat');
         ctx.fillStyle = pattern;
         ctx.fillRect(0, 0, 100, 50);
@@ -2126,7 +2126,7 @@
             resolve(xhr.response);
         };
     });
-    promise.then(function(response) {
+    return promise.then(function(response) {
         var pattern = ctx.createPattern(response, "");
         ctx.fillStyle = pattern;
         ctx.fillRect(0, 0, 200, 50);
@@ -2223,7 +2223,7 @@
             resolve(xhr.response);
         };
     });
-    promise.then(function(response) {
+    return promise.then(function(response) {
         var offscreenCanvas2 = new OffscreenCanvas(100, 50);
         var pattern = offscreenCanvas2.getContext('2d').createPattern(response, 'no-repeat');
         ctx.fillStyle = '#f00';
@@ -2248,7 +2248,7 @@
             resolve(xhr.response);
         };
     });
-    promise.then(function(response) {
+    return promise.then(function(response) {
         var pattern = ctx.createPattern(response, 'no-repeat');
         ctx.fillStyle = pattern;
         ctx.fillRect(0, 0, 100, 50);
@@ -2273,7 +2273,7 @@
             resolve(xhr.response);
         };
     });
-    promise.then(function(response) {
+    return promise.then(function(response) {
         var pattern = ctx.createPattern(response, 'no-repeat');
         ctx.fillStyle = '#0f0';
         ctx.fillRect(0, 0, 100, 50);
@@ -2305,7 +2305,7 @@
             resolve(xhr.response);
         };
     });
-    promise.then(function(response) {
+    return promise.then(function(response) {
         var pattern = ctx.createPattern(response, 'no-repeat');
         ctx.fillStyle = pattern;
         ctx.translate(50, 0);
@@ -2329,7 +2329,7 @@
             resolve(xhr.response);
         };
     });
-    promise.then(function(response) {
+    return promise.then(function(response) {
         var pattern = ctx.createPattern(response, 'no-repeat');
         ctx.fillStyle = pattern;
         ctx.fillRect(0, 0, 50, 50);
@@ -2359,7 +2359,7 @@
             resolve(xhr.response);
         };
     });
-    promise.then(function(response) {
+    return promise.then(function(response) {
         var pattern = ctx.createPattern(response, 'no-repeat');
         ctx.fillStyle = pattern;
         ctx.translate(50, 25);
@@ -2387,7 +2387,7 @@
             resolve(xhr.response);
         };
     });
-    promise.then(function(response) {
+    return promise.then(function(response) {
         var pattern = ctx.createPattern(response, 'no-repeat');
         ctx.fillStyle = pattern;
         ctx.fillRect(0, 0, 100, 50);
@@ -2412,7 +2412,7 @@
             resolve(xhr.response);
         };
     });
-    promise.then(function(response) {
+    return promise.then(function(response) {
         var pattern = ctx.createPattern(response, 'no-repeat');
         ctx.fillStyle = pattern;
         ctx.translate(50, 25);
@@ -2438,7 +2438,7 @@
             resolve(xhr.response);
         };
     });
-    promise.then(function(response) {
+    return promise.then(function(response) {
         var pattern = ctx.createPattern(response, 'no-repeat');
         ctx.fillStyle = pattern;
         ctx.translate(-128, -78);
@@ -2462,7 +2462,7 @@
             resolve(xhr.response);
         };
     });
-    promise.then(function(response) {
+    return promise.then(function(response) {
         var pattern = ctx.createPattern(response, 'no-repeat');
         ctx.fillStyle = pattern;
         ctx.fillRect(0, 0, 100, 50);
@@ -2485,7 +2485,7 @@
             resolve(xhr.response);
         };
     });
-    promise.then(function(response) {
+    return promise.then(function(response) {
         var pattern = ctx.createPattern(response, 'no-repeat');
         ctx.fillStyle = pattern;
         ctx.fillRect(0, 0, 100, 50);
@@ -2514,7 +2514,7 @@
             resolve(xhr.response);
         };
     });
-    promise.then(function(response) {
+    return promise.then(function(response) {
         var pattern = ctx.createPattern(response, 'repeat-x');
         ctx.fillStyle = pattern;
         ctx.fillRect(0, 0, 100, 50);
@@ -2539,7 +2539,7 @@
             resolve(xhr.response);
         };
     });
-    promise.then(function(response) {
+    return promise.then(function(response) {
         var pattern = ctx.createPattern(response, 'repeat-x');
         ctx.fillStyle = pattern;
         ctx.fillRect(0, 0, 100, 50);
@@ -2566,7 +2566,7 @@
             resolve(xhr.response);
         };
     });
-    promise.then(function(response) {
+    return promise.then(function(response) {
         var pattern = ctx.createPattern(response, 'repeat-x');
         ctx.fillStyle = pattern;
         ctx.translate(0, 16);
@@ -2598,7 +2598,7 @@
             resolve(xhr.response);
         };
     });
-    promise.then(function(response) {
+    return promise.then(function(response) {
         var pattern = ctx.createPattern(response, 'repeat-y');
         ctx.fillStyle = pattern;
         ctx.fillRect(0, 0, 100, 50);
@@ -2623,7 +2623,7 @@
             resolve(xhr.response);
         };
     });
-    promise.then(function(response) {
+    return promise.then(function(response) {
         var pattern = ctx.createPattern(response, 'repeat-y');
         ctx.fillStyle = pattern;
         ctx.fillRect(0, 0, 100, 50);
@@ -2652,7 +2652,7 @@
             resolve(xhr.response);
         };
     });
-    promise.then(function(response) {
+    return promise.then(function(response) {
         var pattern = ctx.createPattern(response, 'repeat-y');
         ctx.fillStyle = pattern;
         ctx.translate(48, 0);
@@ -2683,7 +2683,7 @@
             resolve(xhr.response);
         };
     });
-    promise.then(function(response) {
+    return promise.then(function(response) {
         var pattern = ctx.createPattern(response, 'no-repeat');
         ctx.fillStyle = pattern;
         ctx.save();
@@ -3199,7 +3199,7 @@
             resolve(xhr.response);
         };
     });
-    promise.then(function(response) {
+    return promise.then(function(response) {
         ctx.drawImage(response, 0, -50);
         @assert pixel 50,25 == 0,255,0,255;
     });
@@ -3224,7 +3224,7 @@
             resolve(xhr.response);
         };
     });
-    promise.then(function(response) {
+    return promise.then(function(response) {
         ctx.drawImage(response, 0, -50);
         @assert pixel 50,25 == 0,255,0,255;
     });
@@ -3251,7 +3251,7 @@
             resolve(xhr.response);
         };
     });
-    promise.then(function(response) {
+    return promise.then(function(response) {
         ctx.drawImage(response, 50, -50);
         ctx.shadowColor = '#f00';
         ctx.drawImage(response, -50, -50);
@@ -3280,7 +3280,7 @@
             resolve(xhr.response);
         };
     });
-    promise.then(function(response) {
+    return promise.then(function(response) {
         ctx.drawImage(response, 0, -50);
         @assert pixel 50,25 ==~ 127,0,127,255;
     });
@@ -3305,7 +3305,7 @@
             resolve(xhr.response);
         };
     });
-    promise.then(function(response) {
+    return promise.then(function(response) {
         ctx.drawImage(response, 50, 0, 50, 50, 0, -50, 50, 50);
         @assert pixel 25,25 ==~ 0,255,0,255;
         @assert pixel 50,25 ==~ 0,255,0,255;
@@ -3332,7 +3332,7 @@
             resolve(xhr.response);
         };
     });
-    promise.then(function(response) {
+    return promise.then(function(response) {
         ctx.drawImage(response, 0, 0, 100, 50, -10, -50, 240, 50);
         @assert pixel 25,25 ==~ 0,255,0,255;
         @assert pixel 50,25 ==~ 0,255,0,255;
@@ -3423,7 +3423,7 @@
             resolve(xhr.response);
         };
     });
-    promise.then(function(response) {
+    return promise.then(function(response) {
         var pattern = ctx.createPattern(response, 'repeat');
         ctx.fillStyle = '#f00';
         ctx.fillRect(0, 0, 100, 50);
@@ -3450,7 +3450,7 @@
             resolve(xhr.response);
         };
     });
-    promise.then(function(response) {
+    return promise.then(function(response) {
         var pattern = ctx.createPattern(response, 'repeat');
         ctx.fillStyle = '#0f0';
         ctx.fillRect(0, 0, 100, 50);
@@ -3476,7 +3476,7 @@
             resolve(xhr.response);
         };
     });
-    promise.then(function(response) {
+    return promise.then(function(response) {
         var pattern = ctx.createPattern(response, 'repeat');
         ctx.fillStyle = '#f00';
         ctx.fillRect(0, 0, 50, 50);
@@ -3507,7 +3507,7 @@
             resolve(xhr.response);
         };
     });
-    promise.then(function(response) {
+    return promise.then(function(response) {
         var pattern = ctx.createPattern(response, 'repeat');
         ctx.fillStyle = '#f00';
         ctx.fillRect(0, 0, 100, 50);
@@ -4156,7 +4156,8 @@
             resolve(xhr.response);
         };
     });
-    Promise.all([promise1, promise2]).then(function(response1, response2) {
+    return Promise.all([promise1, promise2])
+      .then(function(response1, response2) {
         ctx.drawImage(response2, 0, 0);
         ctx.drawImage(response1, -100, 0);
         ctx.drawImage(response1, 100, 0);
@@ -4166,7 +4167,7 @@
         @assert pixel 99,0 ==~ 0,255,0,255;
         @assert pixel 0,49 ==~ 0,255,0,255;
         @assert pixel 99,49 ==~ 0,255,0,255;
-    });
+      });
 
 - name: 2d.drawImage.5arg
   testing:
@@ -4196,7 +4197,8 @@
             resolve(xhr.response);
         };
     });
-    Promise.all([promise1, promise2]).then(function(response1, response2) {
+    return Promise.all([promise1, promise2])
+      .then(function(response1, response2) {
         ctx.drawImage(response2, 50, 0, 50, 50);
         ctx.drawImage(response1, 0, 0, 50, 50);
         ctx.fillStyle = '#0f0';
@@ -4205,7 +4207,7 @@
         @assert pixel 99,0 ==~ 0,255,0,255;
         @assert pixel 0,49 ==~ 0,255,0,255;
         @assert pixel 99,49 ==~ 0,255,0,255;
-    });
+      });
 
 - name: 2d.drawImage.9arg.basic
   testing:
@@ -4225,7 +4227,7 @@
             resolve(xhr.response);
         };
     });
-    promise.then(function(response) {
+    return promise.then(function(response) {
         ctx.drawImage(response, 0, 0, 100, 50, 0, 0, 100, 50);
         @assert pixel 0,0 ==~ 0,255,0,255;
         @assert pixel 99,0 ==~ 0,255,0,255;
@@ -4251,7 +4253,7 @@
             resolve(xhr.response);
         };
     });
-    promise.then(function(response) {
+    return promise.then(function(response) {
         ctx.drawImage(response, 140, 20, 100, 50, 0, 0, 100, 50);
         @assert pixel 0,0 ==~ 0,255,0,255;
         @assert pixel 99,0 ==~ 0,255,0,255;
@@ -4277,7 +4279,7 @@
             resolve(xhr.response);
         };
     });
-    promise.then(function(response) {
+    return promise.then(function(response) {
         ctx.drawImage(response, 0, 0, 256, 256, 0, 0, 100, 50);
         ctx.fillStyle = '#0f0';
         ctx.fillRect(0, 0, 51, 26);
@@ -4320,7 +4322,8 @@
             resolve(xhr.response);
         };
     });
-    Promise.all([promise1, promise2]).then(function(response1, response2) {
+    return Promise.all([promise1, promise2])
+      .then(function(response1, response2) {
         ctx.drawImage(response2, 0, 0, 100, 50, 0, 0, 100, 50);
         ctx.drawImage(response1, 0, 0, 100, 50, -100, 0, 100, 50);
         ctx.drawImage(response1, 0, 0, 100, 50, 100, 0, 100, 50);
@@ -4330,7 +4333,7 @@
         @assert pixel 99,0 ==~ 0,255,0,255;
         @assert pixel 0,49 ==~ 0,255,0,255;
         @assert pixel 99,49 ==~ 0,255,0,255;
-    });
+      });
 
 - name: 2d.drawImage.9arg.destsize
   testing:
@@ -4360,7 +4363,8 @@
             resolve(xhr.response);
         };
     });
-    Promise.all([promise1, promise2]).then(function(response1, response2) {
+    return Promise.all([promise1, promise2])
+      .then(function(response1, response2) {
         ctx.drawImage(response2, 1, 1, 1, 1, 0, 0, 100, 50);
         ctx.drawImage(response1, 0, 0, 100, 50, -50, 0, 50, 50);
         ctx.drawImage(response1, 0, 0, 100, 50, 100, 0, 50, 50);
@@ -4370,7 +4374,7 @@
         @assert pixel 99,0 ==~ 0,255,0,255;
         @assert pixel 0,49 ==~ 0,255,0,255;
         @assert pixel 99,49 ==~ 0,255,0,255;
-    });
+      });
 
 - name: 2d.drawImage.canvas
   testing:
@@ -4467,7 +4471,7 @@
             resolve(xhr.response);
         };
     });
-    promise.then(function(response) {
+    return promise.then(function(response) {
         ctx.drawImage(response, 10.1, 10.1, 0.1, 0.1, 0, 0, 100, 50);
         @assert pixel 50,25 ==~ 0,255,0,255;
     });
@@ -4491,7 +4495,7 @@
             resolve(xhr.response);
         };
     });
-    promise.then(function(response) {
+    return promise.then(function(response) {
         @assert throws INDEX_SIZE_ERR ctx.drawImage(response, 10, 10, 0, 1, 0, 0, 100, 50);
         @assert throws INDEX_SIZE_ERR ctx.drawImage(response, 10, 10, 1, 0, 0, 0, 100, 50);
         @assert throws INDEX_SIZE_ERR ctx.drawImage(response, 10, 10, 0, 0, 0, 0, 100, 50);
@@ -4519,7 +4523,7 @@
             resolve(xhr.response);
         };
     });
-    promise.then(function(response) {
+    return promise.then(function(response) {
         @assert throws INDEX_SIZE_ERR ctx.drawImage(response, 0, 0, 100, 50);
         @assert throws INDEX_SIZE_ERR ctx.drawImage(response, 0, 0, 100, 50);
         @assert throws INDEX_SIZE_ERR ctx.drawImage(response, 0, 0, 100, 50);
@@ -4546,7 +4550,7 @@
             resolve(xhr.response);
         };
     });
-    promise.then(function(response) {
+    return promise.then(function(response) {
         ctx.drawImage(response, 100, 78, -100, 50, 0, 0, 50, 50);
         ctx.drawImage(response, 100, 128, -100, -50, 50, 0, 50, 50);
         @assert pixel 1,1 ==~ 0,255,0,255;
@@ -4581,7 +4585,7 @@
             resolve(xhr.response);
         };
     });
-    promise.then(function(response) {
+    return promise.then(function(response) {
         ctx.drawImage(response, 100, 78, 50, 50, 0, 50, 50, -50);
         ctx.drawImage(response, 100, 128, 50, -50, 100, 50, -50, -50);
         @assert pixel 1,1 ==~ 0,255,0,255;
@@ -4616,7 +4620,7 @@
             resolve(xhr.response);
         };
     });
-    promise.then(function(response) {
+    return promise.then(function(response) {
         ctx.drawImage(response, 0, 178, 50, -100, 0, 0, 50, 100);
         ctx.drawImage(response, 0, 78, 50, 100, 50, 100, 50, -100);
         @assert pixel 1,1 ==~ 0,255,0,255;
@@ -4654,7 +4658,8 @@
             resolve(xhr.response);
         };
     });
-    Promise.all([promise1, promise2]).then(function(response1, response2) {
+    return Promise.all([promise1, promise2])
+      .then(function(response1, response2) {
         ctx.drawImage(response2, 10.5, 10.5, 89.5, 39.5, 0, 0, 100, 50);
         ctx.drawImage(response2, 5.5, 5.5, -5.5, -5.5, 0, 0, 100, 50);
         ctx.drawImage(response2, 100, 50, -5, -5, 0, 0, 100, 50);
@@ -4667,7 +4672,7 @@
         @assert throws INDEX_SIZE_ERR ctx.drawImage(response1, 0, 0, 5, -5, 0, 0, 100, 50);
         @assert throws INDEX_SIZE_ERR ctx.drawImage(response1, 110, 60, -20, -20, 0, 0, 100, 50);
         @assert pixel 50,25 ==~ 0,255,0,255; @moz-todo
-    });
+      });
 
 - name: 2d.drawImage.broken
   testing:
@@ -4683,7 +4688,7 @@
             resolve(xhr.response);
         };
     });
-    promise.then(function(response) {
+    return promise.then(function(response) {
         ctx.fillStyle = '#0f0';
         ctx.fillRect(0, 0, 100, 50);
         ctx.drawImage(response, 0, 0);
@@ -4705,7 +4710,7 @@
             resolve(xhr.response);
         };
     });
-    promise.then(function(response) {
+    return promise.then(function(response) {
         ctx.drawImage(response, 0, 0);
         @assert pixel 50,25 ==~ 0,255,0,255;
     });
@@ -4727,7 +4732,7 @@
             resolve(xhr.response);
         };
     });
-    promise.then(function(response) {
+    return promise.then(function(response) {
         ctx.drawImage(response, 0, 0);
         @assert pixel 50,25 ==~ 0,255,0,255; @moz-todo
     });
@@ -4748,7 +4753,7 @@
             resolve(xhr.response);
         };
     });
-    promise.then(function(response) {
+    return promise.then(function(response) {
         ctx.drawImage(response, 0, 0);
         ctx.fill();
         @assert pixel 50,25 ==~ 0,255,0,255;
@@ -4773,7 +4778,7 @@
             resolve(xhr.response);
         };
     });
-    promise.then(function(response) {
+    return promise.then(function(response) {
         ctx.drawImage(response, 0, 0);
         @assert pixel 50,25 ==~ 0,255,0,255;
     });
@@ -4797,7 +4802,7 @@
             resolve(xhr.response);
         };
     });
-    promise.then(function(response) {
+    return promise.then(function(response) {
         ctx.drawImage(response, 0, 0);
         @assert pixel 50,25 ==~ 0,255,0,255;
     });
@@ -4822,7 +4827,7 @@
             resolve(xhr.response);
         };
     });
-    promise.then(function(response) {
+    return promise.then(function(response) {
         ctx.drawImage(response, 0, 0);
         @assert pixel 50,25 ==~ 0,255,0,255;
     });
@@ -4846,7 +4851,7 @@
             resolve(xhr.response);
         };
     });
-    promise.then(function(response) {
+    return promise.then(function(response) {
         ctx.drawImage(response, 0, 0);
         @assert pixel 50,25 ==~ 0,255,0,255;
     });
@@ -4868,7 +4873,7 @@
             resolve(xhr.response);
         };
     });
-    promise.then(function(response) {
+    return promise.then(function(response) {
         ctx.drawImage(response, -1950, 0, 2000, 50);
         @assert pixel 45,25 ==~ 0,255,0,255;
         @assert pixel 50,25 ==~ 0,255,0,255;
@@ -4894,7 +4899,7 @@
             resolve(xhr.response);
         };
     });
-    promise.then(function(response) {
+    return promise.then(function(response) {
         @nonfinite ctx.drawImage(<response>, <0 Infinity -Infinity NaN>, <0 Infinity -Infinity NaN>);
         @nonfinite ctx.drawImage(<response>, <0 Infinity -Infinity NaN>, <0 Infinity -Infinity NaN>, <100 Infinity -Infinity NaN>, <50 Infinity -Infinity NaN>);
         @nonfinite ctx.drawImage(<response>, <0 Infinity -Infinity NaN>, <0 Infinity -Infinity NaN>, <100 Infinity -Infinity NaN>, <50 Infinity -Infinity NaN>, <0 Infinity -Infinity NaN>, <0 Infinity -Infinity NaN>, <100 Infinity -Infinity NaN>, <50 Infinity -Infinity NaN>);
@@ -9663,8 +9668,8 @@
     - CanvasTest
   code: |
     ctx.font = '50px CanvasTest';
-    deferTest();
-    step_timeout(t.step_func_done(function () {
+    return new Promise(function(resolve) { step_timeout(resolve, 500); })
+      .then(function() {
         ctx.fillStyle = '#0f0';
         ctx.fillRect(0, 0, 100, 50);
         ctx.fillStyle = '#f00';
@@ -9673,7 +9678,7 @@
         @assert pixel 95,5 ==~ 0,255,0,255;
         @assert pixel 25,25 ==~ 0,255,0,255;
         @assert pixel 75,25 ==~ 0,255,0,255;
-    }), 500);
+      });
   expected: green
 
 - name: 2d.text.draw.fill.maxWidth.bound
@@ -9684,8 +9689,8 @@
     - CanvasTest
   code: |
     ctx.font = '50px CanvasTest';
-    deferTest();
-    step_timeout(t.step_func_done(function () {
+    return new Promise(function(resolve) { step_timeout(resolve, 500); })
+      .then(function() {
         ctx.fillStyle = '#f00';
         ctx.fillRect(0, 0, 100, 50);
         ctx.fillStyle = '#0f0';
@@ -9694,7 +9699,7 @@
         @assert pixel 95,5 ==~ 0,255,0,255;
         @assert pixel 25,25 ==~ 0,255,0,255;
         @assert pixel 75,25 ==~ 0,255,0,255;
-    }), 500);
+      });
   expected: green
 
 - name: 2d.text.draw.fontface
@@ -9704,8 +9709,8 @@
     - CanvasTest
   code: |
     ctx.font = '67px CanvasTest';
-    deferTest();
-    step_timeout(t.step_func_done(function () {
+    return new Promise(function(resolve) { step_timeout(resolve, 500); })
+      .then(function() {
         ctx.fillStyle = '#f00';
         ctx.fillRect(0, 0, 100, 50);
         ctx.fillStyle = '#0f0';
@@ -9714,7 +9719,7 @@
         @assert pixel 95,5 ==~ 0,255,0,255;
         @assert pixel 25,25 ==~ 0,255,0,255;
         @assert pixel 75,25 ==~ 0,255,0,255;
-    }), 500);
+      });
   expected: green
 
 - name: 2d.text.draw.fontface.repeat
@@ -9730,14 +9735,14 @@
     ctx.font = '67px CanvasTest';
     ctx.fillStyle = '#0f0';
     ctx.fillText('AA', 0, 50);
-    deferTest();
-    step_timeout(t.step_func_done(function () {
+    return new Promise(function(resolve) { step_timeout(resolve, 500); })
+      .then(function() {
         ctx.fillText('AA', 0, 50);
         @assert pixel 5,5 ==~ 0,255,0,255;
         @assert pixel 95,5 ==~ 0,255,0,255;
         @assert pixel 25,25 ==~ 0,255,0,255;
         @assert pixel 75,25 ==~ 0,255,0,255;
-    }), 500);
+      });
   expected: green
 
 - name: 2d.text.draw.fontface.notinpage
@@ -9749,8 +9754,8 @@
   fonthack: 0
   code: |
     ctx.font = '67px CanvasTest';
-    deferTest();
-    step_timeout(t.step_func_done(function () {
+    return new Promise(function(resolve) { step_timeout(resolve, 500); })
+      .then(function() {
         ctx.fillStyle = '#f00';
         ctx.fillRect(0, 0, 100, 50);
         ctx.fillStyle = '#0f0';
@@ -9759,7 +9764,7 @@
         @assert pixel 95,5 ==~ 0,255,0,255; @moz-todo
         @assert pixel 25,25 ==~ 0,255,0,255; @moz-todo
         @assert pixel 75,25 ==~ 0,255,0,255; @moz-todo
-    }), 500);
+      });
   expected: green
 
 - name: 2d.text.draw.baseline.top
@@ -9770,8 +9775,8 @@
     - CanvasTest
   code: |
     ctx.font = '50px CanvasTest';
-    deferTest();
-    step_timeout(t.step_func_done(function () {
+    return new Promise(function(resolve) { step_timeout(resolve, 500); })
+      .then(function() {
         ctx.fillStyle = '#f00';
         ctx.fillRect(0, 0, 100, 50);
         ctx.fillStyle = '#0f0';
@@ -9783,7 +9788,7 @@
         @assert pixel 75,25 ==~ 0,255,0,255;
         @assert pixel 5,45 ==~ 0,255,0,255;
         @assert pixel 95,45 ==~ 0,255,0,255;
-    }), 500);
+      });
   expected: green
 
 - name: 2d.text.draw.baseline.bottom
@@ -9794,8 +9799,8 @@
     - CanvasTest
   code: |
     ctx.font = '50px CanvasTest';
-    deferTest();
-    step_timeout(t.step_func_done(function () {
+    return new Promise(function(resolve) { step_timeout(resolve, 500); })
+      .then(function() {
         ctx.fillStyle = '#f00';
         ctx.fillRect(0, 0, 100, 50);
         ctx.fillStyle = '#0f0';
@@ -9807,7 +9812,7 @@
         @assert pixel 75,25 ==~ 0,255,0,255;
         @assert pixel 5,45 ==~ 0,255,0,255;
         @assert pixel 95,45 ==~ 0,255,0,255;
-    }), 500);
+      });
   expected: green
 
 - name: 2d.text.draw.baseline.middle
@@ -9818,8 +9823,8 @@
     - CanvasTest
   code: |
     ctx.font = '50px CanvasTest';
-    deferTest();
-    step_timeout(t.step_func_done(function () {
+    return new Promise(function(resolve) { step_timeout(resolve, 500); })
+      .then(function() {
         ctx.fillStyle = '#f00';
         ctx.fillRect(0, 0, 100, 50);
         ctx.fillStyle = '#0f0';
@@ -9831,7 +9836,7 @@
         @assert pixel 75,25 ==~ 0,255,0,255;
         @assert pixel 5,45 ==~ 0,255,0,255;
         @assert pixel 95,45 ==~ 0,255,0,255;
-    }), 500);
+      });
   expected: green
 
 - name: 2d.text.draw.baseline.alphabetic
@@ -9841,8 +9846,8 @@
     - CanvasTest
   code: |
     ctx.font = '50px CanvasTest';
-    deferTest();
-    step_timeout(t.step_func_done(function () {
+    return new Promise(function(resolve) { step_timeout(resolve, 500); })
+      .then(function() {
         ctx.fillStyle = '#f00';
         ctx.fillRect(0, 0, 100, 50);
         ctx.fillStyle = '#0f0';
@@ -9854,7 +9859,7 @@
         @assert pixel 75,25 ==~ 0,255,0,255;
         @assert pixel 5,45 ==~ 0,255,0,255;
         @assert pixel 95,45 ==~ 0,255,0,255;
-    }), 500);
+      });
   expected: green
 
 - name: 2d.text.draw.baseline.ideographic
@@ -9864,8 +9869,8 @@
     - CanvasTest
   code: |
     ctx.font = '50px CanvasTest';
-    deferTest();
-    step_timeout(t.step_func_done(function () {
+    return new Promise(function(resolve) { step_timeout(resolve, 500); })
+      .then(function() {
         ctx.fillStyle = '#f00';
         ctx.fillRect(0, 0, 100, 50);
         ctx.fillStyle = '#0f0';
@@ -9877,7 +9882,7 @@
         @assert pixel 75,25 ==~ 0,255,0,255;
         @assert pixel 5,45 ==~ 0,255,0,255; @moz-todo
         @assert pixel 95,45 ==~ 0,255,0,255; @moz-todo
-    }), 500);
+      });
   expected: green
 
 - name: 2d.text.draw.baseline.hanging
@@ -9887,8 +9892,8 @@
     - CanvasTest
   code: |
     ctx.font = '50px CanvasTest';
-    deferTest();
-    step_timeout(t.step_func_done(function () {
+    return new Promise(function(resolve) { step_timeout(resolve, 500); })
+      .then(function() {
         ctx.fillStyle = '#f00';
         ctx.fillRect(0, 0, 100, 50);
         ctx.fillStyle = '#0f0';
@@ -9900,7 +9905,7 @@
         @assert pixel 75,25 ==~ 0,255,0,255;
         @assert pixel 5,45 ==~ 0,255,0,255;
         @assert pixel 95,45 ==~ 0,255,0,255;
-    }), 500);
+      });
   expected: green
 
 - name: 2d.text.draw.align.left
@@ -9911,8 +9916,8 @@
     - CanvasTest
   code: |
     ctx.font = '50px CanvasTest';
-    deferTest();
-    step_timeout(t.step_func_done(function () {
+    return new Promise(function(resolve) { step_timeout(resolve, 500); })
+      .then(function() {
         ctx.fillStyle = '#f00';
         ctx.fillRect(0, 0, 100, 50);
         ctx.fillStyle = '#0f0';
@@ -9924,7 +9929,7 @@
         @assert pixel 75,25 ==~ 0,255,0,255;
         @assert pixel 5,45 ==~ 0,255,0,255;
         @assert pixel 95,45 ==~ 0,255,0,255;
-    }), 500);
+      });
   expected: green
 
 - name: 2d.text.draw.align.right
@@ -9935,8 +9940,8 @@
     - CanvasTest
   code: |
     ctx.font = '50px CanvasTest';
-    deferTest();
-    step_timeout(t.step_func_done(function () {
+    return new Promise(function(resolve) { step_timeout(resolve, 500); })
+      .then(function() {
         ctx.fillStyle = '#f00';
         ctx.fillRect(0, 0, 100, 50);
         ctx.fillStyle = '#0f0';
@@ -9948,7 +9953,7 @@
         @assert pixel 75,25 ==~ 0,255,0,255;
         @assert pixel 5,45 ==~ 0,255,0,255;
         @assert pixel 95,45 ==~ 0,255,0,255;
-    }), 500);
+      });
   expected: green
 
 - name: 2d.text.draw.align.start.ltr
@@ -9960,8 +9965,8 @@
   canvas: width="100" height="50" dir="ltr"
   code: |
     ctx.font = '50px CanvasTest';
-    deferTest();
-    step_timeout(t.step_func_done(function () {
+    return new Promise(function(resolve) { step_timeout(resolve, 500); })
+      .then(function() {
         ctx.fillStyle = '#f00';
         ctx.fillRect(0, 0, 100, 50);
         ctx.fillStyle = '#0f0';
@@ -9973,7 +9978,7 @@
         @assert pixel 75,25 ==~ 0,255,0,255;
         @assert pixel 5,45 ==~ 0,255,0,255;
         @assert pixel 95,45 ==~ 0,255,0,255;
-    }), 500);
+      });
   expected: green
 
 - name: 2d.text.draw.align.start.rtl
@@ -9986,8 +9991,8 @@
   canvas: width="100" height="50" dir="rtl"
   code: |
     ctx.font = '50px CanvasTest';
-    deferTest();
-    step_timeout(t.step_func_done(function () {
+    return new Promise(function(resolve) { step_timeout(resolve, 500); })
+      .then(function() {
         ctx.fillStyle = '#f00';
         ctx.fillRect(0, 0, 100, 50);
         ctx.fillStyle = '#0f0';
@@ -9999,7 +10004,7 @@
         @assert pixel 75,25 ==~ 0,255,0,255;
         @assert pixel 5,45 ==~ 0,255,0,255;
         @assert pixel 95,45 ==~ 0,255,0,255;
-    }), 500);
+      });
   expected: green
 
 - name: 2d.text.draw.align.end.ltr
@@ -10011,8 +10016,8 @@
   canvas: width="100" height="50" dir="ltr"
   code: |
     ctx.font = '50px CanvasTest';
-    deferTest();
-    step_timeout(t.step_func_done(function () {
+    return new Promise(function(resolve) { step_timeout(resolve, 500); })
+      .then(function() {
         ctx.fillStyle = '#f00';
         ctx.fillRect(0, 0, 100, 50);
         ctx.fillStyle = '#0f0';
@@ -10024,7 +10029,7 @@
         @assert pixel 75,25 ==~ 0,255,0,255;
         @assert pixel 5,45 ==~ 0,255,0,255;
         @assert pixel 95,45 ==~ 0,255,0,255;
-    }), 500);
+      });
   expected: green
 
 - name: 2d.text.draw.align.end.rtl
@@ -10037,8 +10042,8 @@
   canvas: width="100" height="50" dir="rtl"
   code: |
     ctx.font = '50px CanvasTest';
-    deferTest();
-    step_timeout(t.step_func_done(function () {
+    return new Promise(function(resolve) { step_timeout(resolve, 500); })
+      .then(function() {
         ctx.fillStyle = '#f00';
         ctx.fillRect(0, 0, 100, 50);
         ctx.fillStyle = '#0f0';
@@ -10050,7 +10055,7 @@
         @assert pixel 75,25 ==~ 0,255,0,255;
         @assert pixel 5,45 ==~ 0,255,0,255;
         @assert pixel 95,45 ==~ 0,255,0,255;
-    }), 500);
+      });
   expected: green
 
 - name: 2d.text.draw.align.center
@@ -10061,8 +10066,8 @@
     - CanvasTest
   code: |
     ctx.font = '50px CanvasTest';
-    deferTest();
-    step_timeout(t.step_func_done(function () {
+    return new Promise(function(resolve) { step_timeout(resolve, 500); })
+      .then(function() {
         ctx.fillStyle = '#f00';
         ctx.fillRect(0, 0, 100, 50);
         ctx.fillStyle = '#0f0';
@@ -10074,7 +10079,7 @@
         @assert pixel 75,25 ==~ 0,255,0,255;
         @assert pixel 5,45 ==~ 0,255,0,255;
         @assert pixel 95,45 ==~ 0,255,0,255;
-    }), 500);
+      });
   expected: green
 
 
@@ -10086,15 +10091,15 @@
     - CanvasTest
   code: |
     ctx.font = '50px CanvasTest';
-    deferTest();
-    step_timeout(t.step_func_done(function () {
+    return new Promise(function(resolve) { step_timeout(resolve, 500); })
+      .then(function() {
         ctx.fillStyle = '#f00';
         ctx.fillRect(0, 0, 100, 50);
         ctx.fillStyle = '#0f0';
         ctx.fillText('E EE', -100, 37.5);
         @assert pixel 25,25 ==~ 0,255,0,255;
         @assert pixel 75,25 ==~ 0,255,0,255;
-    }), 500);
+      });
   expected: green
 
 - name: 2d.text.draw.space.collapse.space
@@ -10105,15 +10110,15 @@
     - CanvasTest
   code: |
     ctx.font = '50px CanvasTest';
-    deferTest();
-    step_timeout(t.step_func_done(function () {
+    return new Promise(function(resolve) { step_timeout(resolve, 500); })
+      .then(function() {
         ctx.fillStyle = '#f00';
         ctx.fillRect(0, 0, 100, 50);
         ctx.fillStyle = '#0f0';
         ctx.fillText('E  EE', -100, 37.5);
         @assert pixel 25,25 ==~ 0,255,0,255; @moz-todo
         @assert pixel 75,25 ==~ 0,255,0,255;
-    }), 500);
+      });
   expected: green
 
 - name: 2d.text.draw.space.collapse.other
@@ -10124,15 +10129,15 @@
     - CanvasTest
   code: |
     ctx.font = '50px CanvasTest';
-    deferTest();
-    step_timeout(t.step_func_done(function () {
+    return new Promise(function(resolve) { step_timeout(resolve, 500); })
+      .then(function() {
         ctx.fillStyle = '#f00';
         ctx.fillRect(0, 0, 100, 50);
         ctx.fillStyle = '#0f0';
         ctx.fillText('E \x09\x0a\x0c\x0d  \x09\x0a\x0c\x0dEE', -100, 37.5);
         @assert pixel 25,25 ==~ 0,255,0,255; @moz-todo
         @assert pixel 75,25 ==~ 0,255,0,255; @moz-todo
-    }), 500);
+      });
   expected: green
 
 - name: 2d.text.draw.space.collapse.nonspace
@@ -10143,15 +10148,15 @@
     - CanvasTest
   code: |
     ctx.font = '50px CanvasTest';
-    deferTest();
-    step_timeout(t.step_func_done(function () {
+    return new Promise(function(resolve) { step_timeout(resolve, 500); })
+      .then(function() {
         ctx.fillStyle = '#f00';
         ctx.fillRect(0, 0, 100, 50);
         ctx.fillStyle = '#0f0';
         ctx.fillText('E\x0b EE', -150, 37.5);
         @assert pixel 25,25 ==~ 0,255,0,255;
         @assert pixel 75,25 ==~ 0,255,0,255;
-    }), 500);
+      });
   expected: green
 
 - name: 2d.text.draw.space.collapse.start
@@ -10162,15 +10167,15 @@
     - CanvasTest
   code: |
     ctx.font = '50px CanvasTest';
-    deferTest();
-    step_timeout(t.step_func_done(function () {
+    return new Promise(function(resolve) { step_timeout(resolve, 500); })
+      .then(function() {
         ctx.fillStyle = '#f00';
         ctx.fillRect(0, 0, 100, 50);
         ctx.fillStyle = '#0f0';
         ctx.fillText(' EE', 0, 37.5);
         @assert pixel 25,25 ==~ 0,255,0,255; @moz-todo
         @assert pixel 75,25 ==~ 0,255,0,255;
-    }), 500);
+      });
   expected: green
 
 - name: 2d.text.draw.space.collapse.end
@@ -10181,8 +10186,8 @@
     - CanvasTest
   code: |
     ctx.font = '50px CanvasTest';
-    deferTest();
-    step_timeout(t.step_func_done(function () {
+    return new Promise(function(resolve) { step_timeout(resolve, 500); })
+      .then(function() {
         ctx.fillStyle = '#f00';
         ctx.fillRect(0, 0, 100, 50);
         ctx.fillStyle = '#0f0';
@@ -10190,7 +10195,7 @@
         ctx.fillText('EE ', 100, 37.5);
         @assert pixel 25,25 ==~ 0,255,0,255;
         @assert pixel 75,25 ==~ 0,255,0,255; @moz-todo
-    }), 500);
+      });
   expected: green
 
 - name: 2d.text.measure.width.basic
@@ -10200,20 +10205,19 @@
   fonts:
     - CanvasTest
   code: |
-    deferTest();
     var f = new FontFace("CanvasTest", "/fonts/CanvasTest.ttf");
     let fonts = (self.fonts ? self.fonts : document.fonts);
     fonts.add(f);
-    fonts.ready.then(() => {
-        step_timeout(t.step_func_done(function () {
-            ctx.font = '50px CanvasTest';
-            @assert ctx.measureText('A').width === 50;
-            @assert ctx.measureText('AA').width === 100;
-            @assert ctx.measureText('ABCD').width === 200;
+    return fonts.ready.then(() => {
+        return new Promise(function(resolve) { step_timeout(resolve, 500); });
+    }).then(function() {
+        ctx.font = '50px CanvasTest';
+        @assert ctx.measureText('A').width === 50;
+        @assert ctx.measureText('AA').width === 100;
+        @assert ctx.measureText('ABCD').width === 200;
 
-            ctx.font = '100px CanvasTest';
-            @assert ctx.measureText('A').width === 100;
-        }), 500);
+        ctx.font = '100px CanvasTest';
+        @assert ctx.measureText('A').width === 100;
     });
 
 - name: 2d.text.measure.width.empty
@@ -10223,15 +10227,14 @@
   fonts:
     - CanvasTest
   code: |
-    deferTest();
     var f = new FontFace("CanvasTest", "/fonts/CanvasTest.ttf");
     let fonts = (self.fonts ? self.fonts : document.fonts);
     fonts.add(f);
-    fonts.ready.then(() => {
-        step_timeout(t.step_func_done(function () {
-            ctx.font = '50px CanvasTest';
-            @assert ctx.measureText("").width === 0;
-        }), 500);
+    return fonts.ready.then(() => {
+        return new Promise(function(resolve) { step_timeout(resolve, 500); });
+    }).then(function() {
+        ctx.font = '50px CanvasTest';
+        @assert ctx.measureText("").width === 0;
     });
 
 - name: 2d.text.measure.width.space
@@ -10241,21 +10244,20 @@
   fonts:
     - CanvasTest
   code: |
-    deferTest();
     var f = new FontFace("CanvasTest", "/fonts/CanvasTest.ttf");
     let fonts = (self.fonts ? self.fonts : document.fonts);
     fonts.add(f);
-    fonts.ready.then(() => {
-        step_timeout(t.step_func_done(function () {
-            ctx.font = '50px CanvasTest';
-            @assert ctx.measureText('A B').width === 150;
-            @assert ctx.measureText('A  B').width === 150; @moz-todo
-            @assert ctx.measureText('A \x09\x0a\x0c\x0d  \x09\x0a\x0c\x0dB').width === 150; @moz-todo
-            @assert ctx.measureText('A \x0b B').width >= 200;
+    return fonts.ready.then(() => {
+        return new Promise(function(resolve) { step_timeout(resolve, 500); });
+    }).then(function() {
+        ctx.font = '50px CanvasTest';
+        @assert ctx.measureText('A B').width === 150;
+        @assert ctx.measureText('A  B').width === 150; @moz-todo
+        @assert ctx.measureText('A \x09\x0a\x0c\x0d  \x09\x0a\x0c\x0dB').width === 150; @moz-todo
+        @assert ctx.measureText('A \x0b B').width >= 200;
 
-            @assert ctx.measureText(' AB').width === 100; @moz-todo
-            @assert ctx.measureText('AB ').width === 100; @moz-todo
-        }), 500);
+        @assert ctx.measureText(' AB').width === 100; @moz-todo
+        @assert ctx.measureText('AB ').width === 100; @moz-todo
     });
 
 - name: 2d.text.measure.advances
@@ -10265,30 +10267,29 @@
   fonts:
     - CanvasTest
   code: |
-    deferTest();
     var f = new FontFace("CanvasTest", "/fonts/CanvasTest.ttf");
     let fonts = (self.fonts ? self.fonts : document.fonts);
     fonts.add(f);
-    fonts.ready.then(() => {
-        step_timeout(t.step_func_done(function () {
-            ctx.font = '50px CanvasTest';
-            ctx.direction = 'ltr';
-            ctx.align = 'left'
-            // Some platforms may return '-0'.
-            @assert Math.abs(ctx.measureText('Hello').advances[0]) === 0;
-            // Different platforms may render text slightly different.
-            @assert ctx.measureText('Hello').advances[1] >= 36;
-            @assert ctx.measureText('Hello').advances[2] >= 58;
-            @assert ctx.measureText('Hello').advances[3] >= 70;
-            @assert ctx.measureText('Hello').advances[4] >= 80;
+    return fonts.ready.then(() => {
+        return new Promise(function(resolve) { step_timeout(resolve, 500); });
+    }).then(function() {
+        ctx.font = '50px CanvasTest';
+        ctx.direction = 'ltr';
+        ctx.align = 'left'
+        // Some platforms may return '-0'.
+        @assert Math.abs(ctx.measureText('Hello').advances[0]) === 0;
+        // Different platforms may render text slightly different.
+        @assert ctx.measureText('Hello').advances[1] >= 36;
+        @assert ctx.measureText('Hello').advances[2] >= 58;
+        @assert ctx.measureText('Hello').advances[3] >= 70;
+        @assert ctx.measureText('Hello').advances[4] >= 80;
 
-            var tm = ctx.measureText('Hello');
-            @assert ctx.measureText('Hello').advances[0] === tm.advances[0];
-            @assert ctx.measureText('Hello').advances[1] === tm.advances[1];
-            @assert ctx.measureText('Hello').advances[2] === tm.advances[2];
-            @assert ctx.measureText('Hello').advances[3] === tm.advances[3];
-            @assert ctx.measureText('Hello').advances[4] === tm.advances[4];
-        }), 500);
+        var tm = ctx.measureText('Hello');
+        @assert ctx.measureText('Hello').advances[0] === tm.advances[0];
+        @assert ctx.measureText('Hello').advances[1] === tm.advances[1];
+        @assert ctx.measureText('Hello').advances[2] === tm.advances[2];
+        @assert ctx.measureText('Hello').advances[3] === tm.advances[3];
+        @assert ctx.measureText('Hello').advances[4] === tm.advances[4];
     });
 
 - name: 2d.text.measure.actualBoundingBox
@@ -10298,28 +10299,27 @@
   fonts:
     - CanvasTest
   code: |
-    deferTest();
     var f = new FontFace("CanvasTest", "/fonts/CanvasTest.ttf");
     let fonts = (self.fonts ? self.fonts : document.fonts);
     fonts.add(f);
-    fonts.ready.then(() => {
-        step_timeout(t.step_func_done(function () {
-            ctx.font = '50px CanvasTest';
-            ctx.direction = 'ltr';
-            ctx.align = 'left'
-            ctx.baseline = 'alphabetic'
-            // Some platforms may return '-0'.
-            @assert Math.abs(ctx.measureText('A').actualBoundingBoxLeft) === 0;
-            // Different platforms may render text slightly different.
-            @assert ctx.measureText('A').actualBoundingBoxRight >= 50;
-            @assert ctx.measureText('A').actualBoundingBoxAscent >= 35;
-            @assert Math.abs(ctx.measureText('A').actualBoundingBoxDescent) === 0;
+    return fonts.ready.then(() => {
+        return new Promise(function(resolve) { step_timeout(resolve, 500); });
+    }).then(function() {
+        ctx.font = '50px CanvasTest';
+        ctx.direction = 'ltr';
+        ctx.align = 'left'
+        ctx.baseline = 'alphabetic'
+        // Some platforms may return '-0'.
+        @assert Math.abs(ctx.measureText('A').actualBoundingBoxLeft) === 0;
+        // Different platforms may render text slightly different.
+        @assert ctx.measureText('A').actualBoundingBoxRight >= 50;
+        @assert ctx.measureText('A').actualBoundingBoxAscent >= 35;
+        @assert Math.abs(ctx.measureText('A').actualBoundingBoxDescent) === 0;
 
-            @assert Math.abs(ctx.measureText('ABCD').actualBoundingBoxLeft) === 0;
-            @assert ctx.measureText('ABCD').actualBoundingBoxRight >= 200;
-            @assert ctx.measureText('ABCD').actualBoundingBoxAscent >= 85;
-            @assert ctx.measureText('ABCD').actualBoundingBoxDescent >= 37;
-        }), 500);
+        @assert Math.abs(ctx.measureText('ABCD').actualBoundingBoxLeft) === 0;
+        @assert ctx.measureText('ABCD').actualBoundingBoxRight >= 200;
+        @assert ctx.measureText('ABCD').actualBoundingBoxAscent >= 85;
+        @assert ctx.measureText('ABCD').actualBoundingBoxDescent >= 37;
     });
 
 - name: 2d.text.measure.fontBoundingBox
@@ -10329,21 +10329,20 @@
   fonts:
     - CanvasTest
   code: |
-    deferTest();
     var f = new FontFace("CanvasTest", "/fonts/CanvasTest.ttf");
     let fonts = (self.fonts ? self.fonts : document.fonts);
     fonts.add(f);
-    fonts.ready.then(() => {
-        step_timeout(t.step_func_done(function () {
-            ctx.font = '50px CanvasTest';
-            ctx.direction = 'ltr';
-            ctx.align = 'left'
-            @assert ctx.measureText('A').fontBoundingBoxAscent === 85;
-            @assert ctx.measureText('A').fontBoundingBoxDescent === 39;
+    return fonts.ready.then(() => {
+        return new Promise(function(resolve) { step_timeout(resolve, 500); });
+    }).then(function() {
+        ctx.font = '50px CanvasTest';
+        ctx.direction = 'ltr';
+        ctx.align = 'left'
+        @assert ctx.measureText('A').fontBoundingBoxAscent === 85;
+        @assert ctx.measureText('A').fontBoundingBoxDescent === 39;
 
-            @assert ctx.measureText('ABCD').fontBoundingBoxAscent === 85;
-            @assert ctx.measureText('ABCD').fontBoundingBoxDescent === 39;
-        }), 500);
+        @assert ctx.measureText('ABCD').fontBoundingBoxAscent === 85;
+        @assert ctx.measureText('ABCD').fontBoundingBoxDescent === 39;
     });
 
 - name: 2d.text.measure.emHeights
@@ -10353,23 +10352,22 @@
   fonts:
     - CanvasTest
   code: |
-    deferTest();
     var f = new FontFace("CanvasTest", "/fonts/CanvasTest.ttf");
     let fonts = (self.fonts ? self.fonts : document.fonts);
     fonts.add(f);
-    fonts.ready.then(() => {
-        step_timeout(t.step_func_done(function () {
-            ctx.font = '50px CanvasTest';
-            ctx.direction = 'ltr';
-            ctx.align = 'left'
-            @assert ctx.measureText('A').emHeightAscent === 37.5;
-            @assert ctx.measureText('A').emHeightDescent === 12.5;
-            @assert ctx.measureText('A').emHeightDescent + ctx.measureText('A').emHeightAscent === 50;
+    return fonts.ready.then(() => {
+        return new Promise(function(resolve) { step_timeout(resolve, 500); });
+    }).then(function() {
+        ctx.font = '50px CanvasTest';
+        ctx.direction = 'ltr';
+        ctx.align = 'left'
+        @assert ctx.measureText('A').emHeightAscent === 37.5;
+        @assert ctx.measureText('A').emHeightDescent === 12.5;
+        @assert ctx.measureText('A').emHeightDescent + ctx.measureText('A').emHeightAscent === 50;
 
-            @assert ctx.measureText('ABCD').emHeightAscent === 37.5;
-            @assert ctx.measureText('ABCD').emHeightDescent === 12.5;
-            @assert ctx.measureText('ABCD').emHeightDescent + ctx.measureText('ABCD').emHeightAscent === 50;
-        }), 500);
+        @assert ctx.measureText('ABCD').emHeightAscent === 37.5;
+        @assert ctx.measureText('ABCD').emHeightDescent === 12.5;
+        @assert ctx.measureText('ABCD').emHeightDescent + ctx.measureText('ABCD').emHeightAscent === 50;
     });
 
 - name: 2d.text.measure.baselines
@@ -10379,23 +10377,22 @@
   fonts:
     - CanvasTest
   code: |
-    deferTest();
     var f = new FontFace("CanvasTest", "/fonts/CanvasTest.ttf");
     let fonts = (self.fonts ? self.fonts : document.fonts);
     fonts.add(f);
-    fonts.ready.then(() => {
-        step_timeout(t.step_func_done(function () {
-            ctx.font = '50px CanvasTest';
-            ctx.direction = 'ltr';
-            ctx.align = 'left'
-            @assert Math.abs(ctx.measureText('A').getBaselines().alphabetic) === 0;
-            @assert ctx.measureText('A').getBaselines().ideographic === -39;
-            @assert ctx.measureText('A').getBaselines().hanging === 68;
+    return fonts.ready.then(() => {
+        return new Promise(function(resolve) { step_timeout(resolve, 500); });
+    }).then(function() {
+       ctx.font = '50px CanvasTest';
+       ctx.direction = 'ltr';
+       ctx.align = 'left'
+       @assert Math.abs(ctx.measureText('A').getBaselines().alphabetic) === 0;
+       @assert ctx.measureText('A').getBaselines().ideographic === -39;
+       @assert ctx.measureText('A').getBaselines().hanging === 68;
 
-            @assert Math.abs(ctx.measureText('ABCD').getBaselines().alphabetic) === 0;
-            @assert ctx.measureText('ABCD').getBaselines().ideographic === -39;
-            @assert ctx.measureText('ABCD').getBaselines().hanging === 68;
-        }), 500);
+       @assert Math.abs(ctx.measureText('ABCD').getBaselines().alphabetic) === 0;
+       @assert ctx.measureText('ABCD').getBaselines().ideographic === -39;
+       @assert ctx.measureText('ABCD').getBaselines().hanging === 68;
     });
 
 # TODO: shadows, alpha, composite, clip
