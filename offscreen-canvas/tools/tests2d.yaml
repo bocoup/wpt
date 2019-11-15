@@ -67,6 +67,7 @@
     ctx.fillStyle = '#f00';
     ctx.fillRect(-200, 0, 100, 50);
     @assert pixel 50,25 == 0,255,0,255;
+    t.done();
 
 - name: 2d.state.saverestore.clip
   desc: save()/restore() affects the clipping path
@@ -82,6 +83,7 @@
     ctx.fillStyle = '#0f0';
     ctx.fillRect(0, 0, 100, 50);
     @assert pixel 50,25 == 0,255,0,255;
+    t.done();
 
 - name: 2d.state.saverestore.path
   desc: save()/restore() does not affect the current path
@@ -96,6 +98,7 @@
     ctx.fillStyle = '#0f0';
     ctx.fill();
     @assert pixel 50,25 == 0,255,0,255;
+    t.done();
 
 - name: 2d.state.saverestore.bitmap
   desc: save()/restore() does not affect the current bitmap
@@ -109,6 +112,7 @@
     ctx.fillRect(0, 0, 100, 50);
     ctx.restore();
     @assert pixel 50,25 == 0,255,0,255;
+    t.done();
 
 - name: 2d.state.saverestore.stack
   desc: save()/restore() can be nested as a stack
@@ -126,6 +130,7 @@
     @assert ctx.lineWidth === 2;
     ctx.restore();
     @assert ctx.lineWidth === 1;
+    t.done();
 
 - name: 2d.state.saverestore.stackdepth
   desc: save()/restore() stack depth is not unreasonably limited
@@ -144,6 +149,7 @@
         @assert ctx.lineWidth === i;
         ctx.restore();
     }
+    t.done();
 
 - name: 2d.state.saverestore.underflow
   desc: restore() with an empty stack has no effect
@@ -155,6 +161,7 @@
     ctx.lineWidth = 0.5;
     ctx.restore();
     @assert ctx.lineWidth === 0.5;
+    t.done();
 
 - name: 2d.transformation.order
   desc: Transformations are applied in the right order
@@ -168,6 +175,7 @@
     ctx.fillStyle = '#0f0';
     ctx.fillRect(0, -50, 50, 50);
     @assert pixel 75,25 == 0,255,0,255;
+    t.done();
 
 - name: 2d.transformation.scale.basic
   desc: scale() works
@@ -180,6 +188,7 @@
     ctx.fillStyle = '#0f0';
     ctx.fillRect(0, 0, 50, 12.5);
     @assert pixel 90,40 == 0,255,0,255;
+    t.done();
 
 - name: 2d.transformation.scale.zero
   desc: scale() with a scale factor of zero works
@@ -201,6 +210,7 @@
     ctx.fillRect(0, 0, 100, 50);
     ctx.restore();
     @assert pixel 50,25 == 0,255,0,255;
+    t.done();
 
 - name: 2d.transformation.scale.negative
   desc: scale() with negative scale factors works
@@ -221,6 +231,7 @@
     ctx.restore();
     @assert pixel 25,25 == 0,255,0,255;
     @assert pixel 75,25 == 0,255,0,255;
+    t.done();
 
 - name: 2d.transformation.scale.large
   desc: scale() with large scale factors works
@@ -234,6 +245,7 @@
     ctx.fillStyle = '#0f0';
     ctx.fillRect(0, 0, 1, 1);
     @assert pixel 50,25 == 0,255,0,255;
+    t.done();
 
 - name: 2d.transformation.scale.nonfinite
   desc: scale() with Infinity/NaN is ignored
@@ -247,6 +259,7 @@
     ctx.fillStyle = '#0f0';
     ctx.fillRect(-100, -10, 100, 50);
     @assert pixel 50,25 == 0,255,0,255;
+    t.done();
 
 - name: 2d.transformation.scale.multiple
   desc: Multiple scale()s combine
@@ -260,6 +273,7 @@
     ctx.fillStyle = '#0f0';
     ctx.fillRect(0, 0, 50, 25);
     @assert pixel 90,40 == 0,255,0,255;
+    t.done();
 
 
 - name: 2d.transformation.rotate.zero
@@ -273,6 +287,7 @@
     ctx.fillStyle = '#0f0';
     ctx.fillRect(0, 0, 100, 50);
     @assert pixel 50,25 == 0,255,0,255;
+    t.done();
 
 - name: 2d.transformation.rotate.radians
   desc: rotate() uses radians
@@ -285,6 +300,7 @@
     ctx.fillStyle = '#0f0';
     ctx.fillRect(-100, -50, 100, 50);
     @assert pixel 50,25 == 0,255,0,255;
+    t.done();
 
 - name: 2d.transformation.rotate.direction
   desc: rotate() is clockwise
@@ -297,6 +313,7 @@
     ctx.fillStyle = '#0f0';
     ctx.fillRect(0, -100, 50, 100);
     @assert pixel 50,25 == 0,255,0,255;
+    t.done();
 
 - name: 2d.transformation.rotate.wrap
   desc: rotate() wraps large positive values correctly
@@ -314,6 +331,7 @@
     @assert pixel 50,25 == 0,255,0,255;
     @assert pixel 98,2 == 0,255,0,255;
     @assert pixel 98,47 == 0,255,0,255;
+    t.done();
 
 - name: 2d.transformation.rotate.wrapnegative
   desc: rotate() wraps large negative values correctly
@@ -328,6 +346,7 @@
     @assert pixel 50,25 == 0,255,0,255;
     @assert pixel 98,2 == 0,255,0,255;
     @assert pixel 98,47 == 0,255,0,255;
+    t.done();
 
 - name: 2d.transformation.rotate.nonfinite
   desc: rotate() with Infinity/NaN is ignored
@@ -341,6 +360,7 @@
     ctx.fillStyle = '#0f0';
     ctx.fillRect(-100, -10, 100, 50);
     @assert pixel 50,25 == 0,255,0,255;
+    t.done();
 
 - name: 2d.transformation.translate.basic
   desc: translate() works
@@ -353,6 +373,7 @@
     ctx.fillStyle = '#0f0';
     ctx.fillRect(-100, -50, 100, 50);
     @assert pixel 90,40 == 0,255,0,255;
+    t.done();
 
 - name: 2d.transformation.translate.nonfinite
   desc: translate() with Infinity/NaN is ignored
@@ -366,6 +387,7 @@
     ctx.fillStyle = '#0f0';
     ctx.fillRect(-100, -10, 100, 50);
     @assert pixel 50,25 == 0,255,0,255;
+    t.done();
 
 
 - name: 2d.transformation.transform.identity
@@ -379,6 +401,7 @@
     ctx.fillStyle = '#0f0';
     ctx.fillRect(0, 0, 100, 50);
     @assert pixel 50,25 == 0,255,0,255;
+    t.done();
 
 - name: 2d.transformation.transform.skewed
   desc: transform() with skewy matrix transforms correctly
@@ -413,6 +436,7 @@
     @assert pixel 61,19 == 0,255,0,255;
     @assert pixel 39,31 == 0,255,0,255;
     @assert pixel 61,31 == 0,255,0,255;
+    t.done();
 
 - name: 2d.transformation.transform.multiply
   desc: transform() multiplies the CTM
@@ -426,6 +450,7 @@
     ctx.fillStyle = '#0f0';
     ctx.fillRect(0, 0, 100, 50);
     @assert pixel 50,25 == 0,255,0,255;
+    t.done();
 
 - name: 2d.transformation.transform.nonfinite
   desc: transform() with Infinity/NaN is ignored
@@ -439,6 +464,7 @@
     ctx.fillStyle = '#0f0';
     ctx.fillRect(-100, -10, 100, 50);
     @assert pixel 50,25 == 0,255,0,255;
+    t.done();
 
 
 - name: 2d.transformation.setTransform.skewed
@@ -473,6 +499,7 @@
     @assert pixel 61,19 == 0,255,0,255;
     @assert pixel 39,31 == 0,255,0,255;
     @assert pixel 61,31 == 0,255,0,255;
+    t.done();
 
 - name: 2d.transformation.setTransform.multiple
   testing:
@@ -485,6 +512,7 @@
     ctx.fillStyle = '#0f0';
     ctx.fillRect(0, 0, 50, 25);
     @assert pixel 75,35 == 0,255,0,255;
+    t.done();
 
 - name: 2d.transformation.setTransform.nonfinite
   desc: setTransform() with Infinity/NaN is ignored
@@ -498,6 +526,7 @@
     ctx.fillStyle = '#0f0';
     ctx.fillRect(-100, -10, 100, 50);
     @assert pixel 50,25 == 0,255,0,255;
+    t.done();
 
 - name: 2d.composite.globalAlpha.range
   testing:
@@ -513,6 +542,7 @@
     @assert ctx.globalAlpha === 0;
     ctx.globalAlpha = 1;
     @assert ctx.globalAlpha === 1;
+    t.done();
 
 - name: 2d.composite.globalAlpha.invalid
   testing:
@@ -526,12 +556,14 @@
     @assert ctx.globalAlpha === a;
     ctx.globalAlpha = NaN;
     @assert ctx.globalAlpha === a;
+    t.done();
 
 - name: 2d.composite.globalAlpha.default
   testing:
     - 2d.composite.globalAlpha.default
   code: |
     @assert ctx.globalAlpha === 1.0;
+    t.done();
 
 - name: 2d.composite.globalAlpha.fill
   testing:
@@ -543,6 +575,7 @@
     ctx.fillStyle = '#f00';
     ctx.fillRect(0, 0, 100, 50);
     @assert pixel 50,25 ==~ 2,253,0,255;
+    t.done();
 
 - name: 2d.composite.globalAlpha.image
   testing:
@@ -578,6 +611,7 @@
     ctx.globalAlpha = 0.01; // avoid any potential alpha=0 optimisations
     ctx.drawImage(offscreenCanvas2, 0, 0);
     @assert pixel 50,25 ==~ 2,253,0,255;
+    t.done();
 
 - name: 2d.composite.globalAlpha.imagepattern
   testing:
@@ -615,6 +649,7 @@
     ctx.globalAlpha = 0.01; // avoid any potential alpha=0 optimisations
     ctx.fillRect(0, 0, 100, 50);
     @assert pixel 50,25 ==~ 2,253,0,255;
+    t.done();
 
 - name: 2d.composite.globalAlpha.canvascopy
   testing:
@@ -630,6 +665,7 @@
     ctx.globalAlpha = 0.51;
     ctx.drawImage(offscreenCanvas2, 0, 0);
     @assert pixel 50,25 ==~ 0,255,0,130;
+    t.done();
 
 
 - meta: |
@@ -890,6 +926,7 @@
         ctx.globalCompositeOperation = modes[i];
         @assert ctx.globalCompositeOperation === modes[i];
     }
+    t.done();
 
 - name: 2d.composite.operation.unrecognised
   testing:
@@ -898,6 +935,7 @@
     ctx.globalCompositeOperation = 'xor';
     ctx.globalCompositeOperation = 'nonexistent';
     @assert ctx.globalCompositeOperation === 'xor';
+    t.done();
 
 - name: 2d.composite.operation.darker
   testing:
@@ -906,6 +944,7 @@
     ctx.globalCompositeOperation = 'xor';
     ctx.globalCompositeOperation = 'darker';
     @assert ctx.globalCompositeOperation === 'xor';
+    t.done();
 
 - name: 2d.composite.operation.over
   testing:
@@ -914,6 +953,7 @@
     ctx.globalCompositeOperation = 'xor';
     ctx.globalCompositeOperation = 'over';
     @assert ctx.globalCompositeOperation === 'xor';
+    t.done();
 
 - name: 2d.composite.operation.clear
   testing:
@@ -922,6 +962,7 @@
     ctx.globalCompositeOperation = 'xor';
     ctx.globalCompositeOperation = 'clear';
     @assert ctx.globalCompositeOperation === 'clear';
+    t.done();
 
 - name: 2d.composite.operation.highlight
   testing:
@@ -930,6 +971,7 @@
     ctx.globalCompositeOperation = 'xor';
     ctx.globalCompositeOperation = 'highlight';
     @assert ctx.globalCompositeOperation === 'xor';
+    t.done();
 
 - name: 2d.composite.operation.nullsuffix
   testing:
@@ -938,6 +980,7 @@
     ctx.globalCompositeOperation = 'xor';
     ctx.globalCompositeOperation = 'source-over\0';
     @assert ctx.globalCompositeOperation === 'xor';
+    t.done();
 
 - name: 2d.composite.operation.casesensitive
   testing:
@@ -946,12 +989,14 @@
     ctx.globalCompositeOperation = 'xor';
     ctx.globalCompositeOperation = 'Source-over';
     @assert ctx.globalCompositeOperation === 'xor';
+    t.done();
 
 - name: 2d.composite.operation.default
   testing:
     - 2d.composite.operation.default
   code: |
     @assert ctx.globalCompositeOperation === 'source-over';
+    t.done();
 
 - meta: |
     # Colour parsing tests
@@ -1146,6 +1191,7 @@
     ctx.fillStyle = 'invalid';
     ctx.fillRect(0, 0, 100, 50);
     @assert pixel 50,25 == 0,255,0,255;
+    t.done();
 
 - name: 2d.fillStyle.invalidtype
   testing:
@@ -1157,6 +1203,7 @@
     ctx.fillStyle = null;
     ctx.fillRect(0, 0, 100, 50);
     @assert pixel 50,25 == 0,255,0,255;
+    t.done();
 
 - name: 2d.fillStyle.get.solid
   testing:
@@ -1165,6 +1212,7 @@
   code: |
     ctx.fillStyle = '#fa0';
     @assert ctx.fillStyle === '#ffaa00';
+    t.done();
 
 - name: 2d.fillStyle.get.semitransparent
   testing:
@@ -1173,6 +1221,7 @@
   code: |
     ctx.fillStyle = 'rgba(255,255,255,0.45)';
     @assert ctx.fillStyle =~ /^rgba\(255, 255, 255, 0\.4\d+\)$/;
+    t.done();
 
 - name: 2d.fillStyle.get.transparent
   testing:
@@ -1181,18 +1230,21 @@
   code: |
     ctx.fillStyle = 'rgba(0,0,0,0)';
     @assert ctx.fillStyle === 'rgba(0, 0, 0, 0)';
+    t.done();
 
 - name: 2d.fillStyle.default
   testing:
     - 2d.colours.default
   code: |
     @assert ctx.fillStyle === '#000000';
+    t.done();
 
 - name: 2d.strokeStyle.default
   testing:
     - 2d.colours.default
   code: |
     @assert ctx.strokeStyle === '#000000';
+    t.done();
 
 - name: 2d.gradient.interpolate.solid
   testing:
@@ -1204,6 +1256,7 @@
     ctx.fillStyle = g;
     ctx.fillRect(0, 0, 100, 50);
     @assert pixel 50,25 == 0,255,0,255;
+    t.done();
 
 - name: 2d.gradient.interpolate.colour
   testing:
@@ -1217,6 +1270,7 @@
     @assert pixel 25,25 ==~ 191,191,63,255 +/- 3;
     @assert pixel 50,25 ==~ 127,127,127,255 +/- 3;
     @assert pixel 75,25 ==~ 63,63,191,255 +/- 3;
+    t.done();
 
 - name: 2d.gradient.interpolate.alpha
   testing:
@@ -1232,6 +1286,7 @@
     @assert pixel 25,25 ==~ 191,191,63,255 +/- 3;
     @assert pixel 50,25 ==~ 127,127,127,255 +/- 3;
     @assert pixel 75,25 ==~ 63,63,191,255 +/- 3;
+    t.done();
 
 - name: 2d.gradient.interpolate.colouralpha
   testing:
@@ -1245,6 +1300,7 @@
     @assert pixel 25,25 ==~ 190,190,65,65 +/- 3;
     @assert pixel 50,25 ==~ 126,126,128,128 +/- 3;
     @assert pixel 75,25 ==~ 62,62,192,192 +/- 3;
+    t.done();
 
 - name: 2d.gradient.interpolate.outside
   testing:
@@ -1261,6 +1317,7 @@
     @assert pixel 20,25 ==~ 0,255,0,255;
     @assert pixel 50,25 ==~ 0,255,0,255;
     @assert pixel 80,25 ==~ 0,255,0,255;
+    t.done();
 
 - name: 2d.gradient.interpolate.zerosize.fill
   testing:
@@ -1275,6 +1332,7 @@
     ctx.rect(0, 0, 100, 50);
     ctx.fill();
     @assert pixel 40,20 == 0,255,0,255;
+    t.done();
 
 - name: 2d.gradient.interpolate.zerosize.stroke
   testing:
@@ -1297,6 +1355,7 @@
     @assert pixel 19,21 == 0,255,0,255;
     @assert pixel 20,21 == 0,255,0,255;
     @assert pixel 21,21 == 0,255,0,255;
+    t.done();
 
 - name: 2d.gradient.interpolate.zerosize.fillRect
   testing:
@@ -1310,6 +1369,7 @@
     ctx.fillStyle = g;
     ctx.fillRect(0, 0, 100, 50);
     @assert pixel 40,20 == 0,255,0,255; @moz-todo
+    t.done();
 
 - name: 2d.gradient.interpolate.zerosize.strokeRect
   testing:
@@ -1331,6 +1391,7 @@
     @assert pixel 19,21 == 0,255,0,255;
     @assert pixel 20,21 == 0,255,0,255;
     @assert pixel 21,21 == 0,255,0,255;
+    t.done();
 
 
 - name: 2d.gradient.interpolate.vertical
@@ -1345,6 +1406,7 @@
     @assert pixel 50,12 ==~ 191,191,63,255 +/- 10;
     @assert pixel 50,25 ==~ 127,127,127,255 +/- 5;
     @assert pixel 50,37 ==~ 63,63,191,255 +/- 10;
+    t.done();
 
 - name: 2d.gradient.interpolate.multiple
   testing:
@@ -1360,6 +1422,7 @@
     @assert pixel 50,25 ==~ 127,255,127,255 +/- 3;
     @assert pixel 100,25 ==~ 0,255,255,255 +/- 3;
     @assert pixel 150,25 ==~ 127,127,255,255 +/- 3;
+    t.done();
 
 - name: 2d.gradient.interpolate.overlap
   testing:
@@ -1391,6 +1454,7 @@
     @assert pixel 101,25 ==~ 255,255,0,255 +/- 16;
     @assert pixel 149,25 ==~ 0,0,255,255 +/- 16;
     @assert pixel 151,25 ==~ 255,255,0,255 +/- 16;
+    t.done();
 
 - name: 2d.gradient.interpolate.overlap2
   testing:
@@ -1412,6 +1476,7 @@
     @assert pixel 40,25 == 0,255,0,255;
     @assert pixel 60,25 == 0,255,0,255;
     @assert pixel 80,25 == 0,255,0,255;
+    t.done();
 
 - name: 2d.gradient.empty
   testing:
@@ -1423,6 +1488,7 @@
     ctx.fillStyle = g;
     ctx.fillRect(0, 0, 100, 50);
     @assert pixel 50,25 ==~ 0,255,0,255;
+    t.done();
 
 - name: 2d.gradient.object.update
   testing:
@@ -1436,6 +1502,7 @@
     g.addColorStop(0.9, '#0f0');
     ctx.fillRect(0, 0, 100, 50);
     @assert pixel 50,25 ==~ 0,255,0,255;
+    t.done();
 
 - name: 2d.gradient.object.compare
   testing:
@@ -1446,6 +1513,7 @@
     @assert g1 !== g2;
     ctx.fillStyle = g1;
     @assert ctx.fillStyle === g1;
+    t.done();
 
 - name: 2d.gradient.object.crosscanvas
   code: |
@@ -1458,6 +1526,7 @@
     ctx.fillStyle = g;
     ctx.fillRect(0, 0, 100, 50);
     @assert pixel 50,25 ==~ 0,255,0,255;
+    t.done();
 
 - name: 2d.gradient.object.invalidoffset
   testing:
@@ -1469,6 +1538,7 @@
     @assert throws TypeError g.addColorStop(Infinity, '#000');
     @assert throws TypeError g.addColorStop(-Infinity, '#000');
     @assert throws TypeError g.addColorStop(NaN, '#000');
+    t.done();
 
 - name: 2d.gradient.object.invalidcolour
   testing:
@@ -1480,6 +1550,7 @@
     @assert throws SYNTAX_ERR g.addColorStop(0, 'undefined');
     @assert throws SYNTAX_ERR g.addColorStop(0, null);
     @assert throws SYNTAX_ERR g.addColorStop(0, undefined);
+    t.done();
 
 - name: 2d.gradient.linear.nonfinite
   desc: createLinearGradient() throws TypeError if arguments are not finite
@@ -1487,6 +1558,7 @@
     - 2d.gradient.linear.nonfinite
   code: |
     @nonfinite @assert throws TypeError ctx.createLinearGradient(<0 Infinity -Infinity NaN>, <0 Infinity -Infinity NaN>, <1 Infinity -Infinity NaN>, <0 Infinity -Infinity NaN>);
+    t.done();
 
 - name: 2d.gradient.linear.transform.1
   desc: Linear gradient coordinates are relative to the coordinate space at the time of filling
@@ -1504,6 +1576,7 @@
     @assert pixel 25,25 == 0,255,0,255;
     @assert pixel 50,25 == 0,255,0,255;
     @assert pixel 75,25 == 0,255,0,255;
+    t.done();
 
 - name: 2d.gradient.linear.transform.2
   desc: Linear gradient coordinates are relative to the coordinate space at the time of filling
@@ -1522,6 +1595,7 @@
     @assert pixel 25,25 == 0,255,0,255;
     @assert pixel 50,25 == 0,255,0,255;
     @assert pixel 75,25 == 0,255,0,255;
+    t.done();
 
 - name: 2d.gradient.linear.transform.3
   desc: Linear gradient transforms do not experience broken caching effects
@@ -1540,6 +1614,7 @@
     @assert pixel 25,25 == 0,255,0,255;
     @assert pixel 50,25 == 0,255,0,255;
     @assert pixel 75,25 == 0,255,0,255;
+    t.done();
 
 - name: 2d.gradient.radial.negative
   desc: createRadialGradient() throws INDEX_SIZE_ERR if either radius is negative
@@ -1549,6 +1624,7 @@
     @assert throws INDEX_SIZE_ERR ctx.createRadialGradient(0, 0, -0.1, 0, 0, 1);
     @assert throws INDEX_SIZE_ERR ctx.createRadialGradient(0, 0, 1, 0, 0, -0.1);
     @assert throws INDEX_SIZE_ERR ctx.createRadialGradient(0, 0, -0.1, 0, 0, -0.1);
+    t.done();
 - name: 2d.gradient.radial.nonfinite
 
   desc: createRadialGradient() throws TypeError if arguments are not finite
@@ -1556,6 +1632,7 @@
     - 2d.gradient.radial.nonfinite
   code: |
     @nonfinite @assert throws TypeError ctx.createRadialGradient(<0 Infinity -Infinity NaN>, <0 Infinity -Infinity NaN>, <1 Infinity -Infinity NaN>, <0 Infinity -Infinity NaN>, <0 Infinity -Infinity NaN>, <1 Infinity -Infinity NaN>);
+    t.done();
 
 - name: 2d.gradient.radial.inside1
   testing:
@@ -1577,6 +1654,7 @@
     @assert pixel 1,48 == 0,255,0,255;
     @assert pixel 50,48 == 0,255,0,255;
     @assert pixel 98,48 == 0,255,0,255;
+    t.done();
 
 - name: 2d.gradient.radial.inside2
   testing:
@@ -1598,6 +1676,7 @@
     @assert pixel 1,48 == 0,255,0,255;
     @assert pixel 50,48 == 0,255,0,255;
     @assert pixel 98,48 == 0,255,0,255;
+    t.done();
 
 - name: 2d.gradient.radial.inside3
   testing:
@@ -1620,6 +1699,7 @@
     @assert pixel 1,48 == 0,255,0,255;
     @assert pixel 50,48 == 0,255,0,255;
     @assert pixel 98,48 == 0,255,0,255;
+    t.done();
 
 - name: 2d.gradient.radial.outside1
   testing:
@@ -1641,6 +1721,7 @@
     @assert pixel 1,48 == 0,255,0,255;
     @assert pixel 50,48 == 0,255,0,255;
     @assert pixel 98,48 == 0,255,0,255;
+    t.done();
 
 - name: 2d.gradient.radial.outside2
   testing:
@@ -1662,6 +1743,7 @@
     @assert pixel 1,48 == 0,255,0,255;
     @assert pixel 50,48 == 0,255,0,255;
     @assert pixel 98,48 == 0,255,0,255;
+    t.done();
 
 - name: 2d.gradient.radial.outside3
   testing:
@@ -1684,6 +1766,7 @@
     @assert pixel 1,48 == 0,255,0,255;
     @assert pixel 50,48 == 0,255,0,255;
     @assert pixel 98,48 == 0,255,0,255;
+    t.done();
 
 - name: 2d.gradient.radial.touch1
   testing:
@@ -1705,6 +1788,7 @@
     @assert pixel 1,48 == 0,255,0,255; @moz-todo
     @assert pixel 50,48 == 0,255,0,255; @moz-todo
     @assert pixel 98,48 == 0,255,0,255; @moz-todo
+    t.done();
 
 - name: 2d.gradient.radial.touch2
   testing:
@@ -1728,6 +1812,7 @@
     @assert pixel 1,48 == 0,255,0,255;
     @assert pixel 50,48 == 0,255,0,255;
     @assert pixel 98,48 == 0,255,0,255;
+    t.done();
 
 - name: 2d.gradient.radial.touch3
   testing:
@@ -1749,6 +1834,7 @@
     @assert pixel 1,48 == 0,255,0,255; @moz-todo
     @assert pixel 50,48 == 0,255,0,255; @moz-todo
     @assert pixel 98,48 == 0,255,0,255; @moz-todo
+    t.done();
 
 - name: 2d.gradient.radial.equal
   testing:
@@ -1770,6 +1856,7 @@
     @assert pixel 1,48 == 0,255,0,255; @moz-todo
     @assert pixel 50,48 == 0,255,0,255; @moz-todo
     @assert pixel 98,48 == 0,255,0,255; @moz-todo
+    t.done();
 
 - name: 2d.gradient.radial.cone.behind
   testing:
@@ -1791,6 +1878,7 @@
     @assert pixel 1,48 == 0,255,0,255; @moz-todo
     @assert pixel 50,48 == 0,255,0,255; @moz-todo
     @assert pixel 98,48 == 0,255,0,255; @moz-todo
+    t.done();
 
 - name: 2d.gradient.radial.cone.front
   testing:
@@ -1812,6 +1900,7 @@
     @assert pixel 1,48 == 0,255,0,255;
     @assert pixel 50,48 == 0,255,0,255;
     @assert pixel 98,48 == 0,255,0,255;
+    t.done();
 
 - name: 2d.gradient.radial.cone.bottom
   testing:
@@ -1833,6 +1922,7 @@
     @assert pixel 1,48 == 0,255,0,255;
     @assert pixel 50,48 == 0,255,0,255;
     @assert pixel 98,48 == 0,255,0,255;
+    t.done();
 
 - name: 2d.gradient.radial.cone.top
   testing:
@@ -1854,6 +1944,7 @@
     @assert pixel 1,48 == 0,255,0,255;
     @assert pixel 50,48 == 0,255,0,255;
     @assert pixel 98,48 == 0,255,0,255;
+    t.done();
 
 - name: 2d.gradient.radial.cone.beside
   testing:
@@ -1875,6 +1966,7 @@
     @assert pixel 1,48 == 0,255,0,255; @moz-todo
     @assert pixel 50,48 == 0,255,0,255; @moz-todo
     @assert pixel 98,48 == 0,255,0,255; @moz-todo
+    t.done();
 
 - name: 2d.gradient.radial.cone.cylinder
   testing:
@@ -1896,6 +1988,7 @@
     @assert pixel 1,48 == 0,255,0,255;
     @assert pixel 50,48 == 0,255,0,255;
     @assert pixel 98,48 == 0,255,0,255;
+    t.done();
 
 - name: 2d.gradient.radial.cone.shape1
   testing:
@@ -1924,6 +2017,7 @@
     @assert pixel 1,48 == 0,255,0,255;
     @assert pixel 50,48 == 0,255,0,255;
     @assert pixel 98,48 == 0,255,0,255;
+    t.done();
 
 - name: 2d.gradient.radial.cone.shape2
   testing:
@@ -1952,6 +2046,7 @@
     @assert pixel 1,48 == 0,255,0,255; @moz-todo
     @assert pixel 50,48 == 0,255,0,255;
     @assert pixel 98,48 == 0,255,0,255;
+    t.done();
 
 - name: 2d.gradient.radial.transform.1
   desc: Radial gradient coordinates are relative to the coordinate space at the time of filling
@@ -1970,6 +2065,7 @@
     @assert pixel 25,25 == 0,255,0,255;
     @assert pixel 50,25 == 0,255,0,255;
     @assert pixel 75,25 == 0,255,0,255;
+    t.done();
 
 - name: 2d.gradient.radial.transform.2
   desc: Radial gradient coordinates are relative to the coordinate space at the time of filling
@@ -1989,6 +2085,7 @@
     @assert pixel 25,25 == 0,255,0,255;
     @assert pixel 50,25 == 0,255,0,255;
     @assert pixel 75,25 == 0,255,0,255;
+    t.done();
 
 - name: 2d.gradient.radial.transform.3
   desc: Radial gradient transforms do not experience broken caching effects
@@ -2008,6 +2105,7 @@
     @assert pixel 25,25 == 0,255,0,255;
     @assert pixel 50,25 == 0,255,0,255;
     @assert pixel 75,25 == 0,255,0,255;
+    t.done();
 
 - name: 2d.pattern.basic.image
   testing:
@@ -2056,6 +2154,7 @@
     @assert pixel 1,48 == 0,255,0,255;
     @assert pixel 50,48 == 0,255,0,255;
     @assert pixel 98,48 == 0,255,0,255;
+    t.done();
 
 - name: 2d.pattern.basic.zerocanvas
   testing:
@@ -2076,6 +2175,7 @@
     @assert offscreenCanvas.width === 0;
     @assert offscreenCanvas.height === 0;
     @assert throws INVALID_STATE_ERR ctx.createPattern(offscreenCanvas, 'repeat');
+    t.done();
 
 - name: 2d.pattern.basic.nocontext
   testing:
@@ -2092,24 +2192,28 @@
     @assert pixel 98,1 == 0,255,0,255;
     @assert pixel 1,48 == 0,255,0,255;
     @assert pixel 98,48 == 0,255,0,255;
+    t.done();
 
 - name: 2d.pattern.image.undefined
   testing:
     - 2d.pattern.IDL
   code: |
     @assert throws TypeError ctx.createPattern(undefined, 'repeat');
+    t.done();
 
 - name: 2d.pattern.image.null
   testing:
     - 2d.pattern.IDL
   code: |
     @assert throws TypeError ctx.createPattern(null, 'repeat');
+    t.done();
 
 - name: 2d.pattern.image.string
   testing:
     - 2d.pattern.IDL
   code: |
     @assert throws TypeError ctx.createPattern('../images/red.png', 'repeat');
+    t.done();
 
 - name: 2d.pattern.repeat.empty
   testing:
@@ -2141,36 +2245,42 @@
     - 2d.pattern.unrecognised
   code: |
     @assert ctx.createPattern(offscreenCanvas, null) != null;
+    t.done();
 
 - name: 2d.pattern.repeat.undefined
   testing:
     - 2d.pattern.unrecognised
   code: |
     @assert throws SYNTAX_ERR ctx.createPattern(offscreenCanvas, undefined);
+    t.done();
 
 - name: 2d.pattern.repeat.unrecognised
   testing:
     - 2d.pattern.unrecognised
   code: |
     @assert throws SYNTAX_ERR ctx.createPattern(offscreenCanvas, "invalid");
+    t.done();
 
 - name: 2d.pattern.repeat.unrecognisednull
   testing:
     - 2d.pattern.unrecognised
   code: |
     @assert throws SYNTAX_ERR ctx.createPattern(offscreenCanvas, "null");
+    t.done();
 
 - name: 2d.pattern.repeat.case
   testing:
     - 2d.pattern.exact
   code: |
     @assert throws SYNTAX_ERR ctx.createPattern(offscreenCanvas, "Repeat");
+    t.done();
 
 - name: 2d.pattern.repeat.nullsuffix
   testing:
     - 2d.pattern.exact
   code: |
     @assert throws SYNTAX_ERR ctx.createPattern(offscreenCanvas, "repeat\0");
+    t.done();
 
 - name: 2d.pattern.modify.canvas1
   testing:
@@ -2189,6 +2299,7 @@
     @assert pixel 98,1 == 0,255,0,255;
     @assert pixel 1,48 == 0,255,0,255;
     @assert pixel 98,48 == 0,255,0,255;
+    t.done();
 
 - name: 2d.pattern.modify.canvas2
   testing:
@@ -2211,6 +2322,7 @@
     @assert pixel 98,1 == 0,255,0,255;
     @assert pixel 1,48 == 0,255,0,255;
     @assert pixel 98,48 == 0,255,0,255;
+    t.done();
 
 - name: 2d.pattern.crosscanvas
   code: |
@@ -2720,6 +2832,7 @@
     @assert pixel 98,1 == 0,255,0,255;
     @assert pixel 1,48 == 0,255,0,255;
     @assert pixel 98,48 == 0,255,0,255;
+    t.done();
 
 - name: 2d.shadow.attributes.shadowBlur.initial
   testing:
@@ -2727,6 +2840,7 @@
     - 2d.shadow.blur.initial
   code: |
     @assert ctx.shadowBlur === 0;
+    t.done();
 
 - name: 2d.shadow.attributes.shadowBlur.valid
   testing:
@@ -2741,6 +2855,7 @@
     @assert ctx.shadowBlur === 1e6;
     ctx.shadowBlur = 0;
     @assert ctx.shadowBlur === 0;
+    t.done();
 
 - name: 2d.shadow.attributes.shadowBlur.invalid
   testing:
@@ -2758,6 +2873,7 @@
     ctx.shadowBlur = 1;
     ctx.shadowBlur = NaN;
     @assert ctx.shadowBlur === 1;
+    t.done();
 
 - name: 2d.shadow.attributes.shadowOffset.initial
   testing:
@@ -2765,6 +2881,7 @@
   code: |
     @assert ctx.shadowOffsetX === 0;
     @assert ctx.shadowOffsetY === 0;
+    t.done();
 
 - name: 2d.shadow.attributes.shadowOffset.valid
   testing:
@@ -2791,6 +2908,7 @@
     ctx.shadowOffsetY = 1e6;
     @assert ctx.shadowOffsetX === 1e6;
     @assert ctx.shadowOffsetY === 1e6;
+    t.done();
 
 - name: 2d.shadow.attributes.shadowOffset.invalid
   testing:
@@ -2814,12 +2932,14 @@
     ctx.shadowOffsetY = NaN;
     @assert ctx.shadowOffsetX === 1;
     @assert ctx.shadowOffsetY === 2;
+    t.done();
 
 - name: 2d.shadow.attributes.shadowColor.initial
   testing:
     - 2d.shadow.color.initial
   code: |
     @assert ctx.shadowColor === 'rgba(0, 0, 0, 0)';
+    t.done();
 
 - name: 2d.shadow.attributes.shadowColor.valid
   testing:
@@ -2830,6 +2950,7 @@
     @assert ctx.shadowColor === '#00ff00';
     ctx.shadowColor = 'RGBA(0,255, 0,0)';
     @assert ctx.shadowColor === 'rgba(0, 255, 0, 0)';
+    t.done();
 
 - name: 2d.shadow.attributes.shadowColor.invalid
   testing:
@@ -2847,6 +2968,7 @@
     ctx.shadowColor = '#00ff00';
     ctx.shadowColor = undefined;
     @assert ctx.shadowColor === '#00ff00';
+    t.done();
 
 - name: 2d.shadow.enable.off.1
   desc: Shadows are not drawn when only shadowColor is set
@@ -2858,6 +2980,7 @@
     ctx.fillStyle = '#0f0';
     ctx.fillRect(0, 0, 100, 50);
     @assert pixel 50,25 == 0,255,0,255;
+    t.done();
 
 - name: 2d.shadow.enable.off.2
   desc: Shadows are not drawn when only shadowColor is set
@@ -2870,6 +2993,7 @@
     ctx.fillStyle = '#0f0';
     ctx.fillRect(0, 0, 100, 50);
     @assert pixel 50,25 == 0,255,0,255;
+    t.done();
 
 - name: 2d.shadow.enable.blur
   desc: Shadows are drawn if shadowBlur is set
@@ -2883,6 +3007,7 @@
     ctx.fillStyle = '#f00';
     ctx.fillRect(0, 0, 100, 50);
     @assert pixel 50,25 == 0,255,0,255;
+    t.done();
 
 - name: 2d.shadow.enable.x
   desc: Shadows are drawn if shadowOffsetX is set
@@ -2896,6 +3021,7 @@
     ctx.fillStyle = '#f00';
     ctx.fillRect(0, 0, 100, 50);
     @assert pixel 50,25 == 0,255,0,255;
+    t.done();
 
 - name: 2d.shadow.enable.y
   desc: Shadows are drawn if shadowOffsetY is set
@@ -2909,6 +3035,7 @@
     ctx.fillStyle = '#f00';
     ctx.fillRect(0, 0, 100, 50);
     @assert pixel 50,25 == 0,255,0,255;
+    t.done();
 
 - name: 2d.shadow.offset.positiveX
   desc: Shadows can be offset with positive x
@@ -2923,6 +3050,7 @@
     ctx.fillRect(0, 0, 50, 50);
     @assert pixel 25,25 == 0,255,0,255;
     @assert pixel 75,25 == 0,255,0,255;
+    t.done();
 
 - name: 2d.shadow.offset.negativeX
   desc: Shadows can be offset with negative x
@@ -2937,6 +3065,7 @@
     ctx.fillRect(50, 0, 50, 50);
     @assert pixel 25,25 == 0,255,0,255;
     @assert pixel 75,25 == 0,255,0,255;
+    t.done();
 
 - name: 2d.shadow.offset.positiveY
   desc: Shadows can be offset with positive y
@@ -2951,6 +3080,7 @@
     ctx.fillRect(0, 0, 100, 25);
     @assert pixel 50,12 == 0,255,0,255;
     @assert pixel 50,37 == 0,255,0,255;
+    t.done();
 
 - name: 2d.shadow.offset.negativeY
   desc: Shadows can be offset with negative y
@@ -2965,6 +3095,7 @@
     ctx.fillRect(0, 25, 100, 25);
     @assert pixel 50,12 == 0,255,0,255;
     @assert pixel 50,37 == 0,255,0,255;
+    t.done();
 
 - name: 2d.shadow.outside
   desc: Shadows of shapes outside the visible area can be offset onto the visible area
@@ -2987,6 +3118,7 @@
     @assert pixel 87,25 == 0,255,0,255;
     @assert pixel 50,12 == 0,255,0,255;
     @assert pixel 50,37 == 0,255,0,255;
+    t.done();
 
 - name: 2d.shadow.clip.1
   desc: Shadows of clipped shapes are still drawn within the clipping region
@@ -3007,6 +3139,7 @@
     ctx.restore();
     @assert pixel 25,25 == 0,255,0,255;
     @assert pixel 75,25 == 0,255,0,255;
+    t.done();
 
 - name: 2d.shadow.clip.2
   desc: Shadows are not drawn outside the clipping region
@@ -3027,6 +3160,7 @@
     ctx.restore();
     @assert pixel 25,25 == 0,255,0,255;
     @assert pixel 75,25 == 0,255,0,255;
+    t.done();
 
 - name: 2d.shadow.clip.3
   desc: Shadows of clipped shapes are still drawn within the clipping region
@@ -3048,6 +3182,7 @@
     ctx.restore();
     @assert pixel 25,25 == 0,255,0,255;
     @assert pixel 75,25 == 0,255,0,255;
+    t.done();
 
 - name: 2d.shadow.stroke.basic
   desc: Shadows are drawn for strokes
@@ -3067,6 +3202,7 @@
     @assert pixel 1,25 == 0,255,0,255;
     @assert pixel 50,25 == 0,255,0,255;
     @assert pixel 98,25 == 0,255,0,255;
+    t.done();
 
 - name: 2d.shadow.stroke.cap.1
   desc: Shadows are not drawn for areas outside stroke caps
@@ -3089,6 +3225,7 @@
     @assert pixel 1,25 == 0,255,0,255;
     @assert pixel 50,25 == 0,255,0,255;
     @assert pixel 98,25 == 0,255,0,255;
+    t.done();
 
 - name: 2d.shadow.stroke.cap.2
   desc: Shadows are drawn for stroke caps
@@ -3109,6 +3246,7 @@
     @assert pixel 1,25 == 0,255,0,255;
     @assert pixel 50,25 == 0,255,0,255;
     @assert pixel 98,25 == 0,255,0,255;
+    t.done();
 
 - name: 2d.shadow.stroke.join.1
   desc: Shadows are not drawn for areas outside stroke joins
@@ -3131,6 +3269,7 @@
     @assert pixel 48,48 == 0,255,0,255;
     @assert pixel 50,25 == 0,255,0,255;
     @assert pixel 98,48 == 0,255,0,255;
+    t.done();
 
 - name: 2d.shadow.stroke.join.2
   desc: Shadows are drawn for stroke joins
@@ -3155,6 +3294,7 @@
     @assert pixel 48,48 == 0,255,0,255;
     @assert pixel 50,25 == 0,255,0,255;
     @assert pixel 98,48 == 0,255,0,255;
+    t.done();
 
 - name: 2d.shadow.stroke.join.3
   desc: Shadows are drawn for stroke joins respecting miter limit
@@ -3178,6 +3318,7 @@
     @assert pixel 48,48 == 0,255,0,255;
     @assert pixel 50,25 == 0,255,0,255;
     @assert pixel 98,48 == 0,255,0,255;
+    t.done();
 
 - name: 2d.shadow.image.basic
   desc: Shadows are drawn for images
@@ -3354,6 +3495,7 @@
     ctx.shadowOffsetY = 50;
     ctx.drawImage(offscreenCanvas2, 0, -50);
     @assert pixel 50,25 == 0,255,0,255;
+    t.done();
 
 - name: 2d.shadow.canvas.transparent.1
   desc: Shadows are not drawn for transparent canvases
@@ -3368,6 +3510,7 @@
     ctx.shadowOffsetY = 50;
     ctx.drawImage(offscreenCanvas2, 0, -50);
     @assert pixel 50,25 == 0,255,0,255;
+    t.done();
 
 - name: 2d.shadow.canvas.transparent.2
   desc: Shadows are not drawn for transparent parts of canvases
@@ -3390,6 +3533,7 @@
     @assert pixel 25,25 == 0,255,0,255;
     @assert pixel 50,25 == 0,255,0,255;
     @assert pixel 75,25 == 0,255,0,255;
+    t.done();
 
 - name: 2d.shadow.canvas.alpha
   desc: Shadows are drawn correctly for partially-transparent canvases
@@ -3406,6 +3550,7 @@
     ctx.shadowColor = '#00f';
     ctx.drawImage(offscreenCanvas2, 0, -50);
     @assert pixel 50,25 ==~ 127,0,127,255;
+    t.done();
 
 - name: 2d.shadow.pattern.basic
   desc: Shadows are drawn for fill patterns
@@ -3533,6 +3678,7 @@
     ctx.fillStyle = gradient;
     ctx.fillRect(0, -50, 100, 50);
     @assert pixel 50,25 == 0,255,0,255;
+    t.done();
 
 - name: 2d.shadow.gradient.transparent.1
   desc: Shadows are not drawn for transparent gradient fills
@@ -3550,6 +3696,7 @@
     ctx.fillStyle = gradient;
     ctx.fillRect(0, -50, 100, 50);
     @assert pixel 50,25 == 0,255,0,255;
+    t.done();
 
 - name: 2d.shadow.gradient.transparent.2
   desc: Shadows are not drawn for transparent parts of gradient fills
@@ -3572,6 +3719,7 @@
     @assert pixel 25,25 == 0,255,0,255;
     @assert pixel 50,25 == 0,255,0,255;
     @assert pixel 75,25 == 0,255,0,255;
+    t.done();
 
 - name: 2d.shadow.gradient.alpha
   desc: Shadows are drawn correctly for partially-transparent gradient fills
@@ -3588,6 +3736,7 @@
     ctx.fillStyle = gradient;
     ctx.fillRect(0, -50, 100, 50);
     @assert pixel 50,25 ==~ 127,0,127,255;
+    t.done();
 
 - name: 2d.shadow.transform.1
   desc: Shadows take account of transformations
@@ -3601,6 +3750,7 @@
     ctx.translate(100, 100);
     ctx.fillRect(-100, -150, 100, 50);
     @assert pixel 50,25 == 0,255,0,255;
+    t.done();
 
 - name: 2d.shadow.transform.2
   desc: Shadow offsets are not affected by transformations
@@ -3614,6 +3764,7 @@
     ctx.rotate(Math.PI)
     ctx.fillRect(-100, 0, 100, 50);
     @assert pixel 50,25 == 0,255,0,255;
+    t.done();
 
 - name: 2d.shadow.alpha.1
   desc: Shadow colour alpha components are used
@@ -3626,6 +3777,7 @@
     ctx.shadowOffsetY = 50;
     ctx.fillRect(0, -50, 100, 50);
     @assert pixel 50,25 ==~ 0,255,0,255 +/- 4;
+    t.done();
 
 - name: 2d.shadow.alpha.2
   desc: Shadow colour alpha components are used
@@ -3638,6 +3790,7 @@
     ctx.shadowOffsetY = 50;
     ctx.fillRect(0, -50, 100, 50);
     @assert pixel 50,25 ==~ 127,0,127,255;
+    t.done();
 
 - name: 2d.shadow.alpha.3
   desc: Shadows are affected by globalAlpha
@@ -3652,6 +3805,7 @@
     ctx.globalAlpha = 0.5;
     ctx.fillRect(0, -50, 100, 50);
     @assert pixel 50,25 ==~ 127,0,127,255;
+    t.done();
 
 - name: 2d.shadow.alpha.4
   desc: Shadows with alpha components are correctly affected by globalAlpha
@@ -3666,6 +3820,7 @@
     ctx.globalAlpha = 0.707;
     ctx.fillRect(0, -50, 100, 50);
     @assert pixel 50,25 ==~ 127,0,127,255;
+    t.done();
 
 - name: 2d.shadow.alpha.5
   desc: Shadows of shapes with alpha components are drawn correctly
@@ -3679,6 +3834,7 @@
     ctx.shadowOffsetY = 50;
     ctx.fillRect(0, -50, 100, 50);
     @assert pixel 50,25 ==~ 127,0,127,255;
+    t.done();
 
 - name: 2d.shadow.composite.1
   desc: Shadows are drawn using globalCompositeOperation
@@ -3693,6 +3849,7 @@
     ctx.fillStyle = '#0f0';
     ctx.fillRect(-100, 0, 200, 50);
     @assert pixel 50,25 ==~ 0,255,0,255;
+    t.done();
 
 - name: 2d.shadow.composite.2
   desc: Shadows are drawn using globalCompositeOperation
@@ -3707,6 +3864,7 @@
     ctx.fillStyle = '#0f0';
     ctx.fillRect(-10, -10, 120, 70);
     @assert pixel 50,25 ==~ 0,255,0,255;
+    t.done();
 
 - name: 2d.shadow.composite.3
   desc: Areas outside shadows are drawn correctly with destination-out
@@ -3722,6 +3880,7 @@
     ctx.fillRect(200, 0, 100, 50);
     @assert pixel 5,5 ==~ 0,255,0,255;
     @assert pixel 50,25 ==~ 0,255,0,255;
+    t.done();
 
 - name: 2d.clearRect.basic
   desc: clearRect clears to transparent black
@@ -3732,6 +3891,7 @@
     ctx.fillRect(0, 0, 100, 50);
     ctx.clearRect(0, 0, 100, 50);
     @assert pixel 50,25 == 0,0,0,0;
+    t.done();
 
 - name: 2d.clearRect.path
   desc: clearRect does not affect the current path
@@ -3744,6 +3904,7 @@
     ctx.clearRect(0, 0, 16, 16);
     ctx.fill();
     @assert pixel 50,25 == 0,255,0,255;
+    t.done();
 
 - name: 2d.clearRect.zero
   desc: clearRect of zero pixels has no effect
@@ -3756,6 +3917,7 @@
     ctx.clearRect(0, 0, 0, 50);
     ctx.clearRect(0, 0, 0, 0);
     @assert pixel 50,25 == 0,255,0,255;
+    t.done();
 
 - name: 2d.clearRect.negative
   desc: clearRect of negative sizes works
@@ -3772,6 +3934,7 @@
     @assert pixel 75,12 == 0,0,0,0;
     @assert pixel 25,37 == 0,0,0,0;
     @assert pixel 75,37 == 0,0,0,0;
+    t.done();
 
 - name: 2d.clearRect.transform
   desc: clearRect is affected by transforms
@@ -3784,6 +3947,7 @@
     ctx.translate(0, 5);
     ctx.clearRect(0, -5, 10, 5);
     @assert pixel 50,25 == 0,0,0,0;
+    t.done();
 
 - name: 2d.clearRect.globalalpha
   desc: clearRect is not affected by globalAlpha
@@ -3795,6 +3959,7 @@
     ctx.globalAlpha = 0.1;
     ctx.clearRect(0, 0, 100, 50);
     @assert pixel 50,25 == 0,0,0,0;
+    t.done();
 
 - name: 2d.clearRect.globalcomposite
   desc: clearRect is not affected by globalCompositeOperation
@@ -3806,6 +3971,7 @@
     ctx.globalCompositeOperation = 'destination-atop';
     ctx.clearRect(0, 0, 100, 50);
     @assert pixel 50,25 == 0,0,0,0;
+    t.done();
 
 - name: 2d.clearRect.clip
   desc: clearRect is affected by clipping regions
@@ -3821,6 +3987,7 @@
     ctx.fillStyle = '#0f0';
     ctx.fillRect(0, 0, 16, 16);
     @assert pixel 50,25 == 0,255,0,255;
+    t.done();
 
 - name: 2d.clearRect.shadow
   desc: clearRect does not draw shadows
@@ -3835,6 +4002,7 @@
     ctx.shadowOffsetY = 50;
     ctx.clearRect(0, -50, 100, 50);
     @assert pixel 50,25 == 0,255,0,255;
+    t.done();
 
 - name: 2d.clearRect.nonfinite
   desc: clearRect() with Infinity/NaN is ignored
@@ -3845,6 +4013,7 @@
     ctx.fillRect(0, 0, 100, 50);
     @nonfinite ctx.clearRect(<0 Infinity -Infinity NaN>, <0 Infinity -Infinity NaN>, <100 Infinity -Infinity NaN>, <50 Infinity -Infinity NaN>);
     @assert pixel 50,25 == 0,255,0,255;
+    t.done();
 
 - name: 2d.fillRect.basic
   desc: fillRect works
@@ -3854,6 +4023,7 @@
     ctx.fillStyle = '#0f0';
     ctx.fillRect(0, 0, 100, 50);
     @assert pixel 50,25 == 0,255,0,255;
+    t.done();
 
 - name: 2d.fillRect.path
   desc: fillRect does not affect the current path
@@ -3867,6 +4037,7 @@
     ctx.fillStyle = '#0f0';
     ctx.fill();
     @assert pixel 50,25 == 0,255,0,255;
+    t.done();
 
 - name: 2d.fillRect.zero
   desc: fillRect of zero pixels has no effect
@@ -3880,6 +4051,7 @@
     ctx.fillRect(0, 0, 0, 50);
     ctx.fillRect(0, 0, 0, 0);
     @assert pixel 50,25 == 0,255,0,255;
+    t.done();
 
 - name: 2d.fillRect.negative
   desc: fillRect of negative sizes works
@@ -3897,6 +4069,7 @@
     @assert pixel 75,12 == 0,255,0,255;
     @assert pixel 25,37 == 0,255,0,255;
     @assert pixel 75,37 == 0,255,0,255;
+    t.done();
 
 - name: 2d.fillRect.transform
   desc: fillRect is affected by transforms
@@ -3908,6 +4081,7 @@
     ctx.fillStyle = '#0f0';
     ctx.fillRect(0, -5, 10, 5);
     @assert pixel 50,25 == 0,255,0,255;
+    t.done();
 
 # don't bother testing globalalpha, globalcomposite because they're already heavily used by other test cases
 
@@ -3926,6 +4100,7 @@
     ctx.fillStyle = '#0f0';
     ctx.fillRect(0, 0, 16, 16);
     @assert pixel 50,25 == 0,255,0,255;
+    t.done();
 
 - name: 2d.fillRect.shadow
   desc: fillRect draws shadows
@@ -3940,6 +4115,7 @@
     ctx.shadowOffsetY = 50;
     ctx.fillRect(0, -50, 100, 50);
     @assert pixel 50,25 == 0,255,0,255;
+    t.done();
 
 - name: 2d.fillRect.nonfinite
   desc: fillRect() with Infinity/NaN is ignored
@@ -3951,6 +4127,7 @@
     ctx.fillStyle = '#f00';
     @nonfinite ctx.fillRect(<0 Infinity -Infinity NaN>, <0 Infinity -Infinity NaN>, <100 Infinity -Infinity NaN>, <50 Infinity -Infinity NaN>);
     @assert pixel 50,25 == 0,255,0,255;
+    t.done();
 
 - name: 2d.strokeRect.basic
   desc: strokeRect works
@@ -3961,6 +4138,7 @@
     ctx.lineWidth = 50;
     ctx.strokeRect(25, 24, 50, 2);
     @assert pixel 50,25 == 0,255,0,255;
+    t.done();
 
 - name: 2d.strokeRect.path
   desc: strokeRect does not affect the current path
@@ -3975,6 +4153,7 @@
     ctx.fillStyle = '#0f0';
     ctx.fill();
     @assert pixel 50,25 == 0,255,0,255;
+    t.done();
 
 - name: 2d.strokeRect.zero.1
   desc: strokeRect of 0x0 pixels draws nothing
@@ -3985,6 +4164,7 @@
     ctx.lineWidth = 250;
     ctx.strokeRect(50, 25, 0, 0);
     @assert pixel 50,25 == 0,0,0,0;
+    t.done();
 
 - name: 2d.strokeRect.zero.2
   desc: strokeRect of 0x0 pixels draws nothing, including caps and joins
@@ -3997,6 +4177,7 @@
     ctx.lineJoin = 'round';
     ctx.strokeRect(50, 25, 0, 0);
     @assert pixel 50,25 == 0,0,0,0;
+    t.done();
 
 - name: 2d.strokeRect.zero.3
   desc: strokeRect of Nx0 pixels draws a straight line
@@ -4007,6 +4188,7 @@
     ctx.lineWidth = 50;
     ctx.strokeRect(0, 25, 100, 0);
     @assert pixel 50,25 == 0,255,0,255;
+    t.done();
 
 - name: 2d.strokeRect.zero.4
   desc: strokeRect of Nx0 pixels draws a closed line with no caps
@@ -4018,6 +4200,7 @@
     ctx.lineCap = 'round';
     ctx.strokeRect(100, 25, 100, 0);
     @assert pixel 50,25 == 0,0,0,0;
+    t.done();
 
 - name: 2d.strokeRect.zero.5
   desc: strokeRect of Nx0 pixels draws a closed line with joins
@@ -4029,6 +4212,7 @@
     ctx.lineJoin = 'round';
     ctx.strokeRect(100, 25, 100, 0);
     @assert pixel 50,25 == 0,255,0,255;
+    t.done();
 
 - name: 2d.strokeRect.negative
   desc: strokeRect of negative sizes works
@@ -4047,6 +4231,7 @@
     @assert pixel 75,12 == 0,255,0,255;
     @assert pixel 25,37 == 0,255,0,255;
     @assert pixel 75,37 == 0,255,0,255;
+    t.done();
 
 - name: 2d.strokeRect.transform
   desc: fillRect is affected by transforms
@@ -4059,6 +4244,7 @@
     ctx.lineWidth = 5;
     ctx.strokeRect(2.5, -2.6, 5, 0.2);
     @assert pixel 50,25 == 0,255,0,255;
+    t.done();
 
 - name: 2d.strokeRect.globalalpha
   desc: strokeRect is affected by globalAlpha
@@ -4070,6 +4256,7 @@
     ctx.lineWidth = 50;
     ctx.strokeRect(25, 24, 50, 2);
     @assert pixel 50,25 == 0,0,0,0;
+    t.done();
 
 - name: 2d.strokeRect.globalcomposite
   desc: strokeRect is not affected by globalCompositeOperation
@@ -4081,6 +4268,7 @@
     ctx.lineWidth = 50;
     ctx.strokeRect(25, 24, 50, 2);
     @assert pixel 50,25 == 0,0,0,0;
+    t.done();
 
 - name: 2d.strokeRect.clip
   desc: strokeRect is affected by clipping regions
@@ -4098,6 +4286,7 @@
     ctx.fillStyle = '#0f0';
     ctx.fillRect(0, 0, 16, 16);
     @assert pixel 50,25 == 0,255,0,255;
+    t.done();
 
 - name: 2d.strokeRect.shadow
   desc: strokeRect draws shadows
@@ -4115,6 +4304,7 @@
     ctx.lineWidth = 50;
     ctx.strokeRect(0, -75, 100, 50);
     @assert pixel 50,25 == 0,255,0,255;
+    t.done();
 
 - name: 2d.strokeRect.nonfinite
   desc: strokeRect() with Infinity/NaN is ignored
@@ -4127,6 +4317,7 @@
     ctx.lineWidth = 150;
     @nonfinite ctx.strokeRect(<0 Infinity -Infinity NaN>, <0 Infinity -Infinity NaN>, <100 Infinity -Infinity NaN>, <50 Infinity -Infinity NaN>);
     @assert pixel 50,25 == 0,255,0,255;
+    t.done();
 
 
 - name: 2d.drawImage.3arg
@@ -4391,6 +4582,7 @@
     @assert pixel 99,0 ==~ 0,255,0,255;
     @assert pixel 0,49 ==~ 0,255,0,255;
     @assert pixel 99,49 ==~ 0,255,0,255;
+    t.done();
 
 - name: 2d.drawImage.self.1
   testing:
@@ -4406,6 +4598,7 @@
     @assert pixel 99,0 ==~ 0,255,0,255;
     @assert pixel 0,49 ==~ 0,255,0,255;
     @assert pixel 99,49 ==~ 0,255,0,255;
+    t.done();
 
 - name: 2d.drawImage.self.2
   testing:
@@ -4423,6 +4616,7 @@
     @assert pixel 99,0 ==~ 0,255,0,255;
     @assert pixel 0,49 ==~ 0,255,0,255;
     @assert pixel 99,49 ==~ 0,255,0,255;
+    t.done();
 
 - name: 2d.drawImage.null
   testing:
@@ -4430,6 +4624,7 @@
   timeout: long
   code: |
     @assert throws TypeError ctx.drawImage(null, 0, 0);
+    t.done();
 
 - name: 2d.drawImage.zerocanvas
   testing:
@@ -4446,6 +4641,7 @@
     offscreenCanvas2.width = 0;
     offscreenCanvas2.height = 0;
     @assert throws INVALID_STATE_ERR ctx.drawImage(offscreenCanvas2, 0, 0);
+    t.done();
 
 - name: 2d.drawImage.wrongtype
   desc: Incorrect image types in drawImage do not match any defined overloads, so WebIDL throws a TypeError
@@ -4456,6 +4652,7 @@
     @assert throws TypeError ctx.drawImage(undefined, 0, 0);
     @assert throws TypeError ctx.drawImage(0, 0, 0);
     @assert throws TypeError ctx.drawImage("", 0, 0);
+    t.done();
 
 - name: 2d.drawImage.floatsource
   testing:
@@ -4912,6 +5109,7 @@
     - 2d.imageData.create2.object
   code: |
     @assert ctx.createImageData(1, 1) !== null;
+    t.done();
 
 - name: 2d.imageData.create1.basic
   desc: createImageData(imgdata) exists and returns something
@@ -4919,6 +5117,7 @@
     - 2d.imageData.create1.object
   code: |
     @assert ctx.createImageData(ctx.createImageData(1, 1)) !== null;
+    t.done();
 
 - name: 2d.imageData.create2.initial
   desc: createImageData(sw, sh) returns transparent black data of the right size
@@ -4936,6 +5135,7 @@
         if (imgdata.data[i] !== 0)
             isTransparentBlack = false;
     @assert isTransparentBlack;
+    t.done();
 
 - name: 2d.imageData.create1.initial
   desc: createImageData(imgdata) returns transparent black data of the right size
@@ -4956,6 +5156,7 @@
         if (imgdata2.data[i] !== 0)
             isTransparentBlack = false;
     @assert isTransparentBlack;
+    t.done();
 
 - name: 2d.imageData.create2.large
   desc: createImageData(sw, sh) works for sizes much larger than the canvas
@@ -4971,6 +5172,7 @@
         if (imgdata.data[i] !== 0)
             isTransparentBlack = false;
     @assert isTransparentBlack;
+    t.done();
 
 - name: 2d.imageData.create2.negative
   desc: createImageData(sw, sh) takes the absolute magnitude of the size arguments
@@ -4984,6 +5186,7 @@
     @assert imgdata1.data.length === imgdata2.data.length;
     @assert imgdata2.data.length === imgdata3.data.length;
     @assert imgdata3.data.length === imgdata4.data.length;
+    t.done();
 
 - name: 2d.imageData.create2.zero
   desc: createImageData(sw, sh) throws INDEX_SIZE_ERR if size is zero
@@ -4993,6 +5196,7 @@
     @assert throws INDEX_SIZE_ERR ctx.createImageData(10, 0);
     @assert throws INDEX_SIZE_ERR ctx.createImageData(0, 10);
     @assert throws INDEX_SIZE_ERR ctx.createImageData(0, 0);
+    t.done();
 
 - name: 2d.imageData.create2.nonfinite
   desc: createImageData() throws TypeError if arguments are not finite
@@ -5004,6 +5208,7 @@
         neginfobj = { valueOf: function() { return -Infinity; } },
         nanobj = { valueOf: function() { return -Infinity; } };
     @nonfinite @assert throws TypeError ctx.createImageData(<10 posinfobj neginfobj nanobj>, <10 posinfobj neginfobj nanobj>);
+    t.done();
 
 - name: 2d.imageData.create1.zero
   desc: createImageData(null) throws TypeError
@@ -5011,6 +5216,7 @@
     - 2d.imageData.create.null
   code: |
     @assert throws TypeError ctx.createImageData(null);
+    t.done();
 
 - name: 2d.imageData.create2.round
   desc: createImageData(w, h) is rounded the same as getImageData(0, 0, w, h)
@@ -5021,6 +5227,7 @@
     var imgdata2 = ctx.getImageData(0, 0, 10.01, 10.99);
     @assert imgdata1.width === imgdata2.width;
     @assert imgdata1.height === imgdata2.height;
+    t.done();
 
 - name: 2d.imageData.get.basic
   desc: getImageData() exists and returns something
@@ -5028,6 +5235,7 @@
     - 2d.imageData.get.basic
   code: |
     @assert ctx.getImageData(0, 0, 100, 50) !== null;
+    t.done();
 
 - name: 2d.imageData.get.zero
   desc: getImageData() throws INDEX_SIZE_ERR if size is zero
@@ -5037,6 +5245,7 @@
     @assert throws INDEX_SIZE_ERR ctx.getImageData(1, 1, 10, 0);
     @assert throws INDEX_SIZE_ERR ctx.getImageData(1, 1, 0, 10);
     @assert throws INDEX_SIZE_ERR ctx.getImageData(1, 1, 0, 0);
+    t.done();
 
 - name: 2d.imageData.get.nonfinite
   desc: getImageData() throws TypeError if arguments are not finite
@@ -5048,6 +5257,7 @@
         neginfobj = { valueOf: function() { return -Infinity; } },
         nanobj = { valueOf: function() { return -Infinity; } };
     @nonfinite @assert throws TypeError ctx.getImageData(<10 posinfobj neginfobj nanobj>, <10 posinfobj neginfobj nanobj>, <10 posinfobj neginfobj nanobj>, <10 posinfobj neginfobj nanobj>);
+    t.done();
 
 - name: 2d.imageData.get.source.outside
   desc: getImageData() returns transparent black outside the canvas
@@ -5108,6 +5318,7 @@
     @assert imgdata7.data[20*4+1] === 0;
     @assert imgdata7.data[20*4+2] === 0;
     @assert imgdata7.data[20*4+3] === 0;
+    t.done();
 
 - name: 2d.imageData.get.source.negative
   desc: getImageData() works with negative width and height, and returns top-to-bottom left-to-right
@@ -5133,6 +5344,7 @@
     @assert imgdata2.data[1] === 0;
     @assert imgdata2.data[2] === 0;
     @assert imgdata2.data[3] === 0;
+    t.done();
 
 - name: 2d.imageData.get.source.size
   desc: getImageData() returns bigger ImageData for bigger source rectangle
@@ -5143,6 +5355,7 @@
     var imgdata2 = ctx.getImageData(0, 0, 20, 20);
     @assert imgdata2.width > imgdata1.width;
     @assert imgdata2.height > imgdata1.height;
+    t.done();
 
 - name: 2d.imageData.get.tiny
   desc: getImageData() works for sizes smaller than one pixel
@@ -5153,6 +5366,7 @@
     @assert imgdata.data.length === imgdata.width*imgdata.height*4;
     @assert imgdata.width === 1;
     @assert imgdata.height === 1;
+    t.done();
 
 - name: 2d.imageData.get.nonpremul
   desc: getImageData() returns non-premultiplied colours
@@ -5167,6 +5381,7 @@
     @assert imgdata.data[2] > 200;
     @assert imgdata.data[3] > 100;
     @assert imgdata.data[3] < 200;
+    t.done();
 
 - name: 2d.imageData.get.range
   desc: getImageData() returns values in the range [0, 255]
@@ -5182,6 +5397,7 @@
     @assert imgdata1.data[0] === 0;
     var imgdata2 = ctx.getImageData(30, 15, 1, 1);
     @assert imgdata2.data[0] === 255;
+    t.done();
 
 - name: 2d.imageData.get.clamp
   desc: getImageData() clamps colours to the range [0, 255]
@@ -5200,6 +5416,7 @@
     @assert imgdata2.data[0] === 255;
     @assert imgdata2.data[1] === 255;
     @assert imgdata2.data[2] === 255;
+    t.done();
 
 - name: 2d.imageData.get.length
   desc: getImageData() returns a correctly-sized Uint8ClampedArray
@@ -5208,6 +5425,7 @@
   code: |
     var imgdata = ctx.getImageData(0, 0, 10, 10);
     @assert imgdata.data.length === imgdata.width*imgdata.height*4;
+    t.done();
 
 - name: 2d.imageData.get.order.cols
   desc: getImageData() returns leftmost columns first
@@ -5222,6 +5440,7 @@
     @assert imgdata.data[0] === 0;
     @assert imgdata.data[Math.round(imgdata.width/2*4)] === 255;
     @assert imgdata.data[Math.round((imgdata.height/2)*imgdata.width*4)] === 0;
+    t.done();
 
 - name: 2d.imageData.get.order.rows
   desc: getImageData() returns topmost rows first
@@ -5236,6 +5455,7 @@
     @assert imgdata.data[0] === 0;
     @assert imgdata.data[Math.floor(imgdata.width/2*4)] === 0;
     @assert imgdata.data[(imgdata.height/2)*imgdata.width*4] === 255;
+    t.done();
 
 - name: 2d.imageData.get.order.rgb
   desc: getImageData() returns R then G then B
@@ -5254,6 +5474,7 @@
     @assert imgdata.data[5] === 0x88;
     @assert imgdata.data[6] === 0xCC;
     @assert imgdata.data[7] === 255;
+    t.done();
 
 - name: 2d.imageData.get.order.alpha
   desc: getImageData() returns A in the fourth component
@@ -5265,6 +5486,7 @@
     var imgdata = ctx.getImageData(0, 0, 10, 10);
     @assert imgdata.data[3] < 200;
     @assert imgdata.data[3] > 100;
+    t.done();
 
 - name: 2d.imageData.get.unaffected
   desc: getImageData() is not affected by context state
@@ -5287,6 +5509,7 @@
     ctx.putImageData(imgdata, 50, 0);
     @assert pixel 25,25 ==~ 0,255,0,255;
     @assert pixel 75,25 ==~ 0,255,0,255;
+    t.done();
 
 
 - name: 2d.imageData.object.properties
@@ -5298,6 +5521,7 @@
     @assert typeof(imgdata.width) === 'number';
     @assert typeof(imgdata.height) === 'number';
     @assert typeof(imgdata.data) === 'object';
+    t.done();
 
 - name: 2d.imageData.object.readonly
   desc: ImageData objects properties are read-only
@@ -5318,6 +5542,7 @@
     @assert imgdata.data[1] === 0;
     @assert imgdata.data[2] === 0;
     @assert imgdata.data[3] === 0;
+    t.done();
 
 - name: 2d.imageData.object.set
   desc: ImageData.data can be modified
@@ -5329,6 +5554,7 @@
     @assert imgdata.data[0] === 100;
     imgdata.data[0] = 200;
     @assert imgdata.data[0] === 200;
+    t.done();
 
 - name: 2d.imageData.object.undefined
   desc: ImageData.data converts undefined to 0
@@ -5339,6 +5565,7 @@
     imgdata.data[0] = 100;
     imgdata.data[0] = undefined;
     @assert imgdata.data[0] === 0;
+    t.done();
 
 - name: 2d.imageData.object.nan
   desc: ImageData.data converts NaN to 0
@@ -5352,6 +5579,7 @@
     imgdata.data[0] = 100;
     imgdata.data[0] = "cheese";
     @assert imgdata.data[0] === 0;
+    t.done();
 
 - name: 2d.imageData.object.string
   desc: ImageData.data converts strings to numbers with ToNumber
@@ -5368,6 +5596,7 @@
     imgdata.data[0] = 100;
     imgdata.data[0] = " +130e0 ";
     @assert imgdata.data[0] === 130;
+    t.done();
 
 - name: 2d.imageData.object.clamp
   desc: ImageData.data clamps numbers to [0, 255]
@@ -5399,6 +5628,7 @@
     imgdata.data[0] = 100;
     imgdata.data[0] = Infinity;
     @assert imgdata.data[0] === 255;
+    t.done();
 
 - name: 2d.imageData.object.round
   desc: ImageData.data rounds numbers with round-to-zero
@@ -5434,6 +5664,7 @@
     @assert imgdata.data[0] === 0;
     imgdata.data[0] = -1.5;
     @assert imgdata.data[0] === 0;
+    t.done();
 
 - name: 2d.imageData.put.null
   desc: putImageData() with null imagedata throws TypeError
@@ -5441,6 +5672,7 @@
     - 2d.imageData.put.wrongtype
   code: |
     @assert throws TypeError ctx.putImageData(null, 0, 0);
+    t.done();
 
 - name: 2d.imageData.put.nonfinite
   desc: putImageData() throws TypeError if arguments are not finite
@@ -5450,6 +5682,7 @@
     var imgdata = ctx.getImageData(0, 0, 10, 10);
     @nonfinite @assert throws TypeError ctx.putImageData(<imgdata>, <10 Infinity -Infinity NaN>, <10 Infinity -Infinity NaN>);
     @nonfinite @assert throws TypeError ctx.putImageData(<imgdata>, <10 Infinity -Infinity NaN>, <10 Infinity -Infinity NaN>, <10 Infinity -Infinity NaN>, <10 Infinity -Infinity NaN>, <10 Infinity -Infinity NaN>, <10 Infinity -Infinity NaN>);
+    t.done();
 
 - name: 2d.imageData.put.basic
   desc: putImageData() puts image data from getImageData() onto the canvas
@@ -5464,6 +5697,7 @@
     ctx.fillRect(0, 0, 100, 50)
     ctx.putImageData(imgdata, 0, 0);
     @assert pixel 50,25 ==~ 0,255,0,255;
+    t.done();
 
 - name: 2d.imageData.put.created
   desc: putImageData() puts image data from createImageData() onto the canvas
@@ -5481,6 +5715,7 @@
     ctx.fillRect(0, 0, 100, 50)
     ctx.putImageData(imgdata, 0, 0);
     @assert pixel 50,25 ==~ 0,255,0,255;
+    t.done();
 
 - name: 2d.imageData.put.wrongtype
   desc: putImageData() does not accept non-ImageData objects
@@ -5491,6 +5726,7 @@
     @assert throws TypeError ctx.putImageData(imgdata, 0, 0);
     @assert throws TypeError ctx.putImageData("cheese", 0, 0);
     @assert throws TypeError ctx.putImageData(42, 0, 0);
+    t.done();
 
 - name: 2d.imageData.put.cross
   desc: putImageData() accepts image data got from a different canvas
@@ -5506,6 +5742,7 @@
     ctx.fillRect(0, 0, 100, 50)
     ctx.putImageData(imgdata, 0, 0);
     @assert pixel 50,25 ==~ 0,255,0,255;
+    t.done();
 
 - name: 2d.imageData.put.alpha
   desc: putImageData() puts non-solid image data correctly
@@ -5519,6 +5756,7 @@
     ctx.fillRect(0, 0, 100, 50)
     ctx.putImageData(imgdata, 0, 0);
     @assert pixel 50,25 ==~ 0,255,0,64;
+    t.done();
 
 - name: 2d.imageData.put.modified
   desc: putImageData() puts modified image data correctly
@@ -5537,6 +5775,7 @@
     }
     ctx.putImageData(imgdata, 45, 20);
     @assert pixel 50,25 ==~ 0,255,0,255;
+    t.done();
 
 - name: 2d.imageData.put.dirty.zero
   desc: putImageData() with zero-sized dirty rectangle puts nothing
@@ -5550,6 +5789,7 @@
     ctx.fillRect(0, 0, 100, 50)
     ctx.putImageData(imgdata, 0, 0, 0, 0, 0, 0);
     @assert pixel 50,25 ==~ 0,255,0,255;
+    t.done();
 
 - name: 2d.imageData.put.dirty.rect1
   desc: putImageData() only modifies areas inside the dirty rectangle, using width and height
@@ -5571,6 +5811,7 @@
     @assert pixel 65,25 ==~ 0,255,0,255;
     @assert pixel 50,15 ==~ 0,255,0,255;
     @assert pixel 50,45 ==~ 0,255,0,255;
+    t.done();
 
 - name: 2d.imageData.put.dirty.rect2
   desc: putImageData() only modifies areas inside the dirty rectangle, using x and y
@@ -5592,6 +5833,7 @@
     @assert pixel 65,25 ==~ 0,255,0,255;
     @assert pixel 50,15 ==~ 0,255,0,255;
     @assert pixel 50,45 ==~ 0,255,0,255;
+    t.done();
 
 - name: 2d.imageData.put.dirty.negative
   desc: putImageData() handles negative-sized dirty rectangles correctly
@@ -5613,6 +5855,7 @@
     @assert pixel 65,25 ==~ 0,255,0,255;
     @assert pixel 50,15 ==~ 0,255,0,255;
     @assert pixel 50,45 ==~ 0,255,0,255;
+    t.done();
 
 - name: 2d.imageData.put.dirty.outside
   desc: putImageData() handles dirty rectangles outside the canvas correctly
@@ -5635,6 +5878,7 @@
     @assert pixel 1,5 ==~ 0,255,0,255;
     @assert pixel 1,25 ==~ 0,255,0,255;
     @assert pixel 1,45 ==~ 0,255,0,255;
+    t.done();
 
 - name: 2d.imageData.put.unchanged
   desc: putImageData(getImageData(...), ...) has no effect
@@ -5657,6 +5901,7 @@
     for (var i = 0; i < imgdata2.data.length; ++i) {
         @assert olddata[i] === imgdata2.data[i];
     }
+    t.done();
 
 - name: 2d.imageData.put.unaffected
   desc: putImageData() is not affected by context state
@@ -5676,6 +5921,7 @@
     ctx.scale(0.1, 0.1);
     ctx.putImageData(imgdata, 0, 0);
     @assert pixel 50,25 ==~ 0,255,0,255;
+    t.done();
 
 - name: 2d.imageData.put.clip
   desc: putImageData() is not affected by clipping regions
@@ -5693,6 +5939,7 @@
     ctx.putImageData(imgdata, 0, 0);
     @assert pixel 25,25 ==~ 0,255,0,255;
     @assert pixel 75,25 ==~ 0,255,0,255;
+    t.done();
 
 - name: 2d.imageData.put.path
   desc: putImageData() does not affect the current path
@@ -5707,6 +5954,7 @@
     ctx.fillStyle = '#0f0';
     ctx.fill();
     @assert pixel 50,25 ==~ 0,255,0,255;
+    t.done();
 
 - name: 2d.line.defaults
   testing:
@@ -5719,6 +5967,7 @@
     @assert ctx.lineCap === 'butt';
     @assert ctx.lineJoin === 'miter';
     @assert ctx.miterLimit === 10;
+    t.done();
 
 - name: 2d.line.width.basic
   desc: lineWidth determines the width of line strokes
@@ -5758,6 +6007,7 @@
     @assert pixel 84,25 == 0,255,0,255;
     @assert pixel 85,25 == 0,255,0,255;
     @assert pixel 86,25 == 0,255,0,255;
+    t.done();
 
 - name: 2d.line.width.transformed
   desc: Line stroke widths are affected by scale transformations
@@ -5803,6 +6053,7 @@
     @assert pixel 84,25 == 0,255,0,255;
     @assert pixel 85,25 == 0,255,0,255;
     @assert pixel 86,25 == 0,255,0,255;
+    t.done();
 
 - name: 2d.line.width.scaledefault
   desc: Default lineWidth strokes are affected by scale transformations
@@ -5821,6 +6072,7 @@
     @assert pixel 75,25 == 0,255,0,255;
     @assert pixel 50,5 == 0,255,0,255;
     @assert pixel 50,45 == 0,255,0,255;
+    t.done();
 
 - name: 2d.line.width.valid
   desc: Setting lineWidth to valid values works
@@ -5836,6 +6088,7 @@
     @assert ctx.lineWidth === 1/1024;
     ctx.lineWidth = 1000;
     @assert ctx.lineWidth === 1000;
+    t.done();
 
 - name: 2d.line.width.invalid
   desc: Setting lineWidth to invalid values is ignored
@@ -5859,6 +6112,7 @@
     ctx.lineWidth = 1.5;
     ctx.lineWidth = NaN;
     @assert ctx.lineWidth === 1.5;
+    t.done();
 
 - name: 2d.line.cap.butt
   desc: lineCap 'butt' is rendered correctly
@@ -5895,6 +6149,7 @@
     @assert pixel 75,34 == 0,255,0,255;
     @assert pixel 75,35 == 0,255,0,255;
     @assert pixel 75,36 == 0,255,0,255;
+    t.done();
 
 - name: 2d.line.cap.round
   desc: lineCap 'round' is rendered correctly
@@ -5940,6 +6195,7 @@
     @assert pixel 67,43 == 0,255,0,255;
     @assert pixel 75,43 == 0,255,0,255;
     @assert pixel 82,43 == 0,255,0,255;
+    t.done();
 
 - name: 2d.line.cap.square
   desc: lineCap 'square' is rendered correctly
@@ -5976,6 +6232,7 @@
     @assert pixel 75,44 == 0,255,0,255;
     @assert pixel 75,45 == 0,255,0,255;
     @assert pixel 75,46 == 0,255,0,255;
+    t.done();
 
 - name: 2d.line.cap.open
   desc: Line caps are drawn at the corners of an unclosed rectangle
@@ -5999,6 +6256,7 @@
     @assert pixel 48,1 == 0,255,0,255;
     @assert pixel 48,48 == 0,255,0,255;
     @assert pixel 1,48 == 0,255,0,255;
+    t.done();
 
 - name: 2d.line.cap.closed
   desc: Line caps are not drawn at the corners of an unclosed rectangle
@@ -6022,6 +6280,7 @@
     @assert pixel 48,1 == 0,255,0,255;
     @assert pixel 48,48 == 0,255,0,255;
     @assert pixel 1,48 == 0,255,0,255;
+    t.done();
 
 - name: 2d.line.cap.valid
   desc: Setting lineCap to valid values works
@@ -6035,6 +6294,7 @@
     @assert ctx.lineCap === 'round';
     ctx.lineCap = 'square';
     @assert ctx.lineCap === 'square';
+    t.done();
 
 - name: 2d.line.cap.invalid
   desc: Setting lineCap to invalid values is ignored
@@ -6061,6 +6321,7 @@
     ctx.lineCap = 'butt';
     ctx.lineCap = 'bevel';
     @assert ctx.lineCap === 'butt';
+    t.done();
 
 - name: 2d.line.join.bevel
   desc: lineJoin 'bevel' is rendered correctly
@@ -6111,6 +6372,7 @@
     @assert pixel 85,15 == 0,255,0,255;
     @assert pixel 86,15 == 0,255,0,255;
     @assert pixel 86,14 == 0,255,0,255;
+    t.done();
 
 - name: 2d.line.join.round
   desc: lineJoin 'round' is rendered correctly
@@ -6158,6 +6420,7 @@
     @assert pixel 87,13 == 0,255,0,255;
     @assert pixel 88,13 == 0,255,0,255;
     @assert pixel 88,12 == 0,255,0,255;
+    t.done();
 
 - name: 2d.line.join.miter
   desc: lineJoin 'miter' is rendered correctly
@@ -6198,6 +6461,7 @@
     @assert pixel 90,10 == 0,255,0,255;
     @assert pixel 91,9 == 0,255,0,255;
     @assert pixel 92,8 == 0,255,0,255;
+    t.done();
 
 - name: 2d.line.join.open
   desc: Line joins are not drawn at the corner of an unclosed rectangle
@@ -6220,6 +6484,7 @@
     @assert pixel 48,1 == 0,255,0,255;
     @assert pixel 48,48 == 0,255,0,255;
     @assert pixel 1,48 == 0,255,0,255;
+    t.done();
 
 - name: 2d.line.join.closed
   desc: Line joins are drawn at the corner of a closed rectangle
@@ -6242,6 +6507,7 @@
     @assert pixel 48,1 == 0,255,0,255;
     @assert pixel 48,48 == 0,255,0,255;
     @assert pixel 1,48 == 0,255,0,255;
+    t.done();
 
 - name: 2d.line.join.parallel
   desc: Line joins are drawn at 180-degree joins
@@ -6262,6 +6528,7 @@
     @assert pixel 48,1 == 0,255,0,255;
     @assert pixel 48,48 == 0,255,0,255;
     @assert pixel 1,48 == 0,255,0,255;
+    t.done();
 
 - name: 2d.line.join.valid
   desc: Setting lineJoin to valid values works
@@ -6275,6 +6542,7 @@
     @assert ctx.lineJoin === 'round';
     ctx.lineJoin = 'miter';
     @assert ctx.lineJoin === 'miter';
+    t.done();
 
 - name: 2d.line.join.invalid
   desc: Setting lineJoin to invalid values is ignored
@@ -6301,6 +6569,7 @@
     ctx.lineJoin = 'bevel';
     ctx.lineJoin = 'butt';
     @assert ctx.lineJoin === 'bevel';
+    t.done();
 
 - name: 2d.line.miter.exceeded
   desc: Miter joins are not drawn when the miter limit is exceeded
@@ -6323,6 +6592,7 @@
     @assert pixel 48,1 == 0,255,0,255;
     @assert pixel 48,48 == 0,255,0,255;
     @assert pixel 1,48 == 0,255,0,255;
+    t.done();
 
 - name: 2d.line.miter.acute
   desc: Miter joins are drawn correctly with acute angles
@@ -6352,6 +6622,7 @@
     @assert pixel 48,1 == 0,255,0,255;
     @assert pixel 48,48 == 0,255,0,255;
     @assert pixel 1,48 == 0,255,0,255;
+    t.done();
 
 - name: 2d.line.miter.obtuse
   desc: Miter joins are drawn correctly with obtuse angles
@@ -6381,6 +6652,7 @@
     @assert pixel 48,1 == 0,255,0,255;
     @assert pixel 48,48 == 0,255,0,255;
     @assert pixel 1,48 == 0,255,0,255;
+    t.done();
 
 - name: 2d.line.miter.rightangle
   desc: Miter joins are not drawn when the miter limit is exceeded, on exact right angles
@@ -6402,6 +6674,7 @@
     @assert pixel 48,1 == 0,255,0,255;
     @assert pixel 48,48 == 0,255,0,255;
     @assert pixel 1,48 == 0,255,0,255;
+    t.done();
 
 - name: 2d.line.miter.lineedge
   desc: Miter joins are not drawn when the miter limit is exceeded at the corners of a zero-height rectangle
@@ -6420,6 +6693,7 @@
     @assert pixel 48,1 == 0,255,0,255;
     @assert pixel 48,48 == 0,255,0,255;
     @assert pixel 1,48 == 0,255,0,255;
+    t.done();
 
 - name: 2d.line.miter.within
   desc: Miter joins are drawn when the miter limit is not quite exceeded
@@ -6441,6 +6715,7 @@
     @assert pixel 48,1 == 0,255,0,255;
     @assert pixel 48,48 == 0,255,0,255;
     @assert pixel 1,48 == 0,255,0,255;
+    t.done();
 
 - name: 2d.line.miter.valid
   desc: Setting miterLimit to valid values works
@@ -6456,6 +6731,7 @@
     @assert ctx.miterLimit === 1/1024;
     ctx.miterLimit = 1000;
     @assert ctx.miterLimit === 1000;
+    t.done();
 
 - name: 2d.line.miter.invalid
   desc: Setting miterLimit to invalid values is ignored
@@ -6479,6 +6755,7 @@
     ctx.miterLimit = 1.5;
     ctx.miterLimit = NaN;
     @assert ctx.miterLimit === 1.5;
+    t.done();
 
 - name: 2d.line.cross
   code: |
@@ -6496,6 +6773,7 @@
     @assert pixel 48,1 == 0,255,0,255;
     @assert pixel 48,48 == 0,255,0,255;
     @assert pixel 1,48 == 0,255,0,255;
+    t.done();
 
 - name: 2d.line.union
   code: |
@@ -6516,6 +6794,7 @@
     @assert pixel 1,48 == 0,255,0,255;
     @assert pixel 25,1 == 0,255,0,255;
     @assert pixel 48,48 == 0,255,0,255;
+    t.done();
 
 - name: 2d.path.initial
   testing:
@@ -6527,6 +6806,7 @@
     ctx.fillStyle = '#f00';
     ctx.fill();
     @assert pixel 50,25 == 0,255,0,255;
+    t.done();
 
 - name: 2d.path.beginPath
   testing:
@@ -6539,6 +6819,7 @@
     ctx.fillStyle = '#f00';
     ctx.fill();
     @assert pixel 50,25 == 0,255,0,255;
+    t.done();
 
 - name: 2d.path.moveTo.basic
   testing:
@@ -6554,6 +6835,7 @@
     ctx.fillStyle = '#0f0';
     ctx.fill();
     @assert pixel 90,25 == 0,255,0,255;
+    t.done();
 
 - name: 2d.path.moveTo.newsubpath
   testing:
@@ -6569,6 +6851,7 @@
     ctx.fillStyle = '#f00';
     ctx.fill();
     @assert pixel 50,25 == 0,255,0,255;
+    t.done();
 
 - name: 2d.path.moveTo.multiple
   testing:
@@ -6584,6 +6867,7 @@
     ctx.lineWidth = 50;
     ctx.stroke();
     @assert pixel 50,25 == 0,255,0,255;
+    t.done();
 
 - name: 2d.path.moveTo.nonfinite
   desc: moveTo() with Infinity/NaN is ignored
@@ -6598,6 +6882,7 @@
     ctx.fillStyle = '#0f0';
     ctx.fill();
     @assert pixel 50,25 == 0,255,0,255;
+    t.done();
 
 - name: 2d.path.closePath.empty
   testing:
@@ -6609,6 +6894,7 @@
     ctx.fillStyle = '#f00';
     ctx.fill();
     @assert pixel 50,25 == 0,255,0,255;
+    t.done();
 
 - name: 2d.path.closePath.newline
   testing:
@@ -6625,6 +6911,7 @@
     ctx.closePath();
     ctx.stroke();
     @assert pixel 50,25 == 0,255,0,255;
+    t.done();
 
 - name: 2d.path.closePath.nextpoint
   testing:
@@ -6640,6 +6927,7 @@
     ctx.lineTo(1000, 25);
     ctx.stroke();
     @assert pixel 50,25 == 0,255,0,255;
+    t.done();
 
 - name: 2d.path.lineTo.ensuresubpath.1
   desc: If there is no subpath, the point is added and nothing is drawn
@@ -6655,6 +6943,7 @@
     ctx.lineTo(100, 50);
     ctx.stroke();
     @assert pixel 50,25 == 0,255,0,255;
+    t.done();
 
 - name: 2d.path.lineTo.ensuresubpath.2
   desc: If there is no subpath, the point is added and used for subsequent drawing
@@ -6671,6 +6960,7 @@
     ctx.lineTo(100, 25);
     ctx.stroke();
     @assert pixel 50,25 == 0,255,0,255;
+    t.done();
 
 - name: 2d.path.lineTo.basic
   testing:
@@ -6685,6 +6975,7 @@
     ctx.lineTo(100, 25);
     ctx.stroke();
     @assert pixel 50,25 == 0,255,0,255;
+    t.done();
 
 - name: 2d.path.lineTo.nextpoint
   testing:
@@ -6700,6 +6991,7 @@
     ctx.lineTo(100, 25);
     ctx.stroke();
     @assert pixel 50,25 == 0,255,0,255;
+    t.done();
 
 - name: 2d.path.lineTo.nonfinite
   desc: lineTo() with Infinity/NaN is ignored
@@ -6715,6 +7007,7 @@
     ctx.fill();
     @assert pixel 50,25 == 0,255,0,255;
     @assert pixel 90,45 == 0,255,0,255;
+    t.done();
 
 - name: 2d.path.lineTo.nonfinite.details
   desc: lineTo() with Infinity/NaN for first arg still converts the second arg
@@ -6726,6 +7019,7 @@
       ctx.lineTo(arg1, { valueOf: function() { converted = true; return 0; } });
       @assert converted;
     }
+    t.done();
 
 - name: 2d.path.quadraticCurveTo.ensuresubpath.1
   desc: If there is no subpath, the first control point is added (and nothing is drawn up to it)
@@ -6742,6 +7036,7 @@
     ctx.stroke();
     @assert pixel 50,25 == 0,255,0,255;
     @assert pixel 95,45 == 0,255,0,255; @moz-todo
+    t.done();
 
 - name: 2d.path.quadraticCurveTo.ensuresubpath.2
   desc: If there is no subpath, the first control point is added
@@ -6758,6 +7053,7 @@
     ctx.stroke();
     @assert pixel 50,25 == 0,255,0,255;
     @assert pixel 5,45 == 0,255,0,255; @moz-todo
+    t.done();
 
 - name: 2d.path.quadraticCurveTo.basic
   testing:
@@ -6772,6 +7068,7 @@
     ctx.quadraticCurveTo(100, 25, 100, 25);
     ctx.stroke();
     @assert pixel 50,25 == 0,255,0,255;
+    t.done();
 
 - name: 2d.path.quadraticCurveTo.shape
   testing:
@@ -6790,6 +7087,7 @@
     @assert pixel 98,1 == 0,255,0,255;
     @assert pixel 1,48 == 0,255,0,255;
     @assert pixel 98,48 == 0,255,0,255;
+    t.done();
 
 - name: 2d.path.quadraticCurveTo.scaled
   testing:
@@ -6809,6 +7107,7 @@
     @assert pixel 98,1 == 0,255,0,255;
     @assert pixel 1,48 == 0,255,0,255;
     @assert pixel 98,48 == 0,255,0,255;
+    t.done();
 
 - name: 2d.path.quadraticCurveTo.nonfinite
   desc: quadraticCurveTo() with Infinity/NaN is ignored
@@ -6824,6 +7123,7 @@
     ctx.fill();
     @assert pixel 50,25 == 0,255,0,255;
     @assert pixel 90,45 == 0,255,0,255;
+    t.done();
 
 - name: 2d.path.bezierCurveTo.ensuresubpath.1
   desc: If there is no subpath, the first control point is added (and nothing is drawn up to it)
@@ -6840,6 +7140,7 @@
     ctx.stroke();
     @assert pixel 50,25 == 0,255,0,255;
     @assert pixel 95,45 == 0,255,0,255;
+    t.done();
 
 - name: 2d.path.bezierCurveTo.ensuresubpath.2
   desc: If there is no subpath, the first control point is added
@@ -6856,6 +7157,7 @@
     ctx.stroke();
     @assert pixel 50,25 == 0,255,0,255;
     @assert pixel 5,45 == 0,255,0,255;
+    t.done();
 
 - name: 2d.path.bezierCurveTo.basic
   testing:
@@ -6870,6 +7172,7 @@
     ctx.bezierCurveTo(100, 25, 100, 25, 100, 25);
     ctx.stroke();
     @assert pixel 50,25 == 0,255,0,255;
+    t.done();
 
 - name: 2d.path.bezierCurveTo.shape
   testing:
@@ -6888,6 +7191,7 @@
     @assert pixel 98,1 == 0,255,0,255;
     @assert pixel 1,48 == 0,255,0,255;
     @assert pixel 98,48 == 0,255,0,255;
+    t.done();
 
 - name: 2d.path.bezierCurveTo.scaled
   testing:
@@ -6907,6 +7211,7 @@
     @assert pixel 98,1 == 0,255,0,255;
     @assert pixel 1,48 == 0,255,0,255;
     @assert pixel 98,48 == 0,255,0,255;
+    t.done();
 
 - name: 2d.path.bezierCurveTo.nonfinite
   desc: bezierCurveTo() with Infinity/NaN is ignored
@@ -6922,6 +7227,7 @@
     ctx.fill();
     @assert pixel 50,25 == 0,255,0,255;
     @assert pixel 90,45 == 0,255,0,255;
+    t.done();
 
 - name: 2d.path.arcTo.ensuresubpath.1
   desc: If there is no subpath, the first control point is added (and nothing is drawn up to it)
@@ -6937,6 +7243,7 @@
     ctx.arcTo(100, 50, 200, 50, 0.1);
     ctx.stroke();
     @assert pixel 50,25 == 0,255,0,255;
+    t.done();
 
 - name: 2d.path.arcTo.ensuresubpath.2
   desc: If there is no subpath, the first control point is added
@@ -6953,6 +7260,7 @@
     ctx.lineTo(100, 25);
     ctx.stroke();
     @assert pixel 50,25 == 0,255,0,255;
+    t.done();
 
 - name: 2d.path.arcTo.coincide.1
   desc: arcTo() has no effect if P0 = P1
@@ -6976,6 +7284,7 @@
     @assert pixel 50,1 == 0,255,0,255;
     @assert pixel 50,25 == 0,255,0,255;
     @assert pixel 50,48 == 0,255,0,255;
+    t.done();
 
 - name: 2d.path.arcTo.coincide.2
   desc: arcTo() draws a straight line to P1 if P1 = P2
@@ -6991,6 +7300,7 @@
     ctx.arcTo(100, 25, 100, 25, 1);
     ctx.stroke();
     @assert pixel 50,25 == 0,255,0,255;
+    t.done();
 
 - name: 2d.path.arcTo.collinear.1
   desc: arcTo() with all points on a line, and P1 between P0/P2, draws a straight line to P1
@@ -7011,6 +7321,7 @@
     ctx.arcTo(0, 25, 100, 25, 1);
     ctx.stroke();
     @assert pixel 50,25 == 0,255,0,255;
+    t.done();
 
 - name: 2d.path.arcTo.collinear.2
   desc: arcTo() with all points on a line, and P2 between P0/P1, draws a straight line to P1
@@ -7031,6 +7342,7 @@
     ctx.arcTo(200, 25, 110, 25, 1);
     ctx.stroke();
     @assert pixel 50,25 == 0,255,0,255;
+    t.done();
 
 - name: 2d.path.arcTo.collinear.3
   desc: arcTo() with all points on a line, and P0 between P1/P2, draws a straight line to P1
@@ -7055,6 +7367,7 @@
     ctx.arcTo(0, 25, -200, 25, 1);
     ctx.stroke();
     @assert pixel 50,25 == 0,255,0,255;
+    t.done();
 
 - name: 2d.path.arcTo.shape.curve1
   desc: arcTo() curves in the right kind of shape
@@ -7091,6 +7404,7 @@
     @assert pixel 80,45 == 0,255,0,255;
     @assert pixel 80,46 == 0,255,0,255;
     @assert pixel 65,45 == 0,255,0,255;
+    t.done();
 
 - name: 2d.path.arcTo.shape.curve2
   desc: arcTo() curves in the right kind of shape
@@ -7126,6 +7440,7 @@
     @assert pixel 80,44 == 0,255,0,255;
     @assert pixel 80,45 == 0,255,0,255;
     @assert pixel 80,46 == 0,255,0,255;
+    t.done();
 
 - name: 2d.path.arcTo.shape.start
   desc: arcTo() draws a straight line from P0 to P1
@@ -7145,6 +7460,7 @@
     @assert pixel 50,25 == 0,255,0,255;
     @assert pixel 98,1 == 0,255,0,255;
     @assert pixel 98,48 == 0,255,0,255;
+    t.done();
 
 - name: 2d.path.arcTo.shape.end
   desc: arcTo() does not draw anything from P1 to P2
@@ -7164,6 +7480,7 @@
     @assert pixel 50,25 == 0,255,0,255;
     @assert pixel 98,1 == 0,255,0,255;
     @assert pixel 98,48 == 0,255,0,255;
+    t.done();
 
 - name: 2d.path.arcTo.negative
   desc: arcTo() with negative radius throws an exception
@@ -7171,6 +7488,7 @@
     - 2d.path.arcTo.negative
   code: |
     @assert throws INDEX_SIZE_ERR ctx.arcTo(0, 0, 0, 0, -1);
+    t.done();
 
 - name: 2d.path.arcTo.zero.1
   desc: arcTo() with zero radius draws a straight line from P0 to P1
@@ -7191,6 +7509,7 @@
     ctx.arcTo(50, -25, 50, 50, 0);
     ctx.stroke();
     @assert pixel 50,25 == 0,255,0,255;
+    t.done();
 
 - name: 2d.path.arcTo.zero.2
   desc: arcTo() with zero radius draws a straight line from P0 to P1, even when all points are collinear
@@ -7211,6 +7530,7 @@
     ctx.arcTo(200, 25, 50, 25, 0);
     ctx.stroke();
     @assert pixel 50,25 == 0,255,0,255;
+    t.done();
 
 - name: 2d.path.arcTo.transformation
   desc: arcTo joins up to the last subpath point correctly
@@ -7233,6 +7553,7 @@
     @assert pixel 0,49 == 0,255,0,255;
     @assert pixel 50,49 == 0,255,0,255;
     @assert pixel 99,49 == 0,255,0,255;
+    t.done();
 
 - name: 2d.path.arcTo.scale
   desc: arcTo scales the curve, not just the control points
@@ -7256,6 +7577,7 @@
     @assert pixel 0,49 == 0,255,0,255;
     @assert pixel 50,49 == 0,255,0,255;
     @assert pixel 99,49 == 0,255,0,255;
+    t.done();
 
 - name: 2d.path.arcTo.nonfinite
   desc: arcTo() with Infinity/NaN is ignored
@@ -7271,6 +7593,7 @@
     ctx.fill();
     @assert pixel 50,25 == 0,255,0,255;
     @assert pixel 90,45 == 0,255,0,255;
+    t.done();
 
 
 - name: 2d.path.arc.empty
@@ -7286,6 +7609,7 @@
     ctx.arc(200, 25, 5, 0, 2*Math.PI, true);
     ctx.stroke();
     @assert pixel 50,25 == 0,255,0,255;
+    t.done();
 
 - name: 2d.path.arc.nonempty
   desc: arc() with a non-empty path does draw a straight line to the start point
@@ -7301,6 +7625,7 @@
     ctx.arc(200, 25, 5, 0, 2*Math.PI, true);
     ctx.stroke();
     @assert pixel 50,25 == 0,255,0,255;
+    t.done();
 
 - name: 2d.path.arc.end
   desc: arc() adds the end point of the arc to the subpath
@@ -7317,6 +7642,7 @@
     ctx.lineTo(100, 25);
     ctx.stroke();
     @assert pixel 50,25 == 0,255,0,255;
+    t.done();
 
 - name: 2d.path.arc.default
   desc: arc() with missing last argument defaults to clockwise
@@ -7331,6 +7657,7 @@
     ctx.arc(100, 0, 150, -Math.PI, Math.PI/2);
     ctx.fill();
     @assert pixel 50,25 == 0,255,0,255;
+    t.done();
 
 - name: 2d.path.arc.angle.1
   desc: arc() draws pi/2 .. -pi anticlockwise correctly
@@ -7345,6 +7672,7 @@
     ctx.arc(100, 0, 150, Math.PI/2, -Math.PI, true);
     ctx.fill();
     @assert pixel 50,25 == 0,255,0,255;
+    t.done();
 
 - name: 2d.path.arc.angle.2
   desc: arc() draws -3pi/2 .. -pi anticlockwise correctly
@@ -7359,6 +7687,7 @@
     ctx.arc(100, 0, 150, -3*Math.PI/2, -Math.PI, true);
     ctx.fill();
     @assert pixel 50,25 == 0,255,0,255;
+    t.done();
 
 - name: 2d.path.arc.angle.3
   desc: arc() wraps angles mod 2pi when anticlockwise and end > start+2pi
@@ -7373,6 +7702,7 @@
     ctx.arc(100, 0, 150, (512+1/2)*Math.PI, (1024-1)*Math.PI, true);
     ctx.fill();
     @assert pixel 50,25 == 0,255,0,255;
+    t.done();
 
 - name: 2d.path.arc.angle.4
   desc: arc() draws a full circle when clockwise and end > start+2pi
@@ -7390,6 +7720,7 @@
     @assert pixel 98,1 == 0,255,0,255;
     @assert pixel 1,48 == 0,255,0,255;
     @assert pixel 98,48 == 0,255,0,255;
+    t.done();
 
 - name: 2d.path.arc.angle.5
   desc: arc() wraps angles mod 2pi when clockwise and start > end+2pi
@@ -7404,6 +7735,7 @@
     ctx.arc(100, 0, 150, (1024-1)*Math.PI, (512+1/2)*Math.PI, false);
     ctx.fill();
     @assert pixel 50,25 == 0,255,0,255;
+    t.done();
 
 - name: 2d.path.arc.angle.6
   desc: arc() draws a full circle when anticlockwise and start > end+2pi
@@ -7421,6 +7753,7 @@
     @assert pixel 98,1 == 0,255,0,255;
     @assert pixel 1,48 == 0,255,0,255;
     @assert pixel 98,48 == 0,255,0,255;
+    t.done();
 
 - name: 2d.path.arc.zero.1
   desc: arc() draws nothing when startAngle = endAngle and anticlockwise
@@ -7435,6 +7768,7 @@
     ctx.arc(50, 25, 50, 0, 0, true);
     ctx.stroke();
     @assert pixel 50,20 == 0,255,0,255;
+    t.done();
 
 - name: 2d.path.arc.zero.2
   desc: arc() draws nothing when startAngle = endAngle and clockwise
@@ -7449,6 +7783,7 @@
     ctx.arc(50, 25, 50, 0, 0, false);
     ctx.stroke();
     @assert pixel 50,20 == 0,255,0,255;
+    t.done();
 
 - name: 2d.path.arc.twopie.1
   desc: arc() draws nothing when end = start + 2pi-e and anticlockwise
@@ -7463,6 +7798,7 @@
     ctx.arc(50, 25, 50, 0, 2*Math.PI - 1e-4, true);
     ctx.stroke();
     @assert pixel 50,20 == 0,255,0,255;
+    t.done();
 
 - name: 2d.path.arc.twopie.2
   desc: arc() draws a full circle when end = start + 2pi-e and clockwise
@@ -7477,6 +7813,7 @@
     ctx.arc(50, 25, 50, 0, 2*Math.PI - 1e-4, false);
     ctx.stroke();
     @assert pixel 50,20 == 0,255,0,255;
+    t.done();
 
 - name: 2d.path.arc.twopie.3
   desc: arc() draws a full circle when end = start + 2pi+e and anticlockwise
@@ -7491,6 +7828,7 @@
     ctx.arc(50, 25, 50, 0, 2*Math.PI + 1e-4, true);
     ctx.stroke();
     @assert pixel 50,20 == 0,255,0,255;
+    t.done();
 
 - name: 2d.path.arc.twopie.4
   desc: arc() draws nothing when end = start + 2pi+e and clockwise
@@ -7505,6 +7843,7 @@
     ctx.arc(50, 25, 50, 0, 2*Math.PI + 1e-4, false);
     ctx.stroke();
     @assert pixel 50,20 == 0,255,0,255;
+    t.done();
 
 - name: 2d.path.arc.shape.1
   desc: arc() from 0 to pi does not draw anything in the wrong half
@@ -7524,6 +7863,7 @@
     @assert pixel 1,48 == 0,255,0,255;
     @assert pixel 20,48 == 0,255,0,255;
     @assert pixel 98,48 == 0,255,0,255;
+    t.done();
 
 - name: 2d.path.arc.shape.2
   desc: arc() from 0 to pi draws stuff in the right half
@@ -7543,6 +7883,7 @@
     @assert pixel 1,48 == 0,255,0,255;
     @assert pixel 20,48 == 0,255,0,255;
     @assert pixel 98,48 == 0,255,0,255;
+    t.done();
 
 - name: 2d.path.arc.shape.3
   desc: arc() from 0 to -pi/2 does not draw anything in the wrong quadrant
@@ -7561,6 +7902,7 @@
     @assert pixel 98,1 == 0,255,0,255;
     @assert pixel 1,48 == 0,255,0,255; @moz-todo
     @assert pixel 98,48 == 0,255,0,255;
+    t.done();
 
 - name: 2d.path.arc.shape.4
   desc: arc() from 0 to -pi/2 draws stuff in the right quadrant
@@ -7579,6 +7921,7 @@
     @assert pixel 98,1 == 0,255,0,255;
     @assert pixel 1,48 == 0,255,0,255;
     @assert pixel 98,48 == 0,255,0,255;
+    t.done();
 
 - name: 2d.path.arc.shape.5
   desc: arc() from 0 to 5pi does not draw crazy things
@@ -7597,6 +7940,7 @@
     @assert pixel 98,1 == 0,255,0,255;
     @assert pixel 1,48 == 0,255,0,255;
     @assert pixel 98,48 == 0,255,0,255;
+    t.done();
 
 - name: 2d.path.arc.selfintersect.1
   desc: arc() with lineWidth > 2*radius is drawn sensibly
@@ -7615,6 +7959,7 @@
     ctx.stroke();
     @assert pixel 1,1 == 0,255,0,255; @moz-todo
     @assert pixel 50,25 == 0,255,0,255;
+    t.done();
 
 - name: 2d.path.arc.selfintersect.2
   desc: arc() with lineWidth > 2*radius is drawn sensibly
@@ -7637,6 +7982,7 @@
     @assert pixel 97,2 == 0,255,0,255;
     @assert pixel 97,3 == 0,255,0,255;
     @assert pixel 2,48 == 0,255,0,255;
+    t.done();
 
 - name: 2d.path.arc.negative
   desc: arc() with negative radius throws INDEX_SIZE_ERR
@@ -7644,6 +7990,7 @@
     - 2d.path.arc.negative
   code: |
     @assert throws INDEX_SIZE_ERR ctx.arc(0, 0, -1, 0, 0, true);
+    t.done();
 
 - name: 2d.path.arc.zeroradius
   desc: arc() with zero radius draws a line to the start point
@@ -7659,6 +8006,7 @@
     ctx.arc(200, 25, 0, 0, Math.PI, true);
     ctx.stroke();
     @assert pixel 50,25 == 0,255,0,255;
+    t.done();
 
 - name: 2d.path.arc.scale.1
   desc: Non-uniformly scaled arcs are the right shape
@@ -7692,6 +8040,7 @@
     @assert pixel 0,49 == 0,255,0,255;
     @assert pixel 50,49 == 0,255,0,255;
     @assert pixel 99,49 == 0,255,0,255;
+    t.done();
 
 - name: 2d.path.arc.scale.2
   desc: Highly scaled arcs are the right shape
@@ -7715,6 +8064,7 @@
     @assert pixel 1,48 == 0,255,0,255;
     @assert pixel 50,48 == 0,255,0,255;
     @assert pixel 98,48 == 0,255,0,255;
+    t.done();
 
 - name: 2d.path.arc.nonfinite
   desc: arc() with Infinity/NaN is ignored
@@ -7732,6 +8082,7 @@
     ctx.fill();
     @assert pixel 50,25 == 0,255,0,255;
     @assert pixel 90,45 == 0,255,0,255;
+    t.done();
 
 
 - name: 2d.path.rect.basic
@@ -7744,6 +8095,7 @@
     ctx.rect(0, 0, 100, 50);
     ctx.fill();
     @assert pixel 50,25 == 0,255,0,255;
+    t.done();
 
 - name: 2d.path.rect.newsubpath
   testing:
@@ -7759,6 +8111,7 @@
     ctx.rect(200, 25, 1, 1);
     ctx.stroke();
     @assert pixel 50,25 == 0,255,0,255;
+    t.done();
 
 - name: 2d.path.rect.closed
   testing:
@@ -7772,6 +8125,7 @@
     ctx.rect(100, 50, 100, 100);
     ctx.stroke();
     @assert pixel 50,25 == 0,255,0,255;
+    t.done();
 
 - name: 2d.path.rect.end.1
   testing:
@@ -7785,6 +8139,7 @@
     ctx.lineTo(-2000, -1000);
     ctx.stroke();
     @assert pixel 50,25 == 0,255,0,255;
+    t.done();
 
 - name: 2d.path.rect.end.2
   testing:
@@ -7803,6 +8158,7 @@
     @assert pixel 98,1 == 0,255,0,255;
     @assert pixel 1,48 == 0,255,0,255;
     @assert pixel 98,48 == 0,255,0,255;
+    t.done();
 
 - name: 2d.path.rect.zero.1
   testing:
@@ -7816,6 +8172,7 @@
     ctx.rect(0, 50, 100, 0);
     ctx.stroke();
     @assert pixel 50,25 == 0,255,0,255;
+    t.done();
 
 - name: 2d.path.rect.zero.2
   testing:
@@ -7829,6 +8186,7 @@
     ctx.rect(50, -100, 0, 250);
     ctx.stroke();
     @assert pixel 50,25 == 0,255,0,255;
+    t.done();
 
 - name: 2d.path.rect.zero.3
   testing:
@@ -7842,6 +8200,7 @@
     ctx.rect(50, 25, 0, 0);
     ctx.stroke();
     @assert pixel 50,25 == 0,255,0,255;
+    t.done();
 
 - name: 2d.path.rect.zero.4
   testing:
@@ -7855,6 +8214,7 @@
     ctx.lineTo(0, 25);
     ctx.stroke();
     @assert pixel 50,25 == 0,255,0,255;
+    t.done();
 
 - name: 2d.path.rect.zero.5
   testing:
@@ -7868,6 +8228,7 @@
     ctx.rect(100, 25, 0, 0);
     ctx.stroke();
     @assert pixel 50,25 == 0,255,0,255;
+    t.done();
 
 - name: 2d.path.rect.zero.6
   testing:
@@ -7883,6 +8244,7 @@
     ctx.rect(100, 25, 1000, 0);
     ctx.stroke();
     @assert pixel 50,25 == 0,255,0,255; @moz-todo
+    t.done();
 
 - name: 2d.path.rect.negative
   testing:
@@ -7901,6 +8263,7 @@
     @assert pixel 75,12 == 0,255,0,255;
     @assert pixel 25,37 == 0,255,0,255;
     @assert pixel 75,37 == 0,255,0,255;
+    t.done();
 
 - name: 2d.path.rect.winding
   testing:
@@ -7919,6 +8282,7 @@
     @assert pixel 75,12 == 0,255,0,255;
     @assert pixel 25,37 == 0,255,0,255;
     @assert pixel 75,37 == 0,255,0,255;
+    t.done();
 
 - name: 2d.path.rect.selfintersect
   code: |
@@ -7930,6 +8294,7 @@
     ctx.rect(45, 20, 10, 10);
     ctx.stroke();
     @assert pixel 50,25 == 0,255,0,255; @moz-todo
+    t.done();
 
 - name: 2d.path.rect.nonfinite
   desc: rect() with Infinity/NaN is ignored
@@ -7945,6 +8310,7 @@
     ctx.fill();
     @assert pixel 50,25 == 0,255,0,255;
     @assert pixel 90,45 == 0,255,0,255;
+    t.done();
 
 - name: 2d.path.fill.overlap
   testing:
@@ -7958,6 +8324,7 @@
     ctx.rect(10, 10, 80, 30);
     ctx.fill();
     @assert pixel 50,25 ==~ 0,127,0,255 +/- 1;
+    t.done();
 
 - name: 2d.path.fill.winding.add
   testing:
@@ -7977,6 +8344,7 @@
     ctx.lineTo(0, 50);
     ctx.fill();
     @assert pixel 50,25 == 0,255,0,255;
+    t.done();
 
 - name: 2d.path.fill.winding.subtract.1
   testing:
@@ -7996,6 +8364,7 @@
     ctx.lineTo(100, 0);
     ctx.fill();
     @assert pixel 50,25 == 0,255,0,255;
+    t.done();
 
 - name: 2d.path.fill.winding.subtract.2
   testing:
@@ -8014,6 +8383,7 @@
     ctx.lineTo(100, 0);
     ctx.fill();
     @assert pixel 50,25 == 0,255,0,255;
+    t.done();
 
 - name: 2d.path.fill.winding.subtract.3
   testing:
@@ -8038,6 +8408,7 @@
     ctx.lineTo(100, 0);
     ctx.fill();
     @assert pixel 50,25 == 0,255,0,255;
+    t.done();
 
 - name: 2d.path.fill.closed.basic
   testing:
@@ -8052,6 +8423,7 @@
     ctx.lineTo(0, 50);
     ctx.fill();
     @assert pixel 50,25 == 0,255,0,255;
+    t.done();
 
 - name: 2d.path.fill.closed.unaffected
   testing:
@@ -8069,6 +8441,7 @@
     ctx.fill();
     @assert pixel 90,10 == 0,255,0,255;
     @assert pixel 10,40 == 0,255,0,255;
+    t.done();
 
 - name: 2d.path.stroke.overlap
   desc: Stroked subpaths are combined before being drawn
@@ -8085,6 +8458,7 @@
     ctx.lineTo(100, 30);
     ctx.stroke();
     @assert pixel 50,25 ==~ 0,127,0,255 +/- 1;
+    t.done();
 
 - name: 2d.path.stroke.union
   desc: Strokes in opposite directions are unioned, not subtracted
@@ -8101,6 +8475,7 @@
     ctx.lineTo(0, 40);
     ctx.stroke();
     @assert pixel 50,25 == 0,255,0,255;
+    t.done();
 
 - name: 2d.path.stroke.unaffected
   desc: Stroking does not start a new path or subpath
@@ -8120,6 +8495,7 @@
     ctx.strokeStyle = '#0f0';
     ctx.stroke();
     @assert pixel 50,25 == 0,255,0,255;
+    t.done();
 
 - name: 2d.path.stroke.scale1
   desc: Stroke line widths are scaled by the current transformation matrix
@@ -8151,6 +8527,7 @@
     @assert pixel 0,49 == 0,255,0,255;
     @assert pixel 50,49 == 0,255,0,255;
     @assert pixel 99,49 == 0,255,0,255;
+    t.done();
 
 - name: 2d.path.stroke.scale2
   desc: Stroke line widths are scaled by the current transformation matrix
@@ -8184,6 +8561,7 @@
     @assert pixel 0,49 == 0,255,0,255;
     @assert pixel 50,49 == 0,255,0,255;
     @assert pixel 99,49 == 0,255,0,255;
+    t.done();
 
 - name: 2d.path.stroke.skew
   desc: Strokes lines are skewed by the current transformation matrix
@@ -8230,6 +8608,7 @@
     @assert pixel 0,49 == 0,255,0,255;
     @assert pixel 50,49 == 0,255,0,255;
     @assert pixel 99,49 == 0,255,0,255;
+    t.done();
 
 - name: 2d.path.stroke.empty
   desc: Empty subpaths are not stroked
@@ -8247,6 +8626,7 @@
     ctx.moveTo(60, 25);
     ctx.stroke();
     @assert pixel 50,25 == 0,255,0,255;
+    t.done();
 
 - name: 2d.path.stroke.prune.line
   desc: Zero-length line segments from lineTo are removed before stroking
@@ -8264,6 +8644,7 @@
     ctx.lineTo(50, 25);
     ctx.stroke();
     @assert pixel 50,25 == 0,255,0,255; @moz-todo
+    t.done();
 
 - name: 2d.path.stroke.prune.closed
   desc: Zero-length line segments from closed paths are removed before stroking
@@ -8282,6 +8663,7 @@
     ctx.closePath();
     ctx.stroke();
     @assert pixel 50,25 == 0,255,0,255; @moz-todo
+    t.done();
 
 - name: 2d.path.stroke.prune.curve
   desc: Zero-length line segments from quadraticCurveTo and bezierCurveTo are removed before stroking
@@ -8303,6 +8685,7 @@
     ctx.bezierCurveTo(50, 25, 50, 25, 50, 25);
     ctx.stroke();
     @assert pixel 50,25 == 0,255,0,255; @moz-todo
+    t.done();
 
 - name: 2d.path.stroke.prune.arc
   desc: Zero-length line segments from arcTo and arc are removed before stroking
@@ -8324,6 +8707,7 @@
     ctx.arc(50, 25, 10, 0, 0, false);
     ctx.stroke();
     @assert pixel 50,25 == 0,255,0,255; @moz-todo
+    t.done();
 
 - name: 2d.path.stroke.prune.rect
   desc: Zero-length line segments from rect and strokeRect are removed before stroking
@@ -8341,6 +8725,7 @@
     ctx.stroke();
     ctx.strokeRect(50, 25, 0, 0);
     @assert pixel 50,25 == 0,255,0,255; @moz-todo
+    t.done();
 
 - name: 2d.path.stroke.prune.corner
   desc: Zero-length line segments are removed before stroking with miters
@@ -8361,6 +8746,7 @@
     ctx.lineTo(-100, 1000);
     ctx.stroke();
     @assert pixel 50,25 == 0,255,0,255;
+    t.done();
 
 - name: 2d.path.transformation.basic
   testing:
@@ -8374,6 +8760,7 @@
     ctx.fillStyle = '#0f0';
     ctx.fill();
     @assert pixel 50,25 == 0,255,0,255;
+    t.done();
 
 - name: 2d.path.transformation.multiple
   desc: Transformations are applied while building paths, not when drawing
@@ -8398,6 +8785,7 @@
     ctx.translate(0, 50);
     ctx.stroke();
     @assert pixel 50,25 == 0,255,0,255;
+    t.done();
 
 - name: 2d.path.transformation.changing
   desc: Transformations are applied while building paths, not when drawing
@@ -8419,6 +8807,7 @@
     ctx.scale(0.1, 0.1);
     ctx.fill();
     @assert pixel 50,25 == 0,255,0,255;
+    t.done();
 
 - name: 2d.path.clip.empty
   testing:
@@ -8431,6 +8820,7 @@
     ctx.fillStyle = '#f00';
     ctx.fillRect(0, 0, 100, 50);
     @assert pixel 50,25 == 0,255,0,255;
+    t.done();
 
 - name: 2d.path.clip.basic.1
   testing:
@@ -8444,6 +8834,7 @@
     ctx.fillStyle = '#0f0';
     ctx.fillRect(0, 0, 100, 50);
     @assert pixel 50,25 == 0,255,0,255;
+    t.done();
 
 - name: 2d.path.clip.basic.2
   testing:
@@ -8457,6 +8848,7 @@
     ctx.fillStyle = '#f00';
     ctx.fillRect(0, 0, 100, 50);
     @assert pixel 50,25 == 0,255,0,255;
+    t.done();
 
 - name: 2d.path.clip.intersect
   testing:
@@ -8473,6 +8865,7 @@
     ctx.fillStyle = '#f00';
     ctx.fillRect(0, 0, 100, 50);
     @assert pixel 50,25 == 0,255,0,255;
+    t.done();
 
 - name: 2d.path.clip.winding.1
   testing:
@@ -8494,6 +8887,7 @@
     ctx.fillStyle = '#f00';
     ctx.fillRect(0, 0, 100, 50);
     @assert pixel 50,25 == 0,255,0,255;
+    t.done();
 
 - name: 2d.path.clip.winding.2
   testing:
@@ -8518,6 +8912,7 @@
     ctx.fillStyle = '#0f0';
     ctx.fillRect(0, 0, 100, 50);
     @assert pixel 50,25 == 0,255,0,255;
+    t.done();
 
 - name: 2d.path.clip.unaffected
   testing:
@@ -8535,6 +8930,7 @@
     ctx.lineTo(0, 0);
     ctx.fill();
     @assert pixel 50,25 == 0,255,0,255;
+    t.done();
 
 - name: 2d.path.isPointInPath.basic.1
   desc: isPointInPath() detects whether the point is inside the path
@@ -8544,6 +8940,7 @@
     ctx.rect(0, 0, 20, 20);
     @assert ctx.isPointInPath(10, 10) === true;
     @assert ctx.isPointInPath(30, 10) === false;
+    t.done();
 
 - name: 2d.path.isPointInPath.basic.2
   desc: isPointInPath() detects whether the point is inside the path
@@ -8553,6 +8950,7 @@
     ctx.rect(20, 0, 20, 20);
     @assert ctx.isPointInPath(10, 10) === false;
     @assert ctx.isPointInPath(30, 10) === true;
+    t.done();
 
 - name: 2d.path.isPointInPath.edge
   desc: isPointInPath() counts points on the path as being inside
@@ -8572,6 +8970,7 @@
     @assert ctx.isPointInPath(10, 20.01) === false;
     @assert ctx.isPointInPath(-0.01, 10) === false;
     @assert ctx.isPointInPath(20.01, 10) === false;
+    t.done();
 
 - name: 2d.path.isPointInPath.empty
   desc: isPointInPath() works when there is no path
@@ -8579,6 +8978,7 @@
     - 2d.path.isPointInPath
   code: |
     @assert ctx.isPointInPath(0, 0) === false;
+    t.done();
 
 - name: 2d.path.isPointInPath.subpath
   desc: isPointInPath() uses the current path, not just the subpath
@@ -8593,6 +8993,7 @@
     @assert ctx.isPointInPath(10, 10) === false;
     @assert ctx.isPointInPath(30, 10) === true;
     @assert ctx.isPointInPath(50, 10) === true;
+    t.done();
 
 - name: 2d.path.isPointInPath.outside
   desc: isPointInPath() works on paths outside the canvas
@@ -8607,6 +9008,7 @@
     @assert ctx.isPointInPath(30, -20) === false;
     @assert ctx.isPointInPath(30, 0) === true;
     @assert ctx.isPointInPath(30, 20) === false;
+    t.done();
 
 - name: 2d.path.isPointInPath.unclosed
   desc: isPointInPath() works on unclosed subpaths
@@ -8619,6 +9021,7 @@
     ctx.lineTo(0, 20);
     @assert ctx.isPointInPath(10, 10) === true;
     @assert ctx.isPointInPath(30, 10) === false;
+    t.done();
 
 - name: 2d.path.isPointInPath.arc
   desc: isPointInPath() works on arcs
@@ -8634,6 +9037,7 @@
     @assert ctx.isPointInPath(70, 20) === false;
     @assert ctx.isPointInPath(30, 30) === false;
     @assert ctx.isPointInPath(70, 30) === false;
+    t.done();
 
 - name: 2d.path.isPointInPath.bigarc
   desc: isPointInPath() works on unclosed arcs larger than 2pi
@@ -8650,6 +9054,7 @@
     @assert ctx.isPointInPath(70, 20) === false;
     @assert ctx.isPointInPath(30, 30) === false;
     @assert ctx.isPointInPath(70, 30) === false;
+    t.done();
 
 - name: 2d.path.isPointInPath.bezier
   desc: isPointInPath() works on Bezier curves
@@ -8678,6 +9083,7 @@
     @assert ctx.isPointInPath(70, 30) === true;
     @assert ctx.isPointInPath(75, 20) === false;
     @assert ctx.isPointInPath(75, 30) === false;
+    t.done();
 
 - name: 2d.path.isPointInPath.winding
   desc: isPointInPath() uses the non-zero winding number rule
@@ -8704,6 +9110,7 @@
     @assert ctx.isPointInPath(5, 45) === true;
     @assert ctx.isPointInPath(25, 45) === true;
     @assert ctx.isPointInPath(45, 45) === true;
+    t.done();
 
 - name: 2d.path.isPointInPath.transform.1
   desc: isPointInPath() handles transformations correctly
@@ -8718,6 +9125,7 @@
     @assert ctx.isPointInPath(51, 10) === true;
     @assert ctx.isPointInPath(69, 10) === true;
     @assert ctx.isPointInPath(71, 10) === false;
+    t.done();
 
 - name: 2d.path.isPointInPath.transform.2
   desc: isPointInPath() handles transformations correctly
@@ -8732,6 +9140,7 @@
     @assert ctx.isPointInPath(51, 10) === true;
     @assert ctx.isPointInPath(69, 10) === true;
     @assert ctx.isPointInPath(71, 10) === false;
+    t.done();
 
 - name: 2d.path.isPointInPath.transform.3
   desc: isPointInPath() handles transformations correctly
@@ -8746,6 +9155,7 @@
     @assert ctx.isPointInPath(51, 10) === true;
     @assert ctx.isPointInPath(69, 10) === true;
     @assert ctx.isPointInPath(71, 10) === false;
+    t.done();
 
 - name: 2d.path.isPointInPath.transform.4
   desc: isPointInPath() handles transformations correctly
@@ -8758,6 +9168,7 @@
     @assert ctx.isPointInPath(60, 10) === false;
     @assert ctx.isPointInPath(110, 10) === true;
     @assert ctx.isPointInPath(110, 60) === false;
+    t.done();
 
 - name: 2d.path.isPointInPath.nonfinite
   desc: isPointInPath() returns false for non-finite arguments
@@ -8772,6 +9183,7 @@
     @assert ctx.isPointInPath(0, -Infinity) === false;
     @assert ctx.isPointInPath(0, NaN) === false;
     @assert ctx.isPointInPath(NaN, NaN) === false;
+    t.done();
 
 - name: 2d.coordinatespace
   desc: Coordinate space goes from top-left to bottom-right
@@ -8787,6 +9199,7 @@
     @assert pixel 75,12 == 0,0,255,255;
     @assert pixel 25,37 == 0,0,255,255;
     @assert pixel 75,37 == 0,0,255,255;
+    t.done();
 
 - name: 2d.missingargs
   desc: Missing arguments cause TypeError
@@ -8887,6 +9300,7 @@
     var g = ctx.createLinearGradient(0, 0, 0, 0);
     @assert throws TypeError g.addColorStop(); @moz-todo
     @assert throws TypeError g.addColorStop(0); @moz-todo
+    t.done();
 
 - name: 2d.voidreturn
   desc: void methods return undefined
@@ -8922,6 +9336,7 @@
     }
     @assert ctx.drawImage(offscreenCanvas, 0, 0, 1, 1, 0, 0, 0, 0) === undefined;
     @assert ctx.createLinearGradient(0, 0, 0, 0).addColorStop(0, 'white') === undefined;
+    t.done();
 
 - name: 2d.canvas.reference
   desc: canvas refers back to its canvas
@@ -8929,6 +9344,7 @@
     - 2d.canvas
   code: |
     @assert ctx.canvas === offscreenCanvas;
+    t.done();
 
 - name: 2d.canvas.readonly
   desc: canvas is readonly
@@ -8940,6 +9356,7 @@
     @assert offscreenCanvas2 !== d;
     ctx.canvas = offscreenCanvas2;
     @assert ctx.canvas === d;
+    t.done();
 
 - name: 2d.getcontext.exists
   desc: The 2D context is implemented
@@ -8948,6 +9365,7 @@
   code: |
     var offscreenCanvas2 = new OffscreenCanvas(100, 50);
     @assert offscreenCanvas2.getContext('2d') !== null;
+    t.done();
 
 - name: 2d.getcontext.extraargs
   desc: The 2D context ignores extra getContext arguments
@@ -8956,6 +9374,7 @@
   code: |
     var offscreenCanvas2 = new OffscreenCanvas(100, 50);
     @assert offscreenCanvas2.getContext('2d', false, {}, [], 1, "2") !== null;
+    t.done();
 
 - name: 2d.getcontext.unique
   desc: getContext('2d') returns the same object
@@ -8964,6 +9383,7 @@
   code: |
     var offscreenCanvas2 = new OffscreenCanvas(100, 50);
     @assert offscreenCanvas2.getContext('2d') === offscreenCanvas2.getContext('2d');
+    t.done();
 
 - name: 2d.getcontext.shared
   desc: getContext('2d') returns objects which share canvas state
@@ -8975,6 +9395,7 @@
     ctx2.fillStyle = '#0f0';
     ctx.fillRect(0, 0, 100, 50);
     @assert pixel 50,25 == 0,255,0,255;
+    t.done();
 
 - name: context.emptystring
   desc: getContext with empty string returns null
@@ -8983,6 +9404,7 @@
   code: |
     var offscreenCanvas2 = new OffscreenCanvas(100, 50);
     @assert throws TypeError offscreenCanvas2.getContext("");
+    t.done();
 
 - name: context.unrecognised.badname
   desc: getContext with unrecognised context name returns null
@@ -8991,6 +9413,7 @@
   code: |
     var offscreenCanvas2 = new OffscreenCanvas(100, 50);
     @assert throws TypeError offscreenCanvas2.getContext('This is not an implemented context in any real browser');
+    t.done();
 
 - name: context.unrecognised.badsuffix
   desc: Context name "2d" plus a suffix is unrecognised
@@ -8999,6 +9422,7 @@
   code: |
     var offscreenCanvas2 = new OffscreenCanvas(100, 50);
     @assert throws TypeError offscreenCanvas2.getContext("2d#");
+    t.done();
 
 - name: context.unrecognised.nullsuffix
   desc: Context name "2d" plus a "\0" suffix is unrecognised
@@ -9007,6 +9431,7 @@
   code: |
     var offscreenCanvas2 = new OffscreenCanvas(100, 50);
     @assert throws TypeError offscreenCanvas2.getContext("2d\0");
+    t.done();
 
 - name: context.unrecognised.unicode
   desc: Context name which kind of looks like "2d" is unrecognised
@@ -9015,6 +9440,7 @@
   code: |
     var offscreenCanvas2 = new OffscreenCanvas(100, 50);
     @assert throws TypeError offscreenCanvas2.getContext("2\uFF44");
+    t.done();
 
 - name: context.casesensitive
   desc: Context name "2D" is unrecognised; matching is case sensitive
@@ -9023,6 +9449,7 @@
   code: |
     var offscreenCanvas2 = new OffscreenCanvas(100, 50);
     @assert throws TypeError offscreenCanvas2.getContext('2D');
+    t.done();
 
 - name: context.arguments.missing
   testing:
@@ -9030,6 +9457,7 @@
   code: |
     var offscreenCanvas2 = new OffscreenCanvas(100, 50);
     @assert throws TypeError offscreenCanvas2.getContext(); @moz-todo
+    t.done();
 
 
 - name: initial.colour
@@ -9038,6 +9466,7 @@
     - initial.colour
   code: |
     @assert pixel 20,20 == 0,0,0,0;
+    t.done();
 
 - name: initial.reset.different
   desc: Changing size resets canvas to transparent black
@@ -9049,6 +9478,7 @@
     @assert pixel 20,20 == 255,0,0,255;
     offscreenCanvas.width = 50;
     @assert pixel 20,20 == 0,0,0,0;
+    t.done();
 
 - name: initial.reset.same
   desc: Setting size (not changing the value) resets canvas to transparent black
@@ -9061,6 +9491,7 @@
     @assert pixel 20,20 == 255,0,0,255;
     offscreenCanvas.width = 100;
     @assert pixel 20,20 == 0,0,0,0;
+    t.done();
 
 - name: initial.reset.path
   desc: Resetting the canvas state resets the current path
@@ -9073,6 +9504,7 @@
     ctx.fillStyle = '#f00';
     ctx.fill();
     @assert pixel 20,20 == 0,0,0,0;
+    t.done();
 
 - name: initial.reset.clip
   desc: Resetting the canvas state resets the current clip region
@@ -9086,6 +9518,7 @@
     ctx.fillStyle = '#0f0';
     ctx.fillRect(0, 0, 100, 50);
     @assert pixel 20,20 == 0,255,0,255;
+    t.done();
 
 - name: initial.reset.transform
   desc: Resetting the canvas state resets the current transformation matrix
@@ -9098,6 +9531,7 @@
     ctx.fillStyle = '#0f0';
     ctx.fillRect(0, 0, 100, 50);
     @assert pixel 20,20 == 0,255,0,255;
+    t.done();
 
 - name: initial.reset.gradient
   desc: Resetting the canvas state does not invalidate any existing gradients
@@ -9114,6 +9548,7 @@
     ctx.fillStyle = g;
     ctx.fillRect(0, 0, 100, 50);
     @assert pixel 50,25 == 0,255,0,255;
+    t.done();
 
 - name: initial.reset.pattern
   desc: Resetting the canvas state does not invalidate any existing patterns
@@ -9130,6 +9565,7 @@
     ctx.fillStyle = p;
     ctx.fillRect(0, 0, 100, 50);
     @assert pixel 50,25 == 0,255,0,255;
+    t.done();
 
 - name: size.attributes.idl.set.zero
   desc: Setting width/height IDL attributes to 0
@@ -9141,6 +9577,7 @@
     offscreenCanvas.height = 0;
     @assert offscreenCanvas.width === 0;
     @assert offscreenCanvas.height === 0;
+    t.done();
 
 - name: size.attributes.idl
   desc: Getting/setting width/height IDL attributes
@@ -9166,6 +9603,7 @@
     offscreenCanvas.height = "foo";
     @assert offscreenCanvas.width === 0;
     @assert offscreenCanvas.height === 0;
+    t.done();
 
 - name: size.attributes.default
   desc: Default width/height when attributes are missing
@@ -9175,6 +9613,7 @@
   code: |
     @assert offscreenCanvas.width === 100;
     @assert offscreenCanvas.height === 50;
+    t.done();
 
 - name: size.attributes.reflect.setidl
   desc: Setting IDL attributes updates IDL and content attributes
@@ -9185,6 +9624,7 @@
     offscreenCanvas.height = 60;
     @assert offscreenCanvas.width === 120;
     @assert offscreenCanvas.height === 60;
+    t.done();
 
 - name: size.attributes.reflect.setidlzero
   desc: Setting IDL attributes to 0 updates IDL and content attributes
@@ -9195,6 +9635,7 @@
     offscreenCanvas.height = 0;
     @assert offscreenCanvas.width === 0;
     @assert offscreenCanvas.height === 0;
+    t.done();
 
 - meta: |
     cases = [
@@ -9252,6 +9693,7 @@
     offscreenCanvas.height = n;
     @assert offscreenCanvas.width === n;
     @assert offscreenCanvas.height === n;
+    t.done();
 
 - name: 2d.text.font.parse.basic
   testing:
@@ -9263,6 +9705,7 @@
 
     ctx.font = '20PX   SERIF';
     @assert ctx.font === '20px serif'; @moz-todo
+    t.done();
 
 - name: 2d.text.font.parse.tiny
   testing:
@@ -9271,6 +9714,7 @@
   code: |
     ctx.font = '1px sans-serif';
     @assert ctx.font === '1px sans-serif';
+    t.done();
 
 - name: 2d.text.font.parse.complex
   testing:
@@ -9280,6 +9724,7 @@
   code: |
     ctx.font = 'small-caps italic 400 12px/2 Unknown Font, sans-serif';
     @assert ctx.font === 'italic small-caps 12px "Unknown Font", sans-serif'; @moz-todo
+    t.done();
 
   # TODO:
   #   2d.text.font.parse.size.absolute
@@ -9300,6 +9745,7 @@
   code: |
     ctx.font = 'message-box';
     @assert ctx.font !== 'message-box';
+    t.done();
 
 - name: 2d.text.font.parse.invalid
   testing:
@@ -9339,12 +9785,14 @@
     ctx.font = '20px serif';
     ctx.font = '1em serif; background: green; margin: 10px';
     @assert ctx.font === '20px serif';
+    t.done();
 
 - name: 2d.text.font.default
   testing:
     - 2d.text.font.default
   code: |
     @assert ctx.font === '10px sans-serif';
+    t.done();
 
 - name: 2d.text.font.relative_size
   testing:
@@ -9352,6 +9800,7 @@
   code: |
     ctx.font = '1em sans-serif';
     @assert ctx.font === '10px sans-serif';
+    t.done();
 
 - name: 2d.text.align.valid
   testing:
@@ -9372,6 +9821,7 @@
 
     ctx.textAlign = 'center';
     @assert ctx.textAlign === 'center';
+    t.done();
 
 - name: 2d.text.align.invalid
   testing:
@@ -9392,12 +9842,14 @@
     ctx.textAlign = 'start';
     ctx.textAlign = 'end\0';
     @assert ctx.textAlign === 'start';
+    t.done();
 
 - name: 2d.text.align.default
   testing:
     - 2d.text.align.default
   code: |
     @assert ctx.textAlign === 'start';
+    t.done();
 
 
 - name: 2d.text.baseline.valid
@@ -9422,6 +9874,7 @@
 
     ctx.textBaseline = 'bottom';
     @assert ctx.textBaseline === 'bottom';
+    t.done();
 
 - name: 2d.text.baseline.invalid
   testing:
@@ -9442,12 +9895,14 @@
     ctx.textBaseline = 'top';
     ctx.textBaseline = 'middle\0';
     @assert ctx.textBaseline === 'top';
+    t.done();
 
 - name: 2d.text.baseline.default
   testing:
     - 2d.text.baseline.default
   code: |
     @assert ctx.textBaseline === 'alphabetic';
+    t.done();
 
 - name: 2d.text.draw.fill.basic
   desc: fillText draws filled text
@@ -9462,6 +9917,7 @@
     ctx.strokeStyle = '#f00';
     ctx.font = '35px Arial, sans-serif';
     ctx.fillText('PASS', 5, 35);
+    t.done();
   expected: &passfill |
     size 100 50
     cr.set_source_rgb(0, 0, 0)
@@ -9495,6 +9951,7 @@
 
     @assert pixel 50,25 == 0,255,0,255;
     @assert pixel 5,45 == 0,255,0,255;
+    t.done();
   expected: green
 
 - name: 2d.text.draw.fill.rtl
@@ -9509,6 +9966,7 @@
     ctx.strokeStyle = '#f00';
     ctx.font = '35px Arial, sans-serif';
     ctx.fillText('\u202eFAIL \xa0 \xa0 SSAP', 5, 35);
+    t.done();
   expected: *passfill
 
 - name: 2d.text.draw.fill.maxWidth.large
@@ -9522,6 +9980,7 @@
     ctx.fillStyle = '#0f0';
     ctx.font = '35px Arial, sans-serif';
     ctx.fillText('PASS', 5, 35, 200);
+    t.done();
   expected: *passfill
 
 - name: 2d.text.draw.fill.maxWidth.small
@@ -9535,6 +9994,7 @@
     ctx.font = '35px Arial, sans-serif';
     ctx.fillText('fail fail fail fail fail', -100, 35, 90);
     _assertGreen(ctx, 100, 50);
+    t.done();
   expected: green
 
 - name: 2d.text.draw.fill.maxWidth.zero
@@ -9548,6 +10008,7 @@
     ctx.font = '35px Arial, sans-serif';
     ctx.fillText('fail fail fail fail fail', 5, 35, 0);
     _assertGreen(ctx, 100, 50);
+    t.done();
   expected: green
 
 - name: 2d.text.draw.fill.maxWidth.negative
@@ -9561,6 +10022,7 @@
     ctx.font = '35px Arial, sans-serif';
     ctx.fillText('fail fail fail fail fail', 5, 35, -1);
     _assertGreen(ctx, 100, 50);
+    t.done();
   expected: green
 
 - name: 2d.text.draw.fill.maxWidth.NaN
@@ -9574,6 +10036,7 @@
     ctx.font = '35px Arial, sans-serif';
     ctx.fillText('fail fail fail fail fail', 5, 35, NaN);
     _assertGreen(ctx, 100, 50);
+    t.done();
   expected: green
 
 - name: 2d.text.draw.stroke.basic
@@ -9590,6 +10053,7 @@
     ctx.lineWidth = 1;
     ctx.font = '35px Arial, sans-serif';
     ctx.strokeText('PASS', 5, 35);
+    t.done();
   expected: |
     size 100 50
     cr.set_source_rgb(0, 0, 0)
@@ -9625,6 +10089,7 @@
 
     @assert pixel 50,25 == 0,255,0,255;
     @assert pixel 5,45 == 0,255,0,255;
+    t.done();
   expected: green
 
 - name: 2d.text.draw.kern.consistent
@@ -9643,6 +10108,7 @@
     ctx.fillText('ToToToToToToTo', -50, 45);
     ctx.strokeText('VAVAVAVAVAVAVA', -50, 25);
     ctx.strokeText('ToToToToToToTo', -50, 45);
+    t.done();
   expected: green
 
 # CanvasTest is:
