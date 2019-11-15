@@ -6,7 +6,12 @@
 importScripts("/resources/testharness.js");
 importScripts("/2dcontext/resources/canvas-tests.js");
 
-promise_test(function(t) {
+var t = async_test("arc() draws nothing when startAngle = endAngle and anticlockwise");
+var t_pass = t.done.bind(t);
+var t_fail = t.step_func(function(reason) {
+    throw reason;
+});
+t.step(function() {
 
 var offscreenCanvas = new OffscreenCanvas(100, 50);
 var ctx = offscreenCanvas.getContext('2d');
@@ -20,6 +25,5 @@ ctx.arc(50, 25, 50, 0, 0, true);
 ctx.stroke();
 _assertPixel(offscreenCanvas, 50,20, 0,255,0,255, "50,20", "0,255,0,255");
 
-return Promise.resolve();
-}, "arc() draws nothing when startAngle = endAngle and anticlockwise");
+});
 done();

@@ -6,7 +6,12 @@
 importScripts("/resources/testharness.js");
 importScripts("/2dcontext/resources/canvas-tests.js");
 
-promise_test(function(t) {
+var t = async_test("Negative destination width/height represents the correct rectangle");
+var t_pass = t.done.bind(t);
+var t_fail = t.step_func(function(reason) {
+    throw reason;
+});
+t.step(function() {
 
 var offscreenCanvas = new OffscreenCanvas(100, 50);
 var ctx = offscreenCanvas.getContext('2d');
@@ -22,7 +27,7 @@ var promise = new Promise(function(resolve, reject) {
         resolve(xhr.response);
     };
 });
-return promise.then(function(response) {
+promise.then(function(response) {
     ctx.drawImage(response, 100, 78, 50, 50, 0, 50, 50, -50);
     ctx.drawImage(response, 100, 128, 50, -50, 100, 50, -50, -50);
     _assertPixelApprox(offscreenCanvas, 1,1, 0,255,0,255, "1,1", "0,255,0,255", 2);
@@ -35,8 +40,7 @@ return promise.then(function(response) {
     _assertPixelApprox(offscreenCanvas, 51,48, 0,255,0,255, "51,48", "0,255,0,255", 2);
     _assertPixelApprox(offscreenCanvas, 25,25, 0,255,0,255, "25,25", "0,255,0,255", 2);
     _assertPixelApprox(offscreenCanvas, 75,25, 0,255,0,255, "75,25", "0,255,0,255", 2);
-});
+}).then(t_pass, t_fail);
 
-return Promise.resolve();
-}, "Negative destination width/height represents the correct rectangle");
+});
 done();

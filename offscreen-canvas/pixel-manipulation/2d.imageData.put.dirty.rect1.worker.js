@@ -6,7 +6,12 @@
 importScripts("/resources/testharness.js");
 importScripts("/2dcontext/resources/canvas-tests.js");
 
-promise_test(function(t) {
+var t = async_test("putImageData() only modifies areas inside the dirty rectangle, using width and height");
+var t_pass = t.done.bind(t);
+var t_fail = t.step_func(function(reason) {
+    throw reason;
+});
+t.step(function() {
 
 var offscreenCanvas = new OffscreenCanvas(100, 50);
 var ctx = offscreenCanvas.getContext('2d');
@@ -27,6 +32,5 @@ _assertPixelApprox(offscreenCanvas, 65,25, 0,255,0,255, "65,25", "0,255,0,255", 
 _assertPixelApprox(offscreenCanvas, 50,15, 0,255,0,255, "50,15", "0,255,0,255", 2);
 _assertPixelApprox(offscreenCanvas, 50,45, 0,255,0,255, "50,45", "0,255,0,255", 2);
 
-return Promise.resolve();
-}, "putImageData() only modifies areas inside the dirty rectangle, using width and height");
+});
 done();

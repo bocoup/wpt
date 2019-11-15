@@ -6,7 +6,12 @@
 importScripts("/resources/testharness.js");
 importScripts("/2dcontext/resources/canvas-tests.js");
 
-promise_test(function(t) {
+var t = async_test("strokeRect of negative sizes works");
+var t_pass = t.done.bind(t);
+var t_fail = t.step_func(function(reason) {
+    throw reason;
+});
+t.step(function() {
 
 var offscreenCanvas = new OffscreenCanvas(100, 50);
 var ctx = offscreenCanvas.getContext('2d');
@@ -24,6 +29,5 @@ _assertPixel(offscreenCanvas, 75,12, 0,255,0,255, "75,12", "0,255,0,255");
 _assertPixel(offscreenCanvas, 25,37, 0,255,0,255, "25,37", "0,255,0,255");
 _assertPixel(offscreenCanvas, 75,37, 0,255,0,255, "75,37", "0,255,0,255");
 
-return Promise.resolve();
-}, "strokeRect of negative sizes works");
+});
 done();

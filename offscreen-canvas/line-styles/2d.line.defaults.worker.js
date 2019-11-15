@@ -6,7 +6,12 @@
 importScripts("/resources/testharness.js");
 importScripts("/2dcontext/resources/canvas-tests.js");
 
-promise_test(function(t) {
+var t = async_test("");
+var t_pass = t.done.bind(t);
+var t_fail = t.step_func(function(reason) {
+    throw reason;
+});
+t.step(function() {
 
 var offscreenCanvas = new OffscreenCanvas(100, 50);
 var ctx = offscreenCanvas.getContext('2d');
@@ -16,6 +21,5 @@ _assertSame(ctx.lineCap, 'butt', "ctx.lineCap", "'butt'");
 _assertSame(ctx.lineJoin, 'miter', "ctx.lineJoin", "'miter'");
 _assertSame(ctx.miterLimit, 10, "ctx.miterLimit", "10");
 
-return Promise.resolve();
-}, "");
+});
 done();

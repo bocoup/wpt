@@ -6,7 +6,12 @@
 importScripts("/resources/testharness.js");
 importScripts("/2dcontext/resources/canvas-tests.js");
 
-promise_test(function(t) {
+var t = async_test("");
+var t_pass = t.done.bind(t);
+var t_fail = t.step_func(function(reason) {
+    throw reason;
+});
+t.step(function() {
 
 var offscreenCanvas = new OffscreenCanvas(100, 50);
 var ctx = offscreenCanvas.getContext('2d');
@@ -22,6 +27,5 @@ offscreenCanvas2.width = 0;
 offscreenCanvas2.height = 0;
 assert_throws("INVALID_STATE_ERR", function() { ctx.drawImage(offscreenCanvas2, 0, 0); });
 
-return Promise.resolve();
-}, "");
+});
 done();

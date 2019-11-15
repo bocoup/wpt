@@ -6,7 +6,12 @@
 importScripts("/resources/testharness.js");
 importScripts("/2dcontext/resources/canvas-tests.js");
 
-promise_test(function(t) {
+var t = async_test("drawImage() with Infinity/NaN is ignored");
+var t_pass = t.done.bind(t);
+var t_fail = t.step_func(function(reason) {
+    throw reason;
+});
+t.step(function() {
 
 var offscreenCanvas = new OffscreenCanvas(100, 50);
 var ctx = offscreenCanvas.getContext('2d');
@@ -22,7 +27,7 @@ var promise = new Promise(function(resolve, reject) {
         resolve(xhr.response);
     };
 });
-return promise.then(function(response) {
+promise.then(function(response) {
     ctx.drawImage(response, Infinity, 0);
 ctx.drawImage(response, -Infinity, 0);
 ctx.drawImage(response, NaN, 0);
@@ -325,8 +330,7 @@ ctx.drawImage(response, 0, 0, 100, 50, 0, Infinity, Infinity, Infinity);
 ctx.drawImage(response, 0, 0, 100, 50, 0, Infinity, 100, Infinity);
 ctx.drawImage(response, 0, 0, 100, 50, 0, 0, Infinity, Infinity);
     _assertPixel(offscreenCanvas, 50,25, 0,255,0,255, "50,25", "0,255,0,255");
-});
+}).then(t_pass, t_fail);
 
-return Promise.resolve();
-}, "drawImage() with Infinity/NaN is ignored");
+});
 done();

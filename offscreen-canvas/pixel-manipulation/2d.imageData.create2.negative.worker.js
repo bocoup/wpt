@@ -6,7 +6,12 @@
 importScripts("/resources/testharness.js");
 importScripts("/2dcontext/resources/canvas-tests.js");
 
-promise_test(function(t) {
+var t = async_test("createImageData(sw, sh) takes the absolute magnitude of the size arguments");
+var t_pass = t.done.bind(t);
+var t_fail = t.step_func(function(reason) {
+    throw reason;
+});
+t.step(function() {
 
 var offscreenCanvas = new OffscreenCanvas(100, 50);
 var ctx = offscreenCanvas.getContext('2d');
@@ -19,6 +24,5 @@ _assertSame(imgdata1.data.length, imgdata2.data.length, "imgdata1.data.length", 
 _assertSame(imgdata2.data.length, imgdata3.data.length, "imgdata2.data.length", "imgdata3.data.length");
 _assertSame(imgdata3.data.length, imgdata4.data.length, "imgdata3.data.length", "imgdata4.data.length");
 
-return Promise.resolve();
-}, "createImageData(sw, sh) takes the absolute magnitude of the size arguments");
+});
 done();

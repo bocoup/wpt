@@ -6,7 +6,12 @@
 importScripts("/resources/testharness.js");
 importScripts("/2dcontext/resources/canvas-tests.js");
 
-promise_test(function(t) {
+var t = async_test("strokeRect of 0x0 pixels draws nothing, including caps and joins");
+var t_pass = t.done.bind(t);
+var t_fail = t.step_func(function(reason) {
+    throw reason;
+});
+t.step(function() {
 
 var offscreenCanvas = new OffscreenCanvas(100, 50);
 var ctx = offscreenCanvas.getContext('2d');
@@ -18,6 +23,5 @@ ctx.lineJoin = 'round';
 ctx.strokeRect(50, 25, 0, 0);
 _assertPixel(offscreenCanvas, 50,25, 0,0,0,0, "50,25", "0,0,0,0");
 
-return Promise.resolve();
-}, "strokeRect of 0x0 pixels draws nothing, including caps and joins");
+});
 done();

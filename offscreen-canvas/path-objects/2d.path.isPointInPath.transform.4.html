@@ -10,7 +10,12 @@
 
 
 <script>
-promise_test(function(t) {
+var t = async_test("isPointInPath() handles transformations correctly");
+var t_pass = t.done.bind(t);
+var t_fail = t.step_func(function(reason) {
+    throw reason;
+});
+t.step(function() {
 
 var offscreenCanvas = new OffscreenCanvas(100, 50);
 var ctx = offscreenCanvas.getContext('2d');
@@ -22,6 +27,5 @@ _assertSame(ctx.isPointInPath(60, 10), false, "ctx.isPointInPath(60, 10)", "fals
 _assertSame(ctx.isPointInPath(110, 10), true, "ctx.isPointInPath(110, 10)", "true");
 _assertSame(ctx.isPointInPath(110, 60), false, "ctx.isPointInPath(110, 60)", "false");
 
-return Promise.resolve();
-}, "isPointInPath() handles transformations correctly");
+});
 </script>
