@@ -1,0 +1,36 @@
+
+<!-- This test was procedurally generated. Please do not modify it directly. -->
+<html lang="en">
+  <meta encoding="utf-8">
+  <script src="/resources/testharness.js"></script>
+  <script src="/resources/testharnessreport.js"></script>
+  <script src="/fetch/metadata/resources/helper.js"></script>
+  <script>
+    window.moduleExecuted = new Promise((resolve) => window.resolve = resolve);
+  </script>
+  <script type="module">
+    import '/fetch/metadata/resources/record-header.py?file=script-{{$id:uuid()}}';
+    resolve();
+  </script>
+  <body>
+  <script>
+  'use strict';
+  promise_test(function() {
+    const url = '/fetch/metadata/resources/record-header.py?retrieve&file=script-{{$id}}';
+    return window.moduleExecuted
+      .then(() => fetch(url))
+      .then((response) => response.text())
+      .then((text) => {
+        const actual = JSON.parse(text);
+var expected = {
+  dest: 'script',
+  mode: '',
+  site: '',
+  user: ''
+};
+assert_header_equals(actual, expected);
+
+      });
+  }, 'something');
+  </script>
+</html>

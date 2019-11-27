@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<!-- This test was procedurally generated. Please do not modify it directly. -->
+<html lang="en">
+  <meta encoding="utf-8">
+  <script src="/resources/testharness.js"></script>
+  <script src="/resources/testharnessreport.js"></script>
+  <script src="/fetch/metadata/resources/helper.js"></script>
+  <body>
+  <script>
+  'use strict';
+  promise_test(function() {
+    var video = document.createElement('video');
+    var id = 'image-{{uuid()}}';
+    video.setAttribute(
+      'poster',
+      'https://{{hosts[alt][]}}:{{ports[https][0]}}/fetch/metadata/resources/record-header.py?file=' + id
+    );
+    document.body.appendChild(video);
+
+    return pollForRequestRecording(id)
+      .then(function(actual) {
+var expected = {
+  dest: 'image',
+  mode: 'no-cors',
+  site: 'cross-site',
+  user: ''
+};
+assert_header_equals(actual, expected);
+
+      });
+  }, 'something across domains');
+  </script>
+  </body>
+</html>

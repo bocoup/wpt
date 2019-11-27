@@ -129,3 +129,6 @@ def main(request, response):
   </xsl:template>
 </xsl:stylesheet>"""
 
+    if key.startswith("script"):
+      response.headers.set("Content-Type", "application/javascript")
+      return "void 0;"

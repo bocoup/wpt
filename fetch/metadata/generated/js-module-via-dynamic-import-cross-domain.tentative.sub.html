@@ -1,0 +1,32 @@
+
+<!-- This test was procedurally generated. Please do not modify it directly. -->
+<html lang="en">
+  <meta encoding="utf-8">
+  <script src="/resources/testharness.js"></script>
+  <script src="/resources/testharnessreport.js"></script>
+  <script src="/fetch/metadata/resources/helper.js"></script>
+  <script type="module">
+  </script>
+  <body>
+  <script type="module">
+  'use strict';
+  promise_test(async function() {
+    const id = 'script-{{uuid()}}';
+    await import(
+      'http://{{domains[www2]}}:{{ports[http][0]}}/fetch/metadata/resources/record-header.py?file=' + id
+    );
+    const response = await fetch(
+      '/fetch/metadata/resources/record-header.py?retrieve&file=' + id
+    );
+    const actual = JSON.parse(await response.text());
+var expected = {
+  dest: 'script',
+  mode: '',
+  site: '',
+  user: ''
+};
+assert_header_equals(actual, expected);
+
+  }, 'something across domains');
+  </script>
+</html>
