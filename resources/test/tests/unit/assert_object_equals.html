@@ -56,6 +56,42 @@ test(function() {
   assert_object_equals([23, 45, 99], {2: 99, 0: 23, 1: 45});
 }, 'recognizes equivalence of actual array and expected object');
 
+test_failure(function() {
+  var actual = {};
+  var expected = {};
+  actual.a = actual;
+  expected.a = 45;
+
+  assert_object_equals(actual, expected);
+}, 'recognized inequality in cyclic properties of actual value');
+
+test_failure(function() {
+  var actual = {};
+  var expected = {};
+  actual.a = 45;
+  expected.a = expected;
+
+  assert_object_equals(actual, expected);
+}, 'recognized inequality in cyclic properties of expected value');
+
+test_failure(function() {
+  var actual = {};
+  var expected = {}
+  actual.a = a;
+  expected.a = {a: actual};
+
+  assert_object_equals(actual, expected);
+}, 'recognized inequality in cyclic properties of actual value (nested)');
+
+test_failure(function() {
+  var actual = {};
+  var expected = {};
+  actual.a = {a: actual};
+  expected.a = expected;
+
+  assert_object_equals(actual, expected);
+}, 'recognized inequality in cyclic properties of expected value (nested)');
+
 test(function() {
   var actual = {};
   var expected = {};
@@ -111,6 +147,18 @@ test_failure(function() {
 test_failure(function() {
   assert_object_equals(34, {});
 }, 'invalid actual value: number');
+
+test_failure(function() {
+  assert_object_equals({}, undefined);
+}, 'invalid expected value: undefined');
+
+test_failure(function() {
+  assert_object_equals({}, null);
+}, 'invalid expected value: null');
+
+test_failure(function() {
+  assert_object_equals({}, 34);
+}, 'invalid expected value: number');
 
 test_failure(function() {
   assert_object_equals({c: 3, a: 1, b: 2}, {a: 1, b: 1, c: 3});
