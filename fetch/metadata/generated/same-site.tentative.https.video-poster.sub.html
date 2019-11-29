@@ -13,7 +13,7 @@
     var id = 'image-{{uuid()}}';
     video.setAttribute(
       'poster',
-      'https://{{hosts[alt][]}}:{{ports[https][0]}}/fetch/metadata/resources/record-header.py?file=' + id
+      'https://{{domains[www2]}}:{{ports[https][0]}}/fetch/metadata/resources/record-header.py?file=' + id
     );
     document.body.appendChild(video);
 
@@ -22,7 +22,7 @@
 var expected = {
   dest: 'image',
   mode: 'no-cors',
-  site: 'cross-site',
+  site: 'same-site',
   user: ''
 };
 assert_header_equals(actual, expected);

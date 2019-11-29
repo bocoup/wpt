@@ -1,20 +1,26 @@
-
+<!DOCTYPE html>
 <!-- This test was procedurally generated. Please do not modify it directly. -->
 <html lang="en">
   <meta encoding="utf-8">
   <script src="/resources/testharness.js"></script>
   <script src="/resources/testharnessreport.js"></script>
   <script src="/fetch/metadata/resources/helper.js"></script>
-  <script type="module"
-    src="http://{{domains[www2]}}:{{ports[http][0]}}/fetch/metadata/resources/record-header.py?file=script-{{$id:uuid()}}"></script>
   <body>
   <script>
   'use strict';
   promise_test(function() {
-    return pollForRequestRecording('script-{{$id}}')
+    var video = document.createElement('video');
+    var id = 'image-{{uuid()}}';
+    video.setAttribute(
+      'poster',
+      '/fetch/metadata/resources/record-header.py?file=' + id
+    );
+    document.body.appendChild(video);
+
+    return pollForRequestRecording(id)
       .then(function(actual) {
 var expected = {
-  dest: 'script',
+  dest: '',
   mode: '',
   site: '',
   user: ''
@@ -22,6 +28,7 @@ var expected = {
 assert_header_equals(actual, expected);
 
       });
-  }, 'something across domains');
+  }, 'poster image fetched via an untrustworthy URL');
   </script>
+  </body>
 </html>

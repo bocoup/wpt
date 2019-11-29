@@ -1,4 +1,4 @@
-
+<!DOCTYPE html>
 <!-- This test was procedurally generated. Please do not modify it directly. -->
 <html lang="en">
   <meta encoding="utf-8">
@@ -13,20 +13,13 @@
   promise_test(async function() {
     const id = 'script-{{uuid()}}';
     await import(
-      '/fetch/metadata/resources/record-header.py?file=' + id
+      '%(domain)s/fetch/metadata/resources/record-header.py?file=' + id
     );
     const response = await fetch(
       '/fetch/metadata/resources/record-header.py?retrieve&file=' + id
     );
     const actual = JSON.parse(await response.text());
-var expected = {
-  dest: 'script',
-  mode: '',
-  site: '',
-  user: ''
-};
-assert_header_equals(actual, expected);
-
-  }, 'something');
+%(validation)s
+  }, '%(title)s');
   </script>
 </html>

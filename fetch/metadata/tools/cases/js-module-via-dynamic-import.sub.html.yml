@@ -1,0 +1,24 @@
+---
+same-domain.tentative:
+  title: something
+  domain: ''
+  validation: |
+    var expected = {
+      dest: 'script',
+      mode: '',
+      site: '',
+      user: ''
+    };
+    assert_header_equals(actual, expected);
+
+cross-domain.tentative:
+  title: something across domains
+  domain: http://{{domains[www2]}}:{{ports[http][0]}}
+  validation: |
+    var expected = {
+      dest: 'script',
+      mode: '',
+      site: '',
+      user: ''
+    };
+    assert_header_equals(actual, expected);

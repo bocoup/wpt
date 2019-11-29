@@ -5,30 +5,28 @@
   <script src="/resources/testharness.js"></script>
   <script src="/resources/testharnessreport.js"></script>
   <script src="/fetch/metadata/resources/helper.js"></script>
+  <script type="module">
+  </script>
   <body>
-  <script>
+  <script type="module">
   'use strict';
-  promise_test(function() {
-    var video = document.createElement('video');
-    var id = 'image-{{uuid()}}';
-    video.setAttribute(
-      'poster',
+  promise_test(async function() {
+    const id = 'script-{{uuid()}}';
+    await import(
       '/fetch/metadata/resources/record-header.py?file=' + id
     );
-    document.body.appendChild(video);
-
-    return pollForRequestRecording(id)
-      .then(function(actual) {
+    const response = await fetch(
+      '/fetch/metadata/resources/record-header.py?retrieve&file=' + id
+    );
+    const actual = JSON.parse(await response.text());
 var expected = {
-  dest: '',
+  dest: 'script',
   mode: '',
   site: '',
   user: ''
 };
 assert_header_equals(actual, expected);
 
-      });
-  }, 'poster image fetched via an untrustworthy URL');
+  }, 'something');
   </script>
-  </body>
 </html>

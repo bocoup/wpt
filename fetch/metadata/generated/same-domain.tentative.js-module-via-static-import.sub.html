@@ -1,4 +1,4 @@
-
+<!DOCTYPE html>
 <!-- This test was procedurally generated. Please do not modify it directly. -->
 <html lang="en">
   <meta encoding="utf-8">
@@ -9,7 +9,7 @@
     window.moduleExecuted = new Promise((resolve) => window.resolve = resolve);
   </script>
   <script type="module">
-    import 'http://{{domains[www2]}}:{{ports[http][0]}}/fetch/metadata/resources/record-header.py?file=script-{{$id:uuid()}}';
+    import '/fetch/metadata/resources/record-header.py?file=script-{{$id:uuid()}}';
     resolve();
   </script>
   <body>
@@ -31,6 +31,6 @@ var expected = {
 assert_header_equals(actual, expected);
 
       });
-  }, 'something across domains');
+  }, 'something');
   </script>
 </html>

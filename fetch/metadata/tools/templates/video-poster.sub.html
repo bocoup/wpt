@@ -13,22 +13,15 @@
     var id = 'image-{{uuid()}}';
     video.setAttribute(
       'poster',
-      '/fetch/metadata/resources/record-header.py?file=' + id
+      '%(domain)s/fetch/metadata/resources/record-header.py?file=' + id
     );
     document.body.appendChild(video);
 
     return pollForRequestRecording(id)
       .then(function(actual) {
-var expected = {
-  dest: 'image',
-  mode: 'no-cors',
-  site: 'same-origin',
-  user: ''
-};
-assert_header_equals(actual, expected);
-
+%(validation)s
       });
-  }, 'something across domains');
+  }, '%(title)s');
   </script>
   </body>
 </html>
