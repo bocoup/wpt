@@ -1,0 +1,52 @@
+---
+redirect-cross-site-same-origin.tentative.https:
+  domain: https://{{hosts[alt][www]}}:{{ports[https][0]}}/xhr/resources/redirect.py?location=https://{{host}}:{{ports[https][0]}}
+  title: Cross-Site -> Same-Origin redirect
+  validation: |
+    let expected = {
+      site: "cross-site",
+      user: "",
+      mode: "no-cors",
+      dest: "image"
+    };
+    assert_header_equals(actual, expected, "Cross-Site -> Same-Origin redirect");
+
+redirect-cross-site-same-site.tentative.https:
+  domain: https://{{hosts[alt][www]}}:{{ports[https][0]}}/xhr/resources/redirect.py?location=https://{{hosts[][www]}}:{{ports[https][0]}}
+  title: Cross-Site -> Same-Site redirect
+  validation: |
+    let expected = {
+      site: "cross-site",
+      user: "",
+      mode: "no-cors",
+      dest: "image"
+    };
+    assert_header_equals(actual, expected, "Cross-Site -> Same-Site redirect");
+
+redirect-cross-site-cross-site.tentative.https:
+  domain: https://{{hosts[alt][www]}}:{{ports[https][0]}}/xhr/resources/redirect.py?location=https://{{hosts[alt][www]}}:{{ports[https][0]}}
+  title: Cross-Site -> Cross-Site redirect
+  validation: |
+    let expected = {
+      site: "cross-site",
+      user: "",
+      mode: "no-cors",
+      dest: "image"
+    };
+    assert_header_equals(actual, expected, "Cross-Site -> Cross-Site redirect");
+
+redirect-multiple-cross-site.tentative.https:
+  # same-origin -> cross-site -> same-origin
+  domain: "\
+    https://{{host}}:{{ports[https][0]}}/xhr/resources/redirect.py?location=\
+    https://{{hosts[alt][www]}}:{{ports[https][0]}}/xhr/resources/redirect.py?location=\
+    https://{{host}}:{{ports[https][0]}}"
+  title: Same-Origin -> Cross-Site -> Same-Origin redirect
+  validation: |
+    let expected = {
+      site: "cross-site",
+      user: "",
+      mode: "no-cors",
+      dest: "image"
+    };
+    assert_header_equals(actual, expected,  "Same-Origin -> Cross-Site -> Same-Origin redirect");
