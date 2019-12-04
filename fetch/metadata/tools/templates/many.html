@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<!-- This test was procedurally generated. Please do not modify it directly. -->
+<html lang="en">
+  <meta charset="utf-8">
+  <title>%(title)s</title>
+  <script src="/resources/testharness.js"></script>
+  <script src="/resources/testharnessreport.js"></script>
+  <script src="/fetch/metadata/resources/helper.js"></script>
+  <body>
+  <script>
+  'use strict';
+  let nonce = '{{uuid()}}';
+%(subtests){FOREACH}
+  promise_test(() => {
+    return Promise.resolve('%(foo)s)');
+  });
+%(subtests){ENDFOREACH}
+  </script>
+</html>

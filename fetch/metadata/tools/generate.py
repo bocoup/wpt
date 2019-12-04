@@ -15,6 +15,11 @@ def find_templates(starting_directory):
                 continue
             yield file_name, os.path.join(directory, file_name)
 
+def expand(template, case):
+    if 'subtests' not in case:
+        return template % case
+    return 'this will be difficult'
+
 def main(templates_directory, cases_directory, out_directory):
     for name, path in find_templates(templates_directory):
         with open(path, 'r') as handle:
@@ -25,13 +30,13 @@ def main(templates_directory, cases_directory, out_directory):
         with open(case_path, 'r') as handle:
             cases = yaml.safe_load(handle.read())
 
-            for case in cases:
+            for case_name in cases:
                 out_file_name = os.path.join(
-                    out_directory, '{}.{}'.format(case, name)
+                    out_directory, '{}.{}'.format(case_name, name)
                 )
 
                 with open(out_file_name, 'w') as handle:
-                    handle.write(template % cases[case])
+                    handle.write(expand(template, cases[case_name]))
 
 if __name__ == '__main__':
     main(TEMPLATES_DIR, CASES_DIR, OUT_DIR)
