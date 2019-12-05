@@ -9,7 +9,7 @@
     window.moduleExecuted = new Promise((resolve) => window.resolve = resolve);
   </script>
   <script type="module">
-    import '%(domain)s/fetch/metadata/resources/record-header.py?file=script-{{$id:uuid()}}';
+    import '[%domain%]/fetch/metadata/resources/record-header.py?file=script-{{$id:uuid()}}';
     resolve();
   </script>
   <body>
@@ -22,8 +22,8 @@
       .then((response) => response.text())
       .then((text) => {
         const actual = JSON.parse(text);
-%(validation)s
+[%validation%]
       });
-  }, '%(title)s');
+  }, '[%title%]');
   </script>
 </html>

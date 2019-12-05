@@ -13,13 +13,13 @@
   promise_test(async function() {
     const id = 'script-{{uuid()}}';
     await import(
-      '%(domain)s/fetch/metadata/resources/record-header.py?file=' + id
+      '[%domain%]/fetch/metadata/resources/record-header.py?file=' + id
     );
     const response = await fetch(
       '/fetch/metadata/resources/record-header.py?retrieve&file=' + id
     );
     const actual = JSON.parse(await response.text());
-%(validation)s
-  }, '%(title)s');
+[%validation%]
+  }, '[%title%]');
   </script>
 </html>

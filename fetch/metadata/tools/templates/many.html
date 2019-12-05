@@ -10,10 +10,10 @@
   <script>
   'use strict';
   let nonce = '{{uuid()}}';
-%(subtests){FOREACH}
+{% for subtest in subtests %}
   promise_test(() => {
-    return Promise.resolve('%(foo)s)');
+    return Promise.resolve('[%subtest.foo%]');
   });
-%(subtests){ENDFOREACH}
+{% endfor %}
   </script>
 </html>

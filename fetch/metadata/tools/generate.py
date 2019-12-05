@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 
 import os
+
+from jinja2 import Template
 import yaml
 
 HERE = os.path.abspath(os.path.dirname(__file__))
@@ -15,15 +17,10 @@ def find_templates(starting_directory):
                 continue
             yield file_name, os.path.join(directory, file_name)
 
-def expand(template, case):
-    if 'subtests' not in case:
-        return template % case
-    return 'this will be difficult'
-
 def main(templates_directory, cases_directory, out_directory):
     for name, path in find_templates(templates_directory):
         with open(path, 'r') as handle:
-            template = handle.read()
+            template = Template(handle.read(), variable_start_string='[%', variable_end_string='%]')
 
         case_path = path.replace(templates_directory, cases_directory) + '.yml'
 
@@ -36,7 +33,7 @@ def main(templates_directory, cases_directory, out_directory):
                 )
 
                 with open(out_file_name, 'w') as handle:
-                    handle.write(expand(template, cases[case_name]))
+                    handle.write(template.render(**cases[case_name]))
 
 if __name__ == '__main__':
     main(TEMPLATES_DIR, CASES_DIR, OUT_DIR)

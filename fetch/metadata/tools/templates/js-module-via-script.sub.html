@@ -6,15 +6,15 @@
   <script src="/resources/testharnessreport.js"></script>
   <script src="/fetch/metadata/resources/helper.js"></script>
   <script type="module"
-    src="%(domain)s/fetch/metadata/resources/record-header.py?file=script-{{$id:uuid()}}"></script>
+    src="[%domain%]/fetch/metadata/resources/record-header.py?file=script-{{$id:uuid()}}"></script>
   <body>
   <script>
   'use strict';
   promise_test(function() {
     return pollForRequestRecording('script-{{$id}}')
       .then(function(actual) {
-%(validation)s
+[%validation%]
       });
-  }, '%(title)s');
+  }, '[%title%]');
   </script>
 </html>

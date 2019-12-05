@@ -13,15 +13,15 @@
     var id = 'image-{{uuid()}}';
     video.setAttribute(
       'poster',
-      '%(domain)s/fetch/metadata/resources/record-header.py?file=' + id
+      '[%domain%]/fetch/metadata/resources/record-header.py?file=' + id
     );
     document.body.appendChild(video);
 
     return pollForRequestRecording(id)
       .then(function(actual) {
-%(validation)s
+[%validation%]
       });
-  }, '%(title)s');
+  }, '[%title%]');
   </script>
   </body>
 </html>
