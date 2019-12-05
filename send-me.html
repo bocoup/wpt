@@ -1,0 +1,77 @@
+<!--BEGIN
+END-->
+<!DOCTYPE html>
+<html lang="en">
+  <meta charset="utf-8">
+  <title>All sorts of tests for request headers</title>
+  <script src="/resources/testharness.js"></script>
+  <script src="/resources/testharnessreport.js"></script>
+  <script src="/fetch/metadata/resources/helper.js"></script>
+  <body>
+    <textarea id="a">
+HTTP/1.1 200 OK
+Content-Type: text/html
+
+<!DOCTYPE html>
+<html lang="en">
+  <meta charset="utf-8">
+  <script>
+    fetch('/?unspecified')
+      .then(() => parent.postMessage('okay', '*'));
+  </script>
+</html>
+    </textarea>
+
+    <textarea id="b">
+HTTP/1.1 200 OK
+Content-Type: text/html
+Referrer-Policy: no-referrer
+
+<!DOCTYPE html>
+<html lang="en">
+  <meta charset="utf-8">
+  <script>
+    fetch('/?no-referrer')
+      .then(() => parent.postMessage('okay', '*'));
+  </script>
+</html>
+  </textarea>
+
+  <script>
+  'use strict';
+  function toUrl(templateSelector) {
+    const raw = document.querySelector(templateSelector).textContent;
+    return '/send-me.py?raw=' + encodeURIComponent(raw.trim());
+  }
+
+  promise_test(() => {
+    const iframe = document.createElement('iframe');
+    iframe.setAttribute('src', toUrl('#a'));
+
+    return new Promise((resolve) => {
+      addEventListener('message', function(event) {
+        if (event.source === iframe.contentWindow) {
+          resolve();
+        }
+      });
+
+      document.body.appendChild(iframe);
+    }).then(() => iframe.remove());
+  }, 'Referrer-Policy unspecified');
+
+  promise_test(() => {
+    const iframe = document.createElement('iframe');
+    iframe.setAttribute('src', toUrl('#b'));
+
+    return new Promise((resolve) => {
+      addEventListener('message', function(event) {
+        if (event.source === iframe.contentWindow) {
+          resolve();
+        }
+      });
+
+      document.body.appendChild(iframe);
+    }).then(() => iframe.remove());
+  }, 'Referrer-Policy: no-referrer');
+  </script>
+</html>
