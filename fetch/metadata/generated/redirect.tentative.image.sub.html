@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<!-- This test was procedurally generated. Please do not modify it directly. -->
+<html lang="en">
+  <meta charset="utf-8">
+  <title>Fetch metadata request headers, redirection on images</title>
+  <script src="/resources/testharness.js"></script>
+  <script src="/resources/testharnessreport.js"></script>
+  <script src="/common/get-host-info.sub.js"></script>
+  <script src="/fetch/metadata/resources/helper.sub.js"></script>
+  <body>
+  <script>
+  'use strict';
+
+  {
+    const path = '/fetch/metadata/resources/record-headers.py?key={{uuid()}}';
+    const headers = new Promise((resolve) => {
+      const image = document.createElement('img');
+      image.src = chain('HTTPS_REMOTE_ORIGIN', 'HTTPS_ORIGIN')(path);
+      image.onload = image.onerror = resolve;
+    })
+    .then(() => fetch(path + '&retrieve'))
+    .then((response) => response.text())
+    .then((text) => JSON.parse(text));
+
+    test_eventual_property(
+      'Cross-Site -> Same-Origin redirect',
+      'sec-fetch-site',
+      {value: 'cross-site'},
+      headers
+    );
+
+    test_eventual_property(
+      'Cross-Site -> Same-Origin redirect',
+      'sec-fetch-user',
+      null,
+      headers
+    );
+
+    test_eventual_property(
+      'Cross-Site -> Same-Origin redirect',
+      'sec-fetch-mode',
+      {value: 'no-cors'},
+      headers
+    );
+
+    test_eventual_property(
+      'Cross-Site -> Same-Origin redirect',
+      'sec-fetch-dest',
+      {value: 'image'},
+      headers
+    );
+  }
+
+  {
+    const path = '/fetch/metadata/resources/record-headers.py?key={{uuid()}}';
+    const headers = new Promise((resolve) => {
+      const image = document.createElement('img');
+      image.src = chain('HTTPS_REMOTE_ORIGIN', 'AUTHENTICATED_ORIGIN')(path);
+      image.onload = image.onerror = resolve;
+    })
+    .then(() => fetch(path + '&retrieve'))
+    .then((response) => response.text())
+    .then((text) => JSON.parse(text));
+
+    test_eventual_property(
+      'Cross-Site -> Same-Site redirect',
+      'sec-fetch-site',
+      {value: 'cross-site'},
+      headers
+    );
+
+    test_eventual_property(
+      'Cross-Site -> Same-Site redirect',
+      'sec-fetch-user',
+      null,
+      headers
+    );
+
+    test_eventual_property(
+      'Cross-Site -> Same-Site redirect',
+      'sec-fetch-mode',
+      {value: 'no-cors'},
+      headers
+    );
+
+    test_eventual_property(
+      'Cross-Site -> Same-Site redirect',
+      'sec-fetch-dest',
+      {value: 'image'},
+      headers
+    );
+  }
+
+  {
+    const path = '/fetch/metadata/resources/record-headers.py?key={{uuid()}}';
+    const headers = new Promise((resolve) => {
+      const image = document.createElement('img');
+      image.src = chain('HTTPS_REMOTE_ORIGIN', 'HTTPS_REMOTE_ORIGIN')(path);
+      image.onload = image.onerror = resolve;
+    })
+    .then(() => fetch(path + '&retrieve'))
+    .then((response) => response.text())
+    .then((text) => JSON.parse(text));
+
+    test_eventual_property(
+      'Cross-Site -> Cross-Site redirect',
+      'sec-fetch-site',
+      {value: 'cross-site'},
+      headers
+    );
+
+    test_eventual_property(
+      'Cross-Site -> Cross-Site redirect',
+      'sec-fetch-user',
+      null,
+      headers
+    );
+
+    test_eventual_property(
+      'Cross-Site -> Cross-Site redirect',
+      'sec-fetch-mode',
+      {value: 'no-cors'},
+      headers
+    );
+
+    test_eventual_property(
+      'Cross-Site -> Cross-Site redirect',
+      'sec-fetch-dest',
+      {value: 'image'},
+      headers
+    );
+  }
+
+  {
+    const path = '/fetch/metadata/resources/record-headers.py?key={{uuid()}}';
+    const headers = new Promise((resolve) => {
+      const image = document.createElement('img');
+      image.src = chain('HTTPS_ORIGIN', 'HTTPS_REMOTE_ORIGIN', 'HTTPS_ORIGIN')(path);
+      image.onload = image.onerror = resolve;
+    })
+    .then(() => fetch(path + '&retrieve'))
+    .then((response) => response.text())
+    .then((text) => JSON.parse(text));
+
+    test_eventual_property(
+      'Same-Origin -> Cross-Site -> Same-Origin redirect',
+      'sec-fetch-site',
+      {value: 'cross-site'},
+      headers
+    );
+
+    test_eventual_property(
+      'Same-Origin -> Cross-Site -> Same-Origin redirect',
+      'sec-fetch-user',
+      null,
+      headers
+    );
+
+    test_eventual_property(
+      'Same-Origin -> Cross-Site -> Same-Origin redirect',
+      'sec-fetch-mode',
+      {value: 'no-cors'},
+      headers
+    );
+
+    test_eventual_property(
+      'Same-Origin -> Cross-Site -> Same-Origin redirect',
+      'sec-fetch-dest',
+      {value: 'image'},
+      headers
+    );
+  }
+
+  {
+    const path = '/fetch/metadata/resources/record-headers.py?key={{uuid()}}';
+    const headers = new Promise((resolve) => {
+      const image = document.createElement('img');
+      image.src = chain('HTTPS_ORIGIN', 'HTTP_ORIGIN', 'HTTPS_ORIGIN')(path);
+      image.onload = image.onerror = resolve;
+    })
+    .then(() => fetch(path + '&retrieve'))
+    .then((response) => response.text())
+    .then((text) => JSON.parse(text));
+
+    test_eventual_property(
+      'HTTPS downgrade-upgrade',
+      'sec-fetch-site',
+      {value: 'cross-site'},
+      headers
+    );
+
+    test_eventual_property(
+      'HTTPS downgrade-upgrade',
+      'sec-fetch-user',
+      null,
+      headers
+    );
+
+    test_eventual_property(
+      'HTTPS downgrade-upgrade',
+      'sec-fetch-mode',
+      {value: 'no-cors'},
+      headers
+    );
+
+    test_eventual_property(
+      'HTTPS downgrade-upgrade',
+      'sec-fetch-dest',
+      {value: 'image'},
+      headers
+    );
+  }
+  </script>
+  </body>
+</html>

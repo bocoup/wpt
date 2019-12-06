@@ -1,52 +1,43 @@
 ---
-redirect-cross-site-same-origin.tentative.https:
-  domain: https://{{hosts[alt][www]}}:{{ports[https][0]}}/xhr/resources/redirect.py?location=https://{{host}}:{{ports[https][0]}}
-  title: Cross-Site -> Same-Origin redirect
-  validation: |
-    let expected = {
-      site: "cross-site",
-      user: "",
-      mode: "no-cors",
-      dest: "image"
-    };
-    assert_header_equals(actual, expected, "Cross-Site -> Same-Origin redirect");
+redirect.tentative:
+  title: Fetch metadata request headers, redirection on images
+  requests:
+  - title: Cross-Site -> Same-Origin redirect
+    pathPrefix: chain('HTTPS_REMOTE_ORIGIN', 'HTTPS_ORIGIN')
+    expectations:
+      sec-fetch-site: cross-site
+      sec-fetch-user: NULL
+      sec-fetch-mode: no-cors
+      sec-fetch-dest: image
 
-redirect-cross-site-same-site.tentative.https:
-  domain: https://{{hosts[alt][www]}}:{{ports[https][0]}}/xhr/resources/redirect.py?location=https://{{hosts[][www]}}:{{ports[https][0]}}
-  title: Cross-Site -> Same-Site redirect
-  validation: |
-    let expected = {
-      site: "cross-site",
-      user: "",
-      mode: "no-cors",
-      dest: "image"
-    };
-    assert_header_equals(actual, expected, "Cross-Site -> Same-Site redirect");
+  - title: Cross-Site -> Same-Site redirect
+    pathPrefix: chain('HTTPS_REMOTE_ORIGIN', 'AUTHENTICATED_ORIGIN')
+    expectations:
+      sec-fetch-site: cross-site
+      sec-fetch-user: NULL
+      sec-fetch-mode: no-cors
+      sec-fetch-dest: image
 
-redirect-cross-site-cross-site.tentative.https:
-  domain: https://{{hosts[alt][www]}}:{{ports[https][0]}}/xhr/resources/redirect.py?location=https://{{hosts[alt][www]}}:{{ports[https][0]}}
-  title: Cross-Site -> Cross-Site redirect
-  validation: |
-    let expected = {
-      site: "cross-site",
-      user: "",
-      mode: "no-cors",
-      dest: "image"
-    };
-    assert_header_equals(actual, expected, "Cross-Site -> Cross-Site redirect");
+  - title: Cross-Site -> Cross-Site redirect
+    pathPrefix: chain('HTTPS_REMOTE_ORIGIN', 'HTTPS_REMOTE_ORIGIN')
+    expectations:
+      sec-fetch-site: cross-site
+      sec-fetch-user: NULL
+      sec-fetch-mode: no-cors
+      sec-fetch-dest: image
 
-redirect-multiple-cross-site.tentative.https:
-  # same-origin -> cross-site -> same-origin
-  domain: "\
-    https://{{host}}:{{ports[https][0]}}/xhr/resources/redirect.py?location=\
-    https://{{hosts[alt][www]}}:{{ports[https][0]}}/xhr/resources/redirect.py?location=\
-    https://{{host}}:{{ports[https][0]}}"
-  title: Same-Origin -> Cross-Site -> Same-Origin redirect
-  validation: |
-    let expected = {
-      site: "cross-site",
-      user: "",
-      mode: "no-cors",
-      dest: "image"
-    };
-    assert_header_equals(actual, expected,  "Same-Origin -> Cross-Site -> Same-Origin redirect");
+  - title: Same-Origin -> Cross-Site -> Same-Origin redirect
+    pathPrefix: chain('HTTPS_ORIGIN', 'HTTPS_REMOTE_ORIGIN', 'HTTPS_ORIGIN')
+    expectations:
+      sec-fetch-site: cross-site
+      sec-fetch-user: NULL
+      sec-fetch-mode: no-cors
+      sec-fetch-dest: image
+
+  - title: HTTPS downgrade-upgrade
+    pathPrefix: chain('HTTPS_ORIGIN', 'HTTP_ORIGIN', 'HTTPS_ORIGIN')
+    expectations:
+      sec-fetch-site: cross-site
+      sec-fetch-user: NULL
+      sec-fetch-mode: no-cors
+      sec-fetch-dest: image
