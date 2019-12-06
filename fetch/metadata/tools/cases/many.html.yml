@@ -1,6 +1,0 @@
----
-case-name:
-  title: Test title!
-  subtests:
-    - foo: hello
-    - foo: goodbye
