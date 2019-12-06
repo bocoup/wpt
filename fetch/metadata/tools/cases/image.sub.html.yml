@@ -1,6 +1,9 @@
 ---
 redirect.tentative:
   title: Fetch metadata request headers, redirection on images
+  scripts:
+    - /common/get-host-info.sub.js
+    - /fetch/metadata/resources/helper.sub.js
   requests:
   - title: Cross-Site -> Same-Origin redirect
     pathPrefix: chain('HTTPS_REMOTE_ORIGIN', 'HTTPS_ORIGIN')
