@@ -11,13 +11,17 @@
   <script>
   'use strict';
 
+  function induceRequest(path) {
+    return new Promise((resolve) => {
+        const image = document.createElement('img');
+        image.src = path;
+        image.onload = image.onerror = resolve;
+      });
+  }
+
   {
     const path = '/fetch/metadata/resources/record-headers.py?key={{uuid()}}';
-    const headers = new Promise((resolve) => {
-      const image = document.createElement('img');
-      image.src = chain('HTTPS_REMOTE_ORIGIN', 'HTTPS_ORIGIN')(path);
-      image.onload = image.onerror = resolve;
-    })
+    const headers = induceRequest(chain('HTTPS_REMOTE_ORIGIN', 'HTTPS_ORIGIN')(path))
     .then(() => fetch(path + '&retrieve'))
     .then((response) => response.text())
     .then((text) => JSON.parse(text));
@@ -53,11 +57,7 @@
 
   {
     const path = '/fetch/metadata/resources/record-headers.py?key={{uuid()}}';
-    const headers = new Promise((resolve) => {
-      const image = document.createElement('img');
-      image.src = chain('HTTPS_REMOTE_ORIGIN', 'AUTHENTICATED_ORIGIN')(path);
-      image.onload = image.onerror = resolve;
-    })
+    const headers = induceRequest(chain('HTTPS_REMOTE_ORIGIN', 'AUTHENTICATED_ORIGIN')(path))
     .then(() => fetch(path + '&retrieve'))
     .then((response) => response.text())
     .then((text) => JSON.parse(text));
@@ -93,11 +93,7 @@
 
   {
     const path = '/fetch/metadata/resources/record-headers.py?key={{uuid()}}';
-    const headers = new Promise((resolve) => {
-      const image = document.createElement('img');
-      image.src = chain('HTTPS_REMOTE_ORIGIN', 'HTTPS_REMOTE_ORIGIN')(path);
-      image.onload = image.onerror = resolve;
-    })
+    const headers = induceRequest(chain('HTTPS_REMOTE_ORIGIN', 'HTTPS_REMOTE_ORIGIN')(path))
     .then(() => fetch(path + '&retrieve'))
     .then((response) => response.text())
     .then((text) => JSON.parse(text));
@@ -133,11 +129,7 @@
 
   {
     const path = '/fetch/metadata/resources/record-headers.py?key={{uuid()}}';
-    const headers = new Promise((resolve) => {
-      const image = document.createElement('img');
-      image.src = chain('HTTPS_ORIGIN', 'HTTPS_REMOTE_ORIGIN', 'HTTPS_ORIGIN')(path);
-      image.onload = image.onerror = resolve;
-    })
+    const headers = induceRequest(chain('HTTPS_ORIGIN', 'HTTPS_REMOTE_ORIGIN', 'HTTPS_ORIGIN')(path))
     .then(() => fetch(path + '&retrieve'))
     .then((response) => response.text())
     .then((text) => JSON.parse(text));
@@ -173,11 +165,7 @@
 
   {
     const path = '/fetch/metadata/resources/record-headers.py?key={{uuid()}}';
-    const headers = new Promise((resolve) => {
-      const image = document.createElement('img');
-      image.src = chain('HTTPS_ORIGIN', 'HTTP_ORIGIN', 'HTTPS_ORIGIN')(path);
-      image.onload = image.onerror = resolve;
-    })
+    const headers = induceRequest(chain('HTTPS_ORIGIN', 'HTTP_ORIGIN', 'HTTPS_ORIGIN')(path))
     .then(() => fetch(path + '&retrieve'))
     .then((response) => response.text())
     .then((text) => JSON.parse(text));
