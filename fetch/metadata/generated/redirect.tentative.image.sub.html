@@ -22,9 +22,9 @@
   {
     const path = '/fetch/metadata/resources/record-headers.py?key={{uuid()}}';
     const headers = induceRequest(chain('HTTPS_REMOTE_ORIGIN', 'HTTPS_ORIGIN')(path))
-    .then(() => fetch(path + '&retrieve'))
-    .then((response) => response.text())
-    .then((text) => JSON.parse(text));
+      .then(() => fetch(path + '&retrieve'))
+      .then((response) => response.text())
+      .then((text) => JSON.parse(text));
 
     test_eventual_property(
       'Cross-Site -> Same-Origin redirect',
@@ -58,9 +58,9 @@
   {
     const path = '/fetch/metadata/resources/record-headers.py?key={{uuid()}}';
     const headers = induceRequest(chain('HTTPS_REMOTE_ORIGIN', 'AUTHENTICATED_ORIGIN')(path))
-    .then(() => fetch(path + '&retrieve'))
-    .then((response) => response.text())
-    .then((text) => JSON.parse(text));
+      .then(() => fetch(path + '&retrieve'))
+      .then((response) => response.text())
+      .then((text) => JSON.parse(text));
 
     test_eventual_property(
       'Cross-Site -> Same-Site redirect',
@@ -94,9 +94,9 @@
   {
     const path = '/fetch/metadata/resources/record-headers.py?key={{uuid()}}';
     const headers = induceRequest(chain('HTTPS_REMOTE_ORIGIN', 'HTTPS_REMOTE_ORIGIN')(path))
-    .then(() => fetch(path + '&retrieve'))
-    .then((response) => response.text())
-    .then((text) => JSON.parse(text));
+      .then(() => fetch(path + '&retrieve'))
+      .then((response) => response.text())
+      .then((text) => JSON.parse(text));
 
     test_eventual_property(
       'Cross-Site -> Cross-Site redirect',
@@ -130,9 +130,9 @@
   {
     const path = '/fetch/metadata/resources/record-headers.py?key={{uuid()}}';
     const headers = induceRequest(chain('HTTPS_ORIGIN', 'HTTPS_REMOTE_ORIGIN', 'HTTPS_ORIGIN')(path))
-    .then(() => fetch(path + '&retrieve'))
-    .then((response) => response.text())
-    .then((text) => JSON.parse(text));
+      .then(() => fetch(path + '&retrieve'))
+      .then((response) => response.text())
+      .then((text) => JSON.parse(text));
 
     test_eventual_property(
       'Same-Origin -> Cross-Site -> Same-Origin redirect',
@@ -166,9 +166,9 @@
   {
     const path = '/fetch/metadata/resources/record-headers.py?key={{uuid()}}';
     const headers = induceRequest(chain('HTTPS_ORIGIN', 'HTTP_ORIGIN', 'HTTPS_ORIGIN')(path))
-    .then(() => fetch(path + '&retrieve'))
-    .then((response) => response.text())
-    .then((text) => JSON.parse(text));
+      .then(() => fetch(path + '&retrieve'))
+      .then((response) => response.text())
+      .then((text) => JSON.parse(text));
 
     test_eventual_property(
       'HTTPS downgrade-upgrade',
