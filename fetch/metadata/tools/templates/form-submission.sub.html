@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<!-- This test was procedurally generated. Please do not modify it directly. -->
+<html lang="en">
+  <meta charset="utf-8">
+  <title>[%title%]</title>
+  <script src="/resources/testharness.js"></script>
+  <script src="/resources/testharnessreport.js"></script>
+  <Script src="/fetch/metadata/resources/helper.sub.js"></script>
+  {%- for script in scripts %}
+  <script src="[%script%]"></script>
+  {%- endfor %}
+  <body>
+  <script>
+  'use strict';
+
+  function induceRequest(method, key, path) {
+    const win = window.open();
+    const inputs = [
+        ['key', key],
+        ['body', `<script>opener.postMessage('done', '*');</${''}script>" />`],
+        ...new URL(path).searchParams
+      ]
+      .map(([name, value]) =>
+        `<input type="hidden" name="${name}" value="${value}">`
+      )
+      .join('\n');
+
+    return new Promise((resolve) => {
+        addEventListener('message', function(event) {
+          if (event.source === win) {
+            resolve();
+          }
+        });
+        win.document.open();
+        win.document.write(`
+          <!DOCTYPE html>
+          <form method="${method}" action="${path}">${inputs}</form>
+          <script>
+            const form = document.getElementsByTagName('form')[0];
+            form.submit();
+          </${''}script>
+        `);
+        win.document.close();
+      })
+      .then(() => win.close());
+  }
+  {%- for request in requests %}
+
+  {
+    const path = '/fetch/metadata/resources/record-headers.py';
+    const key = '{{uuid()}}';
+    const headers = series(() =>
+        induceRequest('[%method%]', key, [%request.pathPrefix%](path))
+      )
+      .then(() => fetch(path + '?retrieve&key=' + key))
+      .then((response) => response.text())
+      .then((text) => JSON.parse(text));
+    {%- for name, value in request.expectations.items() %}
+
+    test_eventual_property(
+      '[%request.title%]',
+      '[%name%]',
+    {%- if value == none %}
+      null,
+    {%- else %}
+      {value: '[%value%]'},
+    {%- endif %}
+      headers
+    );
+    {%- endfor %}
+  }
+  {%- endfor %}
+  </script>
+  </body>
+</html>

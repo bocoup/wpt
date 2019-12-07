@@ -24,3 +24,13 @@ function chain(...domains) {
     return full;
   }
 }
+
+let series = (() => {
+  let latest;
+
+  return (operation) => {
+    const next = (latest || Promise.resolve()).then(operation);
+    latest = next.catch(() => {});
+    return next;
+  };
+})();
