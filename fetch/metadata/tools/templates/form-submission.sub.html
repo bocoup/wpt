@@ -50,7 +50,7 @@
     const path = '/fetch/metadata/resources/record-headers.py';
     const key = '{{uuid()}}';
     const headers = series(() =>
-        induceRequest('[%method%]', key, [%request.pathPrefix%](path))
+        induceRequest('[%method%]', key, [%request.pathPrefix | default("location.origin+")%](path))
       )
       .then(() => fetch(path + '?retrieve&key=' + key))
       .then((response) => response.text())

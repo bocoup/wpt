@@ -46,7 +46,7 @@
     const path = '/fetch/metadata/resources/record-headers.py';
     const key = '{{uuid()}}';
     const headers = series(() =>
-        induceRequest('', key, (path))
+        induceRequest('', key, location.origin+(path))
       )
       .then(() => fetch(path + '?retrieve&key=' + key))
       .then((response) => response.text())
@@ -85,7 +85,7 @@
     const path = '/fetch/metadata/resources/record-headers.py';
     const key = '{{uuid()}}';
     const headers = series(() =>
-        induceRequest('', key, (path))
+        induceRequest('', key, location.origin+(path))
       )
       .then(() => fetch(path + '?retrieve&key=' + key))
       .then((response) => response.text())
