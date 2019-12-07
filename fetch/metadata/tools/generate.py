@@ -17,8 +17,12 @@ def find_templates(starting_directory):
                 continue
             yield file_name, os.path.join(directory, file_name)
 
+def test_name(template_name, case_name):
+    prefix, suffix = template_name.split('.', 1)
+    return '{}-{}.{}'.format(prefix, case_name, suffix)
+
 def main(templates_directory, cases_directory, out_directory):
-    for name, path in find_templates(templates_directory):
+    for template_name, path in find_templates(templates_directory):
         with open(path, 'r') as handle:
             template = Template(handle.read(), variable_start_string='[%', variable_end_string='%]')
 
@@ -29,7 +33,7 @@ def main(templates_directory, cases_directory, out_directory):
 
             for case_name in cases:
                 out_file_name = os.path.join(
-                    out_directory, '{}.{}'.format(case_name, name)
+                    out_directory, test_name(template_name, case_name)
                 )
 
                 with open(out_file_name, 'w') as handle:
