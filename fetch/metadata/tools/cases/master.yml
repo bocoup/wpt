@@ -1,7 +1,7 @@
 ---
 - templates: '*'
   file_name_part: sec-fetch-site-redirect.https
-  title: Fetch Metadata - redirection
+  title: Fetch Metadata - Sec-Fetch-Site - redirection
   headerName: sec-fetch-site
   requests:
   - description: Cross-Site -> Same-Origin
@@ -38,7 +38,7 @@
 
 - templates: '*'
   file_name_part: sec-fetch-mode-redirect
-  title: Fetch Metadata - redirection
+  title: Fetch Metadata - Sec-Fetch-Mode - redirection
   headerName: sec-fetch-mode
   requests:
   - description: Cross-Site -> Same-Origin
