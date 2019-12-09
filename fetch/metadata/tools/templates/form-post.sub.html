@@ -12,10 +12,9 @@
   <script>
   'use strict';
 
-  function induceRequest(method, key, path) {
+  function induceRequest(path) {
     const win = window.open();
     const inputs = [
-        ['key', key],
         ['body', `<script>opener.postMessage('done', '*');</${''}script>`],
         ...new URL(path, location.origin).searchParams
       ]
@@ -33,7 +32,7 @@
         win.document.open();
         win.document.write(`
           <!DOCTYPE html>
-          <form method="${method}" action="${path}">${inputs}</form>
+          <form method="POST" action="${path}">${inputs}</form>
           <script>
             const form = document.getElementsByTagName('form')[0];
             form.submit();
@@ -46,10 +45,9 @@
   {%- for request in requests %}
 
   promise_test(() => {
-    const path = '/fetch/metadata/resources/record-headers.py';
-    const key = '{{uuid()}}';
-    return induceRequest('[%method | default("GET") %]', key, '[%request.pathPrefix%]' +path)
-      .then(() => fetch(path + '?retrieve&key=' + key))
+    const path = '/fetch/metadata/resources/record-headers.py?key={{uuid()}}';
+    return induceRequest('[%request.pathPrefix%]' + path)
+      .then(() => fetch(path + '&retrieve'))
       .then((response) => response.text())
       .then((text) => JSON.parse(text))
       .then((headers) => {

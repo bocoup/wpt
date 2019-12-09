@@ -9,10 +9,9 @@
   <script>
   'use strict';
 
-  function induceRequest(method, key, path) {
+  function induceRequest(path) {
     const win = window.open();
     const inputs = [
-        ['key', key],
         ['body', `<script>opener.postMessage('done', '*');</${''}script>`],
         ...new URL(path, location.origin).searchParams
       ]
@@ -30,7 +29,7 @@
         win.document.open();
         win.document.write(`
           <!DOCTYPE html>
-          <form method="${method}" action="${path}">${inputs}</form>
+          <form method="POST" action="${path}">${inputs}</form>
           <script>
             const form = document.getElementsByTagName('form')[0];
             form.submit();
@@ -42,10 +41,9 @@
   }
 
   promise_test(() => {
-    const path = '/fetch/metadata/resources/record-headers.py';
-    const key = '{{uuid()}}';
-    return induceRequest('GET', key, 'https://{{hosts[alt][]}}:{{ports[https][0]}}/fetch/api/resources/redirect.py?location=https://{{host}}:{{ports[https][0]}}' +path)
-      .then(() => fetch(path + '?retrieve&key=' + key))
+    const path = '/fetch/metadata/resources/record-headers.py?key={{uuid()}}';
+    return induceRequest('https://{{hosts[alt][]}}:{{ports[https][0]}}/fetch/api/resources/redirect.py?location=https://{{host}}:{{ports[https][0]}}' + path)
+      .then(() => fetch(path + '&retrieve'))
       .then((response) => response.text())
       .then((text) => JSON.parse(text))
       .then((headers) => {
@@ -55,10 +53,9 @@
   }, 'sec-fetch-mode - Cross-Site -> Same-Origin');
 
   promise_test(() => {
-    const path = '/fetch/metadata/resources/record-headers.py';
-    const key = '{{uuid()}}';
-    return induceRequest('GET', key, 'https://{{hosts[alt][]}}:{{ports[https][0]}}/fetch/api/resources/redirect.py?location=https://{{domains[www]}}:{{ports[https][0]}}' +path)
-      .then(() => fetch(path + '?retrieve&key=' + key))
+    const path = '/fetch/metadata/resources/record-headers.py?key={{uuid()}}';
+    return induceRequest('https://{{hosts[alt][]}}:{{ports[https][0]}}/fetch/api/resources/redirect.py?location=https://{{domains[www]}}:{{ports[https][0]}}' + path)
+      .then(() => fetch(path + '&retrieve'))
       .then((response) => response.text())
       .then((text) => JSON.parse(text))
       .then((headers) => {
@@ -68,10 +65,9 @@
   }, 'sec-fetch-mode - Cross-Site -> Same-Site');
 
   promise_test(() => {
-    const path = '/fetch/metadata/resources/record-headers.py';
-    const key = '{{uuid()}}';
-    return induceRequest('GET', key, 'https://{{hosts[alt][]}}:{{ports[https][0]}}/fetch/api/resources/redirect.py?location=https://{{hosts[alt][]}}:{{ports[https][0]}}' +path)
-      .then(() => fetch(path + '?retrieve&key=' + key))
+    const path = '/fetch/metadata/resources/record-headers.py?key={{uuid()}}';
+    return induceRequest('https://{{hosts[alt][]}}:{{ports[https][0]}}/fetch/api/resources/redirect.py?location=https://{{hosts[alt][]}}:{{ports[https][0]}}' + path)
+      .then(() => fetch(path + '&retrieve'))
       .then((response) => response.text())
       .then((text) => JSON.parse(text))
       .then((headers) => {
@@ -81,10 +77,9 @@
   }, 'sec-fetch-mode - Cross-Site -> Cross-Site');
 
   promise_test(() => {
-    const path = '/fetch/metadata/resources/record-headers.py';
-    const key = '{{uuid()}}';
-    return induceRequest('GET', key, 'https://{{host}}:{{ports[https][0]}}/fetch/api/resources/redirect.py?location=https://{{hosts[alt][]}}:{{ports[https][0]}}/fetch/api/resources/redirect.py?location=https://{{host}}:{{ports[https][0]}}' +path)
-      .then(() => fetch(path + '?retrieve&key=' + key))
+    const path = '/fetch/metadata/resources/record-headers.py?key={{uuid()}}';
+    return induceRequest('https://{{host}}:{{ports[https][0]}}/fetch/api/resources/redirect.py?location=https://{{hosts[alt][]}}:{{ports[https][0]}}/fetch/api/resources/redirect.py?location=https://{{host}}:{{ports[https][0]}}' + path)
+      .then(() => fetch(path + '&retrieve'))
       .then((response) => response.text())
       .then((text) => JSON.parse(text))
       .then((headers) => {
@@ -94,10 +89,9 @@
   }, 'sec-fetch-mode - Same-Origin -> Cross-Site -> Same-Origin');
 
   promise_test(() => {
-    const path = '/fetch/metadata/resources/record-headers.py';
-    const key = '{{uuid()}}';
-    return induceRequest('GET', key, 'https://{{host}}:{{ports[https][0]}}/fetch/api/resources/redirect.py?location=http://{{host}}:{{ports[http][0]}}/fetch/api/resources/redirect.py?location=https://{{host}}:{{ports[https][0]}}' +path)
-      .then(() => fetch(path + '?retrieve&key=' + key))
+    const path = '/fetch/metadata/resources/record-headers.py?key={{uuid()}}';
+    return induceRequest('https://{{host}}:{{ports[https][0]}}/fetch/api/resources/redirect.py?location=http://{{host}}:{{ports[http][0]}}/fetch/api/resources/redirect.py?location=https://{{host}}:{{ports[https][0]}}' + path)
+      .then(() => fetch(path + '&retrieve'))
       .then((response) => response.text())
       .then((text) => JSON.parse(text))
       .then((headers) => {
