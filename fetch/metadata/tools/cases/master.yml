@@ -9,26 +9,22 @@
       https://{{hosts[alt][]}}:{{ports[https][0]}}/fetch/api/resources/redirect.py?location=\
       https://{{host}}:{{ports[https][0]}}"
     expected: cross-site
-
   - description: Cross-Site -> Same-Site
     pathPrefix: "\
       https://{{hosts[alt][]}}:{{ports[https][0]}}/fetch/api/resources/redirect.py?location=\
       https://{{domains[www2]}}:{{ports[https][0]}}"
     expected: cross-site
-
   - description: Cross-Site -> Cross-Site
     pathPrefix: "\
       https://{{hosts[alt][]}}:{{ports[https][0]}}/fetch/api/resources/redirect.py?location=\
       https://{{hosts[alt][]}}:{{ports[https][0]}}"
     expected: cross-site
-
   - description: Same-Origin -> Cross-Site -> Same-Origin
     pathPrefix: "\
       https://{{host}}:{{ports[https][0]}}/fetch/api/resources/redirect.py?location=\
       https://{{hosts[alt][]}}:{{ports[https][0]}}/fetch/api/resources/redirect.py?location=\
       https://{{host}}:{{ports[https][0]}}"
     expected: cross-site
-
   - description: HTTPS downgrade-upgrade
     pathPrefix: "\
       https://{{host}}:{{ports[https][0]}}/fetch/api/resources/redirect.py?location=\
@@ -46,26 +42,22 @@
       https://{{hosts[alt][]}}:{{ports[https][0]}}/fetch/api/resources/redirect.py?location=\
       https://{{host}}:{{ports[https][0]}}"
     expected: no-cors
-
   - description: Cross-Site -> Same-Site
     pathPrefix: "\
       https://{{hosts[alt][]}}:{{ports[https][0]}}/fetch/api/resources/redirect.py?location=\
       https://{{domains[www]}}:{{ports[https][0]}}"
     expected: no-cors
-
   - description: Cross-Site -> Cross-Site
     pathPrefix: "\
       https://{{hosts[alt][]}}:{{ports[https][0]}}/fetch/api/resources/redirect.py?location=\
       https://{{hosts[alt][]}}:{{ports[https][0]}}"
     expected: no-cors
-
   - description: Same-Origin -> Cross-Site -> Same-Origin
     pathPrefix: "\
       https://{{host}}:{{ports[https][0]}}/fetch/api/resources/redirect.py?location=\
       https://{{hosts[alt][]}}:{{ports[https][0]}}/fetch/api/resources/redirect.py?location=\
       https://{{host}}:{{ports[https][0]}}"
     expected: no-cors
-
   - description: HTTPS downgrade-upgrade
     pathPrefix: "\
       https://{{host}}:{{ports[https][0]}}/fetch/api/resources/redirect.py?location=\
