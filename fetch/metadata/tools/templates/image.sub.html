@@ -5,10 +5,6 @@
   <title>[%title%]</title>
   <script src="/resources/testharness.js"></script>
   <script src="/resources/testharnessreport.js"></script>
-  <script src="/fetch/metadata/resources/helper.sub.js"></script>
-  {%- for script in scripts %}
-  <script src="[%script%]"></script>
-  {%- endfor %}
   <body>
   <script>
   'use strict';
@@ -23,27 +19,22 @@
 
   {%- for request in requests %}
 
-  {
+  promise_test(() => {
     const path = '/fetch/metadata/resources/record-headers.py?key={{uuid()}}';
-    const headers = induceRequest([%request.pathPrefix%](path))
+    return induceRequest('[%request.pathPrefix%]' + path)
       .then(() => fetch(path + '&retrieve'))
       .then((response) => response.text())
-      .then((text) => JSON.parse(text));
+      .then((text) => JSON.parse(text))
+      .then((headers) => {
+        {%- if request[expected] == none %}
+          assert_not_own_property(headers, '[%headerName%]');
+        {%- else %}
+          assert_own_property(headers, '[%headerName%]');
+          assert_equals(headers['[%headerName%]'], '[%request.expected%]');
+        {%- endif %}
+    });
+  }, '[%headerName%] - [%request.description%]');
 
-    {%- for name, value in request.expectations.items() %}
-
-    test_eventual_property(
-      '[%request.title%]',
-      '[%name%]',
-    {%- if value == none %}
-      null,
-    {%- else %}
-      {value: '[%value%]'},
-    {%- endif %}
-      headers
-    );
-    {%- endfor %}
-  }
   {%- endfor %}
   </script>
   </body>

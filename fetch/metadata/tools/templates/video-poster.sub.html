@@ -8,20 +8,35 @@
   <body>
   <script>
   'use strict';
-  promise_test(function() {
+
+  function induceRequest(t, path) {
     var video = document.createElement('video');
-    var id = 'image-{{uuid()}}';
-    video.setAttribute(
-      'poster',
-      '[%domain%]/fetch/metadata/resources/record-header.py?file=' + id
-    );
+    video.setAttribute('poster', path);
     document.body.appendChild(video);
 
+    t.add_cleanup(() => video.remove());
+  }
+
+  {%- for request in requests %}
+
+  promise_test((t) => {
+    const id = '{{uuid()}}';
+    const path = '/fetch/metadata/resources/record-headers.py?key=' + id;
+
+    induceRequest(t, '[%request.pathPrefix%]' + path);
+
     return pollForRequestRecording(id)
-      .then(function(actual) {
-[%validation%]
-      });
-  }, '[%title%]');
+      .then((headers) => {
+        {%- if request[expected] == none %}
+          assert_not_own_property(headers, '[%headerName%]');
+        {%- else %}
+          assert_own_property(headers, '[%headerName%]');
+          assert_equals(headers['[%headerName%]'], '[%request.expected%]');
+        {%- endif %}
+    });
+  }, '[%headerName%] - [%request.description%]');
+
+  {%- endfor %}
   </script>
   </body>
 </html>

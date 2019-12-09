@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<!-- This test was procedurally generated. Please do not modify it directly. -->
+<html lang="en">
+  <meta charset="utf-8">
+  <script src="/resources/testharness.js"></script>
+  <script src="/resources/testharnessreport.js"></script>
+  <script src="/fetch/metadata/resources/helper.js"></script>
+  <body>
+  <script>
+  'use strict';
+
+  function induceRequest(t, path) {
+    var video = document.createElement('video');
+    video.setAttribute('poster', path);
+    document.body.appendChild(video);
+
+    t.add_cleanup(() => video.remove());
+  }
+
+  promise_test((t) => {
+    const id = '{{uuid()}}';
+    const path = '/fetch/metadata/resources/record-headers.py?key=' + id;
+
+    induceRequest(t, 'https://{{hosts[alt][]}}:{{ports[https][0]}}/fetch/api/resources/redirect.py?location=https://{{host}}:{{ports[https][0]}}' + path);
+
+    return pollForRequestRecording(id)
+      .then((headers) => {
+          assert_own_property(headers, 'sec-fetch-site');
+          assert_equals(headers['sec-fetch-site'], 'cross-site');
+    });
+  }, 'sec-fetch-site - Cross-Site -> Same-Origin');
+
+  promise_test((t) => {
+    const id = '{{uuid()}}';
+    const path = '/fetch/metadata/resources/record-headers.py?key=' + id;
+
+    induceRequest(t, 'https://{{hosts[alt][]}}:{{ports[https][0]}}/fetch/api/resources/redirect.py?location=https://{{domains[www2]}}:{{ports[https][0]}}' + path);
+
+    return pollForRequestRecording(id)
+      .then((headers) => {
+          assert_own_property(headers, 'sec-fetch-site');
+          assert_equals(headers['sec-fetch-site'], 'cross-site');
+    });
+  }, 'sec-fetch-site - Cross-Site -> Same-Site');
+
+  promise_test((t) => {
+    const id = '{{uuid()}}';
+    const path = '/fetch/metadata/resources/record-headers.py?key=' + id;
+
+    induceRequest(t, 'https://{{hosts[alt][]}}:{{ports[https][0]}}/fetch/api/resources/redirect.py?location=https://{{hosts[alt][]}}:{{ports[https][0]}}' + path);
+
+    return pollForRequestRecording(id)
+      .then((headers) => {
+          assert_own_property(headers, 'sec-fetch-site');
+          assert_equals(headers['sec-fetch-site'], 'cross-site');
+    });
+  }, 'sec-fetch-site - Cross-Site -> Cross-Site');
+
+  promise_test((t) => {
+    const id = '{{uuid()}}';
+    const path = '/fetch/metadata/resources/record-headers.py?key=' + id;
+
+    induceRequest(t, 'https://{{host}}:{{ports[https][0]}}/fetch/api/resources/redirect.py?location=https://{{hosts[alt][]}}:{{ports[https][0]}}/fetch/api/resources/redirect.py?location=https://{{host}}:{{ports[https][0]}}' + path);
+
+    return pollForRequestRecording(id)
+      .then((headers) => {
+          assert_own_property(headers, 'sec-fetch-site');
+          assert_equals(headers['sec-fetch-site'], 'cross-site');
+    });
+  }, 'sec-fetch-site - Same-Origin -> Cross-Site -> Same-Origin');
+
+  promise_test((t) => {
+    const id = '{{uuid()}}';
+    const path = '/fetch/metadata/resources/record-headers.py?key=' + id;
+
+    induceRequest(t, 'https://{{host}}:{{ports[https][0]}}/fetch/api/resources/redirect.py?location=http://{{host}}:{{ports[http][0]}}/fetch/api/resources/redirect.py?location=https://{{host}}:{{ports[https][0]}}' + path);
+
+    return pollForRequestRecording(id)
+      .then((headers) => {
+          assert_own_property(headers, 'sec-fetch-site');
+          assert_equals(headers['sec-fetch-site'], 'cross-site');
+    });
+  }, 'sec-fetch-site - HTTPS downgrade-upgrade');
+  </script>
+  </body>
+</html>

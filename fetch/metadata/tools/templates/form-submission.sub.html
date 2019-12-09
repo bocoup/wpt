@@ -5,7 +5,6 @@
   <title>[%title%]</title>
   <script src="/resources/testharness.js"></script>
   <script src="/resources/testharnessreport.js"></script>
-  <Script src="/fetch/metadata/resources/helper.sub.js"></script>
   {%- for script in scripts %}
   <script src="[%script%]"></script>
   {%- endfor %}
@@ -17,8 +16,8 @@
     const win = window.open();
     const inputs = [
         ['key', key],
-        ['body', `<script>opener.postMessage('done', '*');</${''}script>" />`],
-        ...new URL(path).searchParams
+        ['body', `<script>opener.postMessage('done', '*');</${''}script>`],
+        ...new URL(path, location.origin).searchParams
       ]
       .map(([name, value]) =>
         `<input type="hidden" name="${name}" value="${value}">`
@@ -46,29 +45,23 @@
   }
   {%- for request in requests %}
 
-  {
+  promise_test(() => {
     const path = '/fetch/metadata/resources/record-headers.py';
     const key = '{{uuid()}}';
-    const headers = series(() =>
-        induceRequest('[%method%]', key, [%request.pathPrefix | default("location.origin+")%](path))
-      )
+    return induceRequest('[%method | default("GET") %]', key, '[%request.pathPrefix%]' +path)
       .then(() => fetch(path + '?retrieve&key=' + key))
       .then((response) => response.text())
-      .then((text) => JSON.parse(text));
-    {%- for name, value in request.expectations.items() %}
+      .then((text) => JSON.parse(text))
+      .then((headers) => {
+        {%- if request[expected] == none %}
+          assert_not_own_property(headers, '[%headerName%]');
+        {%- else %}
+          assert_own_property(headers, '[%headerName%]');
+          assert_equals(headers['[%headerName%]'], '[%request.expected%]');
+        {%- endif %}
+        });
+  }, '[%headerName%] - [%request.description%]');
 
-    test_eventual_property(
-      '[%request.title%]',
-      '[%name%]',
-    {%- if value == none %}
-      null,
-    {%- else %}
-      {value: '[%value%]'},
-    {%- endif %}
-      headers
-    );
-    {%- endfor %}
-  }
   {%- endfor %}
   </script>
   </body>

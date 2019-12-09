@@ -63,7 +63,7 @@ function assert_no_headers(value, tag) {
 }
 
 function pollForRequestRecording(id) {
-  return fetch('/fetch/metadata/resources/record-header.py?retrieve&file=' + id)
+  return fetch('/fetch/metadata/resources/record-headers.py?retrieve&key=' + id)
     .then(function(response) {
       if (!response.ok) {
         throw new Error('Failed to query for recorded headers.');
@@ -72,11 +72,13 @@ function pollForRequestRecording(id) {
       return response.text();
     })
     .then(function(text) {
-      if (text === "No header has been recorded") {
+      var value = JSON.parse(text);
+
+      if (value === 'No request has been recorded') {
         return new Promise((resolve) => setTimeout(resolve, 300))
           .then(() => pollForRequestRecording(id));
       }
 
-      return JSON.parse(text);
+      return value;
     });
 }

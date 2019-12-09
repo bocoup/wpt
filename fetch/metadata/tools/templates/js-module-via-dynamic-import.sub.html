@@ -6,20 +6,25 @@
   <script src="/resources/testharnessreport.js"></script>
   <script src="/fetch/metadata/resources/helper.js"></script>
   <script type="module">
-  </script>
-  <body>
-  <script type="module">
   'use strict';
-  promise_test(async function() {
-    const id = 'script-{{uuid()}}';
-    await import(
-      '[%domain%]/fetch/metadata/resources/record-header.py?file=' + id
-    );
-    const response = await fetch(
-      '/fetch/metadata/resources/record-header.py?retrieve&file=' + id
-    );
-    const actual = JSON.parse(await response.text());
-[%validation%]
-  }, '[%title%]');
+  {%- for request in requests %}
+
+  promise_test(() => {
+    const path = '/fetch/metadata/resources/record-headers.py?key={{uuid()}}';
+    return import('[%request.pathPrefix%]' + path + '&mime=application/javascript')
+      .then(() => fetch(path + '&retrieve'))
+      .then((response) => response.text())
+      .then((text) => JSON.parse(text))
+      .then((headers) => {
+        {%- if request[expected] == none %}
+          assert_not_own_property(headers, '[%headerName%]');
+        {%- else %}
+          assert_own_property(headers, '[%headerName%]');
+          assert_equals(headers['[%headerName%]'], '[%request.expected%]');
+        {%- endif %}
+    });
+  }, '[%headerName%] - [%request.description%]');
+
+  {%- endfor %}
   </script>
 </html>
