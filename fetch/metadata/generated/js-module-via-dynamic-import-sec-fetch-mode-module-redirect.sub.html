@@ -16,7 +16,7 @@
       .then((text) => JSON.parse(text))
       .then((headers) => {
           assert_own_property(headers, 'sec-fetch-mode');
-          assert_equals(headers['sec-fetch-mode'], 'no-cors');
+          assert_equals(headers['sec-fetch-mode'], 'cors');
     });
   }, 'sec-fetch-mode - Cross-Site -> Same-Origin');
 
@@ -28,7 +28,7 @@
       .then((text) => JSON.parse(text))
       .then((headers) => {
           assert_own_property(headers, 'sec-fetch-mode');
-          assert_equals(headers['sec-fetch-mode'], 'no-cors');
+          assert_equals(headers['sec-fetch-mode'], 'cors');
     });
   }, 'sec-fetch-mode - Cross-Site -> Same-Site');
 
@@ -40,7 +40,7 @@
       .then((text) => JSON.parse(text))
       .then((headers) => {
           assert_own_property(headers, 'sec-fetch-mode');
-          assert_equals(headers['sec-fetch-mode'], 'no-cors');
+          assert_equals(headers['sec-fetch-mode'], 'cors');
     });
   }, 'sec-fetch-mode - Cross-Site -> Cross-Site');
 
@@ -52,7 +52,7 @@
       .then((text) => JSON.parse(text))
       .then((headers) => {
           assert_own_property(headers, 'sec-fetch-mode');
-          assert_equals(headers['sec-fetch-mode'], 'no-cors');
+          assert_equals(headers['sec-fetch-mode'], 'cors');
     });
   }, 'sec-fetch-mode - Same-Origin -> Cross-Site -> Same-Origin');
 
@@ -64,7 +64,7 @@
       .then((text) => JSON.parse(text))
       .then((headers) => {
           assert_own_property(headers, 'sec-fetch-mode');
-          assert_equals(headers['sec-fetch-mode'], 'no-cors');
+          assert_equals(headers['sec-fetch-mode'], 'cors');
     });
   }, 'sec-fetch-mode - HTTPS downgrade-upgrade');
   </script>
