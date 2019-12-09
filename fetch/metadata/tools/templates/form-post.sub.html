@@ -15,6 +15,7 @@
   function induceRequest(path) {
     const win = window.open();
     const inputs = [
+        ['redirect_status', '307'],
         ['body', `<script>opener.postMessage('done', '*');</${''}script>`],
         ...new URL(path, location.origin).searchParams
       ]

@@ -33,6 +33,8 @@ def main(request, response):
 
     if "redirect_status" in request.GET:
         status = int(request.GET['redirect_status'])
+    elif "redirect_status" in request.POST:
+        status = int(request.POST['redirect_status'])
 
     stashed_data['count'] += 1
 

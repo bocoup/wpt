@@ -7,9 +7,9 @@ import json
 def main(request, response):
   ## Get the query parameter (key) from URL ##
   ## Tests will record POST requests (CSP Report) and GET (rest) ##
-  if request.GET:
+  if 'key' in request.GET:
     key = request.GET['key']
-  elif request.POST:
+  elif 'key' in request.POST:
     key = request.POST['key']
 
   ## Convert the key from String to UUID valid String ##
@@ -44,4 +44,4 @@ def main(request, response):
     if "mime" in request.GET:
         response.headers.set("Content-Type", request.GET.first("mime"))
 
-    return request.GET.first("body", "")
+    return request.GET.first("body", request.POST.first("body", ""))
