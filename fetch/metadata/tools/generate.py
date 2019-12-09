@@ -36,6 +36,10 @@ def main(templates_directory, cases_file, out_directory):
             cases = yaml.safe_load(handle.read())
 
             for case in cases:
+
+                if template_name not in case['templates'] and case['templates'] != '*':
+                    continue
+
                 out_file_name = os.path.join(
                     out_directory, test_name(template_name, case['file_name_part'])
                 )

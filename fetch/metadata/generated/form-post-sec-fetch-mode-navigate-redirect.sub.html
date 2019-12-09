@@ -2,7 +2,7 @@
 <!-- This test was procedurally generated. Please do not modify it directly. -->
 <html lang="en">
   <meta charset="utf-8">
-  <title>Fetch Metadata - Sec-Fetch-Mode - redirection</title>
+  <title>Fetch Metadata - Sec-Fetch-Mode - navigation redirection</title>
   <script src="/resources/testharness.js"></script>
   <script src="/resources/testharnessreport.js"></script>
   <body>
@@ -49,7 +49,7 @@
       .then((text) => JSON.parse(text))
       .then((headers) => {
           assert_own_property(headers, 'sec-fetch-mode');
-          assert_equals(headers['sec-fetch-mode'], 'no-cors');
+          assert_equals(headers['sec-fetch-mode'], 'navigate');
         });
   }, 'sec-fetch-mode - Cross-Site -> Same-Origin');
 
@@ -61,7 +61,7 @@
       .then((text) => JSON.parse(text))
       .then((headers) => {
           assert_own_property(headers, 'sec-fetch-mode');
-          assert_equals(headers['sec-fetch-mode'], 'no-cors');
+          assert_equals(headers['sec-fetch-mode'], 'navigate');
         });
   }, 'sec-fetch-mode - Cross-Site -> Same-Site');
 
@@ -73,7 +73,7 @@
       .then((text) => JSON.parse(text))
       .then((headers) => {
           assert_own_property(headers, 'sec-fetch-mode');
-          assert_equals(headers['sec-fetch-mode'], 'no-cors');
+          assert_equals(headers['sec-fetch-mode'], 'navigate');
         });
   }, 'sec-fetch-mode - Cross-Site -> Cross-Site');
 
@@ -85,7 +85,7 @@
       .then((text) => JSON.parse(text))
       .then((headers) => {
           assert_own_property(headers, 'sec-fetch-mode');
-          assert_equals(headers['sec-fetch-mode'], 'no-cors');
+          assert_equals(headers['sec-fetch-mode'], 'navigate');
         });
   }, 'sec-fetch-mode - Same-Origin -> Cross-Site -> Same-Origin');
 
@@ -97,7 +97,7 @@
       .then((text) => JSON.parse(text))
       .then((headers) => {
           assert_own_property(headers, 'sec-fetch-mode');
-          assert_equals(headers['sec-fetch-mode'], 'no-cors');
+          assert_equals(headers['sec-fetch-mode'], 'navigate');
         });
   }, 'sec-fetch-mode - HTTPS downgrade-upgrade');
   </script>
