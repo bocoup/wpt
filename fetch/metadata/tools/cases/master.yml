@@ -35,61 +35,43 @@
 - templates:
   - appcache-manifest.sub.https.html
   - image.sub.html
-  - js-module-via-script.sub.html
+  - script-element.sub.html
   - video-poster.sub.html
-  file_name_part: sec-fetch-mode-redirect
-  title: Fetch Metadata - Sec-Fetch-Mode - redirection
+  file_name_part: sec-fetch-mode-no-cors
+  title: Fetch Metadata - Sec-Fetch-Mode
   headerName: sec-fetch-mode
   requests:
-  - description: Cross-Site -> Same-Origin
-    pathPrefix: "\
-      https://{{hosts[alt][]}}:{{ports[https][0]}}/fetch/api/resources/redirect.py?location=\
-      https://{{host}}:{{ports[https][0]}}"
-    expected: no-cors
-  - description: Cross-Site -> Same-Site
-    pathPrefix: "\
-      https://{{hosts[alt][]}}:{{ports[https][0]}}/fetch/api/resources/redirect.py?location=\
-      https://{{domains[www]}}:{{ports[https][0]}}"
-    expected: no-cors
-  - description: Cross-Site -> Cross-Site
-    pathPrefix: "\
-      https://{{hosts[alt][]}}:{{ports[https][0]}}/fetch/api/resources/redirect.py?location=\
-      https://{{hosts[alt][]}}:{{ports[https][0]}}"
-    expected: no-cors
-  - description: Same-Origin -> Cross-Site -> Same-Origin
-    pathPrefix: "\
-      https://{{host}}:{{ports[https][0]}}/fetch/api/resources/redirect.py?location=\
-      https://{{hosts[alt][]}}:{{ports[https][0]}}/fetch/api/resources/redirect.py?location=\
-      https://{{host}}:{{ports[https][0]}}"
-    expected: no-cors
-  - description: HTTPS downgrade-upgrade
-    pathPrefix: "\
-      https://{{host}}:{{ports[https][0]}}/fetch/api/resources/redirect.py?location=\
-      http://{{host}}:{{ports[http][0]}}/fetch/api/resources/redirect.py?location=\
-      https://{{host}}:{{ports[https][0]}}"
-    expected: no-cors
+  - expected: no-cors
 
 - templates:
   - script-module-via-import-dynamic.sub.html
   - script-module-via-import-static.sub.html
-  - script-module-via-script.sub.html
-  file_name_part: sec-fetch-mode-cors-script
-  title: Fetch Metadata - Sec-Fetch-Mode - scripts
+  file_name_part: sec-fetch-mode-cors-script-import
+  title: Fetch Metadata - Sec-Fetch-Mode - scripts via "import"
   headerName: sec-fetch-mode
   requests:
-  - description: No attributes
+  - description: foobar
+    expected: cors
+
+- templates:
+  - script-element.sub.html
+  file_name_part: sec-fetch-mode-cors-script-element
+  title: Fetch Metadata - Sec-Fetch-Mode - scripts via element
+  headerName: sec-fetch-mode
+  requests:
+  - description: module script
+    elementAttrs:
+      type: module
+    expected: cors
+  - description: classic script, crossorigin=""
     elementAttrs:
       crossorigin: ''
     expected: cors
-  - description: crossorigin=""
-    elementAttrs:
-      crossorigin: ''
-    expected: cors
-  - description: crossorigin="anonymous"
+  - description: classic script, crossorigin="anonymous"
     elementAttrs:
       crossorigin: anonymous
     expected: cors
-  - description: crossorigin="use-credentials"
+  - description: classic script, crossorigin="use-credentials"
     elementAttrs:
       crossorigin: use-credentials
     expected: cors

@@ -14,7 +14,7 @@
     const script = document.createElement('script');
     script.setAttribute('src', path);
 
-    for (const { name, value } of Object.entries(attributes)) {
+    for (const [ name, value ] of Object.entries(attributes)) {
       script.setAttribute(name, value);
     }
 
