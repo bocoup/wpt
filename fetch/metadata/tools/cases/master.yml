@@ -31,6 +31,7 @@
       expected: cross-site
   each_subtest:
     appcache-manifest.sub.https.html: [{}]
+    fetch.sub.html: [{}]
     form-submission.sub.html:
       - description: GET
         method: GET
@@ -51,6 +52,18 @@
   each_subtest:
     appcache-manifest.sub.https.html:
       - expected: no-cors
+    fetch.sub.html:
+      - description: no options
+        expected: cors
+      - description: 'mode: cors'
+        expected: cors
+        init: { mode: cors }
+      - description: 'mode: no-cors'
+        expected: no-cors
+        init: { mode: no-cors }
+      - description: 'mode: same-origin'
+        expected: same-origin
+        init: { mode: same-origin }
     form-submission.sub.html:
       - description: GET
         method: GET
