@@ -10,9 +10,13 @@
   <script>
   'use strict';
 
-  function induceRequest(path) {
+  function induceRequest(path, attributes) {
     const script = document.createElement('script');
     script.setAttribute('src', path);
+
+    for (const { name, value } of Object.entries(attributes)) {
+      script.setAttribute(name, value);
+    }
 
     return new Promise((resolve, reject) => {
         script.onload = resolve;
@@ -25,7 +29,10 @@
 
   promise_test(() => {
     const path = '/fetch/metadata/resources/record-headers.py?key={{uuid()}}';
-    return induceRequest('[%request.pathPrefix%]' + path + '&mime=application/javascript')
+    return induceRequest(
+        '[%request.pathPrefix%]' + path + '&mime=application/javascript',
+        [%request.elementAttrs | default({}) | tojson%]
+      )
       .then(() => fetch(path + '&retrieve'))
       .then((response) => response.text())
       .then((text) => JSON.parse(text))

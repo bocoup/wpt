@@ -72,36 +72,26 @@
 - templates:
   - js-module-via-dynamic-import.sub.html
   - js-module-via-static-import.sub.html
-  file_name_part: sec-fetch-mode-module-redirect
-  title: Fetch Metadata - Sec-Fetch-Mode - module redirection
+  - js-module-via-script.sub.html
+  file_name_part: sec-fetch-mode-cors-script
+  title: Fetch Metadata - Sec-Fetch-Mode - scripts
   headerName: sec-fetch-mode
   requests:
-  - description: Cross-Site -> Same-Origin
-    pathPrefix: "\
-      https://{{hosts[alt][]}}:{{ports[https][0]}}/fetch/api/resources/redirect.py?location=\
-      https://{{host}}:{{ports[https][0]}}"
+  - description: No attributes
+    elementAttrs:
+      crossorigin: ''
     expected: cors
-  - description: Cross-Site -> Same-Site
-    pathPrefix: "\
-      https://{{hosts[alt][]}}:{{ports[https][0]}}/fetch/api/resources/redirect.py?location=\
-      https://{{domains[www]}}:{{ports[https][0]}}"
+  - description: crossorigin=""
+    elementAttrs:
+      crossorigin: ''
     expected: cors
-  - description: Cross-Site -> Cross-Site
-    pathPrefix: "\
-      https://{{hosts[alt][]}}:{{ports[https][0]}}/fetch/api/resources/redirect.py?location=\
-      https://{{hosts[alt][]}}:{{ports[https][0]}}"
+  - description: crossorigin="anonymous"
+    elementAttrs:
+      crossorigin: anonymous
     expected: cors
-  - description: Same-Origin -> Cross-Site -> Same-Origin
-    pathPrefix: "\
-      https://{{host}}:{{ports[https][0]}}/fetch/api/resources/redirect.py?location=\
-      https://{{hosts[alt][]}}:{{ports[https][0]}}/fetch/api/resources/redirect.py?location=\
-      https://{{host}}:{{ports[https][0]}}"
-    expected: cors
-  - description: HTTPS downgrade-upgrade
-    pathPrefix: "\
-      https://{{host}}:{{ports[https][0]}}/fetch/api/resources/redirect.py?location=\
-      http://{{host}}:{{ports[http][0]}}/fetch/api/resources/redirect.py?location=\
-      https://{{host}}:{{ports[https][0]}}"
+  - description: crossorigin="use-credentials"
+    elementAttrs:
+      crossorigin: use-credentials
     expected: cors
 
 - templates:

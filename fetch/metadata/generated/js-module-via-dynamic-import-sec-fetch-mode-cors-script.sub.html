@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<!-- This test was procedurally generated. Please do not modify it directly. -->
+<html lang="en">
+  <meta charset="utf-8">
+  <script src="/resources/testharness.js"></script>
+  <script src="/resources/testharnessreport.js"></script>
+  <script src="/fetch/metadata/resources/helper.js"></script>
+  <script type="module">
+  'use strict';
+
+  promise_test(() => {
+    const path = '/fetch/metadata/resources/record-headers.py?key={{uuid()}}';
+    return import('' + path + '&mime=application/javascript')
+      .then(() => fetch(path + '&retrieve'))
+      .then((response) => response.text())
+      .then((text) => JSON.parse(text))
+      .then((headers) => {
+          assert_own_property(headers, 'sec-fetch-mode');
+          assert_equals(headers['sec-fetch-mode'], 'cors');
+    });
+  }, 'sec-fetch-mode - No attributes');
+
+  promise_test(() => {
+    const path = '/fetch/metadata/resources/record-headers.py?key={{uuid()}}';
+    return import('' + path + '&mime=application/javascript')
+      .then(() => fetch(path + '&retrieve'))
+      .then((response) => response.text())
+      .then((text) => JSON.parse(text))
+      .then((headers) => {
+          assert_own_property(headers, 'sec-fetch-mode');
+          assert_equals(headers['sec-fetch-mode'], 'cors');
+    });
+  }, 'sec-fetch-mode - crossorigin=""');
+
+  promise_test(() => {
+    const path = '/fetch/metadata/resources/record-headers.py?key={{uuid()}}';
+    return import('' + path + '&mime=application/javascript')
+      .then(() => fetch(path + '&retrieve'))
+      .then((response) => response.text())
+      .then((text) => JSON.parse(text))
+      .then((headers) => {
+          assert_own_property(headers, 'sec-fetch-mode');
+          assert_equals(headers['sec-fetch-mode'], 'cors');
+    });
+  }, 'sec-fetch-mode - crossorigin="anonymous"');
+
+  promise_test(() => {
+    const path = '/fetch/metadata/resources/record-headers.py?key={{uuid()}}';
+    return import('' + path + '&mime=application/javascript')
+      .then(() => fetch(path + '&retrieve'))
+      .then((response) => response.text())
+      .then((text) => JSON.parse(text))
+      .then((headers) => {
+          assert_own_property(headers, 'sec-fetch-mode');
+          assert_equals(headers['sec-fetch-mode'], 'cors');
+    });
+  }, 'sec-fetch-mode - crossorigin="use-credentials"');
+  </script>
+</html>
