@@ -9,10 +9,15 @@
   <script>
   'use strict';
 
-  function induceRequest(path) {
+  function induceRequest(path, attributes) {
+    const image = document.createElement('img');
+
+    for (const [ name, value ] of Object.entries(attributes)) {
+      image.setAttribute(name, value);
+    }
+
     return new Promise((resolve) => {
-        const image = document.createElement('img');
-        image.src = path;
+        image.setAttribute('src', path);
         image.onload = image.onerror = resolve;
       });
   }
@@ -21,7 +26,10 @@
 
   promise_test(() => {
     const path = '/fetch/metadata/resources/record-headers.py?key={{uuid()}}';
-    return induceRequest('[%subtest.pathPrefix%]' + path)
+    return induceRequest(
+        '[%subtest.pathPrefix%]' + path,
+        [%subtest.elementAttrs | default({}) | tojson%]
+      )
       .then(() => fetch(path + '&retrieve'))
       .then((response) => response.text())
       .then((text) => JSON.parse(text))

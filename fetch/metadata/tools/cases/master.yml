@@ -59,7 +59,20 @@
         method: POST
         expected: navigate
     image.sub.html:
-      - expected: no-cors
+      - description: no attributes
+        expected: no-cors
+      - description: crossorigin=""
+        expected: cors
+        elementAttrs:
+          crossorigin: ''
+      - description: crossorigin="anonymous"
+        expected: cors
+        elementAttrs:
+          crossorigin: anonymous
+      - description: crossorigin="use-credentials"
+        expected: cors
+        elementAttrs:
+          crossorigin: use-credentials
     script-element.sub.html:
       - description: classic script
         expected: no-cors
