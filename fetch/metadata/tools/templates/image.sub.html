@@ -40,7 +40,7 @@
           assert_own_property(headers, '[%headerName%]');
           assert_equals(headers['[%headerName%]'], '[%subtest.expected%]');
         {%- endif %}
-    });
+        });
   }, '[%headerName%] - [%subtest.description%]');
 
   {%- endfor %}

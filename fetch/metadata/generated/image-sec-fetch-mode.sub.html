@@ -34,7 +34,7 @@
       .then((headers) => {
           assert_own_property(headers, 'sec-fetch-mode');
           assert_equals(headers['sec-fetch-mode'], 'no-cors');
-    });
+        });
   }, 'sec-fetch-mode - no attributes');
 
   promise_test(() => {
@@ -49,7 +49,7 @@
       .then((headers) => {
           assert_own_property(headers, 'sec-fetch-mode');
           assert_equals(headers['sec-fetch-mode'], 'cors');
-    });
+        });
   }, 'sec-fetch-mode - crossorigin=""');
 
   promise_test(() => {
@@ -64,7 +64,7 @@
       .then((headers) => {
           assert_own_property(headers, 'sec-fetch-mode');
           assert_equals(headers['sec-fetch-mode'], 'cors');
-    });
+        });
   }, 'sec-fetch-mode - crossorigin="anonymous"');
 
   promise_test(() => {
@@ -79,7 +79,7 @@
       .then((headers) => {
           assert_own_property(headers, 'sec-fetch-mode');
           assert_equals(headers['sec-fetch-mode'], 'cors');
-    });
+        });
   }, 'sec-fetch-mode - crossorigin="use-credentials"');
   </script>
   </body>

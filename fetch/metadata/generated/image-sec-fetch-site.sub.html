@@ -34,7 +34,7 @@
       .then((headers) => {
           assert_own_property(headers, 'sec-fetch-site');
           assert_equals(headers['sec-fetch-site'], 'cross-site');
-    });
+        });
   }, 'sec-fetch-site - Cross-Site -> Same-Origin');
 
   promise_test(() => {
@@ -49,7 +49,7 @@
       .then((headers) => {
           assert_own_property(headers, 'sec-fetch-site');
           assert_equals(headers['sec-fetch-site'], 'cross-site');
-    });
+        });
   }, 'sec-fetch-site - Cross-Site -> Same-Site');
 
   promise_test(() => {
@@ -64,7 +64,7 @@
       .then((headers) => {
           assert_own_property(headers, 'sec-fetch-site');
           assert_equals(headers['sec-fetch-site'], 'cross-site');
-    });
+        });
   }, 'sec-fetch-site - Cross-Site -> Cross-Site');
 
   promise_test(() => {
@@ -79,7 +79,7 @@
       .then((headers) => {
           assert_own_property(headers, 'sec-fetch-site');
           assert_equals(headers['sec-fetch-site'], 'cross-site');
-    });
+        });
   }, 'sec-fetch-site - Same-Origin -> Cross-Site -> Same-Origin');
 
   promise_test(() => {
@@ -94,7 +94,7 @@
       .then((headers) => {
           assert_own_property(headers, 'sec-fetch-site');
           assert_equals(headers['sec-fetch-site'], 'cross-site');
-    });
+        });
   }, 'sec-fetch-site - HTTPS downgrade-upgrade');
   </script>
   </body>
