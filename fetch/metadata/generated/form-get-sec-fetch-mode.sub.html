@@ -2,12 +2,9 @@
 <!-- This test was procedurally generated. Please do not modify it directly. -->
 <html lang="en">
   <meta charset="utf-8">
-  <title>[%title%]</title>
+  <title>Fetch Metadata - Sec-Fetch-Mode</title>
   <script src="/resources/testharness.js"></script>
   <script src="/resources/testharnessreport.js"></script>
-  {%- for script in scripts %}
-  <script src="[%script%]"></script>
-  {%- endfor %}
   <body>
   <script>
   'use strict';
@@ -15,7 +12,6 @@
   function induceRequest(path) {
     const win = window.open();
     const inputs = [
-        ['redirect_status', '307'],
         ['body', `<script>opener.postMessage('done', '*');</${''}script>`],
         ...new URL(path, location.origin).searchParams
       ]
@@ -33,7 +29,7 @@
         win.document.open();
         win.document.write(`
           <!DOCTYPE html>
-          <form method="POST" action="${path}">${inputs}</form>
+          <form method="GET" action="${path}">${inputs}</form>
           <script>
             const form = document.getElementsByTagName('form')[0];
             form.submit();
@@ -43,25 +39,18 @@
       })
       .then(() => win.close());
   }
-  {%- for subtest in subtests %}
 
   promise_test(() => {
     const path = '/fetch/metadata/resources/record-headers.py?key={{uuid()}}';
-    return induceRequest('[%subtest.pathPrefix%]' + path)
+    return induceRequest('' + path)
       .then(() => fetch(path + '&retrieve'))
       .then((response) => response.text())
       .then((text) => JSON.parse(text))
       .then((headers) => {
-        {%- if subtest[expected] == none %}
-          assert_not_own_property(headers, '[%headerName%]');
-        {%- else %}
-          assert_own_property(headers, '[%headerName%]');
-          assert_equals(headers['[%headerName%]'], '[%subtest.expected%]');
-        {%- endif %}
+          assert_own_property(headers, 'sec-fetch-mode');
+          assert_equals(headers['sec-fetch-mode'], 'navigate');
         });
-  }, '[%headerName%] - [%subtest.description%]');
-
-  {%- endfor %}
+  }, 'sec-fetch-mode - ');
   </script>
   </body>
 </html>

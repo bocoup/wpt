@@ -1,112 +1,81 @@
 ---
-- templates: '*'
-  file_name_part: sec-fetch-site-redirect.https
-  title: Fetch Metadata - Sec-Fetch-Site - redirection
+- title: Fetch Metadata - Sec-Fetch-Site - redirection
   headerName: sec-fetch-site
-  requests:
-  - description: Cross-Site -> Same-Origin
-    pathPrefix: "\
-      https://{{hosts[alt][]}}:{{ports[https][0]}}/fetch/api/resources/redirect.py?location=\
-      https://{{host}}:{{ports[https][0]}}"
-    expected: cross-site
-  - description: Cross-Site -> Same-Site
-    pathPrefix: "\
-      https://{{hosts[alt][]}}:{{ports[https][0]}}/fetch/api/resources/redirect.py?location=\
-      https://{{domains[www2]}}:{{ports[https][0]}}"
-    expected: cross-site
-  - description: Cross-Site -> Cross-Site
-    pathPrefix: "\
-      https://{{hosts[alt][]}}:{{ports[https][0]}}/fetch/api/resources/redirect.py?location=\
-      https://{{hosts[alt][]}}:{{ports[https][0]}}"
-    expected: cross-site
-  - description: Same-Origin -> Cross-Site -> Same-Origin
-    pathPrefix: "\
-      https://{{host}}:{{ports[https][0]}}/fetch/api/resources/redirect.py?location=\
-      https://{{hosts[alt][]}}:{{ports[https][0]}}/fetch/api/resources/redirect.py?location=\
-      https://{{host}}:{{ports[https][0]}}"
-    expected: cross-site
-  - description: HTTPS downgrade-upgrade
-    pathPrefix: "\
-      https://{{host}}:{{ports[https][0]}}/fetch/api/resources/redirect.py?location=\
-      http://{{host}}:{{ports[http][0]}}/fetch/api/resources/redirect.py?location=\
-      https://{{host}}:{{ports[https][0]}}"
-    expected: cross-site
+  all_subtests:
+    - description: Cross-Site -> Same-Origin
+      pathPrefix: "\
+        https://{{hosts[alt][]}}:{{ports[https][0]}}/fetch/api/resources/redirect.py?location=\
+        https://{{host}}:{{ports[https][0]}}"
+      expected: cross-site
+    - description: Cross-Site -> Same-Site
+      pathPrefix: "\
+        https://{{hosts[alt][]}}:{{ports[https][0]}}/fetch/api/resources/redirect.py?location=\
+        https://{{domains[www2]}}:{{ports[https][0]}}"
+      expected: cross-site
+    - description: Cross-Site -> Cross-Site
+      pathPrefix: "\
+        https://{{hosts[alt][]}}:{{ports[https][0]}}/fetch/api/resources/redirect.py?location=\
+        https://{{hosts[alt][]}}:{{ports[https][0]}}"
+      expected: cross-site
+    - description: Same-Origin -> Cross-Site -> Same-Origin
+      pathPrefix: "\
+        https://{{host}}:{{ports[https][0]}}/fetch/api/resources/redirect.py?location=\
+        https://{{hosts[alt][]}}:{{ports[https][0]}}/fetch/api/resources/redirect.py?location=\
+        https://{{host}}:{{ports[https][0]}}"
+      expected: cross-site
+    - description: HTTPS downgrade-upgrade
+      pathPrefix: "\
+        https://{{host}}:{{ports[https][0]}}/fetch/api/resources/redirect.py?location=\
+        http://{{host}}:{{ports[http][0]}}/fetch/api/resources/redirect.py?location=\
+        https://{{host}}:{{ports[https][0]}}"
+      expected: cross-site
+  each_subtest:
+    appcache-manifest.sub.https.html: [{}]
+    form-get.sub.html: [{}]
+    form-post.sub.html: [{}]
+    image.sub.html: [{}]
+    script-element.sub.html:
+      - description: classic script
+      - description: module script
+        elementAttrs:
+          type: module
+    script-module-import-dynamic.sub.html: [{}]
+    script-module-import-static.sub.html: [{}]
+    video-poster.sub.html: [{}]
 
-- templates:
-  - appcache-manifest.sub.https.html
-  - image.sub.html
-  - script-element.sub.html
-  - video-poster.sub.html
-  file_name_part: sec-fetch-mode-no-cors
-  title: Fetch Metadata - Sec-Fetch-Mode
+- title: Fetch Metadata - Sec-Fetch-Mode
   headerName: sec-fetch-mode
-  requests:
-  - expected: no-cors
-
-- templates:
-  - script-module-via-import-dynamic.sub.html
-  - script-module-via-import-static.sub.html
-  file_name_part: sec-fetch-mode-cors-script-import
-  title: Fetch Metadata - Sec-Fetch-Mode - scripts via "import"
-  headerName: sec-fetch-mode
-  requests:
-  - description: foobar
-    expected: cors
-
-- templates:
-  - script-element.sub.html
-  file_name_part: sec-fetch-mode-cors-script-element
-  title: Fetch Metadata - Sec-Fetch-Mode - scripts via element
-  headerName: sec-fetch-mode
-  requests:
-  - description: module script
-    elementAttrs:
-      type: module
-    expected: cors
-  - description: classic script, crossorigin=""
-    elementAttrs:
-      crossorigin: ''
-    expected: cors
-  - description: classic script, crossorigin="anonymous"
-    elementAttrs:
-      crossorigin: anonymous
-    expected: cors
-  - description: classic script, crossorigin="use-credentials"
-    elementAttrs:
-      crossorigin: use-credentials
-    expected: cors
-
-- templates:
-  - form-post.sub.html
-  - form-get.sub.html
-  file_name_part: sec-fetch-mode-navigate-redirect
-  title: Fetch Metadata - Sec-Fetch-Mode - navigation redirection
-  headerName: sec-fetch-mode
-  requests:
-  - description: Cross-Site -> Same-Origin
-    pathPrefix: "\
-      https://{{hosts[alt][]}}:{{ports[https][0]}}/fetch/api/resources/redirect.py?location=\
-      https://{{host}}:{{ports[https][0]}}"
-    expected: navigate
-  - description: Cross-Site -> Same-Site
-    pathPrefix: "\
-      https://{{hosts[alt][]}}:{{ports[https][0]}}/fetch/api/resources/redirect.py?location=\
-      https://{{domains[www]}}:{{ports[https][0]}}"
-    expected: navigate
-  - description: Cross-Site -> Cross-Site
-    pathPrefix: "\
-      https://{{hosts[alt][]}}:{{ports[https][0]}}/fetch/api/resources/redirect.py?location=\
-      https://{{hosts[alt][]}}:{{ports[https][0]}}"
-    expected: navigate
-  - description: Same-Origin -> Cross-Site -> Same-Origin
-    pathPrefix: "\
-      https://{{host}}:{{ports[https][0]}}/fetch/api/resources/redirect.py?location=\
-      https://{{hosts[alt][]}}:{{ports[https][0]}}/fetch/api/resources/redirect.py?location=\
-      https://{{host}}:{{ports[https][0]}}"
-    expected: navigate
-  - description: HTTPS downgrade-upgrade
-    pathPrefix: "\
-      https://{{host}}:{{ports[https][0]}}/fetch/api/resources/redirect.py?location=\
-      http://{{host}}:{{ports[http][0]}}/fetch/api/resources/redirect.py?location=\
-      https://{{host}}:{{ports[https][0]}}"
-    expected: navigate
+  each_subtest:
+    appcache-manifest.sub.https.html:
+      - expected: no-cors
+    form-post.sub.html:
+      - expected: navigate
+    form-get.sub.html:
+      - expected: navigate
+    image.sub.html:
+      - expected: no-cors
+    script-element.sub.html:
+      - description: classic script
+        expected: no-cors
+      - description: module script
+        expected: cors
+        elementAttrs:
+          type: module
+      - description: classic script, crossorigin=""
+        expected: cors
+        elementAttrs:
+          crossorigin: ''
+      - description: classic script, crossorigin="anonymous"
+        expected: cors
+        elementAttrs:
+          crossorigin: anonymous
+      - description: classic script, crossorigin="use-credentials"
+        expected: cors
+        elementAttrs:
+          crossorigin: use-credentials
+    script-module-import-dynamic.sub.html:
+      - expected: cors
+    script-module-import-static.sub.html:
+      - expected: cors
+    video-poster.sub.html:
+      - expected: no-cors

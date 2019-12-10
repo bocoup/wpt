@@ -25,26 +25,26 @@
       })
       .then(() => script.remove());
   }
-  {%- for request in requests %}
+  {%- for subtest in subtests %}
 
   promise_test(() => {
     const path = '/fetch/metadata/resources/record-headers.py?key={{uuid()}}';
     return induceRequest(
-        '[%request.pathPrefix%]' + path + '&mime=application/javascript',
-        [%request.elementAttrs | default({}) | tojson%]
+        '[%subtest.pathPrefix%]' + path + '&mime=application/javascript',
+        [%subtest.elementAttrs | default({}) | tojson%]
       )
       .then(() => fetch(path + '&retrieve'))
       .then((response) => response.text())
       .then((text) => JSON.parse(text))
       .then((headers) => {
-        {%- if request[expected] == none %}
+        {%- if subtest[expected] == none %}
           assert_not_own_property(headers, '[%headerName%]');
         {%- else %}
           assert_own_property(headers, '[%headerName%]');
-          assert_equals(headers['[%headerName%]'], '[%request.expected%]');
+          assert_equals(headers['[%headerName%]'], '[%subtest.expected%]');
         {%- endif %}
-    });
-  }, '[%headerName%] - [%request.description%]');
+        });
+  }, '[%headerName%] - [%subtest.description%]');
 
   {%- endfor %}
   </script>

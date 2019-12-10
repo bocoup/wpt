@@ -2,7 +2,7 @@
 <!-- This test was procedurally generated. Please do not modify it directly. -->
 <html lang="en">
   <meta charset="utf-8">
-  <title>Fetch Metadata - Sec-Fetch-Mode - scripts via element</title>
+  <title>Fetch Metadata - Sec-Fetch-Mode</title>
   <script src="/resources/testharness.js"></script>
   <script src="/resources/testharnessreport.js"></script>
   <script src="/fetch/metadata/resources/helper.js"></script>
@@ -30,6 +30,21 @@
     const path = '/fetch/metadata/resources/record-headers.py?key={{uuid()}}';
     return induceRequest(
         '' + path + '&mime=application/javascript',
+        {}
+      )
+      .then(() => fetch(path + '&retrieve'))
+      .then((response) => response.text())
+      .then((text) => JSON.parse(text))
+      .then((headers) => {
+          assert_own_property(headers, 'sec-fetch-mode');
+          assert_equals(headers['sec-fetch-mode'], 'no-cors');
+        });
+  }, 'sec-fetch-mode - classic script');
+
+  promise_test(() => {
+    const path = '/fetch/metadata/resources/record-headers.py?key={{uuid()}}';
+    return induceRequest(
+        '' + path + '&mime=application/javascript',
         {"type": "module"}
       )
       .then(() => fetch(path + '&retrieve'))
@@ -38,7 +53,7 @@
       .then((headers) => {
           assert_own_property(headers, 'sec-fetch-mode');
           assert_equals(headers['sec-fetch-mode'], 'cors');
-    });
+        });
   }, 'sec-fetch-mode - module script');
 
   promise_test(() => {
@@ -53,7 +68,7 @@
       .then((headers) => {
           assert_own_property(headers, 'sec-fetch-mode');
           assert_equals(headers['sec-fetch-mode'], 'cors');
-    });
+        });
   }, 'sec-fetch-mode - classic script, crossorigin=""');
 
   promise_test(() => {
@@ -68,7 +83,7 @@
       .then((headers) => {
           assert_own_property(headers, 'sec-fetch-mode');
           assert_equals(headers['sec-fetch-mode'], 'cors');
-    });
+        });
   }, 'sec-fetch-mode - classic script, crossorigin="anonymous"');
 
   promise_test(() => {
@@ -83,7 +98,7 @@
       .then((headers) => {
           assert_own_property(headers, 'sec-fetch-mode');
           assert_equals(headers['sec-fetch-mode'], 'cors');
-    });
+        });
   }, 'sec-fetch-mode - classic script, crossorigin="use-credentials"');
   </script>
 </html>

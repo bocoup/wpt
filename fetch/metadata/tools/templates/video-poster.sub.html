@@ -18,24 +18,24 @@
     t.add_cleanup(() => video.remove());
   }
 
-  {%- for request in requests %}
+  {%- for subtest in subtests %}
 
   promise_test((t) => {
     const id = '{{uuid()}}';
     const path = '/fetch/metadata/resources/record-headers.py?key=' + id;
 
-    induceRequest(t, '[%request.pathPrefix%]' + path);
+    induceRequest(t, '[%subtest.pathPrefix%]' + path);
 
     return pollForRequestRecording(id)
       .then((headers) => {
-        {%- if request[expected] == none %}
+        {%- if subtest[expected] == none %}
           assert_not_own_property(headers, '[%headerName%]');
         {%- else %}
           assert_own_property(headers, '[%headerName%]');
-          assert_equals(headers['[%headerName%]'], '[%request.expected%]');
+          assert_equals(headers['[%headerName%]'], '[%subtest.expected%]');
         {%- endif %}
     });
-  }, '[%headerName%] - [%request.description%]');
+  }, '[%headerName%] - [%subtest.description%]');
 
   {%- endfor %}
   </script>
