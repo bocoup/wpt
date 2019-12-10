@@ -33,23 +33,23 @@
     appcache-manifest.sub.https.html: [{}]
     fetch.sub.html: [{}]
     form-submission.sub.html:
-      - description: GET
+      - description: ' - GET'
         method: GET
-      - description: POST
+      - description: ' - POST'
         method: POST
     global-properties.sub.html:
-      - description: location
+      - description: ' - location'
         api: location
-      - description: location.href
+      - description: ' - location.href'
         api: location.href
-      - description: location.assign
+      - description: ' - location.assign'
         api: location.assign
-      - description: location.replace
+      - description: ' - location.replace'
         api: location.replace
     image.sub.html: [{}]
     script-element.sub.html:
-      - description: classic script
-      - description: module script
+      - description: ' - classic script'
+      - description: ' - module script'
         elementAttrs:
           type: module
     script-module-import-dynamic.sub.html: [{}]

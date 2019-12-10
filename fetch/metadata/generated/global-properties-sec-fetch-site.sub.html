@@ -40,7 +40,7 @@
           assert_own_property(headers, 'sec-fetch-site');
           assert_equals(headers['sec-fetch-site'], 'cross-site');
         });
-  }, 'sec-fetch-site - location');
+  }, 'sec-fetch-site - Cross-Site -> Same-Origin - location');
 
   promise_test(() => {
     const path = '/fetch/metadata/resources/record-headers.py?key={{uuid()}}';
@@ -55,7 +55,7 @@
           assert_own_property(headers, 'sec-fetch-site');
           assert_equals(headers['sec-fetch-site'], 'cross-site');
         });
-  }, 'sec-fetch-site - location.href');
+  }, 'sec-fetch-site - Cross-Site -> Same-Origin - location.href');
 
   promise_test(() => {
     const path = '/fetch/metadata/resources/record-headers.py?key={{uuid()}}';
@@ -70,7 +70,7 @@
           assert_own_property(headers, 'sec-fetch-site');
           assert_equals(headers['sec-fetch-site'], 'cross-site');
         });
-  }, 'sec-fetch-site - location.assign');
+  }, 'sec-fetch-site - Cross-Site -> Same-Origin - location.assign');
 
   promise_test(() => {
     const path = '/fetch/metadata/resources/record-headers.py?key={{uuid()}}';
@@ -85,7 +85,7 @@
           assert_own_property(headers, 'sec-fetch-site');
           assert_equals(headers['sec-fetch-site'], 'cross-site');
         });
-  }, 'sec-fetch-site - location.replace');
+  }, 'sec-fetch-site - Cross-Site -> Same-Origin - location.replace');
 
   promise_test(() => {
     const path = '/fetch/metadata/resources/record-headers.py?key={{uuid()}}';
@@ -100,7 +100,7 @@
           assert_own_property(headers, 'sec-fetch-site');
           assert_equals(headers['sec-fetch-site'], 'cross-site');
         });
-  }, 'sec-fetch-site - location');
+  }, 'sec-fetch-site - Cross-Site -> Same-Site - location');
 
   promise_test(() => {
     const path = '/fetch/metadata/resources/record-headers.py?key={{uuid()}}';
@@ -115,7 +115,7 @@
           assert_own_property(headers, 'sec-fetch-site');
           assert_equals(headers['sec-fetch-site'], 'cross-site');
         });
-  }, 'sec-fetch-site - location.href');
+  }, 'sec-fetch-site - Cross-Site -> Same-Site - location.href');
 
   promise_test(() => {
     const path = '/fetch/metadata/resources/record-headers.py?key={{uuid()}}';
@@ -130,7 +130,7 @@
           assert_own_property(headers, 'sec-fetch-site');
           assert_equals(headers['sec-fetch-site'], 'cross-site');
         });
-  }, 'sec-fetch-site - location.assign');
+  }, 'sec-fetch-site - Cross-Site -> Same-Site - location.assign');
 
   promise_test(() => {
     const path = '/fetch/metadata/resources/record-headers.py?key={{uuid()}}';
@@ -145,7 +145,7 @@
           assert_own_property(headers, 'sec-fetch-site');
           assert_equals(headers['sec-fetch-site'], 'cross-site');
         });
-  }, 'sec-fetch-site - location.replace');
+  }, 'sec-fetch-site - Cross-Site -> Same-Site - location.replace');
 
   promise_test(() => {
     const path = '/fetch/metadata/resources/record-headers.py?key={{uuid()}}';
@@ -160,7 +160,7 @@
           assert_own_property(headers, 'sec-fetch-site');
           assert_equals(headers['sec-fetch-site'], 'cross-site');
         });
-  }, 'sec-fetch-site - location');
+  }, 'sec-fetch-site - Cross-Site -> Cross-Site - location');
 
   promise_test(() => {
     const path = '/fetch/metadata/resources/record-headers.py?key={{uuid()}}';
@@ -175,7 +175,7 @@
           assert_own_property(headers, 'sec-fetch-site');
           assert_equals(headers['sec-fetch-site'], 'cross-site');
         });
-  }, 'sec-fetch-site - location.href');
+  }, 'sec-fetch-site - Cross-Site -> Cross-Site - location.href');
 
   promise_test(() => {
     const path = '/fetch/metadata/resources/record-headers.py?key={{uuid()}}';
@@ -190,7 +190,7 @@
           assert_own_property(headers, 'sec-fetch-site');
           assert_equals(headers['sec-fetch-site'], 'cross-site');
         });
-  }, 'sec-fetch-site - location.assign');
+  }, 'sec-fetch-site - Cross-Site -> Cross-Site - location.assign');
 
   promise_test(() => {
     const path = '/fetch/metadata/resources/record-headers.py?key={{uuid()}}';
@@ -205,7 +205,7 @@
           assert_own_property(headers, 'sec-fetch-site');
           assert_equals(headers['sec-fetch-site'], 'cross-site');
         });
-  }, 'sec-fetch-site - location.replace');
+  }, 'sec-fetch-site - Cross-Site -> Cross-Site - location.replace');
 
   promise_test(() => {
     const path = '/fetch/metadata/resources/record-headers.py?key={{uuid()}}';
@@ -220,7 +220,7 @@
           assert_own_property(headers, 'sec-fetch-site');
           assert_equals(headers['sec-fetch-site'], 'cross-site');
         });
-  }, 'sec-fetch-site - location');
+  }, 'sec-fetch-site - Same-Origin -> Cross-Site -> Same-Origin - location');
 
   promise_test(() => {
     const path = '/fetch/metadata/resources/record-headers.py?key={{uuid()}}';
@@ -235,7 +235,7 @@
           assert_own_property(headers, 'sec-fetch-site');
           assert_equals(headers['sec-fetch-site'], 'cross-site');
         });
-  }, 'sec-fetch-site - location.href');
+  }, 'sec-fetch-site - Same-Origin -> Cross-Site -> Same-Origin - location.href');
 
   promise_test(() => {
     const path = '/fetch/metadata/resources/record-headers.py?key={{uuid()}}';
@@ -250,7 +250,7 @@
           assert_own_property(headers, 'sec-fetch-site');
           assert_equals(headers['sec-fetch-site'], 'cross-site');
         });
-  }, 'sec-fetch-site - location.assign');
+  }, 'sec-fetch-site - Same-Origin -> Cross-Site -> Same-Origin - location.assign');
 
   promise_test(() => {
     const path = '/fetch/metadata/resources/record-headers.py?key={{uuid()}}';
@@ -265,7 +265,7 @@
           assert_own_property(headers, 'sec-fetch-site');
           assert_equals(headers['sec-fetch-site'], 'cross-site');
         });
-  }, 'sec-fetch-site - location.replace');
+  }, 'sec-fetch-site - Same-Origin -> Cross-Site -> Same-Origin - location.replace');
 
   promise_test(() => {
     const path = '/fetch/metadata/resources/record-headers.py?key={{uuid()}}';
@@ -280,7 +280,7 @@
           assert_own_property(headers, 'sec-fetch-site');
           assert_equals(headers['sec-fetch-site'], 'cross-site');
         });
-  }, 'sec-fetch-site - location');
+  }, 'sec-fetch-site - HTTPS downgrade-upgrade - location');
 
   promise_test(() => {
     const path = '/fetch/metadata/resources/record-headers.py?key={{uuid()}}';
@@ -295,7 +295,7 @@
           assert_own_property(headers, 'sec-fetch-site');
           assert_equals(headers['sec-fetch-site'], 'cross-site');
         });
-  }, 'sec-fetch-site - location.href');
+  }, 'sec-fetch-site - HTTPS downgrade-upgrade - location.href');
 
   promise_test(() => {
     const path = '/fetch/metadata/resources/record-headers.py?key={{uuid()}}';
@@ -310,7 +310,7 @@
           assert_own_property(headers, 'sec-fetch-site');
           assert_equals(headers['sec-fetch-site'], 'cross-site');
         });
-  }, 'sec-fetch-site - location.assign');
+  }, 'sec-fetch-site - HTTPS downgrade-upgrade - location.assign');
 
   promise_test(() => {
     const path = '/fetch/metadata/resources/record-headers.py?key={{uuid()}}';
@@ -325,7 +325,7 @@
           assert_own_property(headers, 'sec-fetch-site');
           assert_equals(headers['sec-fetch-site'], 'cross-site');
         });
-  }, 'sec-fetch-site - location.replace');
+  }, 'sec-fetch-site - HTTPS downgrade-upgrade - location.replace');
   </script>
   </body>
 </html>

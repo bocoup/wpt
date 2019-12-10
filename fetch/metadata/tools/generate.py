@@ -28,11 +28,17 @@ def test_name(template_name, case_name):
     return '{}-{}.{}'.format(prefix, case_name, suffix)
 
 def cross(a, b):
-    for a_item in a:
-        for b_item in b:
+    for a_object in a:
+        for b_object in b:
             merged = {}
-            merged.update(a_item)
-            merged.update(b_item)
+            merged.update(a_object)
+            merged.update(b_object)
+
+            if 'description' in a_object and 'description' in b_object:
+                merged['description'] = '{}{}'.format(
+                    a_object['description'], b_object['description']
+                )
+
             yield merged
 
 def main(templates_directory, cases_file, out_directory):
