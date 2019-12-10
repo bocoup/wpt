@@ -31,8 +31,11 @@
       expected: cross-site
   each_subtest:
     appcache-manifest.sub.https.html: [{}]
-    form-get.sub.html: [{}]
-    form-post.sub.html: [{}]
+    form-submission.sub.html:
+      - description: GET
+        method: GET
+      - description: POST
+        method: POST
     image.sub.html: [{}]
     script-element.sub.html:
       - description: classic script
@@ -48,10 +51,13 @@
   each_subtest:
     appcache-manifest.sub.https.html:
       - expected: no-cors
-    form-post.sub.html:
-      - expected: navigate
-    form-get.sub.html:
-      - expected: navigate
+    form-submission.sub.html:
+      - description: GET
+        method: GET
+        expected: navigate
+      - description: POST
+        method: POST
+        expected: navigate
     image.sub.html:
       - expected: no-cors
     script-element.sub.html:
