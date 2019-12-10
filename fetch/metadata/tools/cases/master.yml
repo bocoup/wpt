@@ -1,28 +1,45 @@
 ---
-- title: Fetch Metadata - Sec-Fetch-Site - redirection
+- title: Fetch Metadata - Sec-Fetch-Site - redirection from HTTP
+  fileName: sec-fetch-site
   headerName: sec-fetch-site
   all_subtests:
-    - description: Cross-Site -> Same-Origin
-      pathPrefix: "\
-        https://{{hosts[alt][]}}:{{ports[https][0]}}/fetch/api/resources/redirect.py?location=\
-        https://{{host}}:{{ports[https][0]}}"
-      expected: cross-site
-    - description: Cross-Site -> Same-Site
-      pathPrefix: "\
-        https://{{hosts[alt][]}}:{{ports[https][0]}}/fetch/api/resources/redirect.py?location=\
-        https://{{domains[www2]}}:{{ports[https][0]}}"
-      expected: cross-site
-    - description: Cross-Site -> Cross-Site
-      pathPrefix: "\
-        https://{{hosts[alt][]}}:{{ports[https][0]}}/fetch/api/resources/redirect.py?location=\
-        https://{{hosts[alt][]}}:{{ports[https][0]}}"
-      expected: cross-site
-    - description: Same-Origin -> Cross-Site -> Same-Origin
+    - description: HTTPS downgrade-upgrade
       pathPrefix: "\
         https://{{host}}:{{ports[https][0]}}/fetch/api/resources/redirect.py?location=\
-        https://{{hosts[alt][]}}:{{ports[https][0]}}/fetch/api/resources/redirect.py?location=\
+        http://{{host}}:{{ports[http][0]}}/fetch/api/resources/redirect.py?location=\
         https://{{host}}:{{ports[https][0]}}"
       expected: cross-site
+  each_subtest:
+    appcache-manifest.sub.https.html: [{}]
+    fetch.sub.html: [{}]
+    form-submission.sub.html:
+      - description: ' - GET'
+        method: GET
+      - description: ' - POST'
+        method: POST
+    global-properties.sub.html:
+      - description: ' - location'
+        api: location
+      - description: ' - location.href'
+        api: location.href
+      - description: ' - location.assign'
+        api: location.assign
+      - description: ' - location.replace'
+        api: location.replace
+    image.sub.html: [{}]
+    script-element.sub.html:
+      - description: ' - classic script'
+      - description: ' - module script'
+        elementAttrs:
+          type: module
+    script-module-import-dynamic.sub.html: [{}]
+    script-module-import-static.sub.html: [{}]
+    video-poster.sub.html: [{}]
+
+- title: Fetch Metadata - Sec-Fetch-Site - redirection from HTTPS
+  fileName: sec-fetch-site.https
+  headerName: sec-fetch-site
+  all_subtests:
     - description: HTTPS downgrade-upgrade
       pathPrefix: "\
         https://{{host}}:{{ports[https][0]}}/fetch/api/resources/redirect.py?location=\
@@ -57,6 +74,12 @@
     video-poster.sub.html: [{}]
 
 - title: Fetch Metadata - Sec-Fetch-Mode
+  # These tests are served over HTTPS so the induced requests will be both
+  # same-origin with the document [1] and a potentially-trustworthy URL [2].
+  #
+  # [1] https://html.spec.whatwg.org/multipage/origin.html#same-origin
+  # [2] https://w3c.github.io/webappsec-secure-contexts/#potentially-trustworthy-url
+  fileName: sec-fetch-mode.https
   headerName: sec-fetch-mode
   each_subtest:
     appcache-manifest.sub.https.html:

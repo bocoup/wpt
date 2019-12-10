@@ -2,15 +2,32 @@
 <!-- This test was procedurally generated. Please do not modify it directly. -->
 <html lang="en">
   <meta charset="utf-8">
+  <title>Fetch Metadata - Sec-Fetch-Site - redirection from HTTPS</title>
   <script src="/resources/testharness.js"></script>
   <script src="/resources/testharnessreport.js"></script>
-  <script src="/fetch/metadata/resources/helper.js"></script>
-  <script type="module">
+  <body>
+  <script>
   'use strict';
+
+  function induceRequest(path, attributes) {
+    const image = document.createElement('img');
+
+    for (const [ name, value ] of Object.entries(attributes)) {
+      image.setAttribute(name, value);
+    }
+
+    return new Promise((resolve) => {
+        image.setAttribute('src', path);
+        image.onload = image.onerror = resolve;
+      });
+  }
 
   promise_test(() => {
     const path = '/fetch/metadata/resources/record-headers.py?key={{uuid()}}';
-    return import('https://{{host}}:{{ports[https][0]}}/fetch/api/resources/redirect.py?location=http://{{host}}:{{ports[http][0]}}/fetch/api/resources/redirect.py?location=https://{{host}}:{{ports[https][0]}}' + path + '&mime=application/javascript')
+    return induceRequest(
+        'https://{{host}}:{{ports[https][0]}}/fetch/api/resources/redirect.py?location=http://{{host}}:{{ports[http][0]}}/fetch/api/resources/redirect.py?location=https://{{host}}:{{ports[https][0]}}' + path,
+        {}
+      )
       .then(() => fetch(path + '&retrieve'))
       .then((response) => response.text())
       .then((text) => JSON.parse(text))
@@ -20,4 +37,5 @@
         });
   }, 'sec-fetch-site - HTTPS downgrade-upgrade');
   </script>
+  </body>
 </html>

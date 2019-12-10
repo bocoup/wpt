@@ -58,7 +58,7 @@ def main(templates_directory, cases_file, out_directory):
             for template_name, concise_subtests in case['each_subtest'].items():
                 out_file_name = os.path.join(
                     out_directory,
-                    test_name(template_name, case['headerName'])
+                    test_name(template_name, case['fileName'])
                 )
                 context = dict(
                     subtests=cross(
