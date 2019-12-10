@@ -70,9 +70,9 @@
     expected: no-cors
 
 - templates:
-  - js-module-via-dynamic-import.sub.html
-  - js-module-via-static-import.sub.html
-  - js-module-via-script.sub.html
+  - script-module-via-import-dynamic.sub.html
+  - script-module-via-import-static.sub.html
+  - script-module-via-script.sub.html
   file_name_part: sec-fetch-mode-cors-script
   title: Fetch Metadata - Sec-Fetch-Mode - scripts
   headerName: sec-fetch-mode
