@@ -37,6 +37,15 @@
         method: GET
       - description: POST
         method: POST
+    global-properties.sub.html:
+      - description: location
+        api: location
+      - description: location.href
+        api: location.href
+      - description: location.assign
+        api: location.assign
+      - description: location.replace
+        api: location.replace
     image.sub.html: [{}]
     script-element.sub.html:
       - description: classic script
@@ -70,6 +79,19 @@
         expected: navigate
       - description: POST
         method: POST
+        expected: navigate
+    global-properties.sub.html:
+      - description: location
+        api: location
+        expected: navigate
+      - description: location.href
+        api: location.href
+        expected: navigate
+      - description: location.assign
+        api: location.assign
+        expected: navigate
+      - description: location.replace
+        api: location.replace
         expected: navigate
     image.sub.html:
       - description: no attributes
