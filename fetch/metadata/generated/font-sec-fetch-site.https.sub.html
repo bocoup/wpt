@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<!-- This test was procedurally generated. Please do not modify it directly. -->
+<html lang="en">
+  <meta charset="utf-8">
+  <title>Fetch Metadata - Sec-Fetch-Site - redirection from HTTPS</title>
+  <script src="/resources/testharness.js"></script>
+  <script src="/resources/testharnessreport.js"></script>
+  <script src="/fetch/metadata/resources/helper.js"></script>
+  <body>
+  <div id="font-test">test</div>
+  <script>
+  'use strict';
+
+  function induceRequest(t, path) {
+    const style = document.createElement('style');
+    style.innerText = `
+      @font-face {
+        font-family: myWptFont;
+        src: url(${path});
+      }
+      #font-test {
+        font-family: myWptFont;
+      }
+    `;
+
+    document.body.appendChild(style);
+
+    t.add_cleanup(() => style.remove());
+  }
+
+  promise_test((t) => {
+    const id = '{{uuid()}}';
+    const path = '/fetch/metadata/resources/record-headers.py?key=' + id;
+
+    induceRequest(t, 'https://{{host}}:{{ports[https][0]}}/fetch/api/resources/redirect.py?location=https://{{hosts[alt][www]}}:{{ports[https][0]}}/fetch/api/resources/redirect.py?location=https://{{host}}:{{ports[https][0]}}' + path);
+
+    return pollForRequestRecording(id)
+      .then((headers) => {
+          assert_own_property(headers, 'sec-fetch-site');
+          assert_equals(headers['sec-fetch-site'], 'cross-site');
+        });
+  }, 'sec-fetch-site - Same-Origin -> Cross-Site -> Same-Origin redirect');
+  </script>
+  </body>
+</html>

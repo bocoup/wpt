@@ -12,6 +12,7 @@
   each_subtest:
     appcache-manifest.sub.https.html: [{}]
     fetch.sub.html: [{}]
+    font.sub.html: [{}]
     form-submission.sub.html:
       - description: ' - GET'
         method: GET
@@ -49,6 +50,7 @@
   each_subtest:
     appcache-manifest.sub.https.html: [{}]
     fetch.sub.html: [{ init: { mode: no-cors } }]
+    font.sub.html: [{}]
     form-submission.sub.html:
       - description: ' - GET'
         method: GET
@@ -135,6 +137,8 @@
       - description: 'mode: same-origin'
         expected: same-origin
         init: { mode: same-origin }
+    font.sub.html:
+      - expected: cors
     form-submission.sub.html:
       - description: GET
         method: GET
