@@ -123,6 +123,8 @@
   each_subtest:
     appcache-manifest.sub.https.html:
       - expected: no-cors
+    cors-preflight.sub.html:
+      - expected: cors
     fetch.sub.html:
       - description: no options
         expected: cors

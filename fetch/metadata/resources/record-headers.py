@@ -5,8 +5,12 @@ import time
 import json
 
 def main(request, response):
-  ## Get the query parameter (key) from URL ##
-  ## Tests will record POST requests (CSP Report) and GET (rest) ##
+  # This condition avoids false positives from CORS preflight checks, where the
+  # request under test may be followed immediately by a request to the same URL
+  # using a different HTTP method.
+  if 'requireOPTIONS' in request.GET and request.method != 'OPTIONS':
+      return
+
   if 'key' in request.GET:
     key = request.GET['key']
   elif 'key' in request.POST:

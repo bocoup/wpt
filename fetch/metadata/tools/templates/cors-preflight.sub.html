@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<!-- This test was procedurally generated. Please do not modify it directly. -->
+<html lang="en">
+  <meta charset="utf-8">
+  <title>[%title%]</title>
+  <script src="/resources/testharness.js"></script>
+  <script src="/resources/testharnessreport.js"></script>
+  <body>
+  <script>
+  'use strict';
+
+  {%- for subtest in subtests if not subtest.pathPrefix is string %}
+
+  promise_test(() => {
+    const path = '/fetch/metadata/resources/record-headers.py?key={{uuid()}}';
+    return fetch(
+        'https://{{hosts[alt][]}}:{{ports[https][0]}}' + path + '&requireHEAD',
+        { method: 'DELETE' }
+      )
+      // This request is expected to fail
+      .catch(() => {})
+      .then(() => fetch(path + '&retrieve'))
+      .then((response) => response.text())
+      .then((text) => JSON.parse(text))
+      .then((headers) => {
+        {%- if subtest[expected] == none %}
+          assert_not_own_property(headers, '[%headerName%]');
+        {%- else %}
+          assert_own_property(headers, '[%headerName%]');
+          assert_equals(headers['[%headerName%]'], '[%subtest.expected%]');
+        {%- endif %}
+        });
+  }, '[%headerName%] - [%subtest.description%]');
+
+  {%- endfor %}
+  </script>
+  </body>
+</html>
