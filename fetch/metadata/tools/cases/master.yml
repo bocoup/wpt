@@ -31,8 +31,7 @@
     script-element.sub.html:
       - description: ' - classic script'
       - description: ' - module script'
-        elementAttrs:
-          type: module
+        elementAttrs: { type: module }
     script-module-import-dynamic.sub.html: [{}]
     script-module-import-static.sub.html: [{}]
     video-poster.sub.html: [{}]
@@ -69,8 +68,7 @@
     script-element.sub.html:
       - description: ' - classic script'
       - description: ' - module script'
-        elementAttrs:
-          type: module
+        elementAttrs: { type: module }
     script-module-import-dynamic.sub.html: [{}]
     script-module-import-static.sub.html: [{}]
     video-poster.sub.html: [{}]
@@ -164,35 +162,28 @@
         expected: no-cors
       - description: crossorigin=""
         expected: cors
-        elementAttrs:
-          crossorigin: ''
+        elementAttrs: { crossorigin: '' }
       - description: crossorigin="anonymous"
         expected: cors
-        elementAttrs:
-          crossorigin: anonymous
+        elementAttrs: { crossorigin: anonymous }
       - description: crossorigin="use-credentials"
         expected: cors
-        elementAttrs:
-          crossorigin: use-credentials
+        elementAttrs: { crossorigin: use-credentials }
     script-element.sub.html:
       - description: classic script
         expected: no-cors
       - description: module script
         expected: cors
-        elementAttrs:
-          type: module
+        elementAttrs: { type: module }
       - description: classic script, crossorigin=""
         expected: cors
-        elementAttrs:
-          crossorigin: ''
+        elementAttrs: { crossorigin: '' }
       - description: classic script, crossorigin="anonymous"
         expected: cors
-        elementAttrs:
-          crossorigin: anonymous
+        elementAttrs: { crossorigin: anonymous }
       - description: classic script, crossorigin="use-credentials"
         expected: cors
-        elementAttrs:
-          crossorigin: use-credentials
+        elementAttrs: { crossorigin: use-credentials }
     script-module-import-dynamic.sub.html:
       - expected: cors
     script-module-import-static.sub.html:
