@@ -29,7 +29,7 @@
   promise_test(() => {
     const path = '/fetch/metadata/resources/record-headers.py?key={{uuid()}}';
     return induceRequest(
-        'https://{{host}}:{{ports[https][0]}}/fetch/api/resources/redirect.py?location=http://{{host}}:{{ports[http][0]}}/fetch/api/resources/redirect.py?location=https://{{host}}:{{ports[https][0]}}' + path + '&mime=application/javascript',
+        'https://{{host}}:{{ports[https][0]}}/fetch/api/resources/redirect.py?location=https://{{hosts[alt][www]}}:{{ports[https][0]}}/fetch/api/resources/redirect.py?location=https://{{host}}:{{ports[https][0]}}' + path + '&mime=application/javascript',
         {}
       )
       .then(() => fetch(path + '&retrieve'))
@@ -39,12 +39,12 @@
           assert_own_property(headers, 'sec-fetch-site');
           assert_equals(headers['sec-fetch-site'], 'cross-site');
         });
-  }, 'sec-fetch-site - HTTPS downgrade-upgrade - classic script');
+  }, 'sec-fetch-site - Same-Origin -> Cross-Site -> Same-Origin redirect - classic script');
 
   promise_test(() => {
     const path = '/fetch/metadata/resources/record-headers.py?key={{uuid()}}';
     return induceRequest(
-        'https://{{host}}:{{ports[https][0]}}/fetch/api/resources/redirect.py?location=http://{{host}}:{{ports[http][0]}}/fetch/api/resources/redirect.py?location=https://{{host}}:{{ports[https][0]}}' + path + '&mime=application/javascript',
+        'https://{{host}}:{{ports[https][0]}}/fetch/api/resources/redirect.py?location=https://{{hosts[alt][www]}}:{{ports[https][0]}}/fetch/api/resources/redirect.py?location=https://{{host}}:{{ports[https][0]}}' + path + '&mime=application/javascript',
         {"type": "module"}
       )
       .then(() => fetch(path + '&retrieve'))
@@ -54,6 +54,6 @@
           assert_own_property(headers, 'sec-fetch-site');
           assert_equals(headers['sec-fetch-site'], 'cross-site');
         });
-  }, 'sec-fetch-site - HTTPS downgrade-upgrade - module script');
+  }, 'sec-fetch-site - Same-Origin -> Cross-Site -> Same-Origin redirect - module script');
   </script>
 </html>

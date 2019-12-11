@@ -25,8 +25,8 @@
   promise_test(() => {
     const path = '/fetch/metadata/resources/record-headers.py?key={{uuid()}}';
     return fetch(
-        'https://{{host}}:{{ports[https][0]}}/fetch/api/resources/redirect.py?location=http://{{host}}:{{ports[http][0]}}/fetch/api/resources/redirect.py?location=https://{{host}}:{{ports[https][0]}}' + path,
-        {}
+        'https://{{host}}:{{ports[https][0]}}/fetch/api/resources/redirect.py?location=https://{{hosts[alt][www]}}:{{ports[https][0]}}/fetch/api/resources/redirect.py?location=https://{{host}}:{{ports[https][0]}}' + path,
+        {"mode": "no-cors"}
       )
       .then(() => fetch(path + '&retrieve'))
       .then((response) => response.text())
@@ -35,7 +35,7 @@
           assert_own_property(headers, 'sec-fetch-site');
           assert_equals(headers['sec-fetch-site'], 'cross-site');
         });
-  }, 'sec-fetch-site - HTTPS downgrade-upgrade');
+  }, 'sec-fetch-site - Same-Origin -> Cross-Site -> Same-Origin redirect');
   </script>
   </body>
 </html>

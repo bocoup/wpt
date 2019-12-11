@@ -40,15 +40,15 @@
   fileName: sec-fetch-site.https
   headerName: sec-fetch-site
   all_subtests:
-    - description: HTTPS downgrade-upgrade
+    - description: Same-Origin -> Cross-Site -> Same-Origin redirect
       pathPrefix: "\
         https://{{host}}:{{ports[https][0]}}/fetch/api/resources/redirect.py?location=\
-        http://{{host}}:{{ports[http][0]}}/fetch/api/resources/redirect.py?location=\
+        https://{{hosts[alt][www]}}:{{ports[https][0]}}/fetch/api/resources/redirect.py?location=\
         https://{{host}}:{{ports[https][0]}}"
       expected: cross-site
   each_subtest:
     appcache-manifest.sub.https.html: [{}]
-    fetch.sub.html: [{}]
+    fetch.sub.html: [{ init: { mode: no-cors } }]
     form-submission.sub.html:
       - description: ' - GET'
         method: GET
@@ -71,6 +71,45 @@
           type: module
     script-module-import-dynamic.sub.html: [{}]
     script-module-import-static.sub.html: [{}]
+    video-poster.sub.html: [{}]
+
+- title: Fetch Metadata - Sec-Fetch-Site - redirection with mixed content
+  # These tests verify the effect that redirection has on the request's "site".
+  # The initial request must be made to a resource that is "same-site" with its
+  # origin. This avoids false positives because if the request were made to a
+  # cross-site resource, the value of "cross-site" would be assigned regardless
+  # of the subseqent redirection.
+  #
+  # Because these conditions necessarily warrant mixed content, only templates
+  # which can be configured to allow mixed content [1] can be used.
+  #
+  # [1] https://w3c.github.io/webappsec-mixed-content/#should-block-fetch
+  fileName: sec-fetch-site-mixed.https
+  headerName: sec-fetch-site
+  all_subtests:
+    - description: HTTPS downgrade-upgrade
+      pathPrefix: "\
+        https://{{host}}:{{ports[https][0]}}/fetch/api/resources/redirect.py?location=\
+        http://{{host}}:{{ports[http][0]}}/fetch/api/resources/redirect.py?location=\
+        https://{{host}}:{{ports[https][0]}}"
+      expected: cross-site
+  each_subtest:
+    appcache-manifest.sub.https.html: [{}]
+    form-submission.sub.html:
+      - description: ' - GET'
+        method: GET
+      - description: ' - POST'
+        method: POST
+    global-properties.sub.html:
+      - description: ' - location'
+        api: location
+      - description: ' - location.href'
+        api: location.href
+      - description: ' - location.assign'
+        api: location.assign
+      - description: ' - location.replace'
+        api: location.replace
+    image.sub.html: [{}]
     video-poster.sub.html: [{}]
 
 - title: Fetch Metadata - Sec-Fetch-Mode
