@@ -9,19 +9,6 @@
   <script>
   'use strict';
 
-  function induceRequest(path, attributes) {
-    const image = document.createElement('img');
-
-    for (const [ name, value ] of Object.entries(attributes)) {
-      image.setAttribute(name, value);
-    }
-
-    return new Promise((resolve) => {
-        image.setAttribute('src', path);
-        image.onload = image.onerror = resolve;
-      });
-  }
-
   {%- for subtest in subtests %}
 
   promise_test(() => {
