@@ -11,10 +11,8 @@
 
   function induceRequest(method, path) {
     const win = window.open();
-    const inputs = [
-        ['body', `<script>opener.postMessage('done', '*');</${''}script>`],
-        ...new URL(path, location.origin).searchParams
-      ]
+    path += `&body=<script>opener.postMessage('done', '*')</${''}script>`;
+    const inputs = Array.from(new URL(path, location.origin).searchParams)
       .map(([name, value]) =>
         `<input type="hidden" name="${name}" value="${value}">`
       )
