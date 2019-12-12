@@ -192,3 +192,46 @@
       - expected: cors
     video-poster.sub.html:
       - expected: no-cors
+
+- title: Fetch Metadata - Sec-Fetch-Dest
+  fileName: sec-fetch-dest
+  headerName: sec-fetch-dest
+  each_subtest:
+    appcache-manifest.sub.https.html:
+      - expected: empty
+    cors-preflight.sub.html:
+      - expected: empty
+    fetch.sub.html:
+      - expected: empty
+    font.sub.html:
+      - expected: font
+    form-submission.sub.html:
+      - description: ' - GET'
+        method: GET
+        expected: document
+      - description: ' - POST'
+        method: POST
+        expected: document
+    global-properties.sub.html:
+      - description: location
+        api: location
+        expected: document
+      - description: location.href
+        api: location.href
+        expected: document
+      - description: location.assign
+        api: location.assign
+        expected: document
+      - description: location.replace
+        api: location.replace
+        expected: document
+    image.sub.html:
+      - expected: image
+    script-element.sub.html:
+      - expected: script
+    script-module-import-dynamic.sub.html:
+      - expected: script
+    script-module-import-static.sub.html:
+      - expected: script
+    video-poster.sub.html:
+      - expected: image

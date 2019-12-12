@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<!-- This test was procedurally generated. Please do not modify it directly. -->
+<html lang="en">
+  <meta charset="utf-8">
+  <title>Fetch Metadata - Sec-Fetch-Dest</title>
+  <script src="/resources/testharness.js"></script>
+  <script src="/resources/testharnessreport.js"></script>
+  <script src="/fetch/metadata/resources/helper.js"></script>
+  <body>
+  <script>
+  'use strict';
+
+  function induceRequest(t, path) {
+    var video = document.createElement('video');
+    video.setAttribute('poster', path);
+    document.body.appendChild(video);
+
+    t.add_cleanup(() => video.remove());
+  }
+
+  promise_test((t) => {
+    const id = '{{uuid()}}';
+    const path = '/fetch/metadata/resources/record-headers.py?key=' + id;
+
+    induceRequest(t, '' + path);
+
+    return pollForRequestRecording(id)
+      .then((headers) => {
+          assert_own_property(headers, 'sec-fetch-dest');
+          assert_equals(headers['sec-fetch-dest'], 'image');
+    });
+  }, 'sec-fetch-dest - ');
+  </script>
+  </body>
+</html>

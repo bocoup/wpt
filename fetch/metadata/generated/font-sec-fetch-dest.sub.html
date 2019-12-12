@@ -2,7 +2,7 @@
 <!-- This test was procedurally generated. Please do not modify it directly. -->
 <html lang="en">
   <meta charset="utf-8">
-  <title>Fetch Metadata - Sec-Fetch-Site - redirection with mixed content</title>
+  <title>Fetch Metadata - Sec-Fetch-Dest</title>
   <script src="/resources/testharness.js"></script>
   <script src="/resources/testharnessreport.js"></script>
   <script src="/fetch/metadata/resources/helper.js"></script>
@@ -32,14 +32,14 @@
     const id = '{{uuid()}}';
     const path = '/fetch/metadata/resources/record-headers.py?key=' + id;
 
-    induceRequest(t, 'https://{{host}}:{{ports[https][0]}}/fetch/api/resources/redirect.py?location=http://{{host}}:{{ports[http][0]}}/fetch/api/resources/redirect.py?location=https://{{host}}:{{ports[https][0]}}' + path);
+    induceRequest(t, '' + path);
 
     return pollForRequestRecording(id)
       .then((headers) => {
-          assert_own_property(headers, 'sec-fetch-site');
-          assert_equals(headers['sec-fetch-site'], 'cross-site');
+          assert_own_property(headers, 'sec-fetch-dest');
+          assert_equals(headers['sec-fetch-dest'], 'font');
         });
-  }, 'sec-fetch-site - HTTPS downgrade-upgrade');
+  }, 'sec-fetch-dest - ');
   </script>
   </body>
 </html>
