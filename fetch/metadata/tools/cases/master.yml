@@ -235,3 +235,14 @@
       - expected: script
     video-poster.sub.html:
       - expected: image
+    worker-dedicated-constructor.sub.html:
+      - description: classic script
+        pathPrefix: https://{{host}}:{{ports[https][0]}}
+        expected: worker
+      - description: module script
+        options: { type: module }
+        pathPrefix: https://{{host}}:{{ports[https][0]}}
+        expected: worker
+    worker-dedicated-importscripts.sub.html:
+      - pathPrefix: https://{{host}}:{{ports[https][0]}}
+        expected: script
