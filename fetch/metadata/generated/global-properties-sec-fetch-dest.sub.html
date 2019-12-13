@@ -44,7 +44,7 @@
           assert_own_property(headers, 'sec-fetch-dest');
           assert_equals(headers['sec-fetch-dest'], 'document');
         });
-  }, 'sec-fetch-dest - location');
+  }, 'location');
 
   promise_test(() => {
     const key = '{{uuid()}}';
@@ -59,7 +59,7 @@
           assert_own_property(headers, 'sec-fetch-dest');
           assert_equals(headers['sec-fetch-dest'], 'document');
         });
-  }, 'sec-fetch-dest - location.href');
+  }, 'location.href');
 
   promise_test(() => {
     const key = '{{uuid()}}';
@@ -74,7 +74,7 @@
           assert_own_property(headers, 'sec-fetch-dest');
           assert_equals(headers['sec-fetch-dest'], 'document');
         });
-  }, 'sec-fetch-dest - location.assign');
+  }, 'location.assign');
 
   promise_test(() => {
     const key = '{{uuid()}}';
@@ -89,7 +89,7 @@
           assert_own_property(headers, 'sec-fetch-dest');
           assert_equals(headers['sec-fetch-dest'], 'document');
         });
-  }, 'sec-fetch-dest - location.replace');
+  }, 'location.replace');
   </script>
   </body>
 </html>

@@ -29,7 +29,7 @@
           assert_own_property(headers, 'sec-fetch-dest');
           assert_equals(headers['sec-fetch-dest'], 'worker');
         });
-  }, 'sec-fetch-dest - classic script');
+  }, 'classic script');
 
   promise_test(() => {
     const key = '{{uuid()}}';
@@ -45,6 +45,6 @@
           assert_own_property(headers, 'sec-fetch-dest');
           assert_equals(headers['sec-fetch-dest'], 'worker');
         });
-  }, 'sec-fetch-dest - module script');
+  }, 'module script');
   </script>
 </html>

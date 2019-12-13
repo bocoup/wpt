@@ -53,7 +53,7 @@
           assert_own_property(headers, 'sec-fetch-site');
           assert_equals(headers['sec-fetch-site'], 'cross-site');
         });
-  }, 'sec-fetch-site - HTTPS downgrade-upgrade - GET');
+  }, 'HTTPS downgrade-upgrade - GET');
 
   promise_test(() => {
     const key = '{{uuid()}}';
@@ -64,7 +64,7 @@
           assert_own_property(headers, 'sec-fetch-site');
           assert_equals(headers['sec-fetch-site'], 'cross-site');
         });
-  }, 'sec-fetch-site - HTTPS downgrade-upgrade - POST');
+  }, 'HTTPS downgrade-upgrade - POST');
   </script>
   </body>
 </html>

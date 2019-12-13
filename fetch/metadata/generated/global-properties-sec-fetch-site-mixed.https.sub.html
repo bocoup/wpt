@@ -44,7 +44,7 @@
           assert_own_property(headers, 'sec-fetch-site');
           assert_equals(headers['sec-fetch-site'], 'cross-site');
         });
-  }, 'sec-fetch-site - HTTPS downgrade-upgrade - location');
+  }, 'HTTPS downgrade-upgrade - location');
 
   promise_test(() => {
     const key = '{{uuid()}}';
@@ -59,7 +59,7 @@
           assert_own_property(headers, 'sec-fetch-site');
           assert_equals(headers['sec-fetch-site'], 'cross-site');
         });
-  }, 'sec-fetch-site - HTTPS downgrade-upgrade - location.href');
+  }, 'HTTPS downgrade-upgrade - location.href');
 
   promise_test(() => {
     const key = '{{uuid()}}';
@@ -74,7 +74,7 @@
           assert_own_property(headers, 'sec-fetch-site');
           assert_equals(headers['sec-fetch-site'], 'cross-site');
         });
-  }, 'sec-fetch-site - HTTPS downgrade-upgrade - location.assign');
+  }, 'HTTPS downgrade-upgrade - location.assign');
 
   promise_test(() => {
     const key = '{{uuid()}}';
@@ -89,7 +89,7 @@
           assert_own_property(headers, 'sec-fetch-site');
           assert_equals(headers['sec-fetch-site'], 'cross-site');
         });
-  }, 'sec-fetch-site - HTTPS downgrade-upgrade - location.replace');
+  }, 'HTTPS downgrade-upgrade - location.replace');
   </script>
   </body>
 </html>

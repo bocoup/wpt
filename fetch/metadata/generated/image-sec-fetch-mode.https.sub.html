@@ -35,7 +35,7 @@
           assert_own_property(headers, 'sec-fetch-mode');
           assert_equals(headers['sec-fetch-mode'], 'no-cors');
         });
-  }, 'sec-fetch-mode - no attributes');
+  }, 'no attributes');
 
   promise_test(() => {
     const key = '{{uuid()}}';
@@ -49,7 +49,7 @@
           assert_own_property(headers, 'sec-fetch-mode');
           assert_equals(headers['sec-fetch-mode'], 'cors');
         });
-  }, 'sec-fetch-mode - crossorigin=""');
+  }, 'crossorigin=""');
 
   promise_test(() => {
     const key = '{{uuid()}}';
@@ -63,7 +63,7 @@
           assert_own_property(headers, 'sec-fetch-mode');
           assert_equals(headers['sec-fetch-mode'], 'cors');
         });
-  }, 'sec-fetch-mode - crossorigin="anonymous"');
+  }, 'crossorigin="anonymous"');
 
   promise_test(() => {
     const key = '{{uuid()}}';
@@ -77,7 +77,7 @@
           assert_own_property(headers, 'sec-fetch-mode');
           assert_equals(headers['sec-fetch-mode'], 'cors');
         });
-  }, 'sec-fetch-mode - crossorigin="use-credentials"');
+  }, 'crossorigin="use-credentials"');
   </script>
   </body>
 </html>

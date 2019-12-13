@@ -53,7 +53,7 @@
           assert_own_property(headers, 'sec-fetch-site');
           assert_equals(headers['sec-fetch-site'], 'cross-site');
         });
-  }, 'sec-fetch-site - Same-Origin -> Cross-Site -> Same-Origin redirect - GET');
+  }, 'Same-Origin -> Cross-Site -> Same-Origin redirect - GET');
 
   promise_test(() => {
     const key = '{{uuid()}}';
@@ -64,7 +64,7 @@
           assert_own_property(headers, 'sec-fetch-site');
           assert_equals(headers['sec-fetch-site'], 'cross-site');
         });
-  }, 'sec-fetch-site - Same-Origin -> Cross-Site -> Same-Origin redirect - POST');
+  }, 'Same-Origin -> Cross-Site -> Same-Origin redirect - POST');
   </script>
   </body>
 </html>

@@ -44,7 +44,7 @@
           assert_own_property(headers, 'sec-fetch-site');
           assert_equals(headers['sec-fetch-site'], 'cross-site');
         });
-  }, 'sec-fetch-site - Same-Origin -> Cross-Site -> Same-Origin redirect - location');
+  }, 'Same-Origin -> Cross-Site -> Same-Origin redirect - location');
 
   promise_test(() => {
     const key = '{{uuid()}}';
@@ -59,7 +59,7 @@
           assert_own_property(headers, 'sec-fetch-site');
           assert_equals(headers['sec-fetch-site'], 'cross-site');
         });
-  }, 'sec-fetch-site - Same-Origin -> Cross-Site -> Same-Origin redirect - location.href');
+  }, 'Same-Origin -> Cross-Site -> Same-Origin redirect - location.href');
 
   promise_test(() => {
     const key = '{{uuid()}}';
@@ -74,7 +74,7 @@
           assert_own_property(headers, 'sec-fetch-site');
           assert_equals(headers['sec-fetch-site'], 'cross-site');
         });
-  }, 'sec-fetch-site - Same-Origin -> Cross-Site -> Same-Origin redirect - location.assign');
+  }, 'Same-Origin -> Cross-Site -> Same-Origin redirect - location.assign');
 
   promise_test(() => {
     const key = '{{uuid()}}';
@@ -89,7 +89,7 @@
           assert_own_property(headers, 'sec-fetch-site');
           assert_equals(headers['sec-fetch-site'], 'cross-site');
         });
-  }, 'sec-fetch-site - Same-Origin -> Cross-Site -> Same-Origin redirect - location.replace');
+  }, 'Same-Origin -> Cross-Site -> Same-Origin redirect - location.replace');
   </script>
   </body>
 </html>
