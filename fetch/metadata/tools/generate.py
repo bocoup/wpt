@@ -56,23 +56,23 @@ def main(templates_directory, cases_file, out_directory):
     with open(cases_file, 'r') as handle:
         cases = yaml.safe_load(handle.read())
 
-        for case in cases:
-            for template_name, concise_subtests in case['each_subtest'].items():
-                out_file_name = os.path.join(
-                    out_directory,
-                    test_name(template_name, case['fileName'])
-                )
-                context = dict(
-                    subtests=cross(
-                        case.get('all_subtests', [{}]), concise_subtests
-                    ),
-                    **case
-                )
-                context.pop('all_subtests', None)
-                context.pop('each_subtest')
+    for case in cases:
+        for template_name, concise_subtests in case['each_subtest'].items():
+            out_file_name = os.path.join(
+                out_directory,
+                test_name(template_name, case['fileName'])
+            )
+            context = dict(
+                subtests=cross(
+                    case.get('all_subtests', [{}]), concise_subtests
+                ),
+                **case
+            )
+            context.pop('all_subtests', None)
+            context.pop('each_subtest')
 
-                with open(out_file_name, 'w') as handle:
-                    handle.write(templates[template_name].render(**context))
+            with open(out_file_name, 'w') as handle:
+                handle.write(templates[template_name].render(**context))
 
 if __name__ == '__main__':
     main(TEMPLATES_DIR, CASES, OUT_DIR)
