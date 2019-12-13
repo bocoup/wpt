@@ -63,9 +63,9 @@ def main(templates_directory, cases_file, out_directory):
                 test_name(template_name, case['fileName'])
             )
             context = dict(
-                subtests=cross(
+                subtests=[subtest for subtest in cross(
                     case.get('all_subtests', [{}]), concise_subtests
-                ),
+                )],
                 **case
             )
             context.pop('all_subtests', None)

@@ -2,11 +2,7 @@
 <!-- This test was procedurally generated. Please do not modify it directly. -->
 <html lang="en">
   <meta charset="utf-8">
-  {#- Jinja2 models list values using generators. In order to count the number
-      of members, the generator must be exhausted. Store the list values so
-      that they may be iterated over to generate source code for subtests. #}
-  {%- set foo = subtests|list %}
-  {%- if foo|length > 10 %}
+  {%- if subtests|length > 10 %}
   <meta name="timeout" content="long">
   {%- endif %}
   <title>[%title%]</title>
@@ -37,7 +33,7 @@
     mime: 'text/html',
     body: `<script>opener.postMessage('done', '*')</${''}script>`
   };
-  {%- for subtest in foo %}
+  {%- for subtest in subtests %}
 
   promise_test(() => {
     const key = '{{uuid()}}';
