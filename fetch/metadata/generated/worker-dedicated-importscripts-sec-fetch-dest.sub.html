@@ -26,7 +26,7 @@
     const key = '{{uuid()}}';
     const url = makeRequestURL(
       key, ['sameOrigin'], { mime: 'application/javascript' }
-    ):
+    );
 
     return induceRequest(url)
       .then(() => retrieve(key))

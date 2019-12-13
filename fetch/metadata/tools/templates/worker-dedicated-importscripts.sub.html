@@ -28,7 +28,7 @@
     const key = '{{uuid()}}';
     const url = makeRequestURL(
       key, [% subtest.origins %], { mime: 'application/javascript' }
-    ):
+    );
 
     return induceRequest(url
       {%- if subtest.options -%}
