@@ -7,6 +7,12 @@
       origins: [sameOrigin, httpOrigin, sameOrigin]
       expected: cross-site
   each_subtest:
+    # Unused
+    # TODO(jugglinmike) document rationale
+    cors-preflight.sub.html: []
+    worker-dedicated-constructor.sub.html: []
+    worker-dedicated-importscripts.sub.html: []
+
     appcache-manifest.sub.https.html: [{}]
     fetch.sub.html: [{}]
     font.sub.html: [{}]
@@ -41,6 +47,12 @@
       origins: [sameOrigin, crossSite, sameOrigin]
       expected: cross-site
   each_subtest:
+    # Unused
+    # TODO(jugglinmike) document rationale
+    cors-preflight.sub.html: []
+    worker-dedicated-constructor.sub.html: []
+    worker-dedicated-importscripts.sub.html: []
+
     appcache-manifest.sub.https.html: [{}]
     fetch.sub.html: [{ init: { mode: no-cors } }]
     font.sub.html: [{}]
@@ -85,6 +97,17 @@
       origins: [sameOrigin, httpOrigin, sameOrigin]
       expected: cross-site
   each_subtest:
+    # Unused
+    # TODO(jugglinmike) document rationale
+    fetch.sub.html: []
+    worker-dedicated-importscripts.sub.html: []
+    font.sub.html: []
+    worker-dedicated-constructor.sub.html: []
+    script-module-import-static.sub.html: []
+    script-module-import-dynamic.sub.html: []
+    script-element.sub.html: []
+    cors-preflight.sub.html: []
+
     appcache-manifest.sub.https.html: [{}]
     form-submission.sub.html:
       - description: ' - GET'
@@ -112,6 +135,11 @@
   fileName: sec-fetch-mode.https
   headerName: sec-fetch-mode
   each_subtest:
+    # Unused
+    # TODO(jugglinmike) document rationale
+    worker-dedicated-importscripts.sub.html: []
+    worker-dedicated-constructor.sub.html: []
+
     appcache-manifest.sub.https.html:
       - expected: no-cors
     cors-preflight.sub.html:

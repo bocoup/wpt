@@ -57,6 +57,19 @@ def main(templates_directory, cases_file, out_directory):
         cases = yaml.safe_load(handle.read())
 
     for case in cases:
+        unused_templates = set(templates) - set(case['each_subtest'])
+
+        # This warning is intended to help authors avoid mistakenly omitting
+        # templates. It can be silenced by extending the`each_subtest`
+        # dictionary with an empty list for templates which are intentionally
+        # unused.
+        if unused_templates:
+            print(
+                'Warning: case "{}" does not '.format(case['title']) +
+                'reference the following templates:'
+            )
+            print('\n'.join('- {}'.format(name) for name in unused_templates))
+
         for template_name, concise_subtests in case['each_subtest'].items():
             out_file_name = os.path.join(
                 out_directory,
@@ -71,8 +84,12 @@ def main(templates_directory, cases_file, out_directory):
             context.pop('all_subtests', None)
             context.pop('each_subtest')
 
-            with open(out_file_name, 'w') as handle:
-                handle.write(templates[template_name].render(**context))
+            # Ignore expansions with zero subtests--this is the intended
+            # mechanism for authors to explicitly communicate that a given
+            # template is undesired.
+            if len(context['subtests']):
+                with open(out_file_name, 'w') as handle:
+                    handle.write(templates[template_name].render(**context))
 
 if __name__ == '__main__':
     main(TEMPLATES_DIR, CASES, OUT_DIR)
