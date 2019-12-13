@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<!-- This test was procedurally generated. Please do not modify it directly. -->
+<html lang="en">
+  <meta charset="utf-8">
+  <title>Fetch Metadata - Sec-Fetch-Dest</title>
+  <script src="/resources/testharness.js"></script>
+  <script src="/resources/testharnessreport.js"></script>
+  <script src="/fetch/metadata/resources/helper.sub.js"></script>
+  <body>
+  <script>
+  'use strict';
+
+  function induceRequest(url) {
+    const iframe = document.createElement('iframe');
+    iframe.src =
+      '/fetch/metadata/resources/appcache-iframe.sub.html?manifest=' + encodeURIComponent(url);
+
+    return new Promise((resolve) => {
+        addEventListener('message', function onMessage(event) {
+          if (event.source !== iframe.contentWindow) {
+            return;
+          }
+          removeEventListener('message', onMessage);
+          resolve(event.data);
+        });
+
+        document.body.appendChild(iframe);
+      })
+      .then((message) => {
+        if (message !== 'okay') {
+          throw message;
+        }
+      })
+      .then(() => iframe.remove());
+  }
+
+  promise_test(() => {
+    const key = '{{uuid()}}';
+
+    return induceRequest(makeRequestURL(key, []))
+      .then(() => retrieve(key))
+      .then((headers) => {
+          assert_own_property(headers, 'sec-fetch-dest');
+          assert_equals(headers['sec-fetch-dest'], 'empty');
+    });
+  }, '');
+  </script>
+  </body>
+</html>

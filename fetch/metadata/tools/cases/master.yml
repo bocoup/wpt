@@ -219,7 +219,7 @@
       - expected: no-cors
 
 - title: Fetch Metadata - Sec-Fetch-Dest
-  fileName: sec-fetch-dest
+  fileName: sec-fetch-dest.https
   headerName: sec-fetch-dest
   each_subtest:
     appcache-manifest.sub.https.html:
@@ -262,12 +262,9 @@
       - expected: image
     worker-dedicated-constructor.sub.html:
       - description: classic script
-        origins: [sameOrigin]
         expected: worker
       - description: module script
         options: { type: module }
-        origins: [sameOrigin]
         expected: worker
     worker-dedicated-importscripts.sub.html:
-      - origins: [sameOrigin]
-        expected: script
+      - expected: script

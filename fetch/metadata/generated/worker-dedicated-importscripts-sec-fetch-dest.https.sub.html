@@ -25,7 +25,7 @@
   promise_test(() => {
     const key = '{{uuid()}}';
     const url = makeRequestURL(
-      key, ['sameOrigin'], { mime: 'application/javascript' }
+      key, [], { mime: 'application/javascript' }
     );
 
     return induceRequest(url)
