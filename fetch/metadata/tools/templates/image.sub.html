@@ -5,11 +5,12 @@
   <title>[%title%]</title>
   <script src="/resources/testharness.js"></script>
   <script src="/resources/testharnessreport.js"></script>
+  <script src="/fetch/metadata/resources/helper.sub.js"></script>
   <body>
   <script>
   'use strict';
 
-  function induceRequest(path, attributes) {
+  function induceRequest(url, attributes) {
     const image = document.createElement('img');
 
     for (const [ name, value ] of Object.entries(attributes)) {
@@ -17,7 +18,7 @@
     }
 
     return new Promise((resolve) => {
-        image.setAttribute('src', path);
+        image.setAttribute('src', url);
         image.onload = image.onerror = resolve;
       });
   }
@@ -25,14 +26,13 @@
   {%- for subtest in subtests %}
 
   promise_test(() => {
-    const path = '/fetch/metadata/resources/record-headers.py?key={{uuid()}}';
+    const key = '{{uuid()}}';
+
     return induceRequest(
-        '[%subtest.pathPrefix%]' + path,
+        makeRequestURL(key, [% subtest.origins %]),
         [%subtest.elementAttrs | default({}) | tojson%]
       )
-      .then(() => fetch(path + '&retrieve'))
-      .then((response) => response.text())
-      .then((text) => JSON.parse(text))
+      .then(() => retrieve(key))
       .then((headers) => {
         {%- if subtest[expected] == none %}
           assert_not_own_property(headers, '[%headerName%]');

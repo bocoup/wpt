@@ -5,17 +5,16 @@
   <title>[%title%]</title>
   <script src="/resources/testharness.js"></script>
   <script src="/resources/testharnessreport.js"></script>
-  {%- for script in scripts %}
-  <script src="[%script%]"></script>
-  {%- endfor %}
+  <script src="/fetch/metadata/resources/helper.sub.js"></script>
   <body>
   <script>
   'use strict';
 
-  function induceRequest(method, path) {
+  function induceRequest(method, url) {
     const win = window.open();
-    path += `&body=<script>opener.postMessage('done', '*')</${''}script>`;
-    const inputs = Array.from(new URL(path, location.origin).searchParams)
+    // Query parameters must be expressed as form values so that they are sent
+    // with the submission of forms whose method is POST.
+    const inputs = Array.from(new URL(url, location.origin).searchParams)
       .map(([name, value]) =>
         `<input type="hidden" name="${name}" value="${value}">`
       )
@@ -30,7 +29,7 @@
         win.document.open();
         win.document.write(`
           <!DOCTYPE html>
-          <form method="${method}" action="${path}">${inputs}</form>
+          <form method="${method}" action="${url}">${inputs}</form>
           <script>
             const form = document.getElementsByTagName('form')[0];
             form.submit();
@@ -40,14 +39,18 @@
       })
       .then(() => win.close());
   }
+  const responseParams = {
+    mime: 'text/html',
+    body: `<script>opener.postMessage('done', '*')</${''}script>`
+  };
+
   {%- for subtest in subtests %}
 
   promise_test(() => {
-    const path = '/fetch/metadata/resources/record-headers.py?key={{uuid()}}';
-    return induceRequest('[%subtest.method | default("POST")%]', '[%subtest.pathPrefix%]' + path)
-      .then(() => fetch(path + '&retrieve'))
-      .then((response) => response.text())
-      .then((text) => JSON.parse(text))
+    const key = '{{uuid()}}';
+    const url = makeRequestURL(key, [% subtest.origins %], responseParams);
+    return induceRequest('[%subtest.method | default("POST")%]', url)
+      .then(() => retrieve(key))
       .then((headers) => {
         {%- if subtest[expected] == none %}
           assert_not_own_property(headers, '[%headerName%]');

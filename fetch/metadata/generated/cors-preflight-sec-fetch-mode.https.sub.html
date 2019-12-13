@@ -5,21 +5,21 @@
   <title>Fetch Metadata - Sec-Fetch-Mode</title>
   <script src="/resources/testharness.js"></script>
   <script src="/resources/testharnessreport.js"></script>
+  <script src="/fetch/metadata/resources/helper.sub.js"></script>
   <body>
   <script>
   'use strict';
 
+  
+
   promise_test(() => {
-    const path = '/fetch/metadata/resources/record-headers.py?key={{uuid()}}';
-    return fetch(
-        'https://{{hosts[alt][]}}:{{ports[https][0]}}' + path + '&requireHEAD',
-        { method: 'DELETE' }
-      )
+    const key = '{{uuid()}}';
+    const url = makeRequestURL(key, ['crossSite'], { requireHEAD: true });
+
+    return fetch(url, { method: 'DELETE' })
       // This request is expected to fail
       .catch(() => {})
-      .then(() => fetch(path + '&retrieve'))
-      .then((response) => response.text())
-      .then((text) => JSON.parse(text))
+      .then(() => retrieve(key))
       .then((headers) => {
           assert_own_property(headers, 'sec-fetch-mode');
           assert_equals(headers['sec-fetch-mode'], 'cors');

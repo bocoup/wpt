@@ -38,6 +38,8 @@ def cross(a, b):
                 merged['description'] = '{}{}'.format(
                     a_object['description'], b_object['description']
                 )
+            if 'origins' not in merged:
+                merged['origins'] = []
 
             yield merged
 

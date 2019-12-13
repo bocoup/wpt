@@ -5,14 +5,14 @@
   <title>[%title%]</title>
   <script src="/resources/testharness.js"></script>
   <script src="/resources/testharnessreport.js"></script>
-  <script src="/fetch/metadata/resources/helper.js"></script>
+  <script src="/fetch/metadata/resources/helper.sub.js"></script>
   <body>
   <script>
   'use strict';
 
-  function induceRequest(t, path) {
+  function induceRequest(t, url) {
     var video = document.createElement('video');
-    video.setAttribute('poster', path);
+    video.setAttribute('poster', url);
     document.body.appendChild(video);
 
     t.add_cleanup(() => video.remove());
@@ -21,12 +21,11 @@
   {%- for subtest in subtests %}
 
   promise_test((t) => {
-    const id = '{{uuid()}}';
-    const path = '/fetch/metadata/resources/record-headers.py?key=' + id;
+    const key = '{{uuid()}}';
 
-    induceRequest(t, '[%subtest.pathPrefix%]' + path);
+    induceRequest(t, makeRequestURL(key, [% subtest.origins %]));
 
-    return pollForRequestRecording(id)
+    return retrieve(key, { poll: true })
       .then((headers) => {
         {%- if subtest[expected] == none %}
           assert_not_own_property(headers, '[%headerName%]');
@@ -34,7 +33,7 @@
           assert_own_property(headers, '[%headerName%]');
           assert_equals(headers['[%headerName%]'], '[%subtest.expected%]');
         {%- endif %}
-    });
+      });
   }, '[%headerName%] - [%subtest.description%]');
 
   {%- endfor %}

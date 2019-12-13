@@ -61,24 +61,3 @@ function assert_no_headers(value, tag) {
     test(t => assert_equals(value.user, ""), `${tag}: sec-fetch-user`);
   test(t => assert_equals(value.dest, ""), `${tag}: sec-fetch-dest`);
 }
-
-function pollForRequestRecording(id) {
-  return fetch('/fetch/metadata/resources/record-headers.py?retrieve&key=' + id)
-    .then(function(response) {
-      if (!response.ok) {
-        throw new Error('Failed to query for recorded headers.');
-      }
-
-      return response.text();
-    })
-    .then(function(text) {
-      var value = JSON.parse(text);
-
-      if (value === 'No request has been recorded') {
-        return new Promise((resolve) => setTimeout(resolve, 300))
-          .then(() => pollForRequestRecording(id));
-      }
-
-      return value;
-    });
-}

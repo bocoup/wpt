@@ -21,16 +21,12 @@ def main(request, response):
 
   ## Handle the header retrieval request ##
   if 'retrieve' in request.GET:
-    response.writer.write_status(200)
-    response.writer.end_headers()
-    try:
-      headers = request.server.stash.take(testId)
-      response.writer.write(headers)
-    except (KeyError, ValueError) as e:
-      response.writer.write(json.dumps("No request has been recorded"))
-      pass
+    recorded_headers = request.server.stash.take(testId)
 
-    response.close_connection = True
+    if recorded_headers is None:
+      return (204, [], '')
+
+    return (200, [], recorded_headers)
 
   ## Record incoming fetch metadata header value
   else:

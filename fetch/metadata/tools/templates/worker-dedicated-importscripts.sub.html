@@ -4,17 +4,19 @@
   <meta charset="utf-8">
   <script src="/resources/testharness.js"></script>
   <script src="/resources/testharnessreport.js"></script>
-  <script src="/fetch/metadata/resources/helper.js"></script>
+  <script src="/fetch/metadata/resources/helper.sub.js"></script>
   <script type="module">
   'use strict';
-  function induceRequest(path, options) {
+  function induceRequest(url, options) {
     const src = `
-      importScripts('${path}&mime=text/javascript');
+      importScripts('${url}&mime=text/javascript');
       postMessage('done');
     `;
-    const url = URL.createObjectURL(new Blob([src], { type: 'application/javascript' }));
+    const workerUrl = URL.createObjectURL(
+      new Blob([src], { type: 'application/javascript' })
+    );
     return new Promise((resolve, reject) => {
-      const worker = new Worker(url, options);
+      const worker = new Worker(workerUrl, options);
       worker.onmessage = resolve;
       worker.onerror = reject;
     });
@@ -23,15 +25,17 @@
   {%- for subtest in subtests %}
 
   promise_test(() => {
-    const path = '/fetch/metadata/resources/record-headers.py?key={{uuid()}}';
-    return induceRequest('[%subtest.pathPrefix%]' + path
+    const key = '{{uuid()}}';
+    const url = makeRequestURL(
+      key, [% subtest.origins %], { mime: 'application/javascript' }
+    ):
+
+    return induceRequest(url
       {%- if subtest.options -%}
         , [% subtest.options | tojson %]
       {%- endif -%}
       )
-      .then(() => fetch(path + '&retrieve'))
-      .then((response) => response.text())
-      .then((text) => JSON.parse(text))
+      .then(() => retrieve(key))
       .then((headers) => {
         {%- if subtest[expected] == none %}
           assert_not_own_property(headers, '[%headerName%]');

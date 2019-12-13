@@ -4,10 +4,7 @@
   headerName: sec-fetch-site
   all_subtests:
     - description: HTTPS downgrade-upgrade
-      pathPrefix: "\
-        https://{{host}}:{{ports[https][0]}}/fetch/api/resources/redirect.py?location=\
-        http://{{host}}:{{ports[http][0]}}/fetch/api/resources/redirect.py?location=\
-        https://{{host}}:{{ports[https][0]}}"
+      origins: [sameOrigin, httpOrigin, sameOrigin]
       expected: cross-site
   each_subtest:
     appcache-manifest.sub.https.html: [{}]
@@ -41,10 +38,7 @@
   headerName: sec-fetch-site
   all_subtests:
     - description: Same-Origin -> Cross-Site -> Same-Origin redirect
-      pathPrefix: "\
-        https://{{host}}:{{ports[https][0]}}/fetch/api/resources/redirect.py?location=\
-        https://{{hosts[alt][www]}}:{{ports[https][0]}}/fetch/api/resources/redirect.py?location=\
-        https://{{host}}:{{ports[https][0]}}"
+      origins: [sameOrigin, crossSite, sameOrigin]
       expected: cross-site
   each_subtest:
     appcache-manifest.sub.https.html: [{}]
@@ -88,10 +82,7 @@
   headerName: sec-fetch-site
   all_subtests:
     - description: HTTPS downgrade-upgrade
-      pathPrefix: "\
-        https://{{host}}:{{ports[https][0]}}/fetch/api/resources/redirect.py?location=\
-        http://{{host}}:{{ports[http][0]}}/fetch/api/resources/redirect.py?location=\
-        https://{{host}}:{{ports[https][0]}}"
+      origins: [sameOrigin, httpOrigin, sameOrigin]
       expected: cross-site
   each_subtest:
     appcache-manifest.sub.https.html: [{}]
@@ -237,12 +228,12 @@
       - expected: image
     worker-dedicated-constructor.sub.html:
       - description: classic script
-        pathPrefix: https://{{host}}:{{ports[https][0]}}
+        origins: [sameOrigin]
         expected: worker
       - description: module script
         options: { type: module }
-        pathPrefix: https://{{host}}:{{ports[https][0]}}
+        origins: [sameOrigin]
         expected: worker
     worker-dedicated-importscripts.sub.html:
-      - pathPrefix: https://{{host}}:{{ports[https][0]}}
+      - origins: [sameOrigin]
         expected: script

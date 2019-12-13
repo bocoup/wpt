@@ -5,14 +5,14 @@
   <title>Fetch Metadata - Sec-Fetch-Site - redirection from HTTPS</title>
   <script src="/resources/testharness.js"></script>
   <script src="/resources/testharnessreport.js"></script>
-  <script src="/fetch/metadata/resources/helper.js"></script>
+  <script src="/fetch/metadata/resources/helper.sub.js"></script>
   <body>
   <script>
   'use strict';
 
-  function induceRequest(path, attributes) {
+  function induceRequest(url, attributes) {
     const script = document.createElement('script');
-    script.setAttribute('src', path);
+    script.setAttribute('src', url);
 
     for (const [ name, value ] of Object.entries(attributes)) {
       script.setAttribute(name, value);
@@ -27,14 +27,15 @@
   }
 
   promise_test(() => {
-    const path = '/fetch/metadata/resources/record-headers.py?key={{uuid()}}';
-    return induceRequest(
-        'https://{{host}}:{{ports[https][0]}}/fetch/api/resources/redirect.py?location=https://{{hosts[alt][www]}}:{{ports[https][0]}}/fetch/api/resources/redirect.py?location=https://{{host}}:{{ports[https][0]}}' + path + '&mime=application/javascript',
+    const key = '{{uuid()}}';
+    const url = makeRequestURL(
+      key, ['sameOrigin', 'crossSite', 'sameOrigin'], { mime: 'application/javascript' }
+    );
+
+    return induceRequest(url,
         {}
       )
-      .then(() => fetch(path + '&retrieve'))
-      .then((response) => response.text())
-      .then((text) => JSON.parse(text))
+      .then(() => retrieve(key))
       .then((headers) => {
           assert_own_property(headers, 'sec-fetch-site');
           assert_equals(headers['sec-fetch-site'], 'cross-site');
@@ -42,14 +43,15 @@
   }, 'sec-fetch-site - Same-Origin -> Cross-Site -> Same-Origin redirect - classic script');
 
   promise_test(() => {
-    const path = '/fetch/metadata/resources/record-headers.py?key={{uuid()}}';
-    return induceRequest(
-        'https://{{host}}:{{ports[https][0]}}/fetch/api/resources/redirect.py?location=https://{{hosts[alt][www]}}:{{ports[https][0]}}/fetch/api/resources/redirect.py?location=https://{{host}}:{{ports[https][0]}}' + path + '&mime=application/javascript',
+    const key = '{{uuid()}}';
+    const url = makeRequestURL(
+      key, ['sameOrigin', 'crossSite', 'sameOrigin'], { mime: 'application/javascript' }
+    );
+
+    return induceRequest(url,
         {"type": "module"}
       )
-      .then(() => fetch(path + '&retrieve'))
-      .then((response) => response.text())
-      .then((text) => JSON.parse(text))
+      .then(() => retrieve(key))
       .then((headers) => {
           assert_own_property(headers, 'sec-fetch-site');
           assert_equals(headers['sec-fetch-site'], 'cross-site');

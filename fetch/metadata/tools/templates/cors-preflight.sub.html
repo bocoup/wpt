@@ -5,23 +5,23 @@
   <title>[%title%]</title>
   <script src="/resources/testharness.js"></script>
   <script src="/resources/testharnessreport.js"></script>
+  <script src="/fetch/metadata/resources/helper.sub.js"></script>
   <body>
   <script>
   'use strict';
 
-  {%- for subtest in subtests if not subtest.pathPrefix is string %}
+  {# This feature can only be observed for cross-domain requests, so subtests
+     which require specific origins are ignored. #}
+  {%- for subtest in subtests if not subtest.origins %}
 
   promise_test(() => {
-    const path = '/fetch/metadata/resources/record-headers.py?key={{uuid()}}';
-    return fetch(
-        'https://{{hosts[alt][]}}:{{ports[https][0]}}' + path + '&requireHEAD',
-        { method: 'DELETE' }
-      )
+    const key = '{{uuid()}}';
+    const url = makeRequestURL(key, ['crossSite'], { requireHEAD: true });
+
+    return fetch(url, { method: 'DELETE' })
       // This request is expected to fail
       .catch(() => {})
-      .then(() => fetch(path + '&retrieve'))
-      .then((response) => response.text())
-      .then((text) => JSON.parse(text))
+      .then(() => retrieve(key))
       .then((headers) => {
         {%- if subtest[expected] == none %}
           assert_not_own_property(headers, '[%headerName%]');
