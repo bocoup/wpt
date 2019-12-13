@@ -46,6 +46,48 @@
 
   promise_test(() => {
     const key = '{{uuid()}}';
+    const url = makeRequestURL(key, ['sameOrigin', 'httpOrigin'], responseParams);
+    return induceRequest('GET', url)
+      .then(() => retrieve(key))
+      .then((headers) => {
+          assert_not_own_property(headers, 'sec-fetch-site');
+        });
+  }, 'HTTPS downgrade (header not sent) - GET');
+
+  promise_test(() => {
+    const key = '{{uuid()}}';
+    const url = makeRequestURL(key, ['sameOrigin', 'httpOrigin'], responseParams);
+    return induceRequest('POST', url)
+      .then(() => retrieve(key))
+      .then((headers) => {
+          assert_not_own_property(headers, 'sec-fetch-site');
+        });
+  }, 'HTTPS downgrade (header not sent) - POST');
+
+  promise_test(() => {
+    const key = '{{uuid()}}';
+    const url = makeRequestURL(key, ['httpOrigin', 'sameOrigin'], responseParams);
+    return induceRequest('GET', url)
+      .then(() => retrieve(key))
+      .then((headers) => {
+          assert_own_property(headers, 'sec-fetch-site');
+          assert_equals(headers['sec-fetch-site'], 'cross-site');
+        });
+  }, 'HTTPS upgrade - GET');
+
+  promise_test(() => {
+    const key = '{{uuid()}}';
+    const url = makeRequestURL(key, ['httpOrigin', 'sameOrigin'], responseParams);
+    return induceRequest('POST', url)
+      .then(() => retrieve(key))
+      .then((headers) => {
+          assert_own_property(headers, 'sec-fetch-site');
+          assert_equals(headers['sec-fetch-site'], 'cross-site');
+        });
+  }, 'HTTPS upgrade - POST');
+
+  promise_test(() => {
+    const key = '{{uuid()}}';
     const url = makeRequestURL(key, ['sameOrigin', 'httpOrigin', 'sameOrigin'], responseParams);
     return induceRequest('GET', url)
       .then(() => retrieve(key))

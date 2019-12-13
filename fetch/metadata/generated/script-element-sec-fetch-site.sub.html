@@ -29,6 +29,68 @@
   promise_test(() => {
     const key = '{{uuid()}}';
     const url = makeRequestURL(
+      key, ['sameOrigin', 'httpOrigin'], { mime: 'application/javascript' }
+    );
+
+    return induceRequest(url,
+        {}
+      )
+      .then(() => retrieve(key))
+      .then((headers) => {
+          assert_not_own_property(headers, 'sec-fetch-site');
+        });
+  }, 'HTTPS downgrade (header not sent) - classic script');
+
+  promise_test(() => {
+    const key = '{{uuid()}}';
+    const url = makeRequestURL(
+      key, ['sameOrigin', 'httpOrigin'], { mime: 'application/javascript' }
+    );
+
+    return induceRequest(url,
+        {"type": "module"}
+      )
+      .then(() => retrieve(key))
+      .then((headers) => {
+          assert_not_own_property(headers, 'sec-fetch-site');
+        });
+  }, 'HTTPS downgrade (header not sent) - module script');
+
+  promise_test(() => {
+    const key = '{{uuid()}}';
+    const url = makeRequestURL(
+      key, ['httpOrigin', 'sameOrigin'], { mime: 'application/javascript' }
+    );
+
+    return induceRequest(url,
+        {}
+      )
+      .then(() => retrieve(key))
+      .then((headers) => {
+          assert_own_property(headers, 'sec-fetch-site');
+          assert_equals(headers['sec-fetch-site'], 'cross-site');
+        });
+  }, 'HTTPS upgrade - classic script');
+
+  promise_test(() => {
+    const key = '{{uuid()}}';
+    const url = makeRequestURL(
+      key, ['httpOrigin', 'sameOrigin'], { mime: 'application/javascript' }
+    );
+
+    return induceRequest(url,
+        {"type": "module"}
+      )
+      .then(() => retrieve(key))
+      .then((headers) => {
+          assert_own_property(headers, 'sec-fetch-site');
+          assert_equals(headers['sec-fetch-site'], 'cross-site');
+        });
+  }, 'HTTPS upgrade - module script');
+
+  promise_test(() => {
+    const key = '{{uuid()}}';
+    const url = makeRequestURL(
       key, ['sameOrigin', 'httpOrigin', 'sameOrigin'], { mime: 'application/javascript' }
     );
 

@@ -3,6 +3,12 @@
   fileName: sec-fetch-site
   headerName: sec-fetch-site
   all_subtests:
+    - description: HTTPS downgrade (header not sent)
+      origins: [sameOrigin, httpOrigin]
+      expected: NULL
+    - description: HTTPS upgrade
+      origins: [httpOrigin, sameOrigin]
+      expected: cross-site
     - description: HTTPS downgrade-upgrade
       origins: [sameOrigin, httpOrigin, sameOrigin]
       expected: cross-site

@@ -42,11 +42,11 @@
     return induceRequest(makeRequestURL(key, [% subtest.origins %]))
       .then(() => retrieve(key))
       .then((headers) => {
-        {%- if subtest[expected] == none %}
+        {%- if subtest.expected == none %}
           assert_not_own_property(headers, '[%headerName%]');
         {%- else %}
           assert_own_property(headers, '[%headerName%]');
-          assert_equals(headers['[%headerName%]'], '[%subtest[expected]%]');
+          assert_equals(headers['[%headerName%]'], '[%subtest.expected%]');
         {%- endif %}
     });
   }, '[%subtest.description%]');
