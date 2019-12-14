@@ -35,5 +35,131 @@
           assert_equals(headers['sec-fetch-site'], 'cross-site');
         });
   }, 'Same-Origin -> Cross-Site -> Same-Origin redirect');
+
+  promise_test(() => {
+    const key = '{{uuid()}}';
+    const url = makeRequestURL(
+      key, ['crossSite', 'sameOrigin'], { mime: 'application/javascript' }
+    );
+
+    return induceRequest(url)
+      .then(() => retrieve(key))
+      .then((headers) => {
+          assert_own_property(headers, 'sec-fetch-site');
+          assert_equals(headers['sec-fetch-site'], 'cross-site');
+        });
+  }, 'Cross-Site -> Same Origin');
+
+  promise_test(() => {
+    const key = '{{uuid()}}';
+    const url = makeRequestURL(
+      key, ['crossSite', 'sameSite'], { mime: 'application/javascript' }
+    );
+
+    return induceRequest(url)
+      .then(() => retrieve(key))
+      .then((headers) => {
+          assert_own_property(headers, 'sec-fetch-site');
+          assert_equals(headers['sec-fetch-site'], 'cross-site');
+        });
+  }, 'Cross-Site -> Same-Site');
+
+  promise_test(() => {
+    const key = '{{uuid()}}';
+    const url = makeRequestURL(
+      key, ['crossSite', 'crossSite'], { mime: 'application/javascript' }
+    );
+
+    return induceRequest(url)
+      .then(() => retrieve(key))
+      .then((headers) => {
+          assert_own_property(headers, 'sec-fetch-site');
+          assert_equals(headers['sec-fetch-site'], 'cross-site');
+        });
+  }, 'Cross-Site -> Cross-Site');
+
+  promise_test(() => {
+    const key = '{{uuid()}}';
+    const url = makeRequestURL(
+      key, ['sameOrigin', 'sameOrigin'], { mime: 'application/javascript' }
+    );
+
+    return induceRequest(url)
+      .then(() => retrieve(key))
+      .then((headers) => {
+          assert_own_property(headers, 'sec-fetch-site');
+          assert_equals(headers['sec-fetch-site'], 'same-origin');
+        });
+  }, 'Same-Origin -> Same Origin');
+
+  promise_test(() => {
+    const key = '{{uuid()}}';
+    const url = makeRequestURL(
+      key, ['sameOrigin', 'sameSite'], { mime: 'application/javascript' }
+    );
+
+    return induceRequest(url)
+      .then(() => retrieve(key))
+      .then((headers) => {
+          assert_own_property(headers, 'sec-fetch-site');
+          assert_equals(headers['sec-fetch-site'], 'same-site');
+        });
+  }, 'Same-Origin -> Same-Site');
+
+  promise_test(() => {
+    const key = '{{uuid()}}';
+    const url = makeRequestURL(
+      key, ['sameOrigin', 'crossSite'], { mime: 'application/javascript' }
+    );
+
+    return induceRequest(url)
+      .then(() => retrieve(key))
+      .then((headers) => {
+          assert_own_property(headers, 'sec-fetch-site');
+          assert_equals(headers['sec-fetch-site'], 'cross-site');
+        });
+  }, 'Same-Origin -> Cross-Site');
+
+  promise_test(() => {
+    const key = '{{uuid()}}';
+    const url = makeRequestURL(
+      key, ['sameSite', 'sameOrigin'], { mime: 'application/javascript' }
+    );
+
+    return induceRequest(url)
+      .then(() => retrieve(key))
+      .then((headers) => {
+          assert_own_property(headers, 'sec-fetch-site');
+          assert_equals(headers['sec-fetch-site'], 'same-site');
+        });
+  }, 'Same-Site -> Same Origin');
+
+  promise_test(() => {
+    const key = '{{uuid()}}';
+    const url = makeRequestURL(
+      key, ['sameSite', 'sameSite'], { mime: 'application/javascript' }
+    );
+
+    return induceRequest(url)
+      .then(() => retrieve(key))
+      .then((headers) => {
+          assert_own_property(headers, 'sec-fetch-site');
+          assert_equals(headers['sec-fetch-site'], 'same-site');
+        });
+  }, 'Same-Site -> Same-Site');
+
+  promise_test(() => {
+    const key = '{{uuid()}}';
+    const url = makeRequestURL(
+      key, ['sameSite', 'crossSite'], { mime: 'application/javascript' }
+    );
+
+    return induceRequest(url)
+      .then(() => retrieve(key))
+      .then((headers) => {
+          assert_own_property(headers, 'sec-fetch-site');
+          assert_equals(headers['sec-fetch-site'], 'cross-site');
+        });
+  }, 'Same-Site -> Cross-Site');
   </script>
 </html>

@@ -19,16 +19,32 @@
     const key = '{{uuid()}}';
     const url = makeRequestURL(
       key,
-      ['sameOrigin', 'crossSite', 'sameOrigin'],
+      [],
+      { mime: 'application/javascript', body: 'postMessage("")' }
+    );
+
+    return induceRequest(url)
+      .then(() => retrieve(key))
+      .then((headers) => {
+          assert_own_property(headers, 'sec-fetch-mode');
+          assert_equals(headers['sec-fetch-mode'], 'same-origin');
+        });
+  }, 'classic script');
+
+  promise_test(() => {
+    const key = '{{uuid()}}';
+    const url = makeRequestURL(
+      key,
+      [],
       { mime: 'application/javascript', body: 'postMessage("")' }
     );
 
     return induceRequest(url, {"type": "module"})
       .then(() => retrieve(key))
       .then((headers) => {
-          assert_own_property(headers, 'sec-fetch-site');
-          assert_equals(headers['sec-fetch-site'], 'cross-site');
+          assert_own_property(headers, 'sec-fetch-mode');
+          assert_equals(headers['sec-fetch-mode'], 'same-origin');
         });
-  }, 'Same-Origin -> Cross-Site -> Same-Origin redirect - module script');
+  }, 'module script');
   </script>
 </html>

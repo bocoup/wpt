@@ -23,6 +23,132 @@
           assert_equals(headers['sec-fetch-site'], 'cross-site');
         });
   }, 'Same-Origin -> Cross-Site -> Same-Origin redirect');
+
+  promise_test(() => {
+    const key = '{{uuid()}}';
+
+    return fetch(
+        makeRequestURL(key, ['crossSite', 'sameOrigin']),
+        {"mode": "no-cors"}
+      )
+      .then(() => retrieve(key))
+      .then((headers) => {
+          assert_own_property(headers, 'sec-fetch-site');
+          assert_equals(headers['sec-fetch-site'], 'cross-site');
+        });
+  }, 'Cross-Site -> Same Origin');
+
+  promise_test(() => {
+    const key = '{{uuid()}}';
+
+    return fetch(
+        makeRequestURL(key, ['crossSite', 'sameSite']),
+        {"mode": "no-cors"}
+      )
+      .then(() => retrieve(key))
+      .then((headers) => {
+          assert_own_property(headers, 'sec-fetch-site');
+          assert_equals(headers['sec-fetch-site'], 'cross-site');
+        });
+  }, 'Cross-Site -> Same-Site');
+
+  promise_test(() => {
+    const key = '{{uuid()}}';
+
+    return fetch(
+        makeRequestURL(key, ['crossSite', 'crossSite']),
+        {"mode": "no-cors"}
+      )
+      .then(() => retrieve(key))
+      .then((headers) => {
+          assert_own_property(headers, 'sec-fetch-site');
+          assert_equals(headers['sec-fetch-site'], 'cross-site');
+        });
+  }, 'Cross-Site -> Cross-Site');
+
+  promise_test(() => {
+    const key = '{{uuid()}}';
+
+    return fetch(
+        makeRequestURL(key, ['sameOrigin', 'sameOrigin']),
+        {"mode": "no-cors"}
+      )
+      .then(() => retrieve(key))
+      .then((headers) => {
+          assert_own_property(headers, 'sec-fetch-site');
+          assert_equals(headers['sec-fetch-site'], 'same-origin');
+        });
+  }, 'Same-Origin -> Same Origin');
+
+  promise_test(() => {
+    const key = '{{uuid()}}';
+
+    return fetch(
+        makeRequestURL(key, ['sameOrigin', 'sameSite']),
+        {"mode": "no-cors"}
+      )
+      .then(() => retrieve(key))
+      .then((headers) => {
+          assert_own_property(headers, 'sec-fetch-site');
+          assert_equals(headers['sec-fetch-site'], 'same-site');
+        });
+  }, 'Same-Origin -> Same-Site');
+
+  promise_test(() => {
+    const key = '{{uuid()}}';
+
+    return fetch(
+        makeRequestURL(key, ['sameOrigin', 'crossSite']),
+        {"mode": "no-cors"}
+      )
+      .then(() => retrieve(key))
+      .then((headers) => {
+          assert_own_property(headers, 'sec-fetch-site');
+          assert_equals(headers['sec-fetch-site'], 'cross-site');
+        });
+  }, 'Same-Origin -> Cross-Site');
+
+  promise_test(() => {
+    const key = '{{uuid()}}';
+
+    return fetch(
+        makeRequestURL(key, ['sameSite', 'sameOrigin']),
+        {"mode": "no-cors"}
+      )
+      .then(() => retrieve(key))
+      .then((headers) => {
+          assert_own_property(headers, 'sec-fetch-site');
+          assert_equals(headers['sec-fetch-site'], 'same-site');
+        });
+  }, 'Same-Site -> Same Origin');
+
+  promise_test(() => {
+    const key = '{{uuid()}}';
+
+    return fetch(
+        makeRequestURL(key, ['sameSite', 'sameSite']),
+        {"mode": "no-cors"}
+      )
+      .then(() => retrieve(key))
+      .then((headers) => {
+          assert_own_property(headers, 'sec-fetch-site');
+          assert_equals(headers['sec-fetch-site'], 'same-site');
+        });
+  }, 'Same-Site -> Same-Site');
+
+  promise_test(() => {
+    const key = '{{uuid()}}';
+
+    return fetch(
+        makeRequestURL(key, ['sameSite', 'crossSite']),
+        {"mode": "no-cors"}
+      )
+      .then(() => retrieve(key))
+      .then((headers) => {
+          assert_own_property(headers, 'sec-fetch-site');
+          assert_equals(headers['sec-fetch-site'], 'cross-site');
+        });
+  }, 'Same-Site -> Cross-Site');
   </script>
   </body>
 </html>

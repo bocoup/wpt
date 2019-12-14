@@ -16,6 +16,14 @@
     # Unused
     # TODO(jugglinmike) document rationale
     cors-preflight.sub.html: []
+    # Unused
+    # - the request mode of all "classic" worker scripts is set to
+    #   "same-origin"
+    #   https://html.spec.whatwg.org/#fetch-a-classic-worker-script
+    # - the request mode of all "top-level "module" worker scripts is set to
+    #   "same-origin":
+    #   https://html.spec.whatwg.org/#fetch-a-single-module-script
+    worker-dedicated-constructor.sub.html: []
 
     appcache-manifest.sub.https.html: [{}]
     fetch.sub.html: [{}]
@@ -42,10 +50,6 @@
     script-module-import-dynamic.sub.html: [{}]
     script-module-import-static.sub.html: [{}]
     video-poster.sub.html: [{}]
-    worker-dedicated-constructor.sub.html:
-      - description: classic script
-      - description: module script
-        options: { type: module }
     worker-dedicated-importscripts.sub.html: [{}]
 
 - title: Fetch Metadata - Sec-Fetch-Site - redirection from HTTPS
@@ -55,10 +59,45 @@
     - description: Same-Origin -> Cross-Site -> Same-Origin redirect
       origins: [sameOrigin, crossSite, sameOrigin]
       expected: cross-site
+    - description: Cross-Site -> Same Origin
+      origins: [crossSite, sameOrigin]
+      expected: cross-site
+    - description: Cross-Site -> Same-Site
+      origins: [crossSite, sameSite]
+      expected: cross-site
+    - description: Cross-Site -> Cross-Site
+      origins: [crossSite, crossSite]
+      expected: cross-site
+    - description: Same-Origin -> Same Origin
+      origins: [sameOrigin, sameOrigin]
+      expected: same-origin
+    - description: Same-Origin -> Same-Site
+      origins: [sameOrigin, sameSite]
+      expected: same-site
+    - description: Same-Origin -> Cross-Site
+      origins: [sameOrigin, crossSite]
+      expected: cross-site
+    - description: Same-Site -> Same Origin
+      origins: [sameSite, sameOrigin]
+      expected: same-site
+    - description: Same-Site -> Same-Site
+      origins: [sameSite, sameSite]
+      expected: same-site
+    - description: Same-Site -> Cross-Site
+      origins: [sameSite, crossSite]
+      expected: cross-site
   each_subtest:
     # Unused
     # TODO(jugglinmike) document rationale
     cors-preflight.sub.html: []
+    # Unused
+    # - the request mode of all "classic" worker scripts is set to
+    #   "same-origin"
+    #   https://html.spec.whatwg.org/#fetch-a-classic-worker-script
+    # - the request mode of all "top-level "module" worker scripts is set to
+    #   "same-origin":
+    #   https://html.spec.whatwg.org/#fetch-a-single-module-script
+    worker-dedicated-constructor.sub.html: []
 
     appcache-manifest.sub.https.html: [{}]
     fetch.sub.html: [{ init: { mode: no-cors } }]
@@ -85,9 +124,6 @@
     script-module-import-dynamic.sub.html: [{}]
     script-module-import-static.sub.html: [{}]
     video-poster.sub.html: [{}]
-    worker-dedicated-constructor.sub.html:
-      - description: ' - module script'
-        options: { type: module }
     worker-dedicated-importscripts.sub.html: [{}]
 
 - title: Fetch Metadata - Sec-Fetch-Site - redirection with mixed content
@@ -149,7 +185,6 @@
     # Unused
     # TODO(jugglinmike) document rationale
     worker-dedicated-importscripts.sub.html: []
-    worker-dedicated-constructor.sub.html: []
 
     appcache-manifest.sub.https.html:
       - expected: no-cors
@@ -222,6 +257,12 @@
       - expected: cors
     video-poster.sub.html:
       - expected: no-cors
+    worker-dedicated-constructor.sub.html:
+      - description: classic script
+        expected: same-origin
+      - description: module script
+        options: { type: module }
+        expected: same-origin
 
 - title: Fetch Metadata - Sec-Fetch-Dest
   fileName: sec-fetch-dest.https
