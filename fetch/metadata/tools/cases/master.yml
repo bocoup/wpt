@@ -26,6 +26,11 @@
     worker-dedicated-constructor.sub.html: []
 
     appcache-manifest.sub.https.html: [{}]
+    element-image.sub.html: [{}]
+    element-script.sub.html:
+      - description: ' - classic script'
+      - description: ' - module script'
+        elementAttrs: { type: module }
     fetch.sub.html: [{}]
     font.sub.html: [{}]
     form-submission.sub.html:
@@ -42,11 +47,6 @@
         api: location.assign
       - description: ' - location.replace'
         api: location.replace
-    image.sub.html: [{}]
-    script-element.sub.html:
-      - description: ' - classic script'
-      - description: ' - module script'
-        elementAttrs: { type: module }
     script-module-import-dynamic.sub.html: [{}]
     script-module-import-static.sub.html: [{}]
     video-poster.sub.html: [{}]
@@ -100,6 +100,11 @@
     worker-dedicated-constructor.sub.html: []
 
     appcache-manifest.sub.https.html: [{}]
+    element-image.sub.html: [{}]
+    element-script.sub.html:
+      - description: ' - classic script'
+      - description: ' - module script'
+        elementAttrs: { type: module }
     fetch.sub.html: [{ init: { mode: no-cors } }]
     font.sub.html: [{}]
     form-submission.sub.html:
@@ -116,11 +121,6 @@
         api: location.assign
       - description: ' - location.replace'
         api: location.replace
-    image.sub.html: [{}]
-    script-element.sub.html:
-      - description: ' - classic script'
-      - description: ' - module script'
-        elementAttrs: { type: module }
     script-module-import-dynamic.sub.html: [{}]
     script-module-import-static.sub.html: [{}]
     video-poster.sub.html: [{}]
@@ -146,16 +146,17 @@
   each_subtest:
     # Unused
     # TODO(jugglinmike) document rationale
+    element-script.sub.html: []
     fetch.sub.html: []
-    worker-dedicated-importscripts.sub.html: []
     font.sub.html: []
-    worker-dedicated-constructor.sub.html: []
     script-module-import-static.sub.html: []
     script-module-import-dynamic.sub.html: []
-    script-element.sub.html: []
     cors-preflight.sub.html: []
+    worker-dedicated-constructor.sub.html: []
+    worker-dedicated-importscripts.sub.html: []
 
     appcache-manifest.sub.https.html: [{}]
+    element-image.sub.html: [{}]
     form-submission.sub.html:
       - description: ' - GET'
         method: GET
@@ -170,7 +171,6 @@
         api: location.assign
       - description: ' - location.replace'
         api: location.replace
-    image.sub.html: [{}]
     video-poster.sub.html: [{}]
 
 - title: Fetch Metadata - Sec-Fetch-Mode
@@ -190,6 +190,33 @@
       - expected: no-cors
     cors-preflight.sub.html:
       - expected: cors
+    element-image.sub.html:
+      - description: no attributes
+        expected: no-cors
+      - description: crossorigin=""
+        expected: cors
+        elementAttrs: { crossorigin: '' }
+      - description: crossorigin="anonymous"
+        expected: cors
+        elementAttrs: { crossorigin: anonymous }
+      - description: crossorigin="use-credentials"
+        expected: cors
+        elementAttrs: { crossorigin: use-credentials }
+    element-script.sub.html:
+      - description: classic script
+        expected: no-cors
+      - description: module script
+        expected: cors
+        elementAttrs: { type: module }
+      - description: classic script, crossorigin=""
+        expected: cors
+        elementAttrs: { crossorigin: '' }
+      - description: classic script, crossorigin="anonymous"
+        expected: cors
+        elementAttrs: { crossorigin: anonymous }
+      - description: classic script, crossorigin="use-credentials"
+        expected: cors
+        elementAttrs: { crossorigin: use-credentials }
     fetch.sub.html:
       - description: no options
         expected: cors
@@ -224,33 +251,6 @@
       - description: location.replace
         api: location.replace
         expected: navigate
-    image.sub.html:
-      - description: no attributes
-        expected: no-cors
-      - description: crossorigin=""
-        expected: cors
-        elementAttrs: { crossorigin: '' }
-      - description: crossorigin="anonymous"
-        expected: cors
-        elementAttrs: { crossorigin: anonymous }
-      - description: crossorigin="use-credentials"
-        expected: cors
-        elementAttrs: { crossorigin: use-credentials }
-    script-element.sub.html:
-      - description: classic script
-        expected: no-cors
-      - description: module script
-        expected: cors
-        elementAttrs: { type: module }
-      - description: classic script, crossorigin=""
-        expected: cors
-        elementAttrs: { crossorigin: '' }
-      - description: classic script, crossorigin="anonymous"
-        expected: cors
-        elementAttrs: { crossorigin: anonymous }
-      - description: classic script, crossorigin="use-credentials"
-        expected: cors
-        elementAttrs: { crossorigin: use-credentials }
     script-module-import-dynamic.sub.html:
       - expected: cors
     script-module-import-static.sub.html:
@@ -272,6 +272,10 @@
       - expected: empty
     cors-preflight.sub.html:
       - expected: empty
+    element-image.sub.html:
+      - expected: image
+    element-script.sub.html:
+      - expected: script
     fetch.sub.html:
       - expected: empty
     font.sub.html:
@@ -296,10 +300,6 @@
       - description: location.replace
         api: location.replace
         expected: document
-    image.sub.html:
-      - expected: image
-    script-element.sub.html:
-      - expected: script
     script-module-import-dynamic.sub.html:
       - expected: script
     script-module-import-static.sub.html:
