@@ -10,7 +10,7 @@
   <script>
   'use strict';
 
-  function induceRequest(method, url) {
+  function induceRequest(method, url, bless) {
     // Query parameters must be expressed as form values so that they are sent
     // with the submission of forms whose method is POST.
     const windowName = String(Math.random());
@@ -40,7 +40,11 @@
           }
         });
 
-        submit.click();
+        if (bless) {
+          test_driver.click(submit);
+        } else {
+          submit.click();
+        }
       })
       .then(() => {
         form.remove();
@@ -55,7 +59,8 @@
   promise_test(() => {
     const key = '{{uuid()}}';
     const url = makeRequestURL(key, [], responseParams);
-    return induceRequest('GET', url)
+    const bless = false;
+    return induceRequest('GET', url, bless)
       .then(() => retrieve(key))
       .then((headers) => {
           assert_own_property(headers, 'sec-fetch-dest');
@@ -66,7 +71,8 @@
   promise_test(() => {
     const key = '{{uuid()}}';
     const url = makeRequestURL(key, [], responseParams);
-    return induceRequest('POST', url)
+    const bless = false;
+    return induceRequest('POST', url, bless)
       .then(() => retrieve(key))
       .then((headers) => {
           assert_own_property(headers, 'sec-fetch-dest');

@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<!-- This test was procedurally generated. Please do not modify it directly. -->
+<html lang="en">
+  <meta charset="utf-8">
+  <title>Fetch Metadata - Sec-Fetch-User</title>
+  <script src="/resources/testharness.js"></script>
+  <script src="/resources/testharnessreport.js"></script>
+  <script src="/fetch/metadata/resources/helper.sub.js"></script>
+  <body>
+  <script>
+  'use strict';
+
+  function induceRequest(url, navigate) {
+    const win = window.open();
+    const fullPath = url;
+
+    return new Promise((resolve) => {
+        addEventListener('message', function(event) {
+          if (event.source === win) {
+            resolve();
+          }
+        });
+
+        navigate(win, fullPath);
+      })
+      .then(() => win.close());
+  }
+
+  const responseParams = {
+    mime: 'text/html',
+    body: `<script>opener.postMessage('done', '*')</${''}script>`
+  };
+
+  promise_test(() => {
+    const key = '{{uuid()}}';
+    const url = makeRequestURL(key, [], responseParams);
+
+    const navigate = (win, path) => {
+      win.location = path;
+    };
+    return induceRequest(url, navigate)
+      .then(() => retrieve(key))
+      .then((headers) => {
+          assert_not_own_property(headers, 'sec-fetch-user');
+        });
+  }, 'location');
+
+  promise_test(() => {
+    const key = '{{uuid()}}';
+    const url = makeRequestURL(key, [], responseParams);
+
+    const navigate = (win, path) => {
+      win.location.href = path;
+    };
+    return induceRequest(url, navigate)
+      .then(() => retrieve(key))
+      .then((headers) => {
+          assert_not_own_property(headers, 'sec-fetch-user');
+        });
+  }, 'location.href');
+
+  promise_test(() => {
+    const key = '{{uuid()}}';
+    const url = makeRequestURL(key, [], responseParams);
+
+    const navigate = (win, path) => {
+      win.location.assign(path);
+    };
+    return induceRequest(url, navigate)
+      .then(() => retrieve(key))
+      .then((headers) => {
+          assert_not_own_property(headers, 'sec-fetch-user');
+        });
+  }, 'location.assign');
+
+  promise_test(() => {
+    const key = '{{uuid()}}';
+    const url = makeRequestURL(key, [], responseParams);
+
+    const navigate = (win, path) => {
+      win.location.replace(path);
+    };
+    return induceRequest(url, navigate)
+      .then(() => retrieve(key))
+      .then((headers) => {
+          assert_not_own_property(headers, 'sec-fetch-user');
+        });
+  }, 'location.replace');
+  </script>
+  </body>
+</html>

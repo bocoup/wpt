@@ -5,12 +5,15 @@
   <title>[%title%]</title>
   <script src="/resources/testharness.js"></script>
   <script src="/resources/testharnessreport.js"></script>
+  {%- if subtests|selectattr('bless')|list %}
+  <script src="/resources/testdriver.js"></script>
+  {%- endif %}
   <script src="/fetch/metadata/resources/helper.sub.js"></script>
   <body>
   <script>
   'use strict';
 
-  function induceRequest(method, url) {
+  function induceRequest(method, url, bless) {
     // Query parameters must be expressed as form values so that they are sent
     // with the submission of forms whose method is POST.
     const windowName = String(Math.random());
@@ -40,7 +43,11 @@
           }
         });
 
-        submit.click();
+        if (bless) {
+          test_driver.click(submit);
+        } else {
+          submit.click();
+        }
       })
       .then(() => {
         form.remove();
@@ -57,7 +64,8 @@
   promise_test(() => {
     const key = '{{uuid()}}';
     const url = makeRequestURL(key, [% subtest.origins %], responseParams);
-    return induceRequest('[%subtest.method | default("POST")%]', url)
+    const bless = [% 'true' if subtest.bless else 'false' %];
+    return induceRequest('[%subtest.method | default("POST")%]', url, bless)
       .then(() => retrieve(key))
       .then((headers) => {
         {%- if subtest.expected == none %}

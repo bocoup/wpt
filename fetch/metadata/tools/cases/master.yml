@@ -331,3 +331,64 @@
         expected: worker
     worker-dedicated-importscripts.sub.html:
       - expected: script
+
+- title: Fetch Metadata - Sec-Fetch-User
+  fileName: sec-fetch-user.https
+  headerName: sec-fetch-user
+  each_subtest:
+    appcache-manifest.sub.https.html:
+      - expected: NULL
+    cors-preflight.sub.html:
+      - expected: NULL
+    element-image.sub.html:
+      - expected: NULL
+    element-script.sub.html:
+      - expected: NULL
+    element-video.sub.html:
+      - expected: NULL
+    fetch.sub.html:
+      - expected: NULL
+    font.sub.html:
+      - expected: NULL
+    form-submission.sub.html:
+      - description: ' - GET'
+        method: GET
+        expected: NULL
+      - description: ' - GET with user activation'
+        method: GET
+        bless: TRUE
+        expected: ?1
+      - description: ' - POST'
+        method: POST
+        expected: NULL
+      - description: ' - POST with user activation'
+        method: POST
+        bless: TRUE
+        expected: ?1
+    global-properties.sub.html:
+      - description: location
+        api: location
+        expected: NULL
+      - description: location.href
+        api: location.href
+        expected: NULL
+      - description: location.assign
+        api: location.assign
+        expected: NULL
+      - description: location.replace
+        api: location.replace
+        expected: NULL
+    script-module-import-dynamic.sub.html:
+      - expected: NULL
+    script-module-import-static.sub.html:
+      - expected: NULL
+    video-poster.sub.html:
+      - expected: NULL
+    worker-dedicated-constructor.sub.html:
+      - description: classic script
+        expected: NULL
+      - description: module script
+        options: { type: module }
+        expected: NULL
+    worker-dedicated-importscripts.sub.html:
+      - expected: NULL

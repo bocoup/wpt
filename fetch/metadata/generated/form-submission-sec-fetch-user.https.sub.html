@@ -2,9 +2,10 @@
 <!-- This test was procedurally generated. Please do not modify it directly. -->
 <html lang="en">
   <meta charset="utf-8">
-  <title>Fetch Metadata - Sec-Fetch-Site - redirection from HTTP</title>
+  <title>Fetch Metadata - Sec-Fetch-User</title>
   <script src="/resources/testharness.js"></script>
   <script src="/resources/testharnessreport.js"></script>
+  <script src="/resources/testdriver.js"></script>
   <script src="/fetch/metadata/resources/helper.sub.js"></script>
   <body>
   <script>
@@ -58,73 +59,49 @@
 
   promise_test(() => {
     const key = '{{uuid()}}';
-    const url = makeRequestURL(key, ['sameOrigin', 'httpOrigin'], responseParams);
+    const url = makeRequestURL(key, [], responseParams);
     const bless = false;
     return induceRequest('GET', url, bless)
       .then(() => retrieve(key))
       .then((headers) => {
-          assert_not_own_property(headers, 'sec-fetch-site');
+          assert_not_own_property(headers, 'sec-fetch-user');
         });
-  }, 'HTTPS downgrade (header not sent) - GET');
+  }, ' - GET');
 
   promise_test(() => {
     const key = '{{uuid()}}';
-    const url = makeRequestURL(key, ['sameOrigin', 'httpOrigin'], responseParams);
-    const bless = false;
-    return induceRequest('POST', url, bless)
-      .then(() => retrieve(key))
-      .then((headers) => {
-          assert_not_own_property(headers, 'sec-fetch-site');
-        });
-  }, 'HTTPS downgrade (header not sent) - POST');
-
-  promise_test(() => {
-    const key = '{{uuid()}}';
-    const url = makeRequestURL(key, ['httpOrigin', 'sameOrigin'], responseParams);
-    const bless = false;
+    const url = makeRequestURL(key, [], responseParams);
+    const bless = true;
     return induceRequest('GET', url, bless)
       .then(() => retrieve(key))
       .then((headers) => {
-          assert_own_property(headers, 'sec-fetch-site');
-          assert_equals(headers['sec-fetch-site'], 'cross-site');
+          assert_own_property(headers, 'sec-fetch-user');
+          assert_equals(headers['sec-fetch-user'], '?1');
         });
-  }, 'HTTPS upgrade - GET');
+  }, ' - GET with user activation');
 
   promise_test(() => {
     const key = '{{uuid()}}';
-    const url = makeRequestURL(key, ['httpOrigin', 'sameOrigin'], responseParams);
+    const url = makeRequestURL(key, [], responseParams);
     const bless = false;
     return induceRequest('POST', url, bless)
       .then(() => retrieve(key))
       .then((headers) => {
-          assert_own_property(headers, 'sec-fetch-site');
-          assert_equals(headers['sec-fetch-site'], 'cross-site');
+          assert_not_own_property(headers, 'sec-fetch-user');
         });
-  }, 'HTTPS upgrade - POST');
+  }, ' - POST');
 
   promise_test(() => {
     const key = '{{uuid()}}';
-    const url = makeRequestURL(key, ['sameOrigin', 'httpOrigin', 'sameOrigin'], responseParams);
-    const bless = false;
-    return induceRequest('GET', url, bless)
-      .then(() => retrieve(key))
-      .then((headers) => {
-          assert_own_property(headers, 'sec-fetch-site');
-          assert_equals(headers['sec-fetch-site'], 'cross-site');
-        });
-  }, 'HTTPS downgrade-upgrade - GET');
-
-  promise_test(() => {
-    const key = '{{uuid()}}';
-    const url = makeRequestURL(key, ['sameOrigin', 'httpOrigin', 'sameOrigin'], responseParams);
-    const bless = false;
+    const url = makeRequestURL(key, [], responseParams);
+    const bless = true;
     return induceRequest('POST', url, bless)
       .then(() => retrieve(key))
       .then((headers) => {
-          assert_own_property(headers, 'sec-fetch-site');
-          assert_equals(headers['sec-fetch-site'], 'cross-site');
+          assert_own_property(headers, 'sec-fetch-user');
+          assert_equals(headers['sec-fetch-user'], '?1');
         });
-  }, 'HTTPS downgrade-upgrade - POST');
+  }, ' - POST with user activation');
   </script>
   </body>
 </html>
