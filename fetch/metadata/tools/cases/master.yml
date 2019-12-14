@@ -31,6 +31,7 @@
       - description: ' - classic script'
       - description: ' - module script'
         elementAttrs: { type: module }
+    element-video.sub.html: [{}]
     fetch.sub.html: [{}]
     font.sub.html: [{}]
     form-submission.sub.html:
@@ -105,6 +106,7 @@
       - description: ' - classic script'
       - description: ' - module script'
         elementAttrs: { type: module }
+    element-video.sub.html: [{}]
     fetch.sub.html: [{ init: { mode: no-cors } }]
     font.sub.html: [{}]
     form-submission.sub.html:
@@ -157,6 +159,7 @@
 
     appcache-manifest.sub.https.html: [{}]
     element-image.sub.html: [{}]
+    element-video.sub.html: [{}]
     form-submission.sub.html:
       - description: ' - GET'
         method: GET
@@ -215,6 +218,18 @@
         expected: cors
         elementAttrs: { crossorigin: anonymous }
       - description: classic script, crossorigin="use-credentials"
+        expected: cors
+        elementAttrs: { crossorigin: use-credentials }
+    element-video.sub.html:
+      - description: no attributes
+        expected: no-cors
+      - description: crossorigin=""
+        expected: cors
+        elementAttrs: { crossorigin: '' }
+      - description: crossorigin="anonymous"
+        expected: cors
+        elementAttrs: { crossorigin: anonymous }
+      - description: crossorigin="use-credentials"
         expected: cors
         elementAttrs: { crossorigin: use-credentials }
     fetch.sub.html:
@@ -276,6 +291,8 @@
       - expected: image
     element-script.sub.html:
       - expected: script
+    element-video.sub.html:
+      - expected: video
     fetch.sub.html:
       - expected: empty
     font.sub.html:
