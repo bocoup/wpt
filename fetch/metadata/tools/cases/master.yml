@@ -16,8 +16,6 @@
     # Unused
     # TODO(jugglinmike) document rationale
     cors-preflight.sub.html: []
-    worker-dedicated-constructor.sub.html: []
-    worker-dedicated-importscripts.sub.html: []
 
     appcache-manifest.sub.https.html: [{}]
     fetch.sub.html: [{}]
@@ -44,6 +42,11 @@
     script-module-import-dynamic.sub.html: [{}]
     script-module-import-static.sub.html: [{}]
     video-poster.sub.html: [{}]
+    worker-dedicated-constructor.sub.html:
+      - description: classic script
+      - description: module script
+        options: { type: module }
+    worker-dedicated-importscripts.sub.html: [{}]
 
 - title: Fetch Metadata - Sec-Fetch-Site - redirection from HTTPS
   fileName: sec-fetch-site.https
