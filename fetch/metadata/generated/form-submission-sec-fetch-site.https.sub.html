@@ -11,14 +11,27 @@
   'use strict';
 
   function induceRequest(method, url) {
-    const win = window.open();
     // Query parameters must be expressed as form values so that they are sent
     // with the submission of forms whose method is POST.
-    const inputs = Array.from(new URL(url, location.origin).searchParams)
-      .map(([name, value]) =>
-        `<input type="hidden" name="${name}" value="${value}">`
-      )
-      .join('\n');
+    const windowName = String(Math.random());
+    const form = document.createElement('form');
+    const submit = document.createElement('input');
+    submit.setAttribute('type', 'submit');
+    form.appendChild(submit);
+    const win = open('about:blank', windowName);
+    form.setAttribute('method', method);
+    form.setAttribute('action', url);
+    form.setAttribute('target', windowName);
+    document.body.appendChild(form);
+
+    Array.from(new URL(url, location.origin).searchParams)
+      .forEach(([name, value]) => {
+        const input = document.createElement('input');
+        input.setAttribute('type', 'hidden');
+        input.setAttribute('name', name);
+        input.setAttribute('value', value);
+        form.appendChild(input);
+      });
 
     return new Promise((resolve) => {
         addEventListener('message', function(event) {
@@ -26,18 +39,13 @@
             resolve();
           }
         });
-        win.document.open();
-        win.document.write(`
-          <!DOCTYPE html>
-          <form method="${method}" action="${url}">${inputs}</form>
-          <script>
-            const form = document.getElementsByTagName('form')[0];
-            form.submit();
-          </${''}script>
-        `);
-        win.document.close();
+
+        submit.click();
       })
-      .then(() => win.close());
+      .then(() => {
+        form.remove();
+        win.close();
+      });
   }
   const responseParams = {
     mime: 'text/html',
