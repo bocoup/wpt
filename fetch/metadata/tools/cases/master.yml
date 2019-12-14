@@ -59,8 +59,6 @@
     # Unused
     # TODO(jugglinmike) document rationale
     cors-preflight.sub.html: []
-    worker-dedicated-constructor.sub.html: []
-    worker-dedicated-importscripts.sub.html: []
 
     appcache-manifest.sub.https.html: [{}]
     fetch.sub.html: [{ init: { mode: no-cors } }]
@@ -87,6 +85,10 @@
     script-module-import-dynamic.sub.html: [{}]
     script-module-import-static.sub.html: [{}]
     video-poster.sub.html: [{}]
+    worker-dedicated-constructor.sub.html:
+      - description: ' - module script'
+        options: { type: module }
+    worker-dedicated-importscripts.sub.html: [{}]
 
 - title: Fetch Metadata - Sec-Fetch-Site - redirection with mixed content
   # These tests verify the effect that redirection has on the request's "site".
