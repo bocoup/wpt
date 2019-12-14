@@ -369,15 +369,31 @@
       - description: location
         api: location
         expected: NULL
+      - description: location with user activation
+        api: location
+        bless: TRUE
+        expected: ?1
       - description: location.href
         api: location.href
         expected: NULL
+      - description: location.href with user activation
+        api: location.href
+        bless: TRUE
+        expected: ?1
       - description: location.assign
         api: location.assign
         expected: NULL
+      - description: location.assign with user activation
+        api: location.assign
+        bless: TRUE
+        expected: ?1
       - description: location.replace
         api: location.replace
         expected: NULL
+      - description: location.replace with user activation
+        api: location.replace
+        bless: TRUE
+        expected: ?1
     script-module-import-dynamic.sub.html:
       - expected: NULL
     script-module-import-static.sub.html:

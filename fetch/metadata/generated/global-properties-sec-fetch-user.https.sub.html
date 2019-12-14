@@ -5,14 +5,14 @@
   <title>Fetch Metadata - Sec-Fetch-User</title>
   <script src="/resources/testharness.js"></script>
   <script src="/resources/testharnessreport.js"></script>
+  <script src="/resources/testdriver.js"></script>
   <script src="/fetch/metadata/resources/helper.sub.js"></script>
   <body>
   <script>
   'use strict';
 
-  function induceRequest(url, navigate) {
+  function induceRequest(url, navigate, bless) {
     const win = window.open();
-    const fullPath = url;
 
     return new Promise((resolve) => {
         addEventListener('message', function(event) {
@@ -21,7 +21,13 @@
           }
         });
 
-        navigate(win, fullPath);
+        if (bless) {
+          test_driver.bless('enable user activation', () => {
+            navigate(win, url);
+          });
+        } else {
+          navigate(win, url);
+        }
       })
       .then(() => win.close());
   }
@@ -38,7 +44,7 @@
     const navigate = (win, path) => {
       win.location = path;
     };
-    return induceRequest(url, navigate)
+    return induceRequest(url, navigate, false)
       .then(() => retrieve(key))
       .then((headers) => {
           assert_not_own_property(headers, 'sec-fetch-user');
@@ -50,9 +56,24 @@
     const url = makeRequestURL(key, [], responseParams);
 
     const navigate = (win, path) => {
+      win.location = path;
+    };
+    return induceRequest(url, navigate, true)
+      .then(() => retrieve(key))
+      .then((headers) => {
+          assert_own_property(headers, 'sec-fetch-user');
+          assert_equals(headers['sec-fetch-user'], '?1');
+        });
+  }, 'location with user activation');
+
+  promise_test(() => {
+    const key = '{{uuid()}}';
+    const url = makeRequestURL(key, [], responseParams);
+
+    const navigate = (win, path) => {
       win.location.href = path;
     };
-    return induceRequest(url, navigate)
+    return induceRequest(url, navigate, false)
       .then(() => retrieve(key))
       .then((headers) => {
           assert_not_own_property(headers, 'sec-fetch-user');
@@ -64,9 +85,24 @@
     const url = makeRequestURL(key, [], responseParams);
 
     const navigate = (win, path) => {
+      win.location.href = path;
+    };
+    return induceRequest(url, navigate, true)
+      .then(() => retrieve(key))
+      .then((headers) => {
+          assert_own_property(headers, 'sec-fetch-user');
+          assert_equals(headers['sec-fetch-user'], '?1');
+        });
+  }, 'location.href with user activation');
+
+  promise_test(() => {
+    const key = '{{uuid()}}';
+    const url = makeRequestURL(key, [], responseParams);
+
+    const navigate = (win, path) => {
       win.location.assign(path);
     };
-    return induceRequest(url, navigate)
+    return induceRequest(url, navigate, false)
       .then(() => retrieve(key))
       .then((headers) => {
           assert_not_own_property(headers, 'sec-fetch-user');
@@ -78,14 +114,44 @@
     const url = makeRequestURL(key, [], responseParams);
 
     const navigate = (win, path) => {
+      win.location.assign(path);
+    };
+    return induceRequest(url, navigate, true)
+      .then(() => retrieve(key))
+      .then((headers) => {
+          assert_own_property(headers, 'sec-fetch-user');
+          assert_equals(headers['sec-fetch-user'], '?1');
+        });
+  }, 'location.assign with user activation');
+
+  promise_test(() => {
+    const key = '{{uuid()}}';
+    const url = makeRequestURL(key, [], responseParams);
+
+    const navigate = (win, path) => {
       win.location.replace(path);
     };
-    return induceRequest(url, navigate)
+    return induceRequest(url, navigate, false)
       .then(() => retrieve(key))
       .then((headers) => {
           assert_not_own_property(headers, 'sec-fetch-user');
         });
   }, 'location.replace');
+
+  promise_test(() => {
+    const key = '{{uuid()}}';
+    const url = makeRequestURL(key, [], responseParams);
+
+    const navigate = (win, path) => {
+      win.location.replace(path);
+    };
+    return induceRequest(url, navigate, true)
+      .then(() => retrieve(key))
+      .then((headers) => {
+          assert_own_property(headers, 'sec-fetch-user');
+          assert_equals(headers['sec-fetch-user'], '?1');
+        });
+  }, 'location.replace with user activation');
   </script>
   </body>
 </html>

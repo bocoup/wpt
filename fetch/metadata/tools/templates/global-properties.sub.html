@@ -8,14 +8,16 @@
   <title>[%title%]</title>
   <script src="/resources/testharness.js"></script>
   <script src="/resources/testharnessreport.js"></script>
+  {%- if subtests|selectattr('bless')|list %}
+  <script src="/resources/testdriver.js"></script>
+  {%- endif %}
   <script src="/fetch/metadata/resources/helper.sub.js"></script>
   <body>
   <script>
   'use strict';
 
-  function induceRequest(url, navigate) {
+  function induceRequest(url, navigate, bless) {
     const win = window.open();
-    const fullPath = url;
 
     return new Promise((resolve) => {
         addEventListener('message', function(event) {
@@ -24,7 +26,13 @@
           }
         });
 
-        navigate(win, fullPath);
+        if (bless) {
+          test_driver.bless('enable user activation', () => {
+            navigate(win, url);
+          });
+        } else {
+          navigate(win, url);
+        }
       })
       .then(() => win.close());
   }
@@ -46,7 +54,7 @@
       win.[%subtest.api%](path);
       {%- endif %}
     };
-    return induceRequest(url, navigate)
+    return induceRequest(url, navigate, [% 'true' if subtest.bless else 'false' %])
       .then(() => retrieve(key))
       .then((headers) => {
         {%- if subtest.expected == none %}
