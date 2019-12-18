@@ -10,28 +10,28 @@
 
 let tests = [
   // popup Origin, popup COOP, expect opener
-  [SAME_ORIGIN, "", false],
-  [SAME_ORIGIN, "unsafe-none", false],
-  [SAME_ORIGIN, "jibberish", false],
+  [SAME_ORIGIN, "", true],
+  [SAME_ORIGIN, "unsafe-none", true],
+  [SAME_ORIGIN, "jibberish", true],
   [SAME_ORIGIN, "same-site", false],
-  [SAME_ORIGIN, "same-origin", true],
+  [SAME_ORIGIN, "same-origin", false],
   [SAME_ORIGIN, "same-origin-allow-popups", false],
 
-  [SAME_SITE, "", false],
-  [SAME_SITE, "unsafe-none", false],
-  [SAME_SITE, "jibberish", false],
+  [SAME_SITE, "", true],
+  [SAME_SITE, "unsafe-none", true],
+  [SAME_SITE, "jibberish", true],
   [SAME_SITE, "same-site", false],
   [SAME_SITE, "same-origin", false],
   [SAME_SITE, "same-origin-allow-popups", false],
 
-  [CROSS_ORIGIN, "", false],
-  [CROSS_ORIGIN, "unsafe-none", false],
-  [CROSS_ORIGIN, "jibberish", false],
+  [CROSS_ORIGIN, "", true],
+  [CROSS_ORIGIN, "unsafe-none", true],
+  [CROSS_ORIGIN, "jibberish", true],
   [CROSS_ORIGIN, "same-site", false],
   [CROSS_ORIGIN, "same-origin", false],
   [CROSS_ORIGIN, "same-origin-allow-popups", false],
 ];
 
-run_coop_tests("same-origin", tests);
+run_coop_tests("unspecified", tests);
 
 </script>
