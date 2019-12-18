@@ -44,20 +44,16 @@
     "opener": false
   }
 ].forEach(variant => {
-  ["same-origin", "same-site"].forEach(site => {
-    const title = `Popup navigating to ${site} with ${variant.title}`;
-    const channel = title.replace(/ /g,"-");
-    const navigateHost = site === "same-origin" ? SAME_ORIGIN : SAME_SITE;
-    const navigateURL = `${navigateHost.origin}/html/cross-origin-opener-policy/resources/coop-coep.py?coop=${variant.coop}&coep=${variant.coep}&channel=${channel}`;
-    const opener = site === "same-origin" ? variant.opener : false;
+  const title = `Popup navigating to same-origin with ${variant.title}`;
+  const channel = title.replace(/ /g,"-");
+  const navigateURL = `${SAME_ORIGIN.origin}/html/cross-origin-opener-policy/resources/coop-coep.py?coop=${variant.coop}&coep=${variant.coep}&channel=${channel}`;
 
-    async_test(t => {
-      // For each test we open a COOP: same-origin/COEP: require-corp document in a popup and then
-      // navigate that to either a same-origin or same-site document whose COOP and COEP are set as
-      // per the top-most array. We then verify that this document has the correct opener for its
-      // specific setup.
-      url_test(t, `${SAME_ORIGIN.origin}/html/cross-origin-opener-policy/resources/coop-coep.py?coop=same-origin&coep=require-corp&navigate=${encodeURIComponent(navigateURL)}`, channel, opener);
-    }, title);
-  });
+  async_test(t => {
+    // For each test we open a COOP: same-origin/COEP: require-corp document in a popup and then
+    // navigate that to a same-origin document whose COOP and COEP are set as
+    // per the top-most array. We then verify that this document has the correct opener for its
+    // specific setup.
+    url_test(t, `${SAME_ORIGIN.origin}/html/cross-origin-opener-policy/resources/coop-coep.py?coop=same-origin&coep=require-corp&navigate=${encodeURIComponent(navigateURL)}`, channel, variant.opener);
+  }, title);
 });
 </script>
