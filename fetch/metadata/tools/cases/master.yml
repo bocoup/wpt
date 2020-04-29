@@ -39,7 +39,7 @@
         method: GET
       - description: ' - POST'
         method: POST
-    global-properties.sub.html:
+    window-location.sub.html:
       - description: ' - location'
         api: location
       - description: ' - location.href'
@@ -114,7 +114,7 @@
         method: GET
       - description: ' - POST'
         method: POST
-    global-properties.sub.html:
+    window-location.sub.html:
       - description: ' - location'
         api: location
       - description: ' - location.href'
@@ -165,7 +165,7 @@
         method: GET
       - description: ' - POST'
         method: POST
-    global-properties.sub.html:
+    window-location.sub.html:
       - description: ' - location'
         api: location
       - description: ' - location.href'
@@ -253,7 +253,7 @@
       - description: POST
         method: POST
         expected: navigate
-    global-properties.sub.html:
+    window-location.sub.html:
       - description: location
         api: location
         expected: navigate
@@ -304,7 +304,7 @@
       - description: ' - POST'
         method: POST
         expected: document
-    global-properties.sub.html:
+    window-location.sub.html:
       - description: location
         api: location
         expected: document
@@ -365,7 +365,7 @@
         method: POST
         userActivated: TRUE
         expected: ?1
-    global-properties.sub.html:
+    window-location.sub.html:
       - description: location
         api: location
         expected: NULL
