@@ -16,7 +16,7 @@
 
   promise_test(() => {
     const key = '{{uuid()}}';
-    const url = makeRequestURL(key, ['crossSite'], { requireHEAD: true });
+    const url = makeRequestURL(key, ['crossSite'], { requireOPTIONS: true });
 
     // `DELETE` is not a CORS-safelisted method, so it is expected to induce a
     // CORS preflight request.
