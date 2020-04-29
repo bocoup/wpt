@@ -11,15 +11,15 @@
   'use strict';
 
   function induceRequest(url, attributes) {
-    const image = document.createElement('video');
+    const video = document.createElement('video');
 
     for (const [ name, value ] of Object.entries(attributes)) {
-      image.setAttribute(name, value);
+      video.setAttribute(name, value);
     }
 
     return new Promise((resolve) => {
-        image.setAttribute('src', url);
-        image.onload = image.onerror = resolve;
+        video.setAttribute('src', url);
+        video.onload = video.onerror = resolve;
       });
   }
 
