@@ -11,8 +11,6 @@
   'use strict';
 
   function induceRequest(method, url, bless) {
-    // Query parameters must be expressed as form values so that they are sent
-    // with the submission of forms whose method is POST.
     const windowName = String(Math.random());
     const form = document.createElement('form');
     const submit = document.createElement('input');
@@ -24,6 +22,8 @@
     form.setAttribute('target', windowName);
     document.body.appendChild(form);
 
+    // Query parameters must be expressed as form values so that they are sent
+    // with the submission of forms whose method is POST.
     Array.from(new URL(url, location.origin).searchParams)
       .forEach(([name, value]) => {
         const input = document.createElement('input');
