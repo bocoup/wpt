@@ -36,6 +36,10 @@
 
   promise_test(() => {
     const key = '{{uuid()}}';
+    assert_precondition(
+      !!window.applicationCache,
+      'Application Cache is not supported.'
+    );
 
     return induceRequest(makeRequestURL(key, ['sameOrigin', 'httpOrigin', 'sameOrigin']))
       .then(() => retrieve(key))

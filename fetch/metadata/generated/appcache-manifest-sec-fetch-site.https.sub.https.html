@@ -36,6 +36,10 @@
 
   promise_test(() => {
     const key = '{{uuid()}}';
+    assert_precondition(
+      !!window.applicationCache,
+      'Application Cache is not supported.'
+    );
 
     return induceRequest(makeRequestURL(key, ['sameOrigin', 'crossSite', 'sameOrigin']))
       .then(() => retrieve(key))
@@ -47,6 +51,10 @@
 
   promise_test(() => {
     const key = '{{uuid()}}';
+    assert_precondition(
+      !!window.applicationCache,
+      'Application Cache is not supported.'
+    );
 
     return induceRequest(makeRequestURL(key, ['crossSite', 'sameOrigin']))
       .then(() => retrieve(key))
@@ -58,6 +66,10 @@
 
   promise_test(() => {
     const key = '{{uuid()}}';
+    assert_precondition(
+      !!window.applicationCache,
+      'Application Cache is not supported.'
+    );
 
     return induceRequest(makeRequestURL(key, ['crossSite', 'sameSite']))
       .then(() => retrieve(key))
@@ -69,6 +81,10 @@
 
   promise_test(() => {
     const key = '{{uuid()}}';
+    assert_precondition(
+      !!window.applicationCache,
+      'Application Cache is not supported.'
+    );
 
     return induceRequest(makeRequestURL(key, ['crossSite', 'crossSite']))
       .then(() => retrieve(key))
@@ -80,6 +96,10 @@
 
   promise_test(() => {
     const key = '{{uuid()}}';
+    assert_precondition(
+      !!window.applicationCache,
+      'Application Cache is not supported.'
+    );
 
     return induceRequest(makeRequestURL(key, ['sameOrigin', 'sameOrigin']))
       .then(() => retrieve(key))
@@ -91,6 +111,10 @@
 
   promise_test(() => {
     const key = '{{uuid()}}';
+    assert_precondition(
+      !!window.applicationCache,
+      'Application Cache is not supported.'
+    );
 
     return induceRequest(makeRequestURL(key, ['sameOrigin', 'sameSite']))
       .then(() => retrieve(key))
@@ -102,6 +126,10 @@
 
   promise_test(() => {
     const key = '{{uuid()}}';
+    assert_precondition(
+      !!window.applicationCache,
+      'Application Cache is not supported.'
+    );
 
     return induceRequest(makeRequestURL(key, ['sameOrigin', 'crossSite']))
       .then(() => retrieve(key))
@@ -113,6 +141,10 @@
 
   promise_test(() => {
     const key = '{{uuid()}}';
+    assert_precondition(
+      !!window.applicationCache,
+      'Application Cache is not supported.'
+    );
 
     return induceRequest(makeRequestURL(key, ['sameSite', 'sameOrigin']))
       .then(() => retrieve(key))
@@ -124,6 +156,10 @@
 
   promise_test(() => {
     const key = '{{uuid()}}';
+    assert_precondition(
+      !!window.applicationCache,
+      'Application Cache is not supported.'
+    );
 
     return induceRequest(makeRequestURL(key, ['sameSite', 'sameSite']))
       .then(() => retrieve(key))
@@ -135,6 +171,10 @@
 
   promise_test(() => {
     const key = '{{uuid()}}';
+    assert_precondition(
+      !!window.applicationCache,
+      'Application Cache is not supported.'
+    );
 
     return induceRequest(makeRequestURL(key, ['sameSite', 'crossSite']))
       .then(() => retrieve(key))
