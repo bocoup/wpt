@@ -18,6 +18,9 @@
     const key = '{{uuid()}}';
     const url = makeRequestURL(key, ['crossSite'], { requireHEAD: true });
 
+    // `DELETE` is not a CORS-safelisted method, so it is expected to induce a
+    // CORS preflight request.
+    // https://fetch.spec.whatwg.org/#ref-for-cors-safelisted-method%E2%91%A0
     return fetch(url, { method: 'DELETE' })
       // This request is expected to fail
       .catch(() => {})
