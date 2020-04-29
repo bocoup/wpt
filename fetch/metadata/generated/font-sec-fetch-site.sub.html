@@ -26,14 +26,17 @@
     document.body.appendChild(style);
 
     t.add_cleanup(() => style.remove());
+
+    return document.fonts.ready;
   }
 
   promise_test((t) => {
     const key = '{{uuid()}}';
 
-    induceRequest(t, makeRequestURL(key, ['sameOrigin', 'httpOrigin']));
-
-    return retrieve(key, { poll: true })
+    return induceRequest(t, makeRequestURL(key, ['sameOrigin', 'httpOrigin']))
+      .then(function() {
+        return retrieve(key);
+      })
       .then((headers) => {
           assert_not_own_property(headers, 'sec-fetch-site');
         });
@@ -42,9 +45,10 @@
   promise_test((t) => {
     const key = '{{uuid()}}';
 
-    induceRequest(t, makeRequestURL(key, ['httpOrigin', 'sameOrigin']));
-
-    return retrieve(key, { poll: true })
+    return induceRequest(t, makeRequestURL(key, ['httpOrigin', 'sameOrigin']))
+      .then(function() {
+        return retrieve(key);
+      })
       .then((headers) => {
           assert_own_property(headers, 'sec-fetch-site');
           assert_equals(headers['sec-fetch-site'], 'cross-site');
@@ -54,9 +58,10 @@
   promise_test((t) => {
     const key = '{{uuid()}}';
 
-    induceRequest(t, makeRequestURL(key, ['sameOrigin', 'httpOrigin', 'sameOrigin']));
-
-    return retrieve(key, { poll: true })
+    return induceRequest(t, makeRequestURL(key, ['sameOrigin', 'httpOrigin', 'sameOrigin']))
+      .then(function() {
+        return retrieve(key);
+      })
       .then((headers) => {
           assert_own_property(headers, 'sec-fetch-site');
           assert_equals(headers['sec-fetch-site'], 'cross-site');

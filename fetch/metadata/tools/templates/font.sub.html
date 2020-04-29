@@ -26,6 +26,8 @@
     document.body.appendChild(style);
 
     t.add_cleanup(() => style.remove());
+
+    return document.fonts.ready;
   }
 
   {%- for subtest in subtests %}
@@ -33,9 +35,10 @@
   promise_test((t) => {
     const key = '{{uuid()}}';
 
-    induceRequest(t, makeRequestURL(key, [% subtest.origins %]));
-
-    return retrieve(key, { poll: true })
+    return induceRequest(t, makeRequestURL(key, [% subtest.origins %]))
+      .then(function() {
+        return retrieve(key);
+      })
       .then((headers) => {
         {%- if subtest.expected == none %}
           assert_not_own_property(headers, '[%headerName%]');

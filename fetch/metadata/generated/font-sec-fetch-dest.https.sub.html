@@ -26,14 +26,17 @@
     document.body.appendChild(style);
 
     t.add_cleanup(() => style.remove());
+
+    return document.fonts.ready;
   }
 
   promise_test((t) => {
     const key = '{{uuid()}}';
 
-    induceRequest(t, makeRequestURL(key, []));
-
-    return retrieve(key, { poll: true })
+    return induceRequest(t, makeRequestURL(key, []))
+      .then(function() {
+        return retrieve(key);
+      })
       .then((headers) => {
           assert_own_property(headers, 'sec-fetch-dest');
           assert_equals(headers['sec-fetch-dest'], 'font');
