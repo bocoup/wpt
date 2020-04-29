@@ -2703,6 +2703,7 @@ policies and contribution forms [3].
         }
         this.num_pending--;
         this.notify_result(test);
+        this.set_timeout();
     };
 
     Tests.prototype.notify_result = function(test) {
