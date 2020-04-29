@@ -10,7 +10,7 @@
   <script>
   'use strict';
 
-  function induceRequest(method, url, bless) {
+  function induceRequest(method, url, userActivated) {
     const windowName = String(Math.random());
     const form = document.createElement('form');
     const submit = document.createElement('input');
@@ -40,7 +40,7 @@
           }
         });
 
-        if (bless) {
+        if (userActivated) {
           test_driver.click(submit);
         } else {
           submit.click();
@@ -59,8 +59,8 @@
   promise_test(() => {
     const key = '{{uuid()}}';
     const url = makeRequestURL(key, ['sameOrigin', 'crossSite', 'sameOrigin'], responseParams);
-    const bless = false;
-    return induceRequest('GET', url, bless)
+    const userActivated = false;
+    return induceRequest('GET', url, userActivated)
       .then(() => retrieve(key))
       .then((headers) => {
           assert_own_property(headers, 'sec-fetch-site');
@@ -71,8 +71,8 @@
   promise_test(() => {
     const key = '{{uuid()}}';
     const url = makeRequestURL(key, ['sameOrigin', 'crossSite', 'sameOrigin'], responseParams);
-    const bless = false;
-    return induceRequest('POST', url, bless)
+    const userActivated = false;
+    return induceRequest('POST', url, userActivated)
       .then(() => retrieve(key))
       .then((headers) => {
           assert_own_property(headers, 'sec-fetch-site');
@@ -83,8 +83,8 @@
   promise_test(() => {
     const key = '{{uuid()}}';
     const url = makeRequestURL(key, ['crossSite', 'sameOrigin'], responseParams);
-    const bless = false;
-    return induceRequest('GET', url, bless)
+    const userActivated = false;
+    return induceRequest('GET', url, userActivated)
       .then(() => retrieve(key))
       .then((headers) => {
           assert_own_property(headers, 'sec-fetch-site');
@@ -95,8 +95,8 @@
   promise_test(() => {
     const key = '{{uuid()}}';
     const url = makeRequestURL(key, ['crossSite', 'sameOrigin'], responseParams);
-    const bless = false;
-    return induceRequest('POST', url, bless)
+    const userActivated = false;
+    return induceRequest('POST', url, userActivated)
       .then(() => retrieve(key))
       .then((headers) => {
           assert_own_property(headers, 'sec-fetch-site');
@@ -107,8 +107,8 @@
   promise_test(() => {
     const key = '{{uuid()}}';
     const url = makeRequestURL(key, ['crossSite', 'sameSite'], responseParams);
-    const bless = false;
-    return induceRequest('GET', url, bless)
+    const userActivated = false;
+    return induceRequest('GET', url, userActivated)
       .then(() => retrieve(key))
       .then((headers) => {
           assert_own_property(headers, 'sec-fetch-site');
@@ -119,8 +119,8 @@
   promise_test(() => {
     const key = '{{uuid()}}';
     const url = makeRequestURL(key, ['crossSite', 'sameSite'], responseParams);
-    const bless = false;
-    return induceRequest('POST', url, bless)
+    const userActivated = false;
+    return induceRequest('POST', url, userActivated)
       .then(() => retrieve(key))
       .then((headers) => {
           assert_own_property(headers, 'sec-fetch-site');
@@ -131,8 +131,8 @@
   promise_test(() => {
     const key = '{{uuid()}}';
     const url = makeRequestURL(key, ['crossSite', 'crossSite'], responseParams);
-    const bless = false;
-    return induceRequest('GET', url, bless)
+    const userActivated = false;
+    return induceRequest('GET', url, userActivated)
       .then(() => retrieve(key))
       .then((headers) => {
           assert_own_property(headers, 'sec-fetch-site');
@@ -143,8 +143,8 @@
   promise_test(() => {
     const key = '{{uuid()}}';
     const url = makeRequestURL(key, ['crossSite', 'crossSite'], responseParams);
-    const bless = false;
-    return induceRequest('POST', url, bless)
+    const userActivated = false;
+    return induceRequest('POST', url, userActivated)
       .then(() => retrieve(key))
       .then((headers) => {
           assert_own_property(headers, 'sec-fetch-site');
@@ -155,8 +155,8 @@
   promise_test(() => {
     const key = '{{uuid()}}';
     const url = makeRequestURL(key, ['sameOrigin', 'sameOrigin'], responseParams);
-    const bless = false;
-    return induceRequest('GET', url, bless)
+    const userActivated = false;
+    return induceRequest('GET', url, userActivated)
       .then(() => retrieve(key))
       .then((headers) => {
           assert_own_property(headers, 'sec-fetch-site');
@@ -167,8 +167,8 @@
   promise_test(() => {
     const key = '{{uuid()}}';
     const url = makeRequestURL(key, ['sameOrigin', 'sameOrigin'], responseParams);
-    const bless = false;
-    return induceRequest('POST', url, bless)
+    const userActivated = false;
+    return induceRequest('POST', url, userActivated)
       .then(() => retrieve(key))
       .then((headers) => {
           assert_own_property(headers, 'sec-fetch-site');
@@ -179,8 +179,8 @@
   promise_test(() => {
     const key = '{{uuid()}}';
     const url = makeRequestURL(key, ['sameOrigin', 'sameSite'], responseParams);
-    const bless = false;
-    return induceRequest('GET', url, bless)
+    const userActivated = false;
+    return induceRequest('GET', url, userActivated)
       .then(() => retrieve(key))
       .then((headers) => {
           assert_own_property(headers, 'sec-fetch-site');
@@ -191,8 +191,8 @@
   promise_test(() => {
     const key = '{{uuid()}}';
     const url = makeRequestURL(key, ['sameOrigin', 'sameSite'], responseParams);
-    const bless = false;
-    return induceRequest('POST', url, bless)
+    const userActivated = false;
+    return induceRequest('POST', url, userActivated)
       .then(() => retrieve(key))
       .then((headers) => {
           assert_own_property(headers, 'sec-fetch-site');
@@ -203,8 +203,8 @@
   promise_test(() => {
     const key = '{{uuid()}}';
     const url = makeRequestURL(key, ['sameOrigin', 'crossSite'], responseParams);
-    const bless = false;
-    return induceRequest('GET', url, bless)
+    const userActivated = false;
+    return induceRequest('GET', url, userActivated)
       .then(() => retrieve(key))
       .then((headers) => {
           assert_own_property(headers, 'sec-fetch-site');
@@ -215,8 +215,8 @@
   promise_test(() => {
     const key = '{{uuid()}}';
     const url = makeRequestURL(key, ['sameOrigin', 'crossSite'], responseParams);
-    const bless = false;
-    return induceRequest('POST', url, bless)
+    const userActivated = false;
+    return induceRequest('POST', url, userActivated)
       .then(() => retrieve(key))
       .then((headers) => {
           assert_own_property(headers, 'sec-fetch-site');
@@ -227,8 +227,8 @@
   promise_test(() => {
     const key = '{{uuid()}}';
     const url = makeRequestURL(key, ['sameSite', 'sameOrigin'], responseParams);
-    const bless = false;
-    return induceRequest('GET', url, bless)
+    const userActivated = false;
+    return induceRequest('GET', url, userActivated)
       .then(() => retrieve(key))
       .then((headers) => {
           assert_own_property(headers, 'sec-fetch-site');
@@ -239,8 +239,8 @@
   promise_test(() => {
     const key = '{{uuid()}}';
     const url = makeRequestURL(key, ['sameSite', 'sameOrigin'], responseParams);
-    const bless = false;
-    return induceRequest('POST', url, bless)
+    const userActivated = false;
+    return induceRequest('POST', url, userActivated)
       .then(() => retrieve(key))
       .then((headers) => {
           assert_own_property(headers, 'sec-fetch-site');
@@ -251,8 +251,8 @@
   promise_test(() => {
     const key = '{{uuid()}}';
     const url = makeRequestURL(key, ['sameSite', 'sameSite'], responseParams);
-    const bless = false;
-    return induceRequest('GET', url, bless)
+    const userActivated = false;
+    return induceRequest('GET', url, userActivated)
       .then(() => retrieve(key))
       .then((headers) => {
           assert_own_property(headers, 'sec-fetch-site');
@@ -263,8 +263,8 @@
   promise_test(() => {
     const key = '{{uuid()}}';
     const url = makeRequestURL(key, ['sameSite', 'sameSite'], responseParams);
-    const bless = false;
-    return induceRequest('POST', url, bless)
+    const userActivated = false;
+    return induceRequest('POST', url, userActivated)
       .then(() => retrieve(key))
       .then((headers) => {
           assert_own_property(headers, 'sec-fetch-site');
@@ -275,8 +275,8 @@
   promise_test(() => {
     const key = '{{uuid()}}';
     const url = makeRequestURL(key, ['sameSite', 'crossSite'], responseParams);
-    const bless = false;
-    return induceRequest('GET', url, bless)
+    const userActivated = false;
+    return induceRequest('GET', url, userActivated)
       .then(() => retrieve(key))
       .then((headers) => {
           assert_own_property(headers, 'sec-fetch-site');
@@ -287,8 +287,8 @@
   promise_test(() => {
     const key = '{{uuid()}}';
     const url = makeRequestURL(key, ['sameSite', 'crossSite'], responseParams);
-    const bless = false;
-    return induceRequest('POST', url, bless)
+    const userActivated = false;
+    return induceRequest('POST', url, userActivated)
       .then(() => retrieve(key))
       .then((headers) => {
           assert_own_property(headers, 'sec-fetch-site');

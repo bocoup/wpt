@@ -5,7 +5,7 @@
   <title>[%title%]</title>
   <script src="/resources/testharness.js"></script>
   <script src="/resources/testharnessreport.js"></script>
-  {%- if subtests|selectattr('bless')|list %}
+  {%- if subtests|selectattr('userActivated')|list %}
   <script src="/resources/testdriver.js"></script>
   {%- endif %}
   <script src="/fetch/metadata/resources/helper.sub.js"></script>
@@ -13,7 +13,7 @@
   <script>
   'use strict';
 
-  function induceRequest(method, url, bless) {
+  function induceRequest(method, url, userActivated) {
     const windowName = String(Math.random());
     const form = document.createElement('form');
     const submit = document.createElement('input');
@@ -43,7 +43,7 @@
           }
         });
 
-        if (bless) {
+        if (userActivated) {
           test_driver.click(submit);
         } else {
           submit.click();
@@ -64,8 +64,8 @@
   promise_test(() => {
     const key = '{{uuid()}}';
     const url = makeRequestURL(key, [% subtest.origins %], responseParams);
-    const bless = [% 'true' if subtest.bless else 'false' %];
-    return induceRequest('[%subtest.method | default("POST")%]', url, bless)
+    const userActivated = [% 'true' if subtest.userActivated else 'false' %];
+    return induceRequest('[%subtest.method | default("POST")%]', url, userActivated)
       .then(() => retrieve(key))
       .then((headers) => {
         {%- if subtest.expected == none %}

@@ -10,7 +10,7 @@
   <script>
   'use strict';
 
-  function induceRequest(url, navigate, bless) {
+  function induceRequest(url, navigate, userActivated) {
     const win = window.open();
 
     return new Promise((resolve) => {
@@ -20,7 +20,7 @@
           }
         });
 
-        if (bless) {
+        if (userActivated) {
           test_driver.bless('enable user activation', () => {
             navigate(win, url);
           });
