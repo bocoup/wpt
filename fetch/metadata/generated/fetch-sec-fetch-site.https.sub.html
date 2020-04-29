@@ -10,10 +10,14 @@
   <script>
   'use strict';
 
+  function induceRequest(url, init) {
+    return fetch(url, init);
+  }
+
   promise_test(() => {
     const key = '{{uuid()}}';
 
-    return fetch(
+    return induceRequest(
         makeRequestURL(key, ['sameOrigin', 'crossSite', 'sameOrigin']),
         {"mode": "no-cors"}
       )
@@ -27,7 +31,7 @@
   promise_test(() => {
     const key = '{{uuid()}}';
 
-    return fetch(
+    return induceRequest(
         makeRequestURL(key, ['crossSite', 'sameOrigin']),
         {"mode": "no-cors"}
       )
@@ -41,7 +45,7 @@
   promise_test(() => {
     const key = '{{uuid()}}';
 
-    return fetch(
+    return induceRequest(
         makeRequestURL(key, ['crossSite', 'sameSite']),
         {"mode": "no-cors"}
       )
@@ -55,7 +59,7 @@
   promise_test(() => {
     const key = '{{uuid()}}';
 
-    return fetch(
+    return induceRequest(
         makeRequestURL(key, ['crossSite', 'crossSite']),
         {"mode": "no-cors"}
       )
@@ -69,7 +73,7 @@
   promise_test(() => {
     const key = '{{uuid()}}';
 
-    return fetch(
+    return induceRequest(
         makeRequestURL(key, ['sameOrigin', 'sameOrigin']),
         {"mode": "no-cors"}
       )
@@ -83,7 +87,7 @@
   promise_test(() => {
     const key = '{{uuid()}}';
 
-    return fetch(
+    return induceRequest(
         makeRequestURL(key, ['sameOrigin', 'sameSite']),
         {"mode": "no-cors"}
       )
@@ -97,7 +101,7 @@
   promise_test(() => {
     const key = '{{uuid()}}';
 
-    return fetch(
+    return induceRequest(
         makeRequestURL(key, ['sameOrigin', 'crossSite']),
         {"mode": "no-cors"}
       )
@@ -111,7 +115,7 @@
   promise_test(() => {
     const key = '{{uuid()}}';
 
-    return fetch(
+    return induceRequest(
         makeRequestURL(key, ['sameSite', 'sameOrigin']),
         {"mode": "no-cors"}
       )
@@ -125,7 +129,7 @@
   promise_test(() => {
     const key = '{{uuid()}}';
 
-    return fetch(
+    return induceRequest(
         makeRequestURL(key, ['sameSite', 'sameSite']),
         {"mode": "no-cors"}
       )
@@ -139,7 +143,7 @@
   promise_test(() => {
     const key = '{{uuid()}}';
 
-    return fetch(
+    return induceRequest(
         makeRequestURL(key, ['sameSite', 'crossSite']),
         {"mode": "no-cors"}
       )

@@ -10,10 +10,14 @@
   <script>
   'use strict';
 
+  function induceRequest(url, init) {
+    return fetch(url, init);
+  }
+
   promise_test(() => {
     const key = '{{uuid()}}';
 
-    return fetch(
+    return induceRequest(
         makeRequestURL(key, ['sameOrigin', 'httpOrigin']),
         {}
       )
@@ -26,7 +30,7 @@
   promise_test(() => {
     const key = '{{uuid()}}';
 
-    return fetch(
+    return induceRequest(
         makeRequestURL(key, ['httpOrigin', 'sameOrigin']),
         {}
       )
@@ -40,7 +44,7 @@
   promise_test(() => {
     const key = '{{uuid()}}';
 
-    return fetch(
+    return induceRequest(
         makeRequestURL(key, ['sameOrigin', 'httpOrigin', 'sameOrigin']),
         {}
       )

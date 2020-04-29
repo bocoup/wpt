@@ -10,12 +10,16 @@
   <script>
   'use strict';
 
+  function induceRequest(url, init) {
+    return fetch(url, init);
+  }
+
   {%- for subtest in subtests %}
 
   promise_test(() => {
     const key = '{{uuid()}}';
 
-    return fetch(
+    return induceRequest(
         makeRequestURL(key, [% subtest.origins %]),
         [%subtest.init | default({}) | tojson%]
       )
