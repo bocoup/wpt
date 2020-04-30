@@ -9,6 +9,7 @@ HERE = os.path.abspath(os.path.dirname(__file__))
 OUT_DIR = os.path.normpath(os.path.join(HERE, '..', 'generated'))
 TEMPLATES_DIR = os.path.join(HERE, 'templates')
 CASES = os.path.join(HERE, 'cases', 'master.yml')
+PROJECT_ROOT = os.path.join(HERE, '..', '..', '..')
 
 def find_templates(starting_directory):
     for directory, subdirectories, file_names in os.walk(starting_directory):
@@ -43,7 +44,15 @@ def cross(a, b):
 
             yield merged
 
-def main(templates_directory, cases_file, out_directory):
+def make_provenance(project_root, cases, template):
+    return '\n'.join([
+        'This test was procedurally generated. Please do not modify it directly.',
+        'Sources:',
+        '- {}'.format(os.path.relpath(cases, project_root)),
+        '- {}'.format(os.path.relpath(template, project_root))
+    ])
+
+def main(project_root, templates_directory, cases_file, out_directory):
     templates = {}
     for template_name, path in find_templates(templates_directory):
         with open(path, 'r') as handle:
@@ -79,7 +88,12 @@ def main(templates_directory, cases_file, out_directory):
                 subtests=[subtest for subtest in cross(
                     case.get('all_subtests', [{}]), concise_subtests
                 )],
-                **case
+                **case,
+                provenance=make_provenance(
+                    project_root,
+                    cases_file,
+                    os.path.join(templates_directory, template_name)
+                )
             )
             context.pop('all_subtests', None)
             context.pop('each_subtest')
@@ -92,4 +106,4 @@ def main(templates_directory, cases_file, out_directory):
                     handle.write(templates[template_name].render(**context))
 
 if __name__ == '__main__':
-    main(TEMPLATES_DIR, CASES, OUT_DIR)
+    main(PROJECT_ROOT, TEMPLATES_DIR, CASES, OUT_DIR)
