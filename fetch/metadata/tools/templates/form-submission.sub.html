@@ -71,10 +71,10 @@
       .then(() => retrieve(key))
       .then((headers) => {
         {%- if subtest.expected == none %}
-          assert_not_own_property(headers, '[%headerName%]');
+          assert_not_own_property(headers, '[%subtest.headerName%]');
         {%- else %}
-          assert_own_property(headers, '[%headerName%]');
-          assert_equals(headers['[%headerName%]'], '[%subtest.expected%]');
+          assert_own_property(headers, '[%subtest.headerName%]');
+          assert_equals(headers['[%subtest.headerName%]'], '[%subtest.expected%]');
         {%- endif %}
         });
   }, '[%subtest.description%]');

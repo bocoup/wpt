@@ -1,15 +1,17 @@
 ---
 - title: Fetch Metadata - Sec-Fetch-Site - redirection from HTTP
   fileName: sec-fetch-site
-  headerName: sec-fetch-site
   all_subtests:
     - description: HTTPS downgrade (header not sent)
+      headerName: sec-fetch-site
       origins: [sameOrigin, httpOrigin]
       expected: NULL
     - description: HTTPS upgrade
+      headerName: sec-fetch-site
       origins: [httpOrigin, sameOrigin]
       expected: cross-site
     - description: HTTPS downgrade-upgrade
+      headerName: sec-fetch-site
       origins: [sameOrigin, httpOrigin, sameOrigin]
       expected: cross-site
   each_subtest:
@@ -55,36 +57,45 @@
 
 - title: Fetch Metadata - Sec-Fetch-Site - redirection from HTTPS
   fileName: sec-fetch-site.https
-  headerName: sec-fetch-site
   all_subtests:
     - description: Same-Origin -> Cross-Site -> Same-Origin redirect
+      headerName: sec-fetch-site
       origins: [sameOrigin, crossSite, sameOrigin]
       expected: cross-site
     - description: Cross-Site -> Same Origin
+      headerName: sec-fetch-site
       origins: [crossSite, sameOrigin]
       expected: cross-site
     - description: Cross-Site -> Same-Site
+      headerName: sec-fetch-site
       origins: [crossSite, sameSite]
       expected: cross-site
     - description: Cross-Site -> Cross-Site
+      headerName: sec-fetch-site
       origins: [crossSite, crossSite]
       expected: cross-site
     - description: Same-Origin -> Same Origin
+      headerName: sec-fetch-site
       origins: [sameOrigin, sameOrigin]
       expected: same-origin
     - description: Same-Origin -> Same-Site
+      headerName: sec-fetch-site
       origins: [sameOrigin, sameSite]
       expected: same-site
     - description: Same-Origin -> Cross-Site
+      headerName: sec-fetch-site
       origins: [sameOrigin, crossSite]
       expected: cross-site
     - description: Same-Site -> Same Origin
+      headerName: sec-fetch-site
       origins: [sameSite, sameOrigin]
       expected: same-site
     - description: Same-Site -> Same-Site
+      headerName: sec-fetch-site
       origins: [sameSite, sameSite]
       expected: same-site
     - description: Same-Site -> Cross-Site
+      headerName: sec-fetch-site
       origins: [sameSite, crossSite]
       expected: cross-site
   each_subtest:
@@ -140,9 +151,9 @@
   #
   # [1] https://w3c.github.io/webappsec-mixed-content/#should-block-fetch
   fileName: sec-fetch-site-mixed.https
-  headerName: sec-fetch-site
   all_subtests:
     - description: HTTPS downgrade-upgrade
+      headerName: sec-fetch-site
       origins: [sameOrigin, httpOrigin, sameOrigin]
       expected: cross-site
   each_subtest:
@@ -183,7 +194,8 @@
   # [1] https://html.spec.whatwg.org/multipage/origin.html#same-origin
   # [2] https://w3c.github.io/webappsec-secure-contexts/#potentially-trustworthy-url
   fileName: sec-fetch-mode.https
-  headerName: sec-fetch-mode
+  all_subtests:
+    - headerName: sec-fetch-mode
   each_subtest:
     # Unused
     # TODO(jugglinmike) document rationale
@@ -281,7 +293,8 @@
 
 - title: Fetch Metadata - Sec-Fetch-Dest
   fileName: sec-fetch-dest.https
-  headerName: sec-fetch-dest
+  all_subtests:
+    - headerName: sec-fetch-dest
   each_subtest:
     appcache-manifest.sub.https.html:
       - expected: empty
@@ -334,7 +347,8 @@
 
 - title: Fetch Metadata - Sec-Fetch-User
   fileName: sec-fetch-user.https
-  headerName: sec-fetch-user
+  all_subtests:
+    - headerName: sec-fetch-user
   each_subtest:
     appcache-manifest.sub.https.html:
       - expected: NULL
