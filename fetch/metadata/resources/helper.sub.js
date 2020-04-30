@@ -1,5 +1,24 @@
 'use strict';
 
+/**
+ * Construct a URL which, when followed, will trigger redirection through zero
+ * or more specified origins and ultimately resolve in the Python handler
+ * `record-headers.py`.
+ *
+ * @param {string} key - the WPT server "stash" name where the request's
+ *                       headers should be stored
+ * @param {string[]} [origins] - zero or more origin names through which the
+ *                               request should pass; see the function
+ *                               implementation for a completel list of names
+ *                               and corresponding origins; If specified, the
+ *                               final origin will be used to access the
+ *                               `record-headers.py` hander.
+ * @param {object} [params] - a collection of key-value pairs to include as
+ *                            URL "search" parameters in the final request to
+ *                            `record-headers.py`
+ *
+ * @returns {string} an absolute URL
+ */
 function makeRequestURL(key, origins, params) {
     const byName = {
         sameOrigin: 'https://{{host}}:{{ports[https][0]}}',
@@ -22,6 +41,8 @@ function makeRequestURL(key, origins, params) {
         requestUrl = byName[origins.pop()] + redirectPath +
           encodeURIComponent(requestUrl);
       }
+    } else {
+      requestUrl = byName.sameOrigin + requestUrl;
     }
 
     return requestUrl;

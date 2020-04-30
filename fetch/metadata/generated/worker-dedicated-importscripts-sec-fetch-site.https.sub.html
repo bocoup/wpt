@@ -9,7 +9,7 @@
   'use strict';
   function induceRequest(url, options) {
     const src = `
-      importScripts(new URL('${url}', location.origin));
+      importScripts('${url}');
       postMessage('done');
     `;
     const workerUrl = URL.createObjectURL(
