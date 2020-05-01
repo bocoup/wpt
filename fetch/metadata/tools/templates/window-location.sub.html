@@ -66,7 +66,7 @@
           assert_equals(headers['[%subtest.headerName%]'], '[%subtest.expected%]');
         {%- endif %}
         });
-  }, '[%subtest.description | pad("right", " - ")%][%subtest.api%][% " with user activation" if subtest.userActivated%]');
+  }, '[%subtest.headerName%] - [%subtest.description | pad("right", " - ")%][%subtest.api%][% " with user activation" if subtest.userActivated%]');
 
   {%- endfor %}
   </script>

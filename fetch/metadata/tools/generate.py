@@ -74,7 +74,9 @@ def main(project_root, templates_directory, cases_file, out_directory):
     environment.filters['collection'] = collection_filter
     environment.filters['pad'] = pad_filter
     templates = {}
+    subtests = {}
     for template_name, path in find_templates(templates_directory):
+        subtests[template_name] = []
         with open(path, 'r') as handle:
             templates[template_name] = environment.from_string(handle.read())
 
@@ -90,36 +92,33 @@ def main(project_root, templates_directory, cases_file, out_directory):
         # unused.
         if unused_templates:
             print(
-                'Warning: case "{}" does not '.format(case['title']) +
-                'reference the following templates:'
+                'Warning: case does not reference the following templates:'
             )
             print('\n'.join('- {}'.format(name) for name in unused_templates))
 
         for template_name, concise_subtests in case['each_subtest'].items():
-            out_file_name = os.path.join(
-                out_directory,
-                test_name(template_name, case['fileName'])
-            )
-            context = dict(
-                subtests=[subtest for subtest in cross(
+            subtests[template_name].extend(
+                [subtest for subtest in cross(
                     case.get('all_subtests', [{}]), concise_subtests
-                )],
-                **case,
-                provenance=make_provenance(
-                    project_root,
-                    cases_file,
-                    os.path.join(templates_directory, template_name)
-                )
+                )]
             )
-            context.pop('all_subtests', None)
-            context.pop('each_subtest')
 
-            # Ignore expansions with zero subtests--this is the intended
-            # mechanism for authors to explicitly communicate that a given
-            # template is undesired.
-            if len(context['subtests']):
-                with open(out_file_name, 'w') as handle:
-                    handle.write(templates[template_name].render(**context))
+    for template_name, template in templates.items():
+        provenance = make_provenance(
+            project_root,
+            cases_file,
+            os.path.join(templates_directory, template_name)
+        )
+        out_file_name = os.path.join(
+            out_directory,
+            template_name
+        )
+
+        with open(out_file_name, 'w') as handle:
+            handle.write(templates[template_name].render(
+                subtests=subtests[template_name],
+                provenance=provenance
+            ))
 
 if __name__ == '__main__':
     main(PROJECT_ROOT, TEMPLATES_DIR, CASES, OUT_DIR)

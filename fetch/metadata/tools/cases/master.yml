@@ -1,7 +1,6 @@
 ---
-- title: Fetch Metadata - Sec-Fetch-Site - redirection from HTTP
-  fileName: sec-fetch-site
-  all_subtests:
+# Sec-Fetch-Site - redirection from HTTP
+- all_subtests:
     - description: HTTPS downgrade (header not sent)
       headerName: sec-fetch-site
       origins: [sameOrigin, httpOrigin]
@@ -48,9 +47,8 @@
     video-poster.sub.html: [{}]
     worker-dedicated-importscripts.sub.html: [{}]
 
-- title: Fetch Metadata - Sec-Fetch-Site - redirection from HTTPS
-  fileName: sec-fetch-site.https
-  all_subtests:
+# Sec-Fetch-Site - redirection from HTTPS
+- all_subtests:
     - description: Same-Origin -> Cross-Site -> Same-Origin redirect
       headerName: sec-fetch-site
       origins: [sameOrigin, crossSite, sameOrigin]
@@ -125,19 +123,18 @@
     video-poster.sub.html: [{}]
     worker-dedicated-importscripts.sub.html: [{}]
 
-- title: Fetch Metadata - Sec-Fetch-Site - redirection with mixed content
-  # These tests verify the effect that redirection has on the request's "site".
-  # The initial request must be made to a resource that is "same-site" with its
-  # origin. This avoids false positives because if the request were made to a
-  # cross-site resource, the value of "cross-site" would be assigned regardless
-  # of the subseqent redirection.
-  #
-  # Because these conditions necessarily warrant mixed content, only templates
-  # which can be configured to allow mixed content [1] can be used.
-  #
-  # [1] https://w3c.github.io/webappsec-mixed-content/#should-block-fetch
-  fileName: sec-fetch-site-mixed.https
-  all_subtests:
+# Sec-Fetch-Site - redirection with mixed content
+# These tests verify the effect that redirection has on the request's "site".
+# The initial request must be made to a resource that is "same-site" with its
+# origin. This avoids false positives because if the request were made to a
+# cross-site resource, the value of "cross-site" would be assigned regardless
+# of the subseqent redirection.
+#
+# Because these conditions necessarily warrant mixed content, only templates
+# which can be configured to allow mixed content [1] can be used.
+#
+# [1] https://w3c.github.io/webappsec-mixed-content/#should-block-fetch
+- all_subtests:
     - description: HTTPS downgrade-upgrade
       headerName: sec-fetch-site
       origins: [sameOrigin, httpOrigin, sameOrigin]
@@ -167,14 +164,13 @@
       - api: location.replace
     video-poster.sub.html: [{}]
 
-- title: Fetch Metadata - Sec-Fetch-Mode
-  # These tests are served over HTTPS so the induced requests will be both
-  # same-origin with the document [1] and a potentially-trustworthy URL [2].
-  #
-  # [1] https://html.spec.whatwg.org/multipage/origin.html#same-origin
-  # [2] https://w3c.github.io/webappsec-secure-contexts/#potentially-trustworthy-url
-  fileName: sec-fetch-mode.https
-  all_subtests:
+# Sec-Fetch-Mode
+# These tests are served over HTTPS so the induced requests will be both
+# same-origin with the document [1] and a potentially-trustworthy URL [2].
+#
+# [1] https://html.spec.whatwg.org/multipage/origin.html#same-origin
+# [2] https://w3c.github.io/webappsec-secure-contexts/#potentially-trustworthy-url
+- all_subtests:
     - headerName: sec-fetch-mode
   each_subtest:
     # Unused
@@ -246,9 +242,8 @@
       - options: { type: module }
         expected: same-origin
 
-- title: Fetch Metadata - Sec-Fetch-Dest
-  fileName: sec-fetch-dest.https
-  all_subtests:
+# Sec-Fetch-Dest
+- all_subtests:
     - headerName: sec-fetch-dest
   each_subtest:
     appcache-manifest.sub.https.html:
@@ -292,9 +287,8 @@
     worker-dedicated-importscripts.sub.html:
       - expected: script
 
-- title: Fetch Metadata - Sec-Fetch-User
-  fileName: sec-fetch-user.https
-  all_subtests:
+# Sec-Fetch-User
+- all_subtests:
     - headerName: sec-fetch-user
   each_subtest:
     appcache-manifest.sub.https.html:
