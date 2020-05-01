@@ -45,7 +45,7 @@ Sources:
           assert_own_property(headers, 'sec-fetch-mode');
           assert_equals(headers['sec-fetch-mode'], 'no-cors');
         });
-  }, 'classic script');
+  }, 'no attributes');
 
   promise_test(() => {
     const key = '{{uuid()}}';
@@ -61,7 +61,7 @@ Sources:
           assert_own_property(headers, 'sec-fetch-mode');
           assert_equals(headers['sec-fetch-mode'], 'cors');
         });
-  }, 'module script');
+  }, 'attributes: type=module');
 
   promise_test(() => {
     const key = '{{uuid()}}';
@@ -77,7 +77,7 @@ Sources:
           assert_own_property(headers, 'sec-fetch-mode');
           assert_equals(headers['sec-fetch-mode'], 'cors');
         });
-  }, 'classic script, crossorigin=""');
+  }, 'attributes: crossorigin=');
 
   promise_test(() => {
     const key = '{{uuid()}}';
@@ -93,7 +93,7 @@ Sources:
           assert_own_property(headers, 'sec-fetch-mode');
           assert_equals(headers['sec-fetch-mode'], 'cors');
         });
-  }, 'classic script, crossorigin="anonymous"');
+  }, 'attributes: crossorigin=anonymous');
 
   promise_test(() => {
     const key = '{{uuid()}}';
@@ -109,6 +109,6 @@ Sources:
           assert_own_property(headers, 'sec-fetch-mode');
           assert_equals(headers['sec-fetch-mode'], 'cors');
         });
-  }, 'classic script, crossorigin="use-credentials"');
+  }, 'attributes: crossorigin=use-credentials');
   </script>
 </html>

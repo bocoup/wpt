@@ -77,7 +77,7 @@
           assert_equals(headers['[%subtest.headerName%]'], '[%subtest.expected%]');
         {%- endif %}
         });
-  }, '[%subtest.description%]');
+  }, '[%subtest.description | pad("end", " - ")%][%subtest.method | default("POST")%][%" with user activation" if subtest.userActivated%]');
 
   {%- endfor %}
   </script>

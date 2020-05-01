@@ -34,7 +34,7 @@ Sources:
           assert_own_property(headers, 'sec-fetch-dest');
           assert_equals(headers['sec-fetch-dest'], 'worker');
         });
-  }, 'classic script');
+  }, 'no options');
 
   promise_test(() => {
     const key = '{{uuid()}}';
@@ -50,6 +50,6 @@ Sources:
           assert_own_property(headers, 'sec-fetch-dest');
           assert_equals(headers['sec-fetch-dest'], 'worker');
         });
-  }, 'module script');
+  }, 'options: type=module');
   </script>
 </html>

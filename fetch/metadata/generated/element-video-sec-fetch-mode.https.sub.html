@@ -54,7 +54,7 @@ Sources:
           assert_own_property(headers, 'sec-fetch-mode');
           assert_equals(headers['sec-fetch-mode'], 'cors');
         });
-  }, 'crossorigin=""');
+  }, 'attributes: crossorigin=');
 
   promise_test(() => {
     const key = '{{uuid()}}';
@@ -68,7 +68,7 @@ Sources:
           assert_own_property(headers, 'sec-fetch-mode');
           assert_equals(headers['sec-fetch-mode'], 'cors');
         });
-  }, 'crossorigin="anonymous"');
+  }, 'attributes: crossorigin=anonymous');
 
   promise_test(() => {
     const key = '{{uuid()}}';
@@ -82,7 +82,7 @@ Sources:
           assert_own_property(headers, 'sec-fetch-mode');
           assert_equals(headers['sec-fetch-mode'], 'cors');
         });
-  }, 'crossorigin="use-credentials"');
+  }, 'attributes: crossorigin=use-credentials');
   </script>
   </body>
 </html>

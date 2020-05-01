@@ -71,7 +71,7 @@ Sources:
           assert_own_property(headers, 'sec-fetch-dest');
           assert_equals(headers['sec-fetch-dest'], 'document');
         });
-  }, ' - GET');
+  }, 'GET');
 
   promise_test(() => {
     const key = '{{uuid()}}';
@@ -83,7 +83,7 @@ Sources:
           assert_own_property(headers, 'sec-fetch-dest');
           assert_equals(headers['sec-fetch-dest'], 'document');
         });
-  }, ' - POST');
+  }, 'POST');
   </script>
   </body>
 </html>

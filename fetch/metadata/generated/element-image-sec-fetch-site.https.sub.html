@@ -40,7 +40,7 @@ Sources:
           assert_own_property(headers, 'sec-fetch-site');
           assert_equals(headers['sec-fetch-site'], 'cross-site');
         });
-  }, 'Same-Origin -> Cross-Site -> Same-Origin redirect');
+  }, 'Same-Origin -> Cross-Site -> Same-Origin redirect, no attributes');
 
   promise_test(() => {
     const key = '{{uuid()}}';
@@ -54,7 +54,7 @@ Sources:
           assert_own_property(headers, 'sec-fetch-site');
           assert_equals(headers['sec-fetch-site'], 'cross-site');
         });
-  }, 'Cross-Site -> Same Origin');
+  }, 'Cross-Site -> Same Origin, no attributes');
 
   promise_test(() => {
     const key = '{{uuid()}}';
@@ -68,7 +68,7 @@ Sources:
           assert_own_property(headers, 'sec-fetch-site');
           assert_equals(headers['sec-fetch-site'], 'cross-site');
         });
-  }, 'Cross-Site -> Same-Site');
+  }, 'Cross-Site -> Same-Site, no attributes');
 
   promise_test(() => {
     const key = '{{uuid()}}';
@@ -82,7 +82,7 @@ Sources:
           assert_own_property(headers, 'sec-fetch-site');
           assert_equals(headers['sec-fetch-site'], 'cross-site');
         });
-  }, 'Cross-Site -> Cross-Site');
+  }, 'Cross-Site -> Cross-Site, no attributes');
 
   promise_test(() => {
     const key = '{{uuid()}}';
@@ -96,7 +96,7 @@ Sources:
           assert_own_property(headers, 'sec-fetch-site');
           assert_equals(headers['sec-fetch-site'], 'same-origin');
         });
-  }, 'Same-Origin -> Same Origin');
+  }, 'Same-Origin -> Same Origin, no attributes');
 
   promise_test(() => {
     const key = '{{uuid()}}';
@@ -110,7 +110,7 @@ Sources:
           assert_own_property(headers, 'sec-fetch-site');
           assert_equals(headers['sec-fetch-site'], 'same-site');
         });
-  }, 'Same-Origin -> Same-Site');
+  }, 'Same-Origin -> Same-Site, no attributes');
 
   promise_test(() => {
     const key = '{{uuid()}}';
@@ -124,7 +124,7 @@ Sources:
           assert_own_property(headers, 'sec-fetch-site');
           assert_equals(headers['sec-fetch-site'], 'cross-site');
         });
-  }, 'Same-Origin -> Cross-Site');
+  }, 'Same-Origin -> Cross-Site, no attributes');
 
   promise_test(() => {
     const key = '{{uuid()}}';
@@ -138,7 +138,7 @@ Sources:
           assert_own_property(headers, 'sec-fetch-site');
           assert_equals(headers['sec-fetch-site'], 'same-site');
         });
-  }, 'Same-Site -> Same Origin');
+  }, 'Same-Site -> Same Origin, no attributes');
 
   promise_test(() => {
     const key = '{{uuid()}}';
@@ -152,7 +152,7 @@ Sources:
           assert_own_property(headers, 'sec-fetch-site');
           assert_equals(headers['sec-fetch-site'], 'same-site');
         });
-  }, 'Same-Site -> Same-Site');
+  }, 'Same-Site -> Same-Site, no attributes');
 
   promise_test(() => {
     const key = '{{uuid()}}';
@@ -166,7 +166,7 @@ Sources:
           assert_own_property(headers, 'sec-fetch-site');
           assert_equals(headers['sec-fetch-site'], 'cross-site');
         });
-  }, 'Same-Site -> Cross-Site');
+  }, 'Same-Site -> Cross-Site, no attributes');
   </script>
   </body>
 </html>
