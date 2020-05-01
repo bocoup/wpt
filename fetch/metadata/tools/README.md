@@ -13,4 +13,4 @@ To run:
 
 - Invoke the executable:
 
-      $ python3 ./generate.py
+      $ python3 ./generate.py ./path/to/configuration-file.yml

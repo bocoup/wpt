@@ -1,14 +1,13 @@
 #!/usr/bin/env python3
 
+import argparse
+import itertools
 import os
 
 import jinja2
 import yaml
 
 HERE = os.path.abspath(os.path.dirname(__file__))
-OUT_DIR = os.path.normpath(os.path.join(HERE, '..', 'generated'))
-TEMPLATES_DIR = os.path.join(HERE, 'templates')
-CASES = os.path.join(HERE, 'cases', 'master.yml')
 PROJECT_ROOT = os.path.join(HERE, '..', '..', '..')
 
 def find_templates(starting_directory):
@@ -18,15 +17,12 @@ def find_templates(starting_directory):
                 continue
             yield file_name, os.path.join(directory, file_name)
 
-# template_name       | case_name  | test_name
-# --------------------|------------|----------
-# template.html       | case       | template-case.html
-# template.html       | case.sub   | template-case.sub.html
-# template.https.html | case       | template-case.https.html
-# template.sub.html   | case.https | template-case.https.sub.html
-def test_name(template_name, case_name):
-    prefix, suffix = template_name.split('.', 1)
-    return '{}-{}.{}'.format(prefix, case_name, suffix)
+def test_name(directory, template_name, flags):
+    parts = list(os.path.splitext(template_name))
+    if parts[1]:
+        parts[1] = parts[1][1:]
+    parts[1:1] = flags
+    return os.path.join(directory, '.'.join(parts))
 
 def cross(a, b):
     for a_object in a:
@@ -66,7 +62,14 @@ def pad_filter(value, side, padding):
 
     return value + padding
 
-def main(project_root, templates_directory, cases_file, out_directory):
+def main(config_file):
+    with open(config_file) as handle:
+        config = yaml.safe_load(handle.read())
+
+    templates_directory = os.path.normpath(
+        os.path.join(os.path.dirname(config_file), config['templates'])
+    )
+
     environment = jinja2.Environment(
         variable_start_string='[%',
         variable_end_string='%]'
@@ -74,14 +77,14 @@ def main(project_root, templates_directory, cases_file, out_directory):
     environment.filters['collection'] = collection_filter
     environment.filters['pad'] = pad_filter
     templates = {}
+    subtests = {}
+
     for template_name, path in find_templates(templates_directory):
+        subtests[template_name] = []
         with open(path, 'r') as handle:
             templates[template_name] = environment.from_string(handle.read())
 
-    with open(cases_file, 'r') as handle:
-        cases = yaml.safe_load(handle.read())
-
-    for case in cases:
+    for case in config['cases']:
         unused_templates = set(templates) - set(case['each_subtest'])
 
         # This warning is intended to help authors avoid mistakenly omitting
@@ -90,36 +93,44 @@ def main(project_root, templates_directory, cases_file, out_directory):
         # unused.
         if unused_templates:
             print(
-                'Warning: case "{}" does not '.format(case['title']) +
-                'reference the following templates:'
+                'Warning: case does not reference the following templates:'
             )
             print('\n'.join('- {}'.format(name) for name in unused_templates))
 
         for template_name, concise_subtests in case['each_subtest'].items():
-            out_file_name = os.path.join(
-                out_directory,
-                test_name(template_name, case['fileName'])
+            subtests[template_name].extend(
+                [subtest for subtest in cross(
+                    case['all_subtests'], concise_subtests
+                )]
             )
-            context = dict(
-                subtests=[subtest for subtest in cross(
-                    case.get('all_subtests', [{}]), concise_subtests
-                )],
-                **case,
-                provenance=make_provenance(
-                    project_root,
-                    cases_file,
-                    os.path.join(templates_directory, template_name)
-                )
-            )
-            context.pop('all_subtests', None)
-            context.pop('each_subtest')
 
-            # Ignore expansions with zero subtests--this is the intended
-            # mechanism for authors to explicitly communicate that a given
-            # template is undesired.
-            if len(context['subtests']):
-                with open(out_file_name, 'w') as handle:
-                    handle.write(templates[template_name].render(**context))
+    for template_name, template in templates.items():
+        provenance = make_provenance(
+            PROJECT_ROOT,
+            config_file,
+            os.path.join(templates_directory, template_name)
+        )
+        get_filename_flags = lambda subtest: subtest['filename_flags']
+        subtests_by_flag = itertools.groupby(
+            sorted(subtests[template_name], key=get_filename_flags),
+            key=get_filename_flags
+        )
+        for flags, some_subtests in subtests_by_flag:
+            out_file_name = test_name(
+                config['output_directory'], template_name, flags
+            )
+
+            with open(out_file_name, 'w') as handle:
+                handle.write(templates[template_name].render(
+                    subtests=list(some_subtests),
+                    provenance=provenance
+                ))
 
 if __name__ == '__main__':
-    main(PROJECT_ROOT, TEMPLATES_DIR, CASES, OUT_DIR)
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        'config_file',
+        type=str,
+        help='Path to a YAML-formatted configuration file'
+    )
+    main(**vars(parser.parse_args()))

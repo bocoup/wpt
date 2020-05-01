@@ -1,0 +1,372 @@
+---
+templates: templates
+output_directory: generated
+cases:
+  # Sec-Fetch-Site - redirection from HTTP
+  - all_subtests:
+      - description: HTTPS downgrade (header not sent)
+        headerName: sec-fetch-site
+        origins: [sameOrigin, httpOrigin]
+        expected: NULL
+        filename_flags: []
+      - description: HTTPS upgrade
+        headerName: sec-fetch-site
+        origins: [httpOrigin, sameOrigin]
+        expected: cross-site
+        filename_flags: []
+      - description: HTTPS downgrade-upgrade
+        headerName: sec-fetch-site
+        origins: [sameOrigin, httpOrigin, sameOrigin]
+        expected: cross-site
+        filename_flags: []
+    each_subtest:
+      # Unused
+      # TODO(jugglinmike) document rationale
+      cors-preflight.sub.html: []
+      # Unused
+      # - the request mode of all "classic" worker scripts is set to
+      #   "same-origin"
+      #   https://html.spec.whatwg.org/#fetch-a-classic-worker-script
+      # - the request mode of all "top-level "module" worker scripts is set to
+      #   "same-origin":
+      #   https://html.spec.whatwg.org/#fetch-a-single-module-script
+      worker-dedicated-constructor.sub.html: []
+
+      appcache-manifest.sub.https.html: [{}]
+      element-image.sub.html: [{}]
+      element-script.sub.html:
+        - {}
+        - elementAttrs: { type: module }
+      element-video.sub.html: [{}]
+      fetch.sub.html: [{}]
+      font.sub.html: [{}]
+      form-submission.sub.html:
+        - method: GET
+        - method: POST
+      window-location.sub.html:
+        - api: location
+        - api: location.href
+        - api: location.assign
+        - api: location.replace
+      script-module-import-dynamic.sub.html: [{}]
+      script-module-import-static.sub.html: [{}]
+      video-poster.sub.html: [{}]
+      worker-dedicated-importscripts.sub.html: [{}]
+
+  # Sec-Fetch-Site - redirection from HTTPS
+  - all_subtests:
+      - description: Same-Origin -> Cross-Site -> Same-Origin redirect
+        headerName: sec-fetch-site
+        origins: [sameOrigin, crossSite, sameOrigin]
+        expected: cross-site
+        filename_flags: [https]
+      - description: Cross-Site -> Same Origin
+        headerName: sec-fetch-site
+        origins: [crossSite, sameOrigin]
+        expected: cross-site
+        filename_flags: [https]
+      - description: Cross-Site -> Same-Site
+        headerName: sec-fetch-site
+        origins: [crossSite, sameSite]
+        expected: cross-site
+        filename_flags: [https]
+      - description: Cross-Site -> Cross-Site
+        headerName: sec-fetch-site
+        origins: [crossSite, crossSite]
+        expected: cross-site
+        filename_flags: [https]
+      - description: Same-Origin -> Same Origin
+        headerName: sec-fetch-site
+        origins: [sameOrigin, sameOrigin]
+        expected: same-origin
+        filename_flags: [https]
+      - description: Same-Origin -> Same-Site
+        headerName: sec-fetch-site
+        origins: [sameOrigin, sameSite]
+        expected: same-site
+        filename_flags: [https]
+      - description: Same-Origin -> Cross-Site
+        headerName: sec-fetch-site
+        origins: [sameOrigin, crossSite]
+        expected: cross-site
+        filename_flags: [https]
+      - description: Same-Site -> Same Origin
+        headerName: sec-fetch-site
+        origins: [sameSite, sameOrigin]
+        expected: same-site
+        filename_flags: [https]
+      - description: Same-Site -> Same-Site
+        headerName: sec-fetch-site
+        origins: [sameSite, sameSite]
+        expected: same-site
+        filename_flags: [https]
+      - description: Same-Site -> Cross-Site
+        headerName: sec-fetch-site
+        origins: [sameSite, crossSite]
+        expected: cross-site
+        filename_flags: [https]
+    each_subtest:
+      # Unused
+      # TODO(jugglinmike) document rationale
+      cors-preflight.sub.html: []
+      # Unused
+      # - the request mode of all "classic" worker scripts is set to
+      #   "same-origin"
+      #   https://html.spec.whatwg.org/#fetch-a-classic-worker-script
+      # - the request mode of all "top-level "module" worker scripts is set to
+      #   "same-origin":
+      #   https://html.spec.whatwg.org/#fetch-a-single-module-script
+      worker-dedicated-constructor.sub.html: []
+
+      appcache-manifest.sub.https.html: [{}]
+      element-image.sub.html: [{}]
+      element-script.sub.html:
+        - {}
+        - elementAttrs: { type: module }
+      element-video.sub.html: [{}]
+      fetch.sub.html: [{ init: { mode: no-cors } }]
+      font.sub.html: [{}]
+      form-submission.sub.html:
+        - method: GET
+        - method: POST
+      window-location.sub.html:
+        - api: location
+        - api: location.href
+        - api: location.assign
+        - api: location.replace
+      script-module-import-dynamic.sub.html: [{}]
+      script-module-import-static.sub.html: [{}]
+      video-poster.sub.html: [{}]
+      worker-dedicated-importscripts.sub.html: [{}]
+
+  # Sec-Fetch-Site - redirection with mixed content
+  # These tests verify the effect that redirection has on the request's "site".
+  # The initial request must be made to a resource that is "same-site" with its
+  # origin. This avoids false positives because if the request were made to a
+  # cross-site resource, the value of "cross-site" would be assigned regardless
+  # of the subseqent redirection.
+  #
+  # Because these conditions necessarily warrant mixed content, only templates
+  # which can be configured to allow mixed content [1] can be used.
+  #
+  # [1] https://w3c.github.io/webappsec-mixed-content/#should-block-fetch
+
+  - all_subtests:
+      - description: HTTPS downgrade-upgrade
+        headerName: sec-fetch-site
+        origins: [sameOrigin, httpOrigin, sameOrigin]
+        expected: cross-site
+        filename_flags: [https]
+    each_subtest:
+      # Unused
+      # TODO(jugglinmike) document rationale
+      element-script.sub.html: []
+      fetch.sub.html: []
+      font.sub.html: []
+      script-module-import-static.sub.html: []
+      script-module-import-dynamic.sub.html: []
+      cors-preflight.sub.html: []
+      worker-dedicated-constructor.sub.html: []
+      worker-dedicated-importscripts.sub.html: []
+
+      appcache-manifest.sub.https.html: [{}]
+      element-image.sub.html: [{}]
+      element-video.sub.html: [{}]
+      form-submission.sub.html:
+        - method: GET
+        - method: POST
+      window-location.sub.html:
+        - api: location
+        - api: location.href
+        - api: location.assign
+        - api: location.replace
+      video-poster.sub.html: [{}]
+
+  # Sec-Fetch-Mode
+  # These tests are served over HTTPS so the induced requests will be both
+  # same-origin with the document [1] and a potentially-trustworthy URL [2].
+  #
+  # [1] https://html.spec.whatwg.org/multipage/origin.html#same-origin
+  # [2] https://w3c.github.io/webappsec-secure-contexts/#potentially-trustworthy-url
+  - all_subtests:
+      - headerName: sec-fetch-mode
+        filename_flags: [https]
+    each_subtest:
+      # Unused
+      # TODO(jugglinmike) document rationale
+      worker-dedicated-importscripts.sub.html: []
+
+      appcache-manifest.sub.https.html:
+        - expected: no-cors
+      cors-preflight.sub.html:
+        - expected: cors
+      element-image.sub.html:
+        - expected: no-cors
+        - expected: cors
+          elementAttrs: { crossorigin: '' }
+        - expected: cors
+          elementAttrs: { crossorigin: anonymous }
+        - expected: cors
+          elementAttrs: { crossorigin: use-credentials }
+      element-script.sub.html:
+        - expected: no-cors
+        - expected: cors
+          elementAttrs: { type: module }
+        - expected: cors
+          elementAttrs: { crossorigin: '' }
+        - expected: cors
+          elementAttrs: { crossorigin: anonymous }
+        - expected: cors
+          elementAttrs: { crossorigin: use-credentials }
+      element-video.sub.html:
+        - expected: no-cors
+        - expected: cors
+          elementAttrs: { crossorigin: '' }
+        - expected: cors
+          elementAttrs: { crossorigin: anonymous }
+        - expected: cors
+          elementAttrs: { crossorigin: use-credentials }
+      fetch.sub.html:
+        - expected: cors
+        - expected: cors
+          init: { mode: cors }
+        - expected: no-cors
+          init: { mode: no-cors }
+        - expected: same-origin
+          init: { mode: same-origin }
+      font.sub.html:
+        - expected: cors
+      form-submission.sub.html:
+        - method: GET
+          expected: navigate
+        - method: POST
+          expected: navigate
+      window-location.sub.html:
+        - api: location
+          expected: navigate
+        - api: location.href
+          expected: navigate
+        - api: location.assign
+          expected: navigate
+        - api: location.replace
+          expected: navigate
+      script-module-import-dynamic.sub.html:
+        - expected: cors
+      script-module-import-static.sub.html:
+        - expected: cors
+      video-poster.sub.html:
+        - expected: no-cors
+      worker-dedicated-constructor.sub.html:
+        - expected: same-origin
+        - options: { type: module }
+          expected: same-origin
+
+  # Sec-Fetch-Dest
+  - all_subtests:
+      - headerName: sec-fetch-dest
+        filename_flags: [https]
+    each_subtest:
+      appcache-manifest.sub.https.html:
+        - expected: empty
+      cors-preflight.sub.html:
+        - expected: empty
+      element-image.sub.html:
+        - expected: image
+      element-script.sub.html:
+        - expected: script
+      element-video.sub.html:
+        - expected: video
+      fetch.sub.html:
+        - expected: empty
+      font.sub.html:
+        - expected: font
+      form-submission.sub.html:
+        - method: GET
+          expected: document
+        - method: POST
+          expected: document
+      window-location.sub.html:
+        - api: location
+          expected: document
+        - api: location.href
+          expected: document
+        - api: location.assign
+          expected: document
+        - api: location.replace
+          expected: document
+      script-module-import-dynamic.sub.html:
+        - expected: script
+      script-module-import-static.sub.html:
+        - expected: script
+      video-poster.sub.html:
+        - expected: image
+      worker-dedicated-constructor.sub.html:
+        - expected: worker
+        - options: { type: module }
+          expected: worker
+      worker-dedicated-importscripts.sub.html:
+        - expected: script
+
+  # Sec-Fetch-User
+  - all_subtests:
+      - headerName: sec-fetch-user
+        filename_flags: [https]
+    each_subtest:
+      appcache-manifest.sub.https.html:
+        - expected: NULL
+      cors-preflight.sub.html:
+        - expected: NULL
+      element-image.sub.html:
+        - expected: NULL
+      element-script.sub.html:
+        - expected: NULL
+      element-video.sub.html:
+        - expected: NULL
+      fetch.sub.html:
+        - expected: NULL
+      font.sub.html:
+        - expected: NULL
+      form-submission.sub.html:
+        - method: GET
+          expected: NULL
+        - method: GET
+          userActivated: TRUE
+          expected: ?1
+        - method: POST
+          expected: NULL
+        - method: POST
+          userActivated: TRUE
+          expected: ?1
+      window-location.sub.html:
+        - api: location
+          expected: NULL
+        - api: location
+          userActivated: TRUE
+          expected: ?1
+        - api: location.href
+          expected: NULL
+        - api: location.href
+          userActivated: TRUE
+          expected: ?1
+        - api: location.assign
+          expected: NULL
+        - api: location.assign
+          userActivated: TRUE
+          expected: ?1
+        - api: location.replace
+          expected: NULL
+        - api: location.replace
+          userActivated: TRUE
+          expected: ?1
+      script-module-import-dynamic.sub.html:
+        - expected: NULL
+      script-module-import-static.sub.html:
+        - expected: NULL
+      video-poster.sub.html:
+        - expected: NULL
+      worker-dedicated-constructor.sub.html:
+        - expected: NULL
+        - options: { type: module }
+          expected: NULL
+      worker-dedicated-importscripts.sub.html:
+        - expected: NULL
