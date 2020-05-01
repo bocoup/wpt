@@ -15,20 +15,38 @@ Sources:
   <script>
   'use strict';
 
+  const params = {
+    body: `
+      <svg xmlns="http://www.w3.org/2000/svg" width="123" height="123">
+        <rect fill="lime" width="123" height="123"/>
+      </svg>
+    `,
+    mime: 'image/svg+xml'
+  };
+
   function induceRequest(t, url) {
     var video = document.createElement('video');
     video.setAttribute('poster', url);
     document.body.appendChild(video);
 
+    const poll = () => {
+      if (video.clientWidth === 123) {
+        return;
+      }
+
+      return new Promise((resolve) => setTimeout(resolve, 0))
+        .then(poll);
+    };
     t.add_cleanup(() => video.remove());
+
+    return poll();
   }
 
   promise_test((t) => {
     const key = '{{uuid()}}';
 
-    induceRequest(t, makeRequestURL(key, ['sameOrigin', 'httpOrigin']));
-
-    return retrieve(key, { poll: true })
+    return induceRequest(t, makeRequestURL(key, ['sameOrigin', 'httpOrigin'], params))
+      .then(() => retrieve(key))
       .then((headers) => {
           assert_not_own_property(headers, 'sec-fetch-site');
       });
@@ -37,9 +55,8 @@ Sources:
   promise_test((t) => {
     const key = '{{uuid()}}';
 
-    induceRequest(t, makeRequestURL(key, ['httpOrigin', 'sameOrigin']));
-
-    return retrieve(key, { poll: true })
+    return induceRequest(t, makeRequestURL(key, ['httpOrigin', 'sameOrigin'], params))
+      .then(() => retrieve(key))
       .then((headers) => {
           assert_own_property(headers, 'sec-fetch-site');
           assert_equals(headers['sec-fetch-site'], 'cross-site');
@@ -49,9 +66,8 @@ Sources:
   promise_test((t) => {
     const key = '{{uuid()}}';
 
-    induceRequest(t, makeRequestURL(key, ['sameOrigin', 'httpOrigin', 'sameOrigin']));
-
-    return retrieve(key, { poll: true })
+    return induceRequest(t, makeRequestURL(key, ['sameOrigin', 'httpOrigin', 'sameOrigin'], params))
+      .then(() => retrieve(key))
       .then((headers) => {
           assert_own_property(headers, 'sec-fetch-site');
           assert_equals(headers['sec-fetch-site'], 'cross-site');
