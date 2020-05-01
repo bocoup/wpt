@@ -30,26 +30,19 @@
     appcache-manifest.sub.https.html: [{}]
     element-image.sub.html: [{}]
     element-script.sub.html:
-      - description: ' - classic script'
-      - description: ' - module script'
-        elementAttrs: { type: module }
+      - {}
+      - elementAttrs: { type: module }
     element-video.sub.html: [{}]
     fetch.sub.html: [{}]
     font.sub.html: [{}]
     form-submission.sub.html:
-      - description: ' - GET'
-        method: GET
-      - description: ' - POST'
-        method: POST
+      - method: GET
+      - method: POST
     window-location.sub.html:
-      - description: ' - location'
-        api: location
-      - description: ' - location.href'
-        api: location.href
-      - description: ' - location.assign'
-        api: location.assign
-      - description: ' - location.replace'
-        api: location.replace
+      - api: location
+      - api: location.href
+      - api: location.assign
+      - api: location.replace
     script-module-import-dynamic.sub.html: [{}]
     script-module-import-static.sub.html: [{}]
     video-poster.sub.html: [{}]
@@ -114,26 +107,19 @@
     appcache-manifest.sub.https.html: [{}]
     element-image.sub.html: [{}]
     element-script.sub.html:
-      - description: ' - classic script'
-      - description: ' - module script'
-        elementAttrs: { type: module }
+      - {}
+      - elementAttrs: { type: module }
     element-video.sub.html: [{}]
     fetch.sub.html: [{ init: { mode: no-cors } }]
     font.sub.html: [{}]
     form-submission.sub.html:
-      - description: ' - GET'
-        method: GET
-      - description: ' - POST'
-        method: POST
+      - method: GET
+      - method: POST
     window-location.sub.html:
-      - description: ' - location'
-        api: location
-      - description: ' - location.href'
-        api: location.href
-      - description: ' - location.assign'
-        api: location.assign
-      - description: ' - location.replace'
-        api: location.replace
+      - api: location
+      - api: location.href
+      - api: location.assign
+      - api: location.replace
     script-module-import-dynamic.sub.html: [{}]
     script-module-import-static.sub.html: [{}]
     video-poster.sub.html: [{}]
@@ -172,19 +158,13 @@
     element-image.sub.html: [{}]
     element-video.sub.html: [{}]
     form-submission.sub.html:
-      - description: ' - GET'
-        method: GET
-      - description: ' - POST'
-        method: POST
+      - method: GET
+      - method: POST
     window-location.sub.html:
-      - description: ' - location'
-        api: location
-      - description: ' - location.href'
-        api: location.href
-      - description: ' - location.assign'
-        api: location.assign
-      - description: ' - location.replace'
-        api: location.replace
+      - api: location
+      - api: location.href
+      - api: location.assign
+      - api: location.replace
     video-poster.sub.html: [{}]
 
 - title: Fetch Metadata - Sec-Fetch-Mode
@@ -206,77 +186,54 @@
     cors-preflight.sub.html:
       - expected: cors
     element-image.sub.html:
-      - description: no attributes
-        expected: no-cors
-      - description: crossorigin=""
-        expected: cors
+      - expected: no-cors
+      - expected: cors
         elementAttrs: { crossorigin: '' }
-      - description: crossorigin="anonymous"
-        expected: cors
+      - expected: cors
         elementAttrs: { crossorigin: anonymous }
-      - description: crossorigin="use-credentials"
-        expected: cors
+      - expected: cors
         elementAttrs: { crossorigin: use-credentials }
     element-script.sub.html:
-      - description: classic script
-        expected: no-cors
-      - description: module script
-        expected: cors
+      - expected: no-cors
+      - expected: cors
         elementAttrs: { type: module }
-      - description: classic script, crossorigin=""
-        expected: cors
+      - expected: cors
         elementAttrs: { crossorigin: '' }
-      - description: classic script, crossorigin="anonymous"
-        expected: cors
+      - expected: cors
         elementAttrs: { crossorigin: anonymous }
-      - description: classic script, crossorigin="use-credentials"
-        expected: cors
+      - expected: cors
         elementAttrs: { crossorigin: use-credentials }
     element-video.sub.html:
-      - description: no attributes
-        expected: no-cors
-      - description: crossorigin=""
-        expected: cors
+      - expected: no-cors
+      - expected: cors
         elementAttrs: { crossorigin: '' }
-      - description: crossorigin="anonymous"
-        expected: cors
+      - expected: cors
         elementAttrs: { crossorigin: anonymous }
-      - description: crossorigin="use-credentials"
-        expected: cors
+      - expected: cors
         elementAttrs: { crossorigin: use-credentials }
     fetch.sub.html:
-      - description: no options
-        expected: cors
-      - description: 'mode: cors'
-        expected: cors
+      - expected: cors
+      - expected: cors
         init: { mode: cors }
-      - description: 'mode: no-cors'
-        expected: no-cors
+      - expected: no-cors
         init: { mode: no-cors }
-      - description: 'mode: same-origin'
-        expected: same-origin
+      - expected: same-origin
         init: { mode: same-origin }
     font.sub.html:
       - expected: cors
     form-submission.sub.html:
-      - description: GET
-        method: GET
+      - method: GET
         expected: navigate
-      - description: POST
-        method: POST
+      - method: POST
         expected: navigate
     window-location.sub.html:
-      - description: location
-        api: location
+      - api: location
         expected: navigate
-      - description: location.href
-        api: location.href
+      - api: location.href
         expected: navigate
-      - description: location.assign
-        api: location.assign
+      - api: location.assign
         expected: navigate
-      - description: location.replace
-        api: location.replace
+      - api: location.replace
         expected: navigate
     script-module-import-dynamic.sub.html:
       - expected: cors
@@ -285,10 +242,8 @@
     video-poster.sub.html:
       - expected: no-cors
     worker-dedicated-constructor.sub.html:
-      - description: classic script
-        expected: same-origin
-      - description: module script
-        options: { type: module }
+      - expected: same-origin
+      - options: { type: module }
         expected: same-origin
 
 - title: Fetch Metadata - Sec-Fetch-Dest
@@ -311,24 +266,18 @@
     font.sub.html:
       - expected: font
     form-submission.sub.html:
-      - description: ' - GET'
-        method: GET
+      - method: GET
         expected: document
-      - description: ' - POST'
-        method: POST
+      - method: POST
         expected: document
     window-location.sub.html:
-      - description: location
-        api: location
+      - api: location
         expected: document
-      - description: location.href
-        api: location.href
+      - api: location.href
         expected: document
-      - description: location.assign
-        api: location.assign
+      - api: location.assign
         expected: document
-      - description: location.replace
-        api: location.replace
+      - api: location.replace
         expected: document
     script-module-import-dynamic.sub.html:
       - expected: script
@@ -337,10 +286,8 @@
     video-poster.sub.html:
       - expected: image
     worker-dedicated-constructor.sub.html:
-      - description: classic script
-        expected: worker
-      - description: module script
-        options: { type: module }
+      - expected: worker
+      - options: { type: module }
         expected: worker
     worker-dedicated-importscripts.sub.html:
       - expected: script
@@ -365,47 +312,35 @@
     font.sub.html:
       - expected: NULL
     form-submission.sub.html:
-      - description: ' - GET'
-        method: GET
+      - method: GET
         expected: NULL
-      - description: ' - GET with user activation'
-        method: GET
+      - method: GET
         userActivated: TRUE
         expected: ?1
-      - description: ' - POST'
-        method: POST
+      - method: POST
         expected: NULL
-      - description: ' - POST with user activation'
-        method: POST
+      - method: POST
         userActivated: TRUE
         expected: ?1
     window-location.sub.html:
-      - description: location
-        api: location
+      - api: location
         expected: NULL
-      - description: location with user activation
-        api: location
+      - api: location
         userActivated: TRUE
         expected: ?1
-      - description: location.href
-        api: location.href
+      - api: location.href
         expected: NULL
-      - description: location.href with user activation
-        api: location.href
+      - api: location.href
         userActivated: TRUE
         expected: ?1
-      - description: location.assign
-        api: location.assign
+      - api: location.assign
         expected: NULL
-      - description: location.assign with user activation
-        api: location.assign
+      - api: location.assign
         userActivated: TRUE
         expected: ?1
-      - description: location.replace
-        api: location.replace
+      - api: location.replace
         expected: NULL
-      - description: location.replace with user activation
-        api: location.replace
+      - api: location.replace
         userActivated: TRUE
         expected: ?1
     script-module-import-dynamic.sub.html:
@@ -415,10 +350,8 @@
     video-poster.sub.html:
       - expected: NULL
     worker-dedicated-constructor.sub.html:
-      - description: classic script
-        expected: NULL
-      - description: module script
-        options: { type: module }
+      - expected: NULL
+      - options: { type: module }
         expected: NULL
     worker-dedicated-importscripts.sub.html:
       - expected: NULL

@@ -44,7 +44,7 @@ Sources:
       .then((headers) => {
           assert_not_own_property(headers, 'sec-fetch-site');
         });
-  }, 'HTTPS downgrade (header not sent) - classic script');
+  }, 'HTTPS downgrade (header not sent), no attributes');
 
   promise_test(() => {
     const key = '{{uuid()}}';
@@ -59,7 +59,7 @@ Sources:
       .then((headers) => {
           assert_not_own_property(headers, 'sec-fetch-site');
         });
-  }, 'HTTPS downgrade (header not sent) - module script');
+  }, 'HTTPS downgrade (header not sent), attributes: type=module');
 
   promise_test(() => {
     const key = '{{uuid()}}';
@@ -75,7 +75,7 @@ Sources:
           assert_own_property(headers, 'sec-fetch-site');
           assert_equals(headers['sec-fetch-site'], 'cross-site');
         });
-  }, 'HTTPS upgrade - classic script');
+  }, 'HTTPS upgrade, no attributes');
 
   promise_test(() => {
     const key = '{{uuid()}}';
@@ -91,7 +91,7 @@ Sources:
           assert_own_property(headers, 'sec-fetch-site');
           assert_equals(headers['sec-fetch-site'], 'cross-site');
         });
-  }, 'HTTPS upgrade - module script');
+  }, 'HTTPS upgrade, attributes: type=module');
 
   promise_test(() => {
     const key = '{{uuid()}}';
@@ -107,7 +107,7 @@ Sources:
           assert_own_property(headers, 'sec-fetch-site');
           assert_equals(headers['sec-fetch-site'], 'cross-site');
         });
-  }, 'HTTPS downgrade-upgrade - classic script');
+  }, 'HTTPS downgrade-upgrade, no attributes');
 
   promise_test(() => {
     const key = '{{uuid()}}';
@@ -123,6 +123,6 @@ Sources:
           assert_own_property(headers, 'sec-fetch-site');
           assert_equals(headers['sec-fetch-site'], 'cross-site');
         });
-  }, 'HTTPS downgrade-upgrade - module script');
+  }, 'HTTPS downgrade-upgrade, attributes: type=module');
   </script>
 </html>

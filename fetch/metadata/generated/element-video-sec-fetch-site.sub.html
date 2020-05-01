@@ -39,7 +39,7 @@ Sources:
       .then((headers) => {
           assert_not_own_property(headers, 'sec-fetch-site');
         });
-  }, 'HTTPS downgrade (header not sent)');
+  }, 'HTTPS downgrade (header not sent), no attributes');
 
   promise_test(() => {
     const key = '{{uuid()}}';
@@ -53,7 +53,7 @@ Sources:
           assert_own_property(headers, 'sec-fetch-site');
           assert_equals(headers['sec-fetch-site'], 'cross-site');
         });
-  }, 'HTTPS upgrade');
+  }, 'HTTPS upgrade, no attributes');
 
   promise_test(() => {
     const key = '{{uuid()}}';
@@ -67,7 +67,7 @@ Sources:
           assert_own_property(headers, 'sec-fetch-site');
           assert_equals(headers['sec-fetch-site'], 'cross-site');
         });
-  }, 'HTTPS downgrade-upgrade');
+  }, 'HTTPS downgrade-upgrade, no attributes');
   </script>
   </body>
 </html>

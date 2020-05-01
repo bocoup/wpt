@@ -34,7 +34,7 @@
           assert_equals(headers['[%subtest.headerName%]'], '[%subtest.expected%]');
         {%- endif %}
         });
-  }, '[%subtest.description%]');
+  }, '[%subtest.description | pad("end", ", ")%][%subtest.init | collection("init")%]');
 
   {%- endfor %}
   </script>

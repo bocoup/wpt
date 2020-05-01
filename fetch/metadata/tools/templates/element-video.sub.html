@@ -43,7 +43,7 @@
           assert_equals(headers['[%subtest.headerName%]'], '[%subtest.expected%]');
         {%- endif %}
         });
-  }, '[%subtest.description%]');
+  }, '[%subtest.description | pad("end", ", ")%][%subtest.elementAttrs | collection("attributes")%]');
 
   {%- endfor %}
   </script>

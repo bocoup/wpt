@@ -31,7 +31,7 @@ Sources:
           assert_own_property(headers, 'sec-fetch-mode');
           assert_equals(headers['sec-fetch-mode'], 'cors');
         });
-  }, 'no options');
+  }, 'no init');
 
   promise_test(() => {
     const key = '{{uuid()}}';
@@ -45,7 +45,7 @@ Sources:
           assert_own_property(headers, 'sec-fetch-mode');
           assert_equals(headers['sec-fetch-mode'], 'cors');
         });
-  }, 'mode: cors');
+  }, 'init: mode=cors');
 
   promise_test(() => {
     const key = '{{uuid()}}';
@@ -59,7 +59,7 @@ Sources:
           assert_own_property(headers, 'sec-fetch-mode');
           assert_equals(headers['sec-fetch-mode'], 'no-cors');
         });
-  }, 'mode: no-cors');
+  }, 'init: mode=no-cors');
 
   promise_test(() => {
     const key = '{{uuid()}}';
@@ -73,7 +73,7 @@ Sources:
           assert_own_property(headers, 'sec-fetch-mode');
           assert_equals(headers['sec-fetch-mode'], 'same-origin');
         });
-  }, 'mode: same-origin');
+  }, 'init: mode=same-origin');
   </script>
   </body>
 </html>

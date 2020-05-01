@@ -2,7 +2,7 @@
 
 import os
 
-from jinja2 import Template
+import jinja2
 import yaml
 
 HERE = os.path.abspath(os.path.dirname(__file__))
@@ -35,10 +35,6 @@ def cross(a, b):
             merged.update(a_object)
             merged.update(b_object)
 
-            if 'description' in a_object and 'description' in b_object:
-                merged['description'] = '{}{}'.format(
-                    a_object['description'], b_object['description']
-                )
             if 'origins' not in merged:
                 merged['origins'] = []
 
@@ -52,15 +48,35 @@ def make_provenance(project_root, cases, template):
         '- {}'.format(os.path.relpath(template, project_root))
     ])
 
+def collection_filter(obj, title):
+    if not obj:
+        return 'no {}'.format(title)
+
+    members = []
+    for name, value in obj.items():
+        members.append('{}={}'.format(name, value))
+
+    return '{}: {}'.format(title, ', '.join(members))
+
+def pad_filter(value, side, padding):
+    if not value:
+        return ''
+    if side == 'start':
+        return padding + value
+
+    return value + padding
+
 def main(project_root, templates_directory, cases_file, out_directory):
+    environment = jinja2.Environment(
+        variable_start_string='[%',
+        variable_end_string='%]'
+    )
+    environment.filters['collection'] = collection_filter
+    environment.filters['pad'] = pad_filter
     templates = {}
     for template_name, path in find_templates(templates_directory):
         with open(path, 'r') as handle:
-            templates[template_name] = Template(
-                handle.read(),
-                variable_start_string='[%',
-                variable_end_string='%]'
-            )
+            templates[template_name] = environment.from_string(handle.read())
 
     with open(cases_file, 'r') as handle:
         cases = yaml.safe_load(handle.read())

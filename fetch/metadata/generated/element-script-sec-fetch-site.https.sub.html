@@ -45,7 +45,7 @@ Sources:
           assert_own_property(headers, 'sec-fetch-site');
           assert_equals(headers['sec-fetch-site'], 'cross-site');
         });
-  }, 'Same-Origin -> Cross-Site -> Same-Origin redirect - classic script');
+  }, 'Same-Origin -> Cross-Site -> Same-Origin redirect, no attributes');
 
   promise_test(() => {
     const key = '{{uuid()}}';
@@ -61,7 +61,7 @@ Sources:
           assert_own_property(headers, 'sec-fetch-site');
           assert_equals(headers['sec-fetch-site'], 'cross-site');
         });
-  }, 'Same-Origin -> Cross-Site -> Same-Origin redirect - module script');
+  }, 'Same-Origin -> Cross-Site -> Same-Origin redirect, attributes: type=module');
 
   promise_test(() => {
     const key = '{{uuid()}}';
@@ -77,7 +77,7 @@ Sources:
           assert_own_property(headers, 'sec-fetch-site');
           assert_equals(headers['sec-fetch-site'], 'cross-site');
         });
-  }, 'Cross-Site -> Same Origin - classic script');
+  }, 'Cross-Site -> Same Origin, no attributes');
 
   promise_test(() => {
     const key = '{{uuid()}}';
@@ -93,7 +93,7 @@ Sources:
           assert_own_property(headers, 'sec-fetch-site');
           assert_equals(headers['sec-fetch-site'], 'cross-site');
         });
-  }, 'Cross-Site -> Same Origin - module script');
+  }, 'Cross-Site -> Same Origin, attributes: type=module');
 
   promise_test(() => {
     const key = '{{uuid()}}';
@@ -109,7 +109,7 @@ Sources:
           assert_own_property(headers, 'sec-fetch-site');
           assert_equals(headers['sec-fetch-site'], 'cross-site');
         });
-  }, 'Cross-Site -> Same-Site - classic script');
+  }, 'Cross-Site -> Same-Site, no attributes');
 
   promise_test(() => {
     const key = '{{uuid()}}';
@@ -125,7 +125,7 @@ Sources:
           assert_own_property(headers, 'sec-fetch-site');
           assert_equals(headers['sec-fetch-site'], 'cross-site');
         });
-  }, 'Cross-Site -> Same-Site - module script');
+  }, 'Cross-Site -> Same-Site, attributes: type=module');
 
   promise_test(() => {
     const key = '{{uuid()}}';
@@ -141,7 +141,7 @@ Sources:
           assert_own_property(headers, 'sec-fetch-site');
           assert_equals(headers['sec-fetch-site'], 'cross-site');
         });
-  }, 'Cross-Site -> Cross-Site - classic script');
+  }, 'Cross-Site -> Cross-Site, no attributes');
 
   promise_test(() => {
     const key = '{{uuid()}}';
@@ -157,7 +157,7 @@ Sources:
           assert_own_property(headers, 'sec-fetch-site');
           assert_equals(headers['sec-fetch-site'], 'cross-site');
         });
-  }, 'Cross-Site -> Cross-Site - module script');
+  }, 'Cross-Site -> Cross-Site, attributes: type=module');
 
   promise_test(() => {
     const key = '{{uuid()}}';
@@ -173,7 +173,7 @@ Sources:
           assert_own_property(headers, 'sec-fetch-site');
           assert_equals(headers['sec-fetch-site'], 'same-origin');
         });
-  }, 'Same-Origin -> Same Origin - classic script');
+  }, 'Same-Origin -> Same Origin, no attributes');
 
   promise_test(() => {
     const key = '{{uuid()}}';
@@ -189,7 +189,7 @@ Sources:
           assert_own_property(headers, 'sec-fetch-site');
           assert_equals(headers['sec-fetch-site'], 'same-origin');
         });
-  }, 'Same-Origin -> Same Origin - module script');
+  }, 'Same-Origin -> Same Origin, attributes: type=module');
 
   promise_test(() => {
     const key = '{{uuid()}}';
@@ -205,7 +205,7 @@ Sources:
           assert_own_property(headers, 'sec-fetch-site');
           assert_equals(headers['sec-fetch-site'], 'same-site');
         });
-  }, 'Same-Origin -> Same-Site - classic script');
+  }, 'Same-Origin -> Same-Site, no attributes');
 
   promise_test(() => {
     const key = '{{uuid()}}';
@@ -221,7 +221,7 @@ Sources:
           assert_own_property(headers, 'sec-fetch-site');
           assert_equals(headers['sec-fetch-site'], 'same-site');
         });
-  }, 'Same-Origin -> Same-Site - module script');
+  }, 'Same-Origin -> Same-Site, attributes: type=module');
 
   promise_test(() => {
     const key = '{{uuid()}}';
@@ -237,7 +237,7 @@ Sources:
           assert_own_property(headers, 'sec-fetch-site');
           assert_equals(headers['sec-fetch-site'], 'cross-site');
         });
-  }, 'Same-Origin -> Cross-Site - classic script');
+  }, 'Same-Origin -> Cross-Site, no attributes');
 
   promise_test(() => {
     const key = '{{uuid()}}';
@@ -253,7 +253,7 @@ Sources:
           assert_own_property(headers, 'sec-fetch-site');
           assert_equals(headers['sec-fetch-site'], 'cross-site');
         });
-  }, 'Same-Origin -> Cross-Site - module script');
+  }, 'Same-Origin -> Cross-Site, attributes: type=module');
 
   promise_test(() => {
     const key = '{{uuid()}}';
@@ -269,7 +269,7 @@ Sources:
           assert_own_property(headers, 'sec-fetch-site');
           assert_equals(headers['sec-fetch-site'], 'same-site');
         });
-  }, 'Same-Site -> Same Origin - classic script');
+  }, 'Same-Site -> Same Origin, no attributes');
 
   promise_test(() => {
     const key = '{{uuid()}}';
@@ -285,7 +285,7 @@ Sources:
           assert_own_property(headers, 'sec-fetch-site');
           assert_equals(headers['sec-fetch-site'], 'same-site');
         });
-  }, 'Same-Site -> Same Origin - module script');
+  }, 'Same-Site -> Same Origin, attributes: type=module');
 
   promise_test(() => {
     const key = '{{uuid()}}';
@@ -301,7 +301,7 @@ Sources:
           assert_own_property(headers, 'sec-fetch-site');
           assert_equals(headers['sec-fetch-site'], 'same-site');
         });
-  }, 'Same-Site -> Same-Site - classic script');
+  }, 'Same-Site -> Same-Site, no attributes');
 
   promise_test(() => {
     const key = '{{uuid()}}';
@@ -317,7 +317,7 @@ Sources:
           assert_own_property(headers, 'sec-fetch-site');
           assert_equals(headers['sec-fetch-site'], 'same-site');
         });
-  }, 'Same-Site -> Same-Site - module script');
+  }, 'Same-Site -> Same-Site, attributes: type=module');
 
   promise_test(() => {
     const key = '{{uuid()}}';
@@ -333,7 +333,7 @@ Sources:
           assert_own_property(headers, 'sec-fetch-site');
           assert_equals(headers['sec-fetch-site'], 'cross-site');
         });
-  }, 'Same-Site -> Cross-Site - classic script');
+  }, 'Same-Site -> Cross-Site, no attributes');
 
   promise_test(() => {
     const key = '{{uuid()}}';
@@ -349,6 +349,6 @@ Sources:
           assert_own_property(headers, 'sec-fetch-site');
           assert_equals(headers['sec-fetch-site'], 'cross-site');
         });
-  }, 'Same-Site -> Cross-Site - module script');
+  }, 'Same-Site -> Cross-Site, attributes: type=module');
   </script>
 </html>

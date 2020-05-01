@@ -71,7 +71,7 @@ Sources:
       .then((headers) => {
           assert_not_own_property(headers, 'sec-fetch-user');
         });
-  }, ' - GET');
+  }, 'GET');
 
   promise_test(() => {
     const key = '{{uuid()}}';
@@ -83,7 +83,7 @@ Sources:
           assert_own_property(headers, 'sec-fetch-user');
           assert_equals(headers['sec-fetch-user'], '?1');
         });
-  }, ' - GET with user activation');
+  }, 'GET with user activation');
 
   promise_test(() => {
     const key = '{{uuid()}}';
@@ -94,7 +94,7 @@ Sources:
       .then((headers) => {
           assert_not_own_property(headers, 'sec-fetch-user');
         });
-  }, ' - POST');
+  }, 'POST');
 
   promise_test(() => {
     const key = '{{uuid()}}';
@@ -106,7 +106,7 @@ Sources:
           assert_own_property(headers, 'sec-fetch-user');
           assert_equals(headers['sec-fetch-user'], '?1');
         });
-  }, ' - POST with user activation');
+  }, 'POST with user activation');
   </script>
   </body>
 </html>
