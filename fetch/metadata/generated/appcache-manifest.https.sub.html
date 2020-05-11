@@ -46,6 +46,50 @@ Sources:
       'Application Cache is not supported.'
     );
 
+    return induceRequest(makeRequestURL(key, ['sameOrigin', 'httpOrigin']))
+      .then(() => retrieve(key))
+      .then((headers) => {
+          assert_not_own_property(headers, 'sec-fetch-site');
+    });
+  }, 'sec-fetch-site - HTTPS downgrade (header not sent)');
+
+  promise_test(() => {
+    const key = '{{uuid()}}';
+    assert_precondition(
+      !!window.applicationCache,
+      'Application Cache is not supported.'
+    );
+
+    return induceRequest(makeRequestURL(key, ['httpOrigin', 'sameOrigin']))
+      .then(() => retrieve(key))
+      .then((headers) => {
+          assert_own_property(headers, 'sec-fetch-site');
+          assert_equals(headers['sec-fetch-site'], 'cross-site');
+    });
+  }, 'sec-fetch-site - HTTPS upgrade');
+
+  promise_test(() => {
+    const key = '{{uuid()}}';
+    assert_precondition(
+      !!window.applicationCache,
+      'Application Cache is not supported.'
+    );
+
+    return induceRequest(makeRequestURL(key, ['sameOrigin', 'httpOrigin', 'sameOrigin']))
+      .then(() => retrieve(key))
+      .then((headers) => {
+          assert_own_property(headers, 'sec-fetch-site');
+          assert_equals(headers['sec-fetch-site'], 'cross-site');
+    });
+  }, 'sec-fetch-site - HTTPS downgrade-upgrade');
+
+  promise_test(() => {
+    const key = '{{uuid()}}';
+    assert_precondition(
+      !!window.applicationCache,
+      'Application Cache is not supported.'
+    );
+
     return induceRequest(makeRequestURL(key, ['sameOrigin', 'crossSite', 'sameOrigin']))
       .then(() => retrieve(key))
       .then((headers) => {

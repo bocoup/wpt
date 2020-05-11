@@ -17,12 +17,36 @@ def find_templates(starting_directory):
                 continue
             yield file_name, os.path.join(directory, file_name)
 
-def test_name(directory, template_name, flags):
-    parts = list(os.path.splitext(template_name))
-    if parts[1]:
-        parts[1] = parts[1][1:]
-    parts[1:1] = flags
-    return os.path.join(directory, '.'.join(parts))
+def test_name(directory, template_name, subtest_flags):
+    '''
+    Create a test name based on a template and the WPT file name flags [1]
+    required for a given subtest. This name is used to determine how subtests
+    may be grouped together. In order to promote grouping, the combination uses
+    a few aspects of how file name flags are interpreted:
+
+    - repeated flags have no effect, so duplicates are removed
+    - flag sequence does not matter, so flags are consistently sorted
+
+    directory | template_name    | subtest_flags   | result
+    ----------|------------------|-----------------|-------
+    cors      | image.html       | []              | cors/image.html
+    cors      | image.https.html | []              | cors/image.https.html
+    cors      | image.html       | [https]         | cors/image.https.html
+    cors      | image.https.html | [https]         | cors/image.https.html
+    cors      | image.https.html | [https]         | cors/image.https.html
+    cors      | image.sub.html   | [https]         | cors/image.https.sub.html
+    cors      | image.https.html | [sub]           | cors/image.https.sub.html
+
+    [1] docs/writing-tests/file-names.md
+    '''
+    template_name_parts = template_name.split('.')
+    flags = set(subtest_flags) | set(template_name_parts[1:-1])
+    test_name_parts = [
+        template_name_parts[0],
+        *sorted(flags),
+        template_name_parts[-1]
+    ]
+    return os.path.join(directory, '.'.join(test_name_parts))
 
 def cross(a, b):
     for a_object in a:
@@ -110,17 +134,17 @@ def main(config_file):
             config_file,
             os.path.join(templates_directory, template_name)
         )
-        get_filename_flags = lambda subtest: subtest['filename_flags']
-        subtests_by_flag = itertools.groupby(
-            sorted(subtests[template_name], key=get_filename_flags),
-            key=get_filename_flags
+        get_filename = lambda subtest: test_name(
+            config['output_directory'],
+            template_name,
+            subtest['filename_flags']
         )
-        for flags, some_subtests in subtests_by_flag:
-            out_file_name = test_name(
-                config['output_directory'], template_name, flags
-            )
-
-            with open(out_file_name, 'w') as handle:
+        subtests_by_filename = itertools.groupby(
+            sorted(subtests[template_name], key=get_filename),
+            key=get_filename
+        )
+        for filename, some_subtests in subtests_by_filename:
+            with open(filename, 'w') as handle:
                 handle.write(templates[template_name].render(
                     subtests=list(some_subtests),
                     provenance=provenance
