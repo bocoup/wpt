@@ -191,6 +191,7 @@ cases:
   - all_subtests:
       - headerName: sec-fetch-mode
         filename_flags: [https]
+        origins: []
     each_subtest:
       # Unused
       # TODO(jugglinmike) document rationale
@@ -265,6 +266,7 @@ cases:
   - all_subtests:
       - headerName: sec-fetch-dest
         filename_flags: [https]
+        origins: []
     each_subtest:
       appcache-manifest.sub.https.html:
         - expected: empty
@@ -311,6 +313,7 @@ cases:
   - all_subtests:
       - headerName: sec-fetch-user
         filename_flags: [https]
+        origins: []
     each_subtest:
       appcache-manifest.sub.https.html:
         - expected: NULL

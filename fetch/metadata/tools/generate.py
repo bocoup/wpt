@@ -48,15 +48,28 @@ def test_name(directory, template_name, subtest_flags):
     ]
     return os.path.join(directory, '.'.join(test_name_parts))
 
-def cross(a, b):
+def product(a, b):
+    '''
+    Given two lists of objects, compute their Cartesian product by merging the
+    elements together. For example,
+
+       product(
+           [{'a': 1}, {'b': 2}],
+           [{'c': 3}, {'d': 4}]
+       )
+
+    returns a generator which yields the following values:
+
+        {'a': 1, 'c': 3}
+        {'a': 1, 'd': 4}
+        {'b': 2, 'c': 3}
+        {'b': 2, 'd': 4}
+    '''
     for a_object in a:
         for b_object in b:
             merged = {}
             merged.update(a_object)
             merged.update(b_object)
-
-            if 'origins' not in merged:
-                merged['origins'] = []
 
             yield merged
 
@@ -123,7 +136,7 @@ def main(config_file):
 
         for template_name, concise_subtests in case['each_subtest'].items():
             subtests[template_name].extend(
-                [subtest for subtest in cross(
+                [subtest for subtest in product(
                     case['all_subtests'], concise_subtests
                 )]
             )
