@@ -65,13 +65,17 @@ def product(a, b):
         {'b': 2, 'c': 3}
         {'b': 2, 'd': 4}
     '''
+    result = []
+
     for a_object in a:
         for b_object in b:
             merged = {}
             merged.update(a_object)
             merged.update(b_object)
 
-            yield merged
+            result.append(merged)
+
+    return result
 
 def make_provenance(project_root, cases, template):
     return '\n'.join([
@@ -122,10 +126,10 @@ def main(config_file):
             templates[template_name] = environment.from_string(handle.read())
 
     for case in config['cases']:
-        unused_templates = set(templates) - set(case['each_subtest'])
+        unused_templates = set(templates) - set(case['template_axes'])
 
         # This warning is intended to help authors avoid mistakenly omitting
-        # templates. It can be silenced by extending the`each_subtest`
+        # templates. It can be silenced by extending the`template_axes`
         # dictionary with an empty list for templates which are intentionally
         # unused.
         if unused_templates:
@@ -134,12 +138,12 @@ def main(config_file):
             )
             print('\n'.join('- {}'.format(name) for name in unused_templates))
 
-        for template_name, concise_subtests in case['each_subtest'].items():
-            subtests[template_name].extend(
-                [subtest for subtest in product(
-                    case['all_subtests'], concise_subtests
-                )]
-            )
+        common_axis = product(
+            case['common_axis'], [case.get('all_subtests', {})]
+        )
+
+        for template_name, template_axis in case['template_axes'].items():
+            subtests[template_name].extend(product(common_axis, template_axis))
 
     for template_name, template in templates.items():
         provenance = make_provenance(

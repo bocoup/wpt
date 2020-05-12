@@ -4,22 +4,19 @@ output_directory: generated
 cases:
   # Sec-Fetch-Site - redirection from HTTP
   - all_subtests:
+      headerName: sec-fetch-site
+      filename_flags: []
+    common_axis:
       - description: HTTPS downgrade (header not sent)
-        headerName: sec-fetch-site
         origins: [sameOrigin, httpOrigin]
         expected: NULL
-        filename_flags: []
       - description: HTTPS upgrade
-        headerName: sec-fetch-site
         origins: [httpOrigin, sameOrigin]
         expected: cross-site
-        filename_flags: []
       - description: HTTPS downgrade-upgrade
-        headerName: sec-fetch-site
         origins: [sameOrigin, httpOrigin, sameOrigin]
         expected: cross-site
-        filename_flags: []
-    each_subtest:
+    template_axes:
       # Unused
       # TODO(jugglinmike) document rationale
       cors-preflight.sub.html: []
@@ -55,57 +52,40 @@ cases:
 
   # Sec-Fetch-Site - redirection from HTTPS
   - all_subtests:
+      headerName: sec-fetch-site
+      filename_flags: [https]
+    common_axis:
       - description: Same-Origin -> Cross-Site -> Same-Origin redirect
-        headerName: sec-fetch-site
         origins: [sameOrigin, crossSite, sameOrigin]
         expected: cross-site
-        filename_flags: [https]
       - description: Cross-Site -> Same Origin
-        headerName: sec-fetch-site
         origins: [crossSite, sameOrigin]
         expected: cross-site
-        filename_flags: [https]
       - description: Cross-Site -> Same-Site
-        headerName: sec-fetch-site
         origins: [crossSite, sameSite]
         expected: cross-site
-        filename_flags: [https]
       - description: Cross-Site -> Cross-Site
-        headerName: sec-fetch-site
         origins: [crossSite, crossSite]
         expected: cross-site
-        filename_flags: [https]
       - description: Same-Origin -> Same Origin
-        headerName: sec-fetch-site
         origins: [sameOrigin, sameOrigin]
         expected: same-origin
-        filename_flags: [https]
       - description: Same-Origin -> Same-Site
-        headerName: sec-fetch-site
         origins: [sameOrigin, sameSite]
         expected: same-site
-        filename_flags: [https]
       - description: Same-Origin -> Cross-Site
-        headerName: sec-fetch-site
         origins: [sameOrigin, crossSite]
         expected: cross-site
-        filename_flags: [https]
       - description: Same-Site -> Same Origin
-        headerName: sec-fetch-site
         origins: [sameSite, sameOrigin]
         expected: same-site
-        filename_flags: [https]
       - description: Same-Site -> Same-Site
-        headerName: sec-fetch-site
         origins: [sameSite, sameSite]
         expected: same-site
-        filename_flags: [https]
       - description: Same-Site -> Cross-Site
-        headerName: sec-fetch-site
         origins: [sameSite, crossSite]
         expected: cross-site
-        filename_flags: [https]
-    each_subtest:
+    template_axes:
       # Unused
       # TODO(jugglinmike) document rationale
       cors-preflight.sub.html: []
@@ -151,13 +131,13 @@ cases:
   #
   # [1] https://w3c.github.io/webappsec-mixed-content/#should-block-fetch
 
-  - all_subtests:
+  - common_axis:
       - description: HTTPS downgrade-upgrade
         headerName: sec-fetch-site
         origins: [sameOrigin, httpOrigin, sameOrigin]
         expected: cross-site
         filename_flags: [https]
-    each_subtest:
+    template_axes:
       # Unused
       # TODO(jugglinmike) document rationale
       element-script.sub.html: []
@@ -188,11 +168,11 @@ cases:
   #
   # [1] https://html.spec.whatwg.org/multipage/origin.html#same-origin
   # [2] https://w3c.github.io/webappsec-secure-contexts/#potentially-trustworthy-url
-  - all_subtests:
+  - common_axis:
       - headerName: sec-fetch-mode
         filename_flags: [https]
         origins: []
-    each_subtest:
+    template_axes:
       # Unused
       # TODO(jugglinmike) document rationale
       worker-dedicated-importscripts.sub.html: []
@@ -263,11 +243,11 @@ cases:
           expected: same-origin
 
   # Sec-Fetch-Dest
-  - all_subtests:
+  - common_axis:
       - headerName: sec-fetch-dest
         filename_flags: [https]
         origins: []
-    each_subtest:
+    template_axes:
       appcache-manifest.sub.https.html:
         - expected: empty
       cors-preflight.sub.html:
@@ -310,11 +290,11 @@ cases:
         - expected: script
 
   # Sec-Fetch-User
-  - all_subtests:
+  - common_axis:
       - headerName: sec-fetch-user
         filename_flags: [https]
         origins: []
-    each_subtest:
+    template_axes:
       appcache-manifest.sub.https.html:
         - expected: NULL
       cors-preflight.sub.html:
