@@ -7,6 +7,8 @@ import os
 import jinja2
 import yaml
 
+from functools import reduce
+
 HERE = os.path.abspath(os.path.dirname(__file__))
 PROJECT_ROOT = os.path.join(HERE, '..', '..', '..')
 
@@ -134,10 +136,12 @@ def main(config_file):
             )
             print('\n'.join('- {}'.format(name) for name in unused_templates))
 
+        all_subtests = [x for x in reduce(lambda a, b: product(a, b), case['all_subtests'])]
+
         for template_name, concise_subtests in case['each_subtest'].items():
             subtests[template_name].extend(
                 [subtest for subtest in product(
-                    case['all_subtests'], concise_subtests
+                    all_subtests, concise_subtests
                 )]
             )
 

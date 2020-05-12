@@ -4,21 +4,17 @@ output_directory: generated
 cases:
   # Sec-Fetch-Site - redirection from HTTP
   - all_subtests:
-      - description: HTTPS downgrade (header not sent)
-        headerName: sec-fetch-site
-        origins: [sameOrigin, httpOrigin]
-        expected: NULL
-        filename_flags: []
-      - description: HTTPS upgrade
-        headerName: sec-fetch-site
-        origins: [httpOrigin, sameOrigin]
-        expected: cross-site
-        filename_flags: []
-      - description: HTTPS downgrade-upgrade
-        headerName: sec-fetch-site
-        origins: [sameOrigin, httpOrigin, sameOrigin]
-        expected: cross-site
-        filename_flags: []
+      - - headerName: sec-fetch-site
+          filename_flags: []
+      - - description: HTTPS downgrade (header not sent)
+          origins: [sameOrigin, httpOrigin]
+          expected: NULL
+        - description: HTTPS upgrade
+          origins: [httpOrigin, sameOrigin]
+          expected: cross-site
+        - description: HTTPS downgrade-upgrade
+          origins: [sameOrigin, httpOrigin, sameOrigin]
+          expected: cross-site
     each_subtest:
       # Unused
       # TODO(jugglinmike) document rationale
@@ -55,56 +51,38 @@ cases:
 
   # Sec-Fetch-Site - redirection from HTTPS
   - all_subtests:
-      - description: Same-Origin -> Cross-Site -> Same-Origin redirect
-        headerName: sec-fetch-site
-        origins: [sameOrigin, crossSite, sameOrigin]
-        expected: cross-site
-        filename_flags: [https]
-      - description: Cross-Site -> Same Origin
-        headerName: sec-fetch-site
-        origins: [crossSite, sameOrigin]
-        expected: cross-site
-        filename_flags: [https]
-      - description: Cross-Site -> Same-Site
-        headerName: sec-fetch-site
-        origins: [crossSite, sameSite]
-        expected: cross-site
-        filename_flags: [https]
-      - description: Cross-Site -> Cross-Site
-        headerName: sec-fetch-site
-        origins: [crossSite, crossSite]
-        expected: cross-site
-        filename_flags: [https]
-      - description: Same-Origin -> Same Origin
-        headerName: sec-fetch-site
-        origins: [sameOrigin, sameOrigin]
-        expected: same-origin
-        filename_flags: [https]
-      - description: Same-Origin -> Same-Site
-        headerName: sec-fetch-site
-        origins: [sameOrigin, sameSite]
-        expected: same-site
-        filename_flags: [https]
-      - description: Same-Origin -> Cross-Site
-        headerName: sec-fetch-site
-        origins: [sameOrigin, crossSite]
-        expected: cross-site
-        filename_flags: [https]
-      - description: Same-Site -> Same Origin
-        headerName: sec-fetch-site
-        origins: [sameSite, sameOrigin]
-        expected: same-site
-        filename_flags: [https]
-      - description: Same-Site -> Same-Site
-        headerName: sec-fetch-site
-        origins: [sameSite, sameSite]
-        expected: same-site
-        filename_flags: [https]
-      - description: Same-Site -> Cross-Site
-        headerName: sec-fetch-site
-        origins: [sameSite, crossSite]
-        expected: cross-site
-        filename_flags: [https]
+      - - headerName: sec-fetch-site
+          filename_flags: [https]
+      - - description: Same-Origin -> Cross-Site -> Same-Origin redirect
+          origins: [sameOrigin, crossSite, sameOrigin]
+          expected: cross-site
+        - description: Cross-Site -> Same Origin
+          origins: [crossSite, sameOrigin]
+          expected: cross-site
+        - description: Cross-Site -> Same-Site
+          origins: [crossSite, sameSite]
+          expected: cross-site
+        - description: Cross-Site -> Cross-Site
+          origins: [crossSite, crossSite]
+          expected: cross-site
+        - description: Same-Origin -> Same Origin
+          origins: [sameOrigin, sameOrigin]
+          expected: same-origin
+        - description: Same-Origin -> Same-Site
+          origins: [sameOrigin, sameSite]
+          expected: same-site
+        - description: Same-Origin -> Cross-Site
+          origins: [sameOrigin, crossSite]
+          expected: cross-site
+        - description: Same-Site -> Same Origin
+          origins: [sameSite, sameOrigin]
+          expected: same-site
+        - description: Same-Site -> Same-Site
+          origins: [sameSite, sameSite]
+          expected: same-site
+        - description: Same-Site -> Cross-Site
+          origins: [sameSite, crossSite]
+          expected: cross-site
     each_subtest:
       # Unused
       # TODO(jugglinmike) document rationale
@@ -152,11 +130,11 @@ cases:
   # [1] https://w3c.github.io/webappsec-mixed-content/#should-block-fetch
 
   - all_subtests:
-      - description: HTTPS downgrade-upgrade
-        headerName: sec-fetch-site
-        origins: [sameOrigin, httpOrigin, sameOrigin]
-        expected: cross-site
-        filename_flags: [https]
+      - - description: HTTPS downgrade-upgrade
+          headerName: sec-fetch-site
+          origins: [sameOrigin, httpOrigin, sameOrigin]
+          expected: cross-site
+          filename_flags: [https]
     each_subtest:
       # Unused
       # TODO(jugglinmike) document rationale
@@ -189,9 +167,9 @@ cases:
   # [1] https://html.spec.whatwg.org/multipage/origin.html#same-origin
   # [2] https://w3c.github.io/webappsec-secure-contexts/#potentially-trustworthy-url
   - all_subtests:
-      - headerName: sec-fetch-mode
-        filename_flags: [https]
-        origins: []
+      - - headerName: sec-fetch-mode
+          filename_flags: [https]
+          origins: []
     each_subtest:
       # Unused
       # TODO(jugglinmike) document rationale
@@ -264,9 +242,9 @@ cases:
 
   # Sec-Fetch-Dest
   - all_subtests:
-      - headerName: sec-fetch-dest
-        filename_flags: [https]
-        origins: []
+      - - headerName: sec-fetch-dest
+          filename_flags: [https]
+          origins: []
     each_subtest:
       appcache-manifest.sub.https.html:
         - expected: empty
@@ -311,9 +289,9 @@ cases:
 
   # Sec-Fetch-User
   - all_subtests:
-      - headerName: sec-fetch-user
-        filename_flags: [https]
-        origins: []
+      - - headerName: sec-fetch-user
+          filename_flags: [https]
+          origins: []
     each_subtest:
       appcache-manifest.sub.https.html:
         - expected: NULL
