@@ -17,6 +17,9 @@
   {%- for subtest in subtests if not subtest.origins %}
 
   promise_test(() => {
+    {%- if subtest.precondition %}
+    assert_precondition([%subtest.precondition%], 'Not implemented');
+    {%- endif %}
     const key = '{{uuid()}}';
     const url = makeRequestURL(key, ['crossSite'], { requireOPTIONS: true });
 

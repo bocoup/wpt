@@ -44,6 +44,9 @@
       !!window.applicationCache,
       'Application Cache is not supported.'
     );
+    {%- if subtest.precondition %}
+    assert_precondition([%subtest.precondition%], 'Not implemented');
+    {%- endif %}
 
     return induceRequest(makeRequestURL(key, [% subtest.origins %]))
       .then(() => retrieve(key))
