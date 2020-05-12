@@ -30,6 +30,7 @@ cases:
       worker-dedicated-constructor.sub.html: []
 
       appcache-manifest.sub.https.html: [{}]
+      element-audio.sub.html: [{}]
       element-image.sub.html: [{}]
       element-script.sub.html:
         - {}
@@ -99,6 +100,7 @@ cases:
       worker-dedicated-constructor.sub.html: []
 
       appcache-manifest.sub.https.html: [{}]
+      element-audio.sub.html: [{}]
       element-image.sub.html: [{}]
       element-script.sub.html:
         - {}
@@ -150,6 +152,7 @@ cases:
       worker-dedicated-importscripts.sub.html: []
 
       appcache-manifest.sub.https.html: [{}]
+      element-audio.sub.html: [{}]
       element-image.sub.html: [{}]
       element-video.sub.html: [{}]
       form-submission.sub.html:
@@ -181,6 +184,14 @@ cases:
         - expected: no-cors
       cors-preflight.sub.html:
         - expected: cors
+      element-audio.sub.html:
+        - expected: no-cors
+        - expected: cors
+          elementAttrs: { crossorigin: '' }
+        - expected: cors
+          elementAttrs: { crossorigin: anonymous }
+        - expected: cors
+          elementAttrs: { crossorigin: use-credentials }
       element-image.sub.html:
         - expected: no-cors
         - expected: cors
@@ -252,6 +263,8 @@ cases:
         - expected: empty
       cors-preflight.sub.html:
         - expected: empty
+      element-audio.sub.html:
+        - expected: audio
       element-image.sub.html:
         - expected: image
       element-script.sub.html:
@@ -298,6 +311,8 @@ cases:
       appcache-manifest.sub.https.html:
         - expected: NULL
       cors-preflight.sub.html:
+        - expected: NULL
+      element-audio.sub.html:
         - expected: NULL
       element-image.sub.html:
         - expected: NULL
