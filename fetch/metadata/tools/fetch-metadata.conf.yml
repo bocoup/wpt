@@ -359,7 +359,7 @@ cases:
       element-a.sub.html:
         - expected: NULL
         - userActivated: TRUE
-          expected: ?!
+          expected: ?1
       element-audio.sub.html:
         - expected: NULL
       element-frame.sub.html:
