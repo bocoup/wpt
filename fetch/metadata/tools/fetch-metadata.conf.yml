@@ -144,8 +144,10 @@ cases:
         expected: cross-site
         filename_flags: [https]
     template_axes:
-      # Unused
-      # TODO(jugglinmike) document rationale
+      # Mixed Content considers only a small subset of requests as
+      # "optionally-blockable." These are the only requests that can be tested
+      # for the "downgrade-upgrade" scenario, so all other templates must be
+      # explicitly ignored.
       audioworklet.https.sub.html: []
       element-script.sub.html: []
       fetch.sub.html: []
