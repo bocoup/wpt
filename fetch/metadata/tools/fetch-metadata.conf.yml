@@ -205,6 +205,9 @@ cases:
         - expected: cors
       element-a.sub.html:
         - expected: navigate
+        # https://html.spec.whatwg.org/multipage/links.html#downloading-hyperlinks
+        - elementAttrs: {download: ''}
+          expected: no-cors
       element-audio.sub.html:
         - expected: no-cors
         - expected: cors
