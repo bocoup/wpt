@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<!--
+[%provenance%]
+-->
+<html lang="en">
+  <meta charset="utf-8">
+  <title>[%title%]</title>
+  <script src="/resources/testharness.js"></script>
+  <script src="/resources/testharnessreport.js"></script>
+  {%- if subtests|selectattr('userActivated')|list %}
+  <script src="/resources/testdriver.js"></script>
+  {%- endif %}
+  <script src="/fetch/metadata/resources/helper.sub.js"></script>
+  <body>
+  <script>
+  'use strict';
+
+  function induceRequest(url, {userActivated, attributes}) {
+    const win = window.open();
+    const navigate = () => {
+      const anchor = win.document.createElement('a');
+      anchor.setAttribute('href', url);
+
+      for (const [ name, value ] of Object.entries(attributes)) {
+        anchor.setAttribute(name, value);
+      }
+
+      win.document.body.appendChild(anchor);
+      anchor.click();
+    };
+
+    return new Promise((resolve) => {
+        addEventListener('message', function(event) {
+          if (event.source === win) {
+            resolve();
+          }
+        });
+
+        if (userActivated) {
+          test_driver.bless('enable user activation', navigate);
+        } else {
+          navigate();
+        }
+      })
+      .then(() => win.close());
+  }
+
+  const responseParams = {
+    mime: 'text/html',
+    body: `<script>opener.postMessage('done', '*')</${''}script>`
+  };
+  {%- for subtest in subtests %}
+
+  promise_test(() => {
+    const key = '{{uuid()}}';
+
+    return induceRequest(
+        makeRequestURL(key, [% subtest.origins %], responseParams),
+        {
+          userActivated: [%subtest.userActivated | default(false) | tojson%],
+          attributes: [%subtest.elementAttrs | default({}) | tojson%]
+        }
+      )
+      .then(() => retrieve(key))
+      .then((headers) => {
+        {%- if subtest.expected == none %}
+          assert_not_own_property(headers, '[%subtest.headerName%]');
+        {%- else %}
+          assert_own_property(headers, '[%subtest.headerName%]');
+          assert_equals(headers['[%subtest.headerName%]'], '[%subtest.expected%]');
+        {%- endif %}
+        });
+  }, '[%subtest.headerName%][%subtest.description | pad("start", " - ")%] - [%subtest.elementAttrs | collection("attributes")%][% " with user activation" if subtest.userActivated%]');
+
+  {%- endfor %}
+  </script>
+  </body>
+</html>
+
