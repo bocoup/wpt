@@ -168,7 +168,7 @@ def main(config_file):
                 handle.write(templates[template_name].render(
                     subtests=list(some_subtests),
                     provenance=provenance
-                ))
+                ) + '\n')
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
