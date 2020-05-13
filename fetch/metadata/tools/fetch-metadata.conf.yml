@@ -34,6 +34,8 @@ cases:
 
       appcache-manifest.sub.https.html: [{}]
       element-audio.sub.html: [{}]
+      element-frame.sub.html: [{}]
+      element-iframe.sub.html: [{}]
       element-image.sub.html: [{}]
       element-script.sub.html:
         - {}
@@ -105,6 +107,8 @@ cases:
       appcache-manifest.sub.https.html: [{}]
       audioworklet.https.sub.html: [{}]
       element-audio.sub.html: [{}]
+      element-frame.sub.html: [{}]
+      element-iframe.sub.html: [{}]
       element-image.sub.html: [{}]
       element-script.sub.html:
         - {}
@@ -149,6 +153,8 @@ cases:
       # for the "downgrade-upgrade" scenario, so all other templates must be
       # explicitly ignored.
       audioworklet.https.sub.html: []
+      element-frame.sub.html: []
+      element-iframe.sub.html: []
       element-script.sub.html: []
       fetch.sub.html: []
       font.sub.html: []
@@ -202,6 +208,10 @@ cases:
           elementAttrs: { crossorigin: anonymous }
         - expected: cors
           elementAttrs: { crossorigin: use-credentials }
+      element-frame.sub.html:
+        - expected: navigate
+      element-iframe.sub.html:
+        - expected: navigate
       element-image.sub.html:
         - expected: no-cors
         - expected: cors
@@ -278,6 +288,12 @@ cases:
         - expected: empty
       element-audio.sub.html:
         - expected: audio
+      element-frame.sub.html:
+        # https://github.com/whatwg/html/pull/4976
+        - expected: frame
+      element-iframe.sub.html:
+        # https://github.com/whatwg/html/pull/4976
+        - expected: iframe
       element-image.sub.html:
         - expected: image
       element-script.sub.html:
@@ -329,6 +345,14 @@ cases:
         - expected: NULL
       element-audio.sub.html:
         - expected: NULL
+      element-frame.sub.html:
+        - expected: NULL
+        - userActivated: TRUE
+          expected: ?1
+      element-iframe.sub.html:
+        - expected: NULL
+        - userActivated: TRUE
+          expected: ?1
       element-image.sub.html:
         - expected: NULL
       element-script.sub.html:
