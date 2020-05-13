@@ -42,7 +42,7 @@ function makeRequestURL(key, origins, params) {
           encodeURIComponent(requestUrl);
       }
     } else {
-      requestUrl = byName.sameOrigin + requestUrl;
+      requestUrl = byName.sameOrigin + encodeURIComponent(requestUrl);
     }
 
     return requestUrl;
