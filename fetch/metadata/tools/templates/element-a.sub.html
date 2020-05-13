@@ -15,53 +15,43 @@
   <script>
   'use strict';
 
-  function induceRequest(url, {userActivated, attributes}) {
+  function induceRequest(url, {test, userActivated, attributes}) {
     const win = window.open();
-    const navigate = () => {
-      const anchor = win.document.createElement('a');
-      anchor.setAttribute('href', url);
+    const anchor = win.document.createElement('a');
+    anchor.setAttribute('href', url);
 
-      for (const [ name, value ] of Object.entries(attributes)) {
-        anchor.setAttribute(name, value);
-      }
+    for (const [ name, value ] of Object.entries(attributes)) {
+      anchor.setAttribute(name, value);
+    }
 
-      win.document.body.appendChild(anchor);
+    win.document.body.appendChild(anchor);
+
+    test.add_cleanup(() => win.close());
+
+    if (userActivated) {
+      test_driver.bless('enable user activation', () => anchor.click());
+    } else {
       anchor.click();
-    };
-
-    return new Promise((resolve) => {
-        addEventListener('message', function(event) {
-          if (event.source === win) {
-            resolve();
-          }
-        });
-
-        if (userActivated) {
-          test_driver.bless('enable user activation', navigate);
-        } else {
-          navigate();
-        }
-      })
-      .then(() => win.close());
+    }
   }
 
-  const responseParams = {
-    mime: 'text/html',
-    body: `<script>opener.postMessage('done', '*')</${''}script>`
-  };
   {%- for subtest in subtests %}
 
-  promise_test(() => {
+  promise_test((t) => {
     const key = '{{uuid()}}';
 
-    return induceRequest(
-        makeRequestURL(key, [% subtest.origins %], responseParams),
-        {
-          userActivated: [%subtest.userActivated | default(false) | tojson%],
-          attributes: [%subtest.elementAttrs | default({}) | tojson%]
-        }
-      )
-      .then(() => retrieve(key))
+    induceRequest(
+      makeRequestURL(key, [% subtest.origins %], {mime: 'text/html'}),
+      {
+        test: t,
+        userActivated: [%subtest.userActivated | default(false) | tojson%],
+        attributes: [%subtest.elementAttrs | default({}) | tojson%]
+      }
+    );
+
+    // `induceRequest` does not necessarily trigger a navigation, so the Python
+    // handler must be polled until it has received the initial request.
+    return retrieve(key, {poll: true})
       .then((headers) => {
         {%- if subtest.expected == none %}
           assert_not_own_property(headers, '[%subtest.headerName%]');

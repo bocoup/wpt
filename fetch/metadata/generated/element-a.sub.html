@@ -15,85 +15,82 @@ Sources:
   <script>
   'use strict';
 
-  function induceRequest(url, {userActivated, attributes}) {
+  function induceRequest(url, {test, userActivated, attributes}) {
     const win = window.open();
-    const navigate = () => {
-      const anchor = win.document.createElement('a');
-      anchor.setAttribute('href', url);
+    const anchor = win.document.createElement('a');
+    anchor.setAttribute('href', url);
 
-      for (const [ name, value ] of Object.entries(attributes)) {
-        anchor.setAttribute(name, value);
-      }
+    for (const [ name, value ] of Object.entries(attributes)) {
+      anchor.setAttribute(name, value);
+    }
 
-      win.document.body.appendChild(anchor);
+    win.document.body.appendChild(anchor);
+
+    test.add_cleanup(() => win.close());
+
+    if (userActivated) {
+      test_driver.bless('enable user activation', () => anchor.click());
+    } else {
       anchor.click();
-    };
-
-    return new Promise((resolve) => {
-        addEventListener('message', function(event) {
-          if (event.source === win) {
-            resolve();
-          }
-        });
-
-        if (userActivated) {
-          test_driver.bless('enable user activation', navigate);
-        } else {
-          navigate();
-        }
-      })
-      .then(() => win.close());
+    }
   }
 
-  const responseParams = {
-    mime: 'text/html',
-    body: `<script>opener.postMessage('done', '*')</${''}script>`
-  };
-
-  promise_test(() => {
+  promise_test((t) => {
     const key = '{{uuid()}}';
 
-    return induceRequest(
-        makeRequestURL(key, ['sameOrigin', 'httpOrigin'], responseParams),
-        {
-          userActivated: false,
-          attributes: {}
-        }
-      )
-      .then(() => retrieve(key))
+    induceRequest(
+      makeRequestURL(key, ['sameOrigin', 'httpOrigin'], {mime: 'text/html'}),
+      {
+        test: t,
+        userActivated: false,
+        attributes: {}
+      }
+    );
+
+    // `induceRequest` does not necessarily trigger a navigation, so the Python
+    // handler must be polled until it has received the initial request.
+    return retrieve(key, {poll: true})
       .then((headers) => {
           assert_not_own_property(headers, 'sec-fetch-site');
         });
   }, 'sec-fetch-site - HTTPS downgrade (header not sent) - no attributes');
 
-  promise_test(() => {
+  promise_test((t) => {
     const key = '{{uuid()}}';
 
-    return induceRequest(
-        makeRequestURL(key, ['httpOrigin', 'sameOrigin'], responseParams),
-        {
-          userActivated: false,
-          attributes: {}
-        }
-      )
-      .then(() => retrieve(key))
+    induceRequest(
+      makeRequestURL(key, ['httpOrigin', 'sameOrigin'], {mime: 'text/html'}),
+      {
+        test: t,
+        userActivated: false,
+        attributes: {}
+      }
+    );
+
+    // `induceRequest` does not necessarily trigger a navigation, so the Python
+    // handler must be polled until it has received the initial request.
+    return retrieve(key, {poll: true})
       .then((headers) => {
           assert_own_property(headers, 'sec-fetch-site');
           assert_equals(headers['sec-fetch-site'], 'cross-site');
         });
   }, 'sec-fetch-site - HTTPS upgrade - no attributes');
 
-  promise_test(() => {
+  promise_test((t) => {
     const key = '{{uuid()}}';
 
-    return induceRequest(
-        makeRequestURL(key, ['sameOrigin', 'httpOrigin', 'sameOrigin'], responseParams),
-        {
-          userActivated: false,
-          attributes: {}
-        }
-      )
-      .then(() => retrieve(key))
+    induceRequest(
+      makeRequestURL(key, ['sameOrigin', 'httpOrigin', 'sameOrigin'], {mime: 'text/html'}),
+      {
+        test: t,
+        userActivated: false,
+        attributes: {}
+      }
+    );
+
+    // `induceRequest` does not necessarily trigger a navigation, so the Python
+    // handler must be polled until it has received the initial request.
+    return retrieve(key, {poll: true})
       .then((headers) => {
           assert_own_property(headers, 'sec-fetch-site');
           assert_equals(headers['sec-fetch-site'], 'cross-site');
