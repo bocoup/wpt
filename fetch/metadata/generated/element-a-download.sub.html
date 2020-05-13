@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<!--
+This test was procedurally generated. Please do not modify it directly.
+Sources:
+- fetch/metadata/tools/fetch-metadata.conf.yml
+- fetch/metadata/tools/templates/element-a-download.sub.html
+-->
+<html lang="en">
+  <meta charset="utf-8">
+  <title></title>
+  <script src="/resources/testharness.js"></script>
+  <script src="/resources/testharnessreport.js"></script>
+  <script src="/fetch/metadata/resources/helper.sub.js"></script>
+  <body>
+  <script>
+  'use strict';
+
+  function induceRequest(url, test, userActivated) {
+    const win = window.open();
+    const anchor = win.document.createElement('a');
+    anchor.setAttribute('href', url);
+    anchor.setAttribute('download', '');
+
+    win.document.body.appendChild(anchor);
+
+    test.add_cleanup(() => win.close());
+
+    if (userActivated) {
+      test_driver.bless('enable user activation', () => anchor.click());
+    } else {
+      anchor.click();
+    }
+  }
+
+  promise_test((t) => {
+    const key = '{{uuid()}}';
+
+    induceRequest(
+      makeRequestURL(key, ['sameOrigin', 'httpOrigin'], {mime: 'text/data'}),
+      t,
+      false
+    );
+
+    return retrieve(key, {poll: true})
+      .then((headers) => {
+          assert_not_own_property(headers, 'sec-fetch-site');
+        });
+  }, 'sec-fetch-site - HTTPS downgrade (header not sent)');
+
+  promise_test((t) => {
+    const key = '{{uuid()}}';
+
+    induceRequest(
+      makeRequestURL(key, ['httpOrigin', 'sameOrigin'], {mime: 'text/data'}),
+      t,
+      false
+    );
+
+    return retrieve(key, {poll: true})
+      .then((headers) => {
+          assert_own_property(headers, 'sec-fetch-site');
+          assert_equals(headers['sec-fetch-site'], 'cross-site');
+        });
+  }, 'sec-fetch-site - HTTPS upgrade');
+
+  promise_test((t) => {
+    const key = '{{uuid()}}';
+
+    induceRequest(
+      makeRequestURL(key, ['sameOrigin', 'httpOrigin', 'sameOrigin'], {mime: 'text/data'}),
+      t,
+      false
+    );
+
+    return retrieve(key, {poll: true})
+      .then((headers) => {
+          assert_own_property(headers, 'sec-fetch-site');
+          assert_equals(headers['sec-fetch-site'], 'cross-site');
+        });
+  }, 'sec-fetch-site - HTTPS downgrade-upgrade');
+  </script>
+  </body>
+</html>

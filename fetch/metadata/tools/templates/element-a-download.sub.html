@@ -15,46 +15,35 @@
   <script>
   'use strict';
 
-  function induceRequest(url, userActivated) {
+  function induceRequest(url, test, userActivated) {
     const win = window.open();
-    const navigate = () => {
-      const anchor = win.document.createElement('a');
-      anchor.setAttribute('href', url);
+    const anchor = win.document.createElement('a');
+    anchor.setAttribute('href', url);
+    anchor.setAttribute('download', '');
 
-      win.document.body.appendChild(anchor);
+    win.document.body.appendChild(anchor);
+
+    test.add_cleanup(() => win.close());
+
+    if (userActivated) {
+      test_driver.bless('enable user activation', () => anchor.click());
+    } else {
       anchor.click();
-    };
-
-    return new Promise((resolve) => {
-        addEventListener('message', function(event) {
-          if (event.source === win) {
-            resolve();
-          }
-        });
-
-        if (userActivated) {
-          test_driver.bless('enable user activation', navigate);
-        } else {
-          navigate();
-        }
-      })
-      .then(() => win.close());
+    }
   }
 
-  const responseParams = {
-    mime: 'text/html',
-    body: `<script>opener.postMessage('done', '*')</${''}script>`
-  };
   {%- for subtest in subtests %}
 
-  promise_test(() => {
+  promise_test((t) => {
     const key = '{{uuid()}}';
 
-    return induceRequest(
-        makeRequestURL(key, [% subtest.origins %], responseParams),
-        [%subtest.userActivated | default(false) | tojson%]
-      )
-      .then(() => retrieve(key))
+    induceRequest(
+      makeRequestURL(key, [% subtest.origins %], {mime: 'text/data'}),
+      t,
+      [%subtest.userActivated | default(false) | tojson%]
+    );
+
+    return retrieve(key, {poll: true})
       .then((headers) => {
         {%- if subtest.expected == none %}
           assert_not_own_property(headers, '[%subtest.headerName%]');

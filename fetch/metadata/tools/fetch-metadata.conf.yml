@@ -34,6 +34,7 @@ cases:
 
       appcache-manifest.sub.https.html: [{}]
       element-a.sub.html: [{}]
+      element-a-download.sub.html: [{}]
       element-audio.sub.html: [{}]
       element-frame.sub.html: [{}]
       element-iframe.sub.html: [{}]
@@ -108,6 +109,7 @@ cases:
       appcache-manifest.sub.https.html: [{}]
       audioworklet.https.sub.html: [{}]
       element-a.sub.html: [{}]
+      element-a-download.sub.html: [{}]
       element-audio.sub.html: [{}]
       element-frame.sub.html: [{}]
       element-iframe.sub.html: [{}]
@@ -168,6 +170,7 @@ cases:
 
       appcache-manifest.sub.https.html: [{}]
       element-a.sub.html: [{}]
+      element-a-download.sub.html: [{}]
       element-audio.sub.html: [{}]
       element-image.sub.html: [{}]
       element-video.sub.html: [{}]
@@ -204,6 +207,8 @@ cases:
       cors-preflight.sub.html:
         - expected: cors
       element-a.sub.html:
+        - expected: navigate
+      element-a-download.sub.html:
         - expected: navigate
       element-audio.sub.html:
         - expected: no-cors
@@ -293,9 +298,9 @@ cases:
         - expected: empty
       element-a.sub.html:
         - expected: document
+      element-a-download.sub.html:
         # https://html.spec.whatwg.org/multipage/links.html#downloading-hyperlinks
-        - elementAttrs: {download: ''}
-          expected: empty
+        - expected: empty
       element-audio.sub.html:
         - expected: audio
       element-frame.sub.html:
@@ -354,6 +359,10 @@ cases:
       cors-preflight.sub.html:
         - expected: NULL
       element-a.sub.html:
+        - expected: NULL
+        - userActivated: TRUE
+          expected: ?!
+      element-a-download.sub.html:
         - expected: NULL
         - userActivated: TRUE
           expected: ?!
