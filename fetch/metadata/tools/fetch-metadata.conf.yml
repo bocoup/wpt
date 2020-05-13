@@ -39,6 +39,7 @@ cases:
       element-frame.sub.html: [{}]
       element-iframe.sub.html: [{}]
       element-image.sub.html: [{}]
+      element-meta-refresh.optional.sub.html: [{}]
       element-script.sub.html:
         - {}
         - elementAttrs: { type: module }
@@ -114,6 +115,7 @@ cases:
       element-frame.sub.html: [{}]
       element-iframe.sub.html: [{}]
       element-image.sub.html: [{}]
+      element-meta-refresh.optional.sub.html: [{}]
       element-script.sub.html:
         - {}
         - elementAttrs: { type: module }
@@ -173,6 +175,7 @@ cases:
       element-area.sub.html: [{}]
       element-audio.sub.html: [{}]
       element-image.sub.html: [{}]
+      element-meta-refresh.optional.sub.html: [{}]
       element-video.sub.html: [{}]
       form-submission.sub.html:
         - method: GET
@@ -236,6 +239,8 @@ cases:
           elementAttrs: { crossorigin: anonymous }
         - expected: cors
           elementAttrs: { crossorigin: use-credentials }
+      element-meta-refresh.optional.sub.html:
+        - expected: navigate
       element-script.sub.html:
         - expected: no-cors
         - expected: cors
@@ -322,6 +327,8 @@ cases:
         - expected: iframe
       element-image.sub.html:
         - expected: image
+      element-meta-refresh.optional.sub.html:
+        - expected: document
       element-script.sub.html:
         - expected: script
       element-video.sub.html:
@@ -388,6 +395,8 @@ cases:
         - userActivated: TRUE
           expected: ?1
       element-image.sub.html:
+        - expected: NULL
+      element-meta-refresh.optional.sub.html:
         - expected: NULL
       element-script.sub.html:
         - expected: NULL
