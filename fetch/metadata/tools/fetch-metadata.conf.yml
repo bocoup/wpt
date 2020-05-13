@@ -34,6 +34,7 @@ cases:
 
       appcache-manifest.sub.https.html: [{}]
       element-a.sub.html: [{}]
+      element-area.sub.html: [{}]
       element-audio.sub.html: [{}]
       element-frame.sub.html: [{}]
       element-iframe.sub.html: [{}]
@@ -108,6 +109,7 @@ cases:
       appcache-manifest.sub.https.html: [{}]
       audioworklet.https.sub.html: [{}]
       element-a.sub.html: [{}]
+      element-area.sub.html: [{}]
       element-audio.sub.html: [{}]
       element-frame.sub.html: [{}]
       element-iframe.sub.html: [{}]
@@ -168,6 +170,7 @@ cases:
 
       appcache-manifest.sub.https.html: [{}]
       element-a.sub.html: [{}]
+      element-area.sub.html: [{}]
       element-audio.sub.html: [{}]
       element-image.sub.html: [{}]
       element-video.sub.html: [{}]
@@ -204,6 +207,11 @@ cases:
       cors-preflight.sub.html:
         - expected: cors
       element-a.sub.html:
+        - expected: navigate
+        # https://html.spec.whatwg.org/multipage/links.html#downloading-hyperlinks
+        - elementAttrs: {download: ''}
+          expected: no-cors
+      element-area.sub.html:
         - expected: navigate
         # https://html.spec.whatwg.org/multipage/links.html#downloading-hyperlinks
         - elementAttrs: {download: ''}
@@ -299,6 +307,11 @@ cases:
         # https://html.spec.whatwg.org/multipage/links.html#downloading-hyperlinks
         - elementAttrs: {download: ''}
           expected: empty
+      element-area.sub.html:
+        - expected: document
+        # https://html.spec.whatwg.org/multipage/links.html#downloading-hyperlinks
+        - elementAttrs: {download: ''}
+          expected: empty
       element-audio.sub.html:
         - expected: audio
       element-frame.sub.html:
@@ -357,6 +370,10 @@ cases:
       cors-preflight.sub.html:
         - expected: NULL
       element-a.sub.html:
+        - expected: NULL
+        - userActivated: TRUE
+          expected: ?1
+      element-area.sub.html:
         - expected: NULL
         - userActivated: TRUE
           expected: ?1
