@@ -18,30 +18,59 @@
   <script>
   'use strict';
 
-  function induceRequest(url, test, clear) {
+  const whenDone = (win) => {
+    return new Promise((resolve) => {
+      addEventListener('message', function handle(event) {
+        if (event.source === win) {
+          resolve();
+          removeEventListener('message', handle);
+        }
+      });
+    })
+  };
+
+  /**
+   * Prime the UA's session history such that the location of the request is
+   * immediately behind the current entry. Because the location may not be
+   * same-origin with the current browsing context, this must be done via a
+   * true navigation and not, e.g. the `history.pushState` API. The initial
+   * navigation will alter the WPT server's internal state; in order to avoid
+   * false positives, clear that state prior to initiating the second
+   * navigation via `history.back`.
+   */
+  function induceBackRequest(url, test, clear) {
     const win = window.open(url);
 
     test.add_cleanup(() => win.close());
 
-    const whenDone = () => {
-      return new Promise((resolve) => {
-        addEventListener('message', (event) => {
-          if (event.source === win) {
-            resolve();
-          }
-        });
-      })
-    };
-
-    return whenDone()
+    return whenDone(win)
       .then(clear)
-      .then(() => {
-        win.history.back();
-        return new Promise((resolve) => {
-          win.addEventListener('unload', resolve);
-        });
-      })
-      .then(whenDone);
+      .then(() => win.history.back())
+      .then(() => whenDone(win));
+  }
+
+  /**
+   * Prime the UA's session history such that the location of the request is
+   * immediately ahead of the current entry. Because the location may not be
+   * same-origin with the current browsing context, this must be done via a
+   * true navigation and not, e.g. the `history.pushState` API. The initial
+   * navigation will alter the WPT server's internal state; in order to avoid
+   * false positives, clear that state prior to initiating the second
+   * navigation via `history.forward`.
+   */
+  function induceForwardRequest(url, test, clear) {
+    const win = window.open(messageOpenerUrl);
+
+    test.add_cleanup(() => win.close());
+
+    return whenDone(win)
+      .then(() => win.location = url)
+      .then(() => whenDone(win))
+      .then(clear)
+      .then(() => win.history.go(-2))
+      .then(() => whenDone(win))
+      .then(() => win.history.forward())
+      .then(() => whenDone(win));
   }
 
   const messageOpenerUrl = new URL(
@@ -70,7 +99,7 @@
     const key = '{{uuid()}}';
     const url = makeRequestURL(key, [% subtest.origins %], responseParams);
 
-    return induceRequest(url, t, () => retrieve(key))
+    return induceBackRequest(url, t, () => retrieve(key))
       .then(() => retrieve(key))
       .then((headers) => {
         {%- if subtest.expected == none %}
@@ -80,7 +109,23 @@
           assert_equals(headers['[%subtest.headerName%]'], '[%subtest.expected%]');
         {%- endif %}
         });
-  }, '[%subtest.headerName%] - [%subtest.description | pad("right", " - ")%][%subtest.api%][% " with user activation" if subtest.userActivated%]');
+  }, '[%subtest.headerName%] - [%subtest.description | pad("right", " - ")%]history.back[%subtest.api%][% " with user activation" if subtest.userActivated%]');
+
+  promise_test((t) => {
+    const key = '{{uuid()}}';
+    const url = makeRequestURL(key, [% subtest.origins %], responseParams);
+
+    return induceForwardRequest(url, t, () => retrieve(key))
+      .then(() => retrieve(key))
+      .then((headers) => {
+        {%- if subtest.expected == none %}
+          assert_not_own_property(headers, '[%subtest.headerName%]');
+        {%- else %}
+          assert_own_property(headers, '[%subtest.headerName%]');
+          assert_equals(headers['[%subtest.headerName%]'], '[%subtest.expected%]');
+        {%- endif %}
+        });
+  }, '[%subtest.headerName%] - [%subtest.description | pad("right", " - ")%]history.forward[%subtest.api%][% " with user activation" if subtest.userActivated%]');
 
   {%- endfor %}
   </script>
