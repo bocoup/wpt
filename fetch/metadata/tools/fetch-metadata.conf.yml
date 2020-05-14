@@ -37,6 +37,7 @@ cases:
       worker-dedicated-constructor.sub.html: []
 
       appcache-manifest.sub.https.html: [{}]
+      css-font-face.sub.tentative.html: [{}]
       element-a.sub.html: [{}]
       element-area.sub.html: [{}]
       element-audio.sub.html: [{}]
@@ -119,6 +120,7 @@ cases:
 
       appcache-manifest.sub.https.html: [{}]
       audioworklet.https.sub.html: [{}]
+      css-font-face.sub.tentative.html: [{}]
       element-a.sub.html: [{}]
       element-area.sub.html: [{}]
       element-audio.sub.html: [{}]
@@ -171,6 +173,7 @@ cases:
       # for the "downgrade-upgrade" scenario, so all other templates must be
       # explicitly ignored.
       audioworklet.https.sub.html: []
+      css-font-face.sub.tentative.html: []
       element-embed.sub.html: []
       element-frame.sub.html: []
       element-iframe.sub.html: []
@@ -224,6 +227,8 @@ cases:
         - expected: no-cors
       audioworklet.https.sub.html:
         # https://html.spec.whatwg.org/multipage/webappapis.html#fetch-a-single-module-script
+        - expected: cors
+      css-font-face.sub.tentative.html:
         - expected: cors
       cors-preflight.sub.html:
         - expected: cors
@@ -329,6 +334,8 @@ cases:
       audioworklet.https.sub.html:
         # https://github.com/WebAudio/web-audio-api/issues/2203
         - expected: audioworklet
+      css-font-face.sub.tentative.html:
+        - expected: font
       cors-preflight.sub.html:
         - expected: empty
       element-a.sub.html:
@@ -403,6 +410,8 @@ cases:
       appcache-manifest.sub.https.html:
         - expected: NULL
       audioworklet.https.sub.html:
+        - expected: NULL
+      css-font-face.sub.tentative.html:
         - expected: NULL
       cors-preflight.sub.html:
         - expected: NULL
