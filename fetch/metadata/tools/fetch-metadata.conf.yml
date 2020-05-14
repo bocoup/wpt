@@ -48,6 +48,7 @@ cases:
         - {}
         - elementAttrs: { type: module }
       element-video.sub.html: [{}]
+      element-video-poster.sub.html: [{}]
       fetch.sub.html: [{}]
       font.sub.html: [{}]
       form-submission.sub.html:
@@ -61,7 +62,6 @@ cases:
         - api: location.replace
       script-module-import-dynamic.sub.html: [{}]
       script-module-import-static.sub.html: [{}]
-      video-poster.sub.html: [{}]
       worker-dedicated-importscripts.sub.html: [{}]
 
   # Sec-Fetch-Site - redirection from HTTPS
@@ -129,6 +129,7 @@ cases:
         - {}
         - elementAttrs: { type: module }
       element-video.sub.html: [{}]
+      element-video-poster.sub.html: [{}]
       fetch.sub.html: [{ init: { mode: no-cors } }]
       font.sub.html: [{}]
       form-submission.sub.html:
@@ -142,7 +143,6 @@ cases:
         - api: location.replace
       script-module-import-dynamic.sub.html: [{}]
       script-module-import-static.sub.html: [{}]
-      video-poster.sub.html: [{}]
       worker-dedicated-importscripts.sub.html: [{}]
 
   # Sec-Fetch-Site - redirection with mixed content
@@ -191,6 +191,7 @@ cases:
       element-image.sub.html: [{}]
       element-meta-refresh.optional.sub.html: [{}]
       element-video.sub.html: [{}]
+      element-video-poster.sub.html: [{}]
       form-submission.sub.html:
         - method: GET
         - method: POST
@@ -200,7 +201,6 @@ cases:
         - api: location.href
         - api: location.assign
         - api: location.replace
-      video-poster.sub.html: [{}]
 
   # Sec-Fetch-Mode
   # These tests are served over HTTPS so the induced requests will be both
@@ -274,6 +274,8 @@ cases:
           elementAttrs: { crossorigin: anonymous }
         - expected: cors
           elementAttrs: { crossorigin: use-credentials }
+      element-video-poster.sub.html:
+        - expected: no-cors
       fetch.sub.html:
         - expected: cors
         - expected: cors
@@ -306,8 +308,6 @@ cases:
         - expected: cors
       script-module-import-static.sub.html:
         - expected: cors
-      video-poster.sub.html:
-        - expected: no-cors
       worker-dedicated-constructor.sub.html:
         - expected: same-origin
         - options: { type: module }
@@ -352,6 +352,8 @@ cases:
         - expected: script
       element-video.sub.html:
         - expected: video
+      element-video-poster.sub.html:
+        - expected: image
       fetch.sub.html:
         - expected: empty
       font.sub.html:
@@ -378,8 +380,6 @@ cases:
         - expected: script
       script-module-import-static.sub.html:
         - expected: script
-      video-poster.sub.html:
-        - expected: image
       worker-dedicated-constructor.sub.html:
         - expected: worker
         - options: { type: module }
@@ -425,6 +425,8 @@ cases:
         - expected: NULL
       element-video.sub.html:
         - expected: NULL
+      element-video-poster.sub.html:
+        - expected: NULL
       fetch.sub.html:
         - expected: NULL
       font.sub.html:
@@ -468,8 +470,6 @@ cases:
       script-module-import-dynamic.sub.html:
         - expected: NULL
       script-module-import-static.sub.html:
-        - expected: NULL
-      video-poster.sub.html:
         - expected: NULL
       worker-dedicated-constructor.sub.html:
         - expected: NULL
