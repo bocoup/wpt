@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<!--
+This test was procedurally generated. Please do not modify it directly.
+Sources:
+- fetch/metadata/tools/fetch-metadata.conf.yml
+- fetch/metadata/tools/templates/element-embed.sub.html
+-->
+<html lang="en">
+  <meta charset="utf-8">
+  <title></title>
+  <script src="/resources/testharness.js"></script>
+  <script src="/resources/testharnessreport.js"></script>
+  <script src="/fetch/metadata/resources/helper.sub.js"></script>
+  <body>
+  <script>
+  'use strict';
+
+  const params = {
+    body: `
+      <svg xmlns="http://www.w3.org/2000/svg" width="123" height="123">
+        <rect fill="lime" width="123" height="123"/>
+      </svg>
+    `,
+    mime: 'image/svg+xml'
+  };
+
+  function induceRequest(t, url) {
+    const embed = document.createElement('embed');
+    embed.setAttribute('src', url);
+    document.body.appendChild(embed);
+
+    t.add_cleanup(() => embed.remove());
+
+    return new Promise((resolve) => embed.addEventListener('load', resolve));
+  }
+
+  promise_test((t) => {
+    const key = '{{uuid()}}';
+
+    return induceRequest(t, makeRequestURL(key, ['sameOrigin', 'httpOrigin'], params))
+      .then(() => retrieve(key))
+      .then((headers) => {
+          assert_not_own_property(headers, 'sec-fetch-site');
+      });
+  }, 'sec-fetch-site - HTTPS downgrade (header not sent)');
+
+  promise_test((t) => {
+    const key = '{{uuid()}}';
+
+    return induceRequest(t, makeRequestURL(key, ['httpOrigin', 'sameOrigin'], params))
+      .then(() => retrieve(key))
+      .then((headers) => {
+          assert_own_property(headers, 'sec-fetch-site');
+          assert_equals(headers['sec-fetch-site'], 'cross-site');
+      });
+  }, 'sec-fetch-site - HTTPS upgrade');
+
+  promise_test((t) => {
+    const key = '{{uuid()}}';
+
+    return induceRequest(t, makeRequestURL(key, ['sameOrigin', 'httpOrigin', 'sameOrigin'], params))
+      .then(() => retrieve(key))
+      .then((headers) => {
+          assert_own_property(headers, 'sec-fetch-site');
+          assert_equals(headers['sec-fetch-site'], 'cross-site');
+      });
+  }, 'sec-fetch-site - HTTPS downgrade-upgrade');
+  </script>
+  </body>
+</html>

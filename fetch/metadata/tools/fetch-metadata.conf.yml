@@ -40,6 +40,7 @@ cases:
       element-a.sub.html: [{}]
       element-area.sub.html: [{}]
       element-audio.sub.html: [{}]
+      element-embed.sub.html: [{}]
       element-frame.sub.html: [{}]
       element-iframe.sub.html: [{}]
       element-image.sub.html: [{}]
@@ -121,6 +122,7 @@ cases:
       element-a.sub.html: [{}]
       element-area.sub.html: [{}]
       element-audio.sub.html: [{}]
+      element-embed.sub.html: [{}]
       element-frame.sub.html: [{}]
       element-iframe.sub.html: [{}]
       element-image.sub.html: [{}]
@@ -169,6 +171,7 @@ cases:
       # for the "downgrade-upgrade" scenario, so all other templates must be
       # explicitly ignored.
       audioworklet.https.sub.html: []
+      element-embed.sub.html: []
       element-frame.sub.html: []
       element-iframe.sub.html: []
       element-script.sub.html: []
@@ -242,6 +245,8 @@ cases:
           elementAttrs: { crossorigin: anonymous }
         - expected: cors
           elementAttrs: { crossorigin: use-credentials }
+      element-embed.sub.html:
+        - expected: no-cors
       element-frame.sub.html:
         - expected: navigate
       element-iframe.sub.html:
@@ -338,6 +343,8 @@ cases:
           expected: empty
       element-audio.sub.html:
         - expected: audio
+      element-embed.sub.html:
+        - expected: embed
       element-frame.sub.html:
         # https://github.com/whatwg/html/pull/4976
         - expected: frame
@@ -408,6 +415,8 @@ cases:
         - userActivated: TRUE
           expected: ?1
       element-audio.sub.html:
+        - expected: NULL
+      element-embed.sub.html:
         - expected: NULL
       element-frame.sub.html:
         - expected: NULL
