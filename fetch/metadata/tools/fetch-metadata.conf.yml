@@ -55,6 +55,14 @@ cases:
         - api: location.href
         - api: location.assign
         - api: location.replace
+      window-location-partial.sub.html:
+        - api: location.host
+        - api: location.hostname
+        - api: location.pathname
+        - api: location.port
+        - api: location.protocol
+        - api: location.reload
+        - api: location.search
       script-module-import-dynamic.sub.html: [{}]
       script-module-import-static.sub.html: [{}]
       video-poster.sub.html: [{}]
@@ -132,6 +140,14 @@ cases:
         - api: location.href
         - api: location.assign
         - api: location.replace
+      window-location-partial.sub.html:
+        - api: location.host
+        - api: location.hostname
+        - api: location.pathname
+        - api: location.port
+        - api: location.protocol
+        - api: location.reload
+        - api: location.search
       script-module-import-dynamic.sub.html: [{}]
       script-module-import-static.sub.html: [{}]
       video-poster.sub.html: [{}]
@@ -188,6 +204,14 @@ cases:
         - api: location.href
         - api: location.assign
         - api: location.replace
+      window-location-partial.sub.html:
+        - api: location.host
+        - api: location.hostname
+        - api: location.pathname
+        - api: location.port
+        - api: location.protocol
+        - api: location.reload
+        - api: location.search
       video-poster.sub.html: [{}]
 
   # Sec-Fetch-Mode
@@ -288,6 +312,21 @@ cases:
           expected: navigate
         - api: location.replace
           expected: navigate
+      window-location-partial.sub.html:
+        - api: location.host
+          expected: navigate
+        - api: location.hostname
+          expected: navigate
+        - api: location.pathname
+          expected: navigate
+        - api: location.port
+          expected: navigate
+        - api: location.protocol
+          expected: navigate
+        - api: location.reload
+          expected: navigate
+        - api: location.search
+          expected: navigate
       script-module-import-dynamic.sub.html:
         - expected: cors
       script-module-import-static.sub.html:
@@ -357,6 +396,21 @@ cases:
         - api: location.assign
           expected: document
         - api: location.replace
+          expected: document
+      window-location-partial.sub.html:
+        - api: location.host
+          expected: document
+        - api: location.hostname
+          expected: document
+        - api: location.pathname
+          expected: document
+        - api: location.port
+          expected: document
+        - api: location.protocol
+          expected: document
+        - api: location.reload
+          expected: document
+        - api: location.search
           expected: document
       script-module-import-dynamic.sub.html:
         - expected: script
@@ -447,6 +501,21 @@ cases:
         - api: location.replace
           userActivated: TRUE
           expected: ?1
+      window-location-partial.sub.html:
+        - api: location.host
+          expected: NULL
+        - api: location.hostname
+          expected: NULL
+        - api: location.pathname
+          expected: NULL
+        - api: location.port
+          expected: NULL
+        - api: location.protocol
+          expected: NULL
+        - api: location.reload
+          expected: NULL
+        - api: location.search
+          expected: NULL
       script-module-import-dynamic.sub.html:
         - expected: NULL
       script-module-import-static.sub.html:

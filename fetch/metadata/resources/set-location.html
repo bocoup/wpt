@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf8">
+  </head>
+  <body>
+    <script>
+'use strict';
+
+opener.postMessage('ready', '*');
+
+addEventListener('message', (event) => {
+  if (event.source !== opener) {
+    return;
+  }
+
+  const {api, url} = event.data;
+
+  history.replaceState('', {}, url);
+  const parts = api.split('.');
+
+  if (parts[1] === 'reload') {
+    location.reload();
+  } else {
+    location[parts[1]] = location[parts[1]];
+  }
+});
+    </script>
+  </body>
+</html>

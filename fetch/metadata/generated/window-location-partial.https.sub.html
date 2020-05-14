@@ -1,0 +1,1229 @@
+<!DOCTYPE html>
+<!--
+This test was procedurally generated. Please do not modify it directly.
+Sources:
+- fetch/metadata/tools/fetch-metadata.conf.yml
+- fetch/metadata/tools/templates/window-location-partial.sub.html
+-->
+<html lang="en">
+  <meta charset="utf-8">
+  <meta name="timeout" content="long">
+  <title></title>
+  <script src="/resources/testharness.js"></script>
+  <script src="/resources/testharnessreport.js"></script>
+  <script src="/fetch/metadata/resources/helper.sub.js"></script>
+  <body>
+  <script>
+  'use strict';
+
+  function induceRequest(url, test, api) {
+	let win;
+	try {
+    win = window.open(
+      new URL('/fetch/metadata/resources/set-location.html', url).toString()
+    );
+	} finally {
+	  if (!win) {
+		console.log(url);
+	  }
+	}
+
+    test.add_cleanup(() => win.close());
+
+    return new Promise((resolve) => {
+        addEventListener('message', function handle(event) {
+          if (event.source === win) {
+            removeEventListener('message', handle);
+            resolve();
+          }
+        });
+      })
+      .then(() => {
+        win.postMessage({ url, api }, '*');
+
+        return new Promise((resolve) => {
+            addEventListener('message', (event) => {
+              if (event.source === win) {
+                resolve();
+              }
+            });
+          });
+      });
+  }
+
+  const responseParams = {
+    mime: 'text/html',
+    body: `<script>opener.postMessage('done', '*')</${''}script>`
+  };
+
+  promise_test((t) => {
+    const key = '{{uuid()}}';
+    const url = makeRequestURL(key, ['sameOrigin', 'crossSite', 'sameOrigin'], responseParams);
+
+    return induceRequest(url, t, 'location.host')
+      .then(() => retrieve(key))
+      .then((headers) => {
+          assert_own_property(headers, 'sec-fetch-site');
+          assert_equals(headers['sec-fetch-site'], 'cross-site');
+        });
+  }, 'sec-fetch-site - Same-Origin -> Cross-Site -> Same-Origin redirect - location.host');
+
+  promise_test((t) => {
+    const key = '{{uuid()}}';
+    const url = makeRequestURL(key, ['sameOrigin', 'crossSite', 'sameOrigin'], responseParams);
+
+    return induceRequest(url, t, 'location.hostname')
+      .then(() => retrieve(key))
+      .then((headers) => {
+          assert_own_property(headers, 'sec-fetch-site');
+          assert_equals(headers['sec-fetch-site'], 'cross-site');
+        });
+  }, 'sec-fetch-site - Same-Origin -> Cross-Site -> Same-Origin redirect - location.hostname');
+
+  promise_test((t) => {
+    const key = '{{uuid()}}';
+    const url = makeRequestURL(key, ['sameOrigin', 'crossSite', 'sameOrigin'], responseParams);
+
+    return induceRequest(url, t, 'location.pathname')
+      .then(() => retrieve(key))
+      .then((headers) => {
+          assert_own_property(headers, 'sec-fetch-site');
+          assert_equals(headers['sec-fetch-site'], 'cross-site');
+        });
+  }, 'sec-fetch-site - Same-Origin -> Cross-Site -> Same-Origin redirect - location.pathname');
+
+  promise_test((t) => {
+    const key = '{{uuid()}}';
+    const url = makeRequestURL(key, ['sameOrigin', 'crossSite', 'sameOrigin'], responseParams);
+
+    return induceRequest(url, t, 'location.port')
+      .then(() => retrieve(key))
+      .then((headers) => {
+          assert_own_property(headers, 'sec-fetch-site');
+          assert_equals(headers['sec-fetch-site'], 'cross-site');
+        });
+  }, 'sec-fetch-site - Same-Origin -> Cross-Site -> Same-Origin redirect - location.port');
+
+  promise_test((t) => {
+    const key = '{{uuid()}}';
+    const url = makeRequestURL(key, ['sameOrigin', 'crossSite', 'sameOrigin'], responseParams);
+
+    return induceRequest(url, t, 'location.protocol')
+      .then(() => retrieve(key))
+      .then((headers) => {
+          assert_own_property(headers, 'sec-fetch-site');
+          assert_equals(headers['sec-fetch-site'], 'cross-site');
+        });
+  }, 'sec-fetch-site - Same-Origin -> Cross-Site -> Same-Origin redirect - location.protocol');
+
+  promise_test((t) => {
+    const key = '{{uuid()}}';
+    const url = makeRequestURL(key, ['sameOrigin', 'crossSite', 'sameOrigin'], responseParams);
+
+    return induceRequest(url, t, 'location.reload')
+      .then(() => retrieve(key))
+      .then((headers) => {
+          assert_own_property(headers, 'sec-fetch-site');
+          assert_equals(headers['sec-fetch-site'], 'cross-site');
+        });
+  }, 'sec-fetch-site - Same-Origin -> Cross-Site -> Same-Origin redirect - location.reload');
+
+  promise_test((t) => {
+    const key = '{{uuid()}}';
+    const url = makeRequestURL(key, ['sameOrigin', 'crossSite', 'sameOrigin'], responseParams);
+
+    return induceRequest(url, t, 'location.search')
+      .then(() => retrieve(key))
+      .then((headers) => {
+          assert_own_property(headers, 'sec-fetch-site');
+          assert_equals(headers['sec-fetch-site'], 'cross-site');
+        });
+  }, 'sec-fetch-site - Same-Origin -> Cross-Site -> Same-Origin redirect - location.search');
+
+  promise_test((t) => {
+    const key = '{{uuid()}}';
+    const url = makeRequestURL(key, ['crossSite', 'sameOrigin'], responseParams);
+
+    return induceRequest(url, t, 'location.host')
+      .then(() => retrieve(key))
+      .then((headers) => {
+          assert_own_property(headers, 'sec-fetch-site');
+          assert_equals(headers['sec-fetch-site'], 'cross-site');
+        });
+  }, 'sec-fetch-site - Cross-Site -> Same Origin - location.host');
+
+  promise_test((t) => {
+    const key = '{{uuid()}}';
+    const url = makeRequestURL(key, ['crossSite', 'sameOrigin'], responseParams);
+
+    return induceRequest(url, t, 'location.hostname')
+      .then(() => retrieve(key))
+      .then((headers) => {
+          assert_own_property(headers, 'sec-fetch-site');
+          assert_equals(headers['sec-fetch-site'], 'cross-site');
+        });
+  }, 'sec-fetch-site - Cross-Site -> Same Origin - location.hostname');
+
+  promise_test((t) => {
+    const key = '{{uuid()}}';
+    const url = makeRequestURL(key, ['crossSite', 'sameOrigin'], responseParams);
+
+    return induceRequest(url, t, 'location.pathname')
+      .then(() => retrieve(key))
+      .then((headers) => {
+          assert_own_property(headers, 'sec-fetch-site');
+          assert_equals(headers['sec-fetch-site'], 'cross-site');
+        });
+  }, 'sec-fetch-site - Cross-Site -> Same Origin - location.pathname');
+
+  promise_test((t) => {
+    const key = '{{uuid()}}';
+    const url = makeRequestURL(key, ['crossSite', 'sameOrigin'], responseParams);
+
+    return induceRequest(url, t, 'location.port')
+      .then(() => retrieve(key))
+      .then((headers) => {
+          assert_own_property(headers, 'sec-fetch-site');
+          assert_equals(headers['sec-fetch-site'], 'cross-site');
+        });
+  }, 'sec-fetch-site - Cross-Site -> Same Origin - location.port');
+
+  promise_test((t) => {
+    const key = '{{uuid()}}';
+    const url = makeRequestURL(key, ['crossSite', 'sameOrigin'], responseParams);
+
+    return induceRequest(url, t, 'location.protocol')
+      .then(() => retrieve(key))
+      .then((headers) => {
+          assert_own_property(headers, 'sec-fetch-site');
+          assert_equals(headers['sec-fetch-site'], 'cross-site');
+        });
+  }, 'sec-fetch-site - Cross-Site -> Same Origin - location.protocol');
+
+  promise_test((t) => {
+    const key = '{{uuid()}}';
+    const url = makeRequestURL(key, ['crossSite', 'sameOrigin'], responseParams);
+
+    return induceRequest(url, t, 'location.reload')
+      .then(() => retrieve(key))
+      .then((headers) => {
+          assert_own_property(headers, 'sec-fetch-site');
+          assert_equals(headers['sec-fetch-site'], 'cross-site');
+        });
+  }, 'sec-fetch-site - Cross-Site -> Same Origin - location.reload');
+
+  promise_test((t) => {
+    const key = '{{uuid()}}';
+    const url = makeRequestURL(key, ['crossSite', 'sameOrigin'], responseParams);
+
+    return induceRequest(url, t, 'location.search')
+      .then(() => retrieve(key))
+      .then((headers) => {
+          assert_own_property(headers, 'sec-fetch-site');
+          assert_equals(headers['sec-fetch-site'], 'cross-site');
+        });
+  }, 'sec-fetch-site - Cross-Site -> Same Origin - location.search');
+
+  promise_test((t) => {
+    const key = '{{uuid()}}';
+    const url = makeRequestURL(key, ['crossSite', 'sameSite'], responseParams);
+
+    return induceRequest(url, t, 'location.host')
+      .then(() => retrieve(key))
+      .then((headers) => {
+          assert_own_property(headers, 'sec-fetch-site');
+          assert_equals(headers['sec-fetch-site'], 'cross-site');
+        });
+  }, 'sec-fetch-site - Cross-Site -> Same-Site - location.host');
+
+  promise_test((t) => {
+    const key = '{{uuid()}}';
+    const url = makeRequestURL(key, ['crossSite', 'sameSite'], responseParams);
+
+    return induceRequest(url, t, 'location.hostname')
+      .then(() => retrieve(key))
+      .then((headers) => {
+          assert_own_property(headers, 'sec-fetch-site');
+          assert_equals(headers['sec-fetch-site'], 'cross-site');
+        });
+  }, 'sec-fetch-site - Cross-Site -> Same-Site - location.hostname');
+
+  promise_test((t) => {
+    const key = '{{uuid()}}';
+    const url = makeRequestURL(key, ['crossSite', 'sameSite'], responseParams);
+
+    return induceRequest(url, t, 'location.pathname')
+      .then(() => retrieve(key))
+      .then((headers) => {
+          assert_own_property(headers, 'sec-fetch-site');
+          assert_equals(headers['sec-fetch-site'], 'cross-site');
+        });
+  }, 'sec-fetch-site - Cross-Site -> Same-Site - location.pathname');
+
+  promise_test((t) => {
+    const key = '{{uuid()}}';
+    const url = makeRequestURL(key, ['crossSite', 'sameSite'], responseParams);
+
+    return induceRequest(url, t, 'location.port')
+      .then(() => retrieve(key))
+      .then((headers) => {
+          assert_own_property(headers, 'sec-fetch-site');
+          assert_equals(headers['sec-fetch-site'], 'cross-site');
+        });
+  }, 'sec-fetch-site - Cross-Site -> Same-Site - location.port');
+
+  promise_test((t) => {
+    const key = '{{uuid()}}';
+    const url = makeRequestURL(key, ['crossSite', 'sameSite'], responseParams);
+
+    return induceRequest(url, t, 'location.protocol')
+      .then(() => retrieve(key))
+      .then((headers) => {
+          assert_own_property(headers, 'sec-fetch-site');
+          assert_equals(headers['sec-fetch-site'], 'cross-site');
+        });
+  }, 'sec-fetch-site - Cross-Site -> Same-Site - location.protocol');
+
+  promise_test((t) => {
+    const key = '{{uuid()}}';
+    const url = makeRequestURL(key, ['crossSite', 'sameSite'], responseParams);
+
+    return induceRequest(url, t, 'location.reload')
+      .then(() => retrieve(key))
+      .then((headers) => {
+          assert_own_property(headers, 'sec-fetch-site');
+          assert_equals(headers['sec-fetch-site'], 'cross-site');
+        });
+  }, 'sec-fetch-site - Cross-Site -> Same-Site - location.reload');
+
+  promise_test((t) => {
+    const key = '{{uuid()}}';
+    const url = makeRequestURL(key, ['crossSite', 'sameSite'], responseParams);
+
+    return induceRequest(url, t, 'location.search')
+      .then(() => retrieve(key))
+      .then((headers) => {
+          assert_own_property(headers, 'sec-fetch-site');
+          assert_equals(headers['sec-fetch-site'], 'cross-site');
+        });
+  }, 'sec-fetch-site - Cross-Site -> Same-Site - location.search');
+
+  promise_test((t) => {
+    const key = '{{uuid()}}';
+    const url = makeRequestURL(key, ['crossSite', 'crossSite'], responseParams);
+
+    return induceRequest(url, t, 'location.host')
+      .then(() => retrieve(key))
+      .then((headers) => {
+          assert_own_property(headers, 'sec-fetch-site');
+          assert_equals(headers['sec-fetch-site'], 'cross-site');
+        });
+  }, 'sec-fetch-site - Cross-Site -> Cross-Site - location.host');
+
+  promise_test((t) => {
+    const key = '{{uuid()}}';
+    const url = makeRequestURL(key, ['crossSite', 'crossSite'], responseParams);
+
+    return induceRequest(url, t, 'location.hostname')
+      .then(() => retrieve(key))
+      .then((headers) => {
+          assert_own_property(headers, 'sec-fetch-site');
+          assert_equals(headers['sec-fetch-site'], 'cross-site');
+        });
+  }, 'sec-fetch-site - Cross-Site -> Cross-Site - location.hostname');
+
+  promise_test((t) => {
+    const key = '{{uuid()}}';
+    const url = makeRequestURL(key, ['crossSite', 'crossSite'], responseParams);
+
+    return induceRequest(url, t, 'location.pathname')
+      .then(() => retrieve(key))
+      .then((headers) => {
+          assert_own_property(headers, 'sec-fetch-site');
+          assert_equals(headers['sec-fetch-site'], 'cross-site');
+        });
+  }, 'sec-fetch-site - Cross-Site -> Cross-Site - location.pathname');
+
+  promise_test((t) => {
+    const key = '{{uuid()}}';
+    const url = makeRequestURL(key, ['crossSite', 'crossSite'], responseParams);
+
+    return induceRequest(url, t, 'location.port')
+      .then(() => retrieve(key))
+      .then((headers) => {
+          assert_own_property(headers, 'sec-fetch-site');
+          assert_equals(headers['sec-fetch-site'], 'cross-site');
+        });
+  }, 'sec-fetch-site - Cross-Site -> Cross-Site - location.port');
+
+  promise_test((t) => {
+    const key = '{{uuid()}}';
+    const url = makeRequestURL(key, ['crossSite', 'crossSite'], responseParams);
+
+    return induceRequest(url, t, 'location.protocol')
+      .then(() => retrieve(key))
+      .then((headers) => {
+          assert_own_property(headers, 'sec-fetch-site');
+          assert_equals(headers['sec-fetch-site'], 'cross-site');
+        });
+  }, 'sec-fetch-site - Cross-Site -> Cross-Site - location.protocol');
+
+  promise_test((t) => {
+    const key = '{{uuid()}}';
+    const url = makeRequestURL(key, ['crossSite', 'crossSite'], responseParams);
+
+    return induceRequest(url, t, 'location.reload')
+      .then(() => retrieve(key))
+      .then((headers) => {
+          assert_own_property(headers, 'sec-fetch-site');
+          assert_equals(headers['sec-fetch-site'], 'cross-site');
+        });
+  }, 'sec-fetch-site - Cross-Site -> Cross-Site - location.reload');
+
+  promise_test((t) => {
+    const key = '{{uuid()}}';
+    const url = makeRequestURL(key, ['crossSite', 'crossSite'], responseParams);
+
+    return induceRequest(url, t, 'location.search')
+      .then(() => retrieve(key))
+      .then((headers) => {
+          assert_own_property(headers, 'sec-fetch-site');
+          assert_equals(headers['sec-fetch-site'], 'cross-site');
+        });
+  }, 'sec-fetch-site - Cross-Site -> Cross-Site - location.search');
+
+  promise_test((t) => {
+    const key = '{{uuid()}}';
+    const url = makeRequestURL(key, ['sameOrigin', 'sameOrigin'], responseParams);
+
+    return induceRequest(url, t, 'location.host')
+      .then(() => retrieve(key))
+      .then((headers) => {
+          assert_own_property(headers, 'sec-fetch-site');
+          assert_equals(headers['sec-fetch-site'], 'same-origin');
+        });
+  }, 'sec-fetch-site - Same-Origin -> Same Origin - location.host');
+
+  promise_test((t) => {
+    const key = '{{uuid()}}';
+    const url = makeRequestURL(key, ['sameOrigin', 'sameOrigin'], responseParams);
+
+    return induceRequest(url, t, 'location.hostname')
+      .then(() => retrieve(key))
+      .then((headers) => {
+          assert_own_property(headers, 'sec-fetch-site');
+          assert_equals(headers['sec-fetch-site'], 'same-origin');
+        });
+  }, 'sec-fetch-site - Same-Origin -> Same Origin - location.hostname');
+
+  promise_test((t) => {
+    const key = '{{uuid()}}';
+    const url = makeRequestURL(key, ['sameOrigin', 'sameOrigin'], responseParams);
+
+    return induceRequest(url, t, 'location.pathname')
+      .then(() => retrieve(key))
+      .then((headers) => {
+          assert_own_property(headers, 'sec-fetch-site');
+          assert_equals(headers['sec-fetch-site'], 'same-origin');
+        });
+  }, 'sec-fetch-site - Same-Origin -> Same Origin - location.pathname');
+
+  promise_test((t) => {
+    const key = '{{uuid()}}';
+    const url = makeRequestURL(key, ['sameOrigin', 'sameOrigin'], responseParams);
+
+    return induceRequest(url, t, 'location.port')
+      .then(() => retrieve(key))
+      .then((headers) => {
+          assert_own_property(headers, 'sec-fetch-site');
+          assert_equals(headers['sec-fetch-site'], 'same-origin');
+        });
+  }, 'sec-fetch-site - Same-Origin -> Same Origin - location.port');
+
+  promise_test((t) => {
+    const key = '{{uuid()}}';
+    const url = makeRequestURL(key, ['sameOrigin', 'sameOrigin'], responseParams);
+
+    return induceRequest(url, t, 'location.protocol')
+      .then(() => retrieve(key))
+      .then((headers) => {
+          assert_own_property(headers, 'sec-fetch-site');
+          assert_equals(headers['sec-fetch-site'], 'same-origin');
+        });
+  }, 'sec-fetch-site - Same-Origin -> Same Origin - location.protocol');
+
+  promise_test((t) => {
+    const key = '{{uuid()}}';
+    const url = makeRequestURL(key, ['sameOrigin', 'sameOrigin'], responseParams);
+
+    return induceRequest(url, t, 'location.reload')
+      .then(() => retrieve(key))
+      .then((headers) => {
+          assert_own_property(headers, 'sec-fetch-site');
+          assert_equals(headers['sec-fetch-site'], 'same-origin');
+        });
+  }, 'sec-fetch-site - Same-Origin -> Same Origin - location.reload');
+
+  promise_test((t) => {
+    const key = '{{uuid()}}';
+    const url = makeRequestURL(key, ['sameOrigin', 'sameOrigin'], responseParams);
+
+    return induceRequest(url, t, 'location.search')
+      .then(() => retrieve(key))
+      .then((headers) => {
+          assert_own_property(headers, 'sec-fetch-site');
+          assert_equals(headers['sec-fetch-site'], 'same-origin');
+        });
+  }, 'sec-fetch-site - Same-Origin -> Same Origin - location.search');
+
+  promise_test((t) => {
+    const key = '{{uuid()}}';
+    const url = makeRequestURL(key, ['sameOrigin', 'sameSite'], responseParams);
+
+    return induceRequest(url, t, 'location.host')
+      .then(() => retrieve(key))
+      .then((headers) => {
+          assert_own_property(headers, 'sec-fetch-site');
+          assert_equals(headers['sec-fetch-site'], 'same-site');
+        });
+  }, 'sec-fetch-site - Same-Origin -> Same-Site - location.host');
+
+  promise_test((t) => {
+    const key = '{{uuid()}}';
+    const url = makeRequestURL(key, ['sameOrigin', 'sameSite'], responseParams);
+
+    return induceRequest(url, t, 'location.hostname')
+      .then(() => retrieve(key))
+      .then((headers) => {
+          assert_own_property(headers, 'sec-fetch-site');
+          assert_equals(headers['sec-fetch-site'], 'same-site');
+        });
+  }, 'sec-fetch-site - Same-Origin -> Same-Site - location.hostname');
+
+  promise_test((t) => {
+    const key = '{{uuid()}}';
+    const url = makeRequestURL(key, ['sameOrigin', 'sameSite'], responseParams);
+
+    return induceRequest(url, t, 'location.pathname')
+      .then(() => retrieve(key))
+      .then((headers) => {
+          assert_own_property(headers, 'sec-fetch-site');
+          assert_equals(headers['sec-fetch-site'], 'same-site');
+        });
+  }, 'sec-fetch-site - Same-Origin -> Same-Site - location.pathname');
+
+  promise_test((t) => {
+    const key = '{{uuid()}}';
+    const url = makeRequestURL(key, ['sameOrigin', 'sameSite'], responseParams);
+
+    return induceRequest(url, t, 'location.port')
+      .then(() => retrieve(key))
+      .then((headers) => {
+          assert_own_property(headers, 'sec-fetch-site');
+          assert_equals(headers['sec-fetch-site'], 'same-site');
+        });
+  }, 'sec-fetch-site - Same-Origin -> Same-Site - location.port');
+
+  promise_test((t) => {
+    const key = '{{uuid()}}';
+    const url = makeRequestURL(key, ['sameOrigin', 'sameSite'], responseParams);
+
+    return induceRequest(url, t, 'location.protocol')
+      .then(() => retrieve(key))
+      .then((headers) => {
+          assert_own_property(headers, 'sec-fetch-site');
+          assert_equals(headers['sec-fetch-site'], 'same-site');
+        });
+  }, 'sec-fetch-site - Same-Origin -> Same-Site - location.protocol');
+
+  promise_test((t) => {
+    const key = '{{uuid()}}';
+    const url = makeRequestURL(key, ['sameOrigin', 'sameSite'], responseParams);
+
+    return induceRequest(url, t, 'location.reload')
+      .then(() => retrieve(key))
+      .then((headers) => {
+          assert_own_property(headers, 'sec-fetch-site');
+          assert_equals(headers['sec-fetch-site'], 'same-site');
+        });
+  }, 'sec-fetch-site - Same-Origin -> Same-Site - location.reload');
+
+  promise_test((t) => {
+    const key = '{{uuid()}}';
+    const url = makeRequestURL(key, ['sameOrigin', 'sameSite'], responseParams);
+
+    return induceRequest(url, t, 'location.search')
+      .then(() => retrieve(key))
+      .then((headers) => {
+          assert_own_property(headers, 'sec-fetch-site');
+          assert_equals(headers['sec-fetch-site'], 'same-site');
+        });
+  }, 'sec-fetch-site - Same-Origin -> Same-Site - location.search');
+
+  promise_test((t) => {
+    const key = '{{uuid()}}';
+    const url = makeRequestURL(key, ['sameOrigin', 'crossSite'], responseParams);
+
+    return induceRequest(url, t, 'location.host')
+      .then(() => retrieve(key))
+      .then((headers) => {
+          assert_own_property(headers, 'sec-fetch-site');
+          assert_equals(headers['sec-fetch-site'], 'cross-site');
+        });
+  }, 'sec-fetch-site - Same-Origin -> Cross-Site - location.host');
+
+  promise_test((t) => {
+    const key = '{{uuid()}}';
+    const url = makeRequestURL(key, ['sameOrigin', 'crossSite'], responseParams);
+
+    return induceRequest(url, t, 'location.hostname')
+      .then(() => retrieve(key))
+      .then((headers) => {
+          assert_own_property(headers, 'sec-fetch-site');
+          assert_equals(headers['sec-fetch-site'], 'cross-site');
+        });
+  }, 'sec-fetch-site - Same-Origin -> Cross-Site - location.hostname');
+
+  promise_test((t) => {
+    const key = '{{uuid()}}';
+    const url = makeRequestURL(key, ['sameOrigin', 'crossSite'], responseParams);
+
+    return induceRequest(url, t, 'location.pathname')
+      .then(() => retrieve(key))
+      .then((headers) => {
+          assert_own_property(headers, 'sec-fetch-site');
+          assert_equals(headers['sec-fetch-site'], 'cross-site');
+        });
+  }, 'sec-fetch-site - Same-Origin -> Cross-Site - location.pathname');
+
+  promise_test((t) => {
+    const key = '{{uuid()}}';
+    const url = makeRequestURL(key, ['sameOrigin', 'crossSite'], responseParams);
+
+    return induceRequest(url, t, 'location.port')
+      .then(() => retrieve(key))
+      .then((headers) => {
+          assert_own_property(headers, 'sec-fetch-site');
+          assert_equals(headers['sec-fetch-site'], 'cross-site');
+        });
+  }, 'sec-fetch-site - Same-Origin -> Cross-Site - location.port');
+
+  promise_test((t) => {
+    const key = '{{uuid()}}';
+    const url = makeRequestURL(key, ['sameOrigin', 'crossSite'], responseParams);
+
+    return induceRequest(url, t, 'location.protocol')
+      .then(() => retrieve(key))
+      .then((headers) => {
+          assert_own_property(headers, 'sec-fetch-site');
+          assert_equals(headers['sec-fetch-site'], 'cross-site');
+        });
+  }, 'sec-fetch-site - Same-Origin -> Cross-Site - location.protocol');
+
+  promise_test((t) => {
+    const key = '{{uuid()}}';
+    const url = makeRequestURL(key, ['sameOrigin', 'crossSite'], responseParams);
+
+    return induceRequest(url, t, 'location.reload')
+      .then(() => retrieve(key))
+      .then((headers) => {
+          assert_own_property(headers, 'sec-fetch-site');
+          assert_equals(headers['sec-fetch-site'], 'cross-site');
+        });
+  }, 'sec-fetch-site - Same-Origin -> Cross-Site - location.reload');
+
+  promise_test((t) => {
+    const key = '{{uuid()}}';
+    const url = makeRequestURL(key, ['sameOrigin', 'crossSite'], responseParams);
+
+    return induceRequest(url, t, 'location.search')
+      .then(() => retrieve(key))
+      .then((headers) => {
+          assert_own_property(headers, 'sec-fetch-site');
+          assert_equals(headers['sec-fetch-site'], 'cross-site');
+        });
+  }, 'sec-fetch-site - Same-Origin -> Cross-Site - location.search');
+
+  promise_test((t) => {
+    const key = '{{uuid()}}';
+    const url = makeRequestURL(key, ['sameSite', 'sameOrigin'], responseParams);
+
+    return induceRequest(url, t, 'location.host')
+      .then(() => retrieve(key))
+      .then((headers) => {
+          assert_own_property(headers, 'sec-fetch-site');
+          assert_equals(headers['sec-fetch-site'], 'same-site');
+        });
+  }, 'sec-fetch-site - Same-Site -> Same Origin - location.host');
+
+  promise_test((t) => {
+    const key = '{{uuid()}}';
+    const url = makeRequestURL(key, ['sameSite', 'sameOrigin'], responseParams);
+
+    return induceRequest(url, t, 'location.hostname')
+      .then(() => retrieve(key))
+      .then((headers) => {
+          assert_own_property(headers, 'sec-fetch-site');
+          assert_equals(headers['sec-fetch-site'], 'same-site');
+        });
+  }, 'sec-fetch-site - Same-Site -> Same Origin - location.hostname');
+
+  promise_test((t) => {
+    const key = '{{uuid()}}';
+    const url = makeRequestURL(key, ['sameSite', 'sameOrigin'], responseParams);
+
+    return induceRequest(url, t, 'location.pathname')
+      .then(() => retrieve(key))
+      .then((headers) => {
+          assert_own_property(headers, 'sec-fetch-site');
+          assert_equals(headers['sec-fetch-site'], 'same-site');
+        });
+  }, 'sec-fetch-site - Same-Site -> Same Origin - location.pathname');
+
+  promise_test((t) => {
+    const key = '{{uuid()}}';
+    const url = makeRequestURL(key, ['sameSite', 'sameOrigin'], responseParams);
+
+    return induceRequest(url, t, 'location.port')
+      .then(() => retrieve(key))
+      .then((headers) => {
+          assert_own_property(headers, 'sec-fetch-site');
+          assert_equals(headers['sec-fetch-site'], 'same-site');
+        });
+  }, 'sec-fetch-site - Same-Site -> Same Origin - location.port');
+
+  promise_test((t) => {
+    const key = '{{uuid()}}';
+    const url = makeRequestURL(key, ['sameSite', 'sameOrigin'], responseParams);
+
+    return induceRequest(url, t, 'location.protocol')
+      .then(() => retrieve(key))
+      .then((headers) => {
+          assert_own_property(headers, 'sec-fetch-site');
+          assert_equals(headers['sec-fetch-site'], 'same-site');
+        });
+  }, 'sec-fetch-site - Same-Site -> Same Origin - location.protocol');
+
+  promise_test((t) => {
+    const key = '{{uuid()}}';
+    const url = makeRequestURL(key, ['sameSite', 'sameOrigin'], responseParams);
+
+    return induceRequest(url, t, 'location.reload')
+      .then(() => retrieve(key))
+      .then((headers) => {
+          assert_own_property(headers, 'sec-fetch-site');
+          assert_equals(headers['sec-fetch-site'], 'same-site');
+        });
+  }, 'sec-fetch-site - Same-Site -> Same Origin - location.reload');
+
+  promise_test((t) => {
+    const key = '{{uuid()}}';
+    const url = makeRequestURL(key, ['sameSite', 'sameOrigin'], responseParams);
+
+    return induceRequest(url, t, 'location.search')
+      .then(() => retrieve(key))
+      .then((headers) => {
+          assert_own_property(headers, 'sec-fetch-site');
+          assert_equals(headers['sec-fetch-site'], 'same-site');
+        });
+  }, 'sec-fetch-site - Same-Site -> Same Origin - location.search');
+
+  promise_test((t) => {
+    const key = '{{uuid()}}';
+    const url = makeRequestURL(key, ['sameSite', 'sameSite'], responseParams);
+
+    return induceRequest(url, t, 'location.host')
+      .then(() => retrieve(key))
+      .then((headers) => {
+          assert_own_property(headers, 'sec-fetch-site');
+          assert_equals(headers['sec-fetch-site'], 'same-site');
+        });
+  }, 'sec-fetch-site - Same-Site -> Same-Site - location.host');
+
+  promise_test((t) => {
+    const key = '{{uuid()}}';
+    const url = makeRequestURL(key, ['sameSite', 'sameSite'], responseParams);
+
+    return induceRequest(url, t, 'location.hostname')
+      .then(() => retrieve(key))
+      .then((headers) => {
+          assert_own_property(headers, 'sec-fetch-site');
+          assert_equals(headers['sec-fetch-site'], 'same-site');
+        });
+  }, 'sec-fetch-site - Same-Site -> Same-Site - location.hostname');
+
+  promise_test((t) => {
+    const key = '{{uuid()}}';
+    const url = makeRequestURL(key, ['sameSite', 'sameSite'], responseParams);
+
+    return induceRequest(url, t, 'location.pathname')
+      .then(() => retrieve(key))
+      .then((headers) => {
+          assert_own_property(headers, 'sec-fetch-site');
+          assert_equals(headers['sec-fetch-site'], 'same-site');
+        });
+  }, 'sec-fetch-site - Same-Site -> Same-Site - location.pathname');
+
+  promise_test((t) => {
+    const key = '{{uuid()}}';
+    const url = makeRequestURL(key, ['sameSite', 'sameSite'], responseParams);
+
+    return induceRequest(url, t, 'location.port')
+      .then(() => retrieve(key))
+      .then((headers) => {
+          assert_own_property(headers, 'sec-fetch-site');
+          assert_equals(headers['sec-fetch-site'], 'same-site');
+        });
+  }, 'sec-fetch-site - Same-Site -> Same-Site - location.port');
+
+  promise_test((t) => {
+    const key = '{{uuid()}}';
+    const url = makeRequestURL(key, ['sameSite', 'sameSite'], responseParams);
+
+    return induceRequest(url, t, 'location.protocol')
+      .then(() => retrieve(key))
+      .then((headers) => {
+          assert_own_property(headers, 'sec-fetch-site');
+          assert_equals(headers['sec-fetch-site'], 'same-site');
+        });
+  }, 'sec-fetch-site - Same-Site -> Same-Site - location.protocol');
+
+  promise_test((t) => {
+    const key = '{{uuid()}}';
+    const url = makeRequestURL(key, ['sameSite', 'sameSite'], responseParams);
+
+    return induceRequest(url, t, 'location.reload')
+      .then(() => retrieve(key))
+      .then((headers) => {
+          assert_own_property(headers, 'sec-fetch-site');
+          assert_equals(headers['sec-fetch-site'], 'same-site');
+        });
+  }, 'sec-fetch-site - Same-Site -> Same-Site - location.reload');
+
+  promise_test((t) => {
+    const key = '{{uuid()}}';
+    const url = makeRequestURL(key, ['sameSite', 'sameSite'], responseParams);
+
+    return induceRequest(url, t, 'location.search')
+      .then(() => retrieve(key))
+      .then((headers) => {
+          assert_own_property(headers, 'sec-fetch-site');
+          assert_equals(headers['sec-fetch-site'], 'same-site');
+        });
+  }, 'sec-fetch-site - Same-Site -> Same-Site - location.search');
+
+  promise_test((t) => {
+    const key = '{{uuid()}}';
+    const url = makeRequestURL(key, ['sameSite', 'crossSite'], responseParams);
+
+    return induceRequest(url, t, 'location.host')
+      .then(() => retrieve(key))
+      .then((headers) => {
+          assert_own_property(headers, 'sec-fetch-site');
+          assert_equals(headers['sec-fetch-site'], 'cross-site');
+        });
+  }, 'sec-fetch-site - Same-Site -> Cross-Site - location.host');
+
+  promise_test((t) => {
+    const key = '{{uuid()}}';
+    const url = makeRequestURL(key, ['sameSite', 'crossSite'], responseParams);
+
+    return induceRequest(url, t, 'location.hostname')
+      .then(() => retrieve(key))
+      .then((headers) => {
+          assert_own_property(headers, 'sec-fetch-site');
+          assert_equals(headers['sec-fetch-site'], 'cross-site');
+        });
+  }, 'sec-fetch-site - Same-Site -> Cross-Site - location.hostname');
+
+  promise_test((t) => {
+    const key = '{{uuid()}}';
+    const url = makeRequestURL(key, ['sameSite', 'crossSite'], responseParams);
+
+    return induceRequest(url, t, 'location.pathname')
+      .then(() => retrieve(key))
+      .then((headers) => {
+          assert_own_property(headers, 'sec-fetch-site');
+          assert_equals(headers['sec-fetch-site'], 'cross-site');
+        });
+  }, 'sec-fetch-site - Same-Site -> Cross-Site - location.pathname');
+
+  promise_test((t) => {
+    const key = '{{uuid()}}';
+    const url = makeRequestURL(key, ['sameSite', 'crossSite'], responseParams);
+
+    return induceRequest(url, t, 'location.port')
+      .then(() => retrieve(key))
+      .then((headers) => {
+          assert_own_property(headers, 'sec-fetch-site');
+          assert_equals(headers['sec-fetch-site'], 'cross-site');
+        });
+  }, 'sec-fetch-site - Same-Site -> Cross-Site - location.port');
+
+  promise_test((t) => {
+    const key = '{{uuid()}}';
+    const url = makeRequestURL(key, ['sameSite', 'crossSite'], responseParams);
+
+    return induceRequest(url, t, 'location.protocol')
+      .then(() => retrieve(key))
+      .then((headers) => {
+          assert_own_property(headers, 'sec-fetch-site');
+          assert_equals(headers['sec-fetch-site'], 'cross-site');
+        });
+  }, 'sec-fetch-site - Same-Site -> Cross-Site - location.protocol');
+
+  promise_test((t) => {
+    const key = '{{uuid()}}';
+    const url = makeRequestURL(key, ['sameSite', 'crossSite'], responseParams);
+
+    return induceRequest(url, t, 'location.reload')
+      .then(() => retrieve(key))
+      .then((headers) => {
+          assert_own_property(headers, 'sec-fetch-site');
+          assert_equals(headers['sec-fetch-site'], 'cross-site');
+        });
+  }, 'sec-fetch-site - Same-Site -> Cross-Site - location.reload');
+
+  promise_test((t) => {
+    const key = '{{uuid()}}';
+    const url = makeRequestURL(key, ['sameSite', 'crossSite'], responseParams);
+
+    return induceRequest(url, t, 'location.search')
+      .then(() => retrieve(key))
+      .then((headers) => {
+          assert_own_property(headers, 'sec-fetch-site');
+          assert_equals(headers['sec-fetch-site'], 'cross-site');
+        });
+  }, 'sec-fetch-site - Same-Site -> Cross-Site - location.search');
+
+  promise_test((t) => {
+    const key = '{{uuid()}}';
+    const url = makeRequestURL(key, ['sameOrigin', 'httpOrigin', 'sameOrigin'], responseParams);
+
+    return induceRequest(url, t, 'location.host')
+      .then(() => retrieve(key))
+      .then((headers) => {
+          assert_own_property(headers, 'sec-fetch-site');
+          assert_equals(headers['sec-fetch-site'], 'cross-site');
+        });
+  }, 'sec-fetch-site - HTTPS downgrade-upgrade - location.host');
+
+  promise_test((t) => {
+    const key = '{{uuid()}}';
+    const url = makeRequestURL(key, ['sameOrigin', 'httpOrigin', 'sameOrigin'], responseParams);
+
+    return induceRequest(url, t, 'location.hostname')
+      .then(() => retrieve(key))
+      .then((headers) => {
+          assert_own_property(headers, 'sec-fetch-site');
+          assert_equals(headers['sec-fetch-site'], 'cross-site');
+        });
+  }, 'sec-fetch-site - HTTPS downgrade-upgrade - location.hostname');
+
+  promise_test((t) => {
+    const key = '{{uuid()}}';
+    const url = makeRequestURL(key, ['sameOrigin', 'httpOrigin', 'sameOrigin'], responseParams);
+
+    return induceRequest(url, t, 'location.pathname')
+      .then(() => retrieve(key))
+      .then((headers) => {
+          assert_own_property(headers, 'sec-fetch-site');
+          assert_equals(headers['sec-fetch-site'], 'cross-site');
+        });
+  }, 'sec-fetch-site - HTTPS downgrade-upgrade - location.pathname');
+
+  promise_test((t) => {
+    const key = '{{uuid()}}';
+    const url = makeRequestURL(key, ['sameOrigin', 'httpOrigin', 'sameOrigin'], responseParams);
+
+    return induceRequest(url, t, 'location.port')
+      .then(() => retrieve(key))
+      .then((headers) => {
+          assert_own_property(headers, 'sec-fetch-site');
+          assert_equals(headers['sec-fetch-site'], 'cross-site');
+        });
+  }, 'sec-fetch-site - HTTPS downgrade-upgrade - location.port');
+
+  promise_test((t) => {
+    const key = '{{uuid()}}';
+    const url = makeRequestURL(key, ['sameOrigin', 'httpOrigin', 'sameOrigin'], responseParams);
+
+    return induceRequest(url, t, 'location.protocol')
+      .then(() => retrieve(key))
+      .then((headers) => {
+          assert_own_property(headers, 'sec-fetch-site');
+          assert_equals(headers['sec-fetch-site'], 'cross-site');
+        });
+  }, 'sec-fetch-site - HTTPS downgrade-upgrade - location.protocol');
+
+  promise_test((t) => {
+    const key = '{{uuid()}}';
+    const url = makeRequestURL(key, ['sameOrigin', 'httpOrigin', 'sameOrigin'], responseParams);
+
+    return induceRequest(url, t, 'location.reload')
+      .then(() => retrieve(key))
+      .then((headers) => {
+          assert_own_property(headers, 'sec-fetch-site');
+          assert_equals(headers['sec-fetch-site'], 'cross-site');
+        });
+  }, 'sec-fetch-site - HTTPS downgrade-upgrade - location.reload');
+
+  promise_test((t) => {
+    const key = '{{uuid()}}';
+    const url = makeRequestURL(key, ['sameOrigin', 'httpOrigin', 'sameOrigin'], responseParams);
+
+    return induceRequest(url, t, 'location.search')
+      .then(() => retrieve(key))
+      .then((headers) => {
+          assert_own_property(headers, 'sec-fetch-site');
+          assert_equals(headers['sec-fetch-site'], 'cross-site');
+        });
+  }, 'sec-fetch-site - HTTPS downgrade-upgrade - location.search');
+
+  promise_test((t) => {
+    const key = '{{uuid()}}';
+    const url = makeRequestURL(key, [], responseParams);
+
+    return induceRequest(url, t, 'location.host')
+      .then(() => retrieve(key))
+      .then((headers) => {
+          assert_own_property(headers, 'sec-fetch-mode');
+          assert_equals(headers['sec-fetch-mode'], 'navigate');
+        });
+  }, 'sec-fetch-mode - location.host');
+
+  promise_test((t) => {
+    const key = '{{uuid()}}';
+    const url = makeRequestURL(key, [], responseParams);
+
+    return induceRequest(url, t, 'location.hostname')
+      .then(() => retrieve(key))
+      .then((headers) => {
+          assert_own_property(headers, 'sec-fetch-mode');
+          assert_equals(headers['sec-fetch-mode'], 'navigate');
+        });
+  }, 'sec-fetch-mode - location.hostname');
+
+  promise_test((t) => {
+    const key = '{{uuid()}}';
+    const url = makeRequestURL(key, [], responseParams);
+
+    return induceRequest(url, t, 'location.pathname')
+      .then(() => retrieve(key))
+      .then((headers) => {
+          assert_own_property(headers, 'sec-fetch-mode');
+          assert_equals(headers['sec-fetch-mode'], 'navigate');
+        });
+  }, 'sec-fetch-mode - location.pathname');
+
+  promise_test((t) => {
+    const key = '{{uuid()}}';
+    const url = makeRequestURL(key, [], responseParams);
+
+    return induceRequest(url, t, 'location.port')
+      .then(() => retrieve(key))
+      .then((headers) => {
+          assert_own_property(headers, 'sec-fetch-mode');
+          assert_equals(headers['sec-fetch-mode'], 'navigate');
+        });
+  }, 'sec-fetch-mode - location.port');
+
+  promise_test((t) => {
+    const key = '{{uuid()}}';
+    const url = makeRequestURL(key, [], responseParams);
+
+    return induceRequest(url, t, 'location.protocol')
+      .then(() => retrieve(key))
+      .then((headers) => {
+          assert_own_property(headers, 'sec-fetch-mode');
+          assert_equals(headers['sec-fetch-mode'], 'navigate');
+        });
+  }, 'sec-fetch-mode - location.protocol');
+
+  promise_test((t) => {
+    const key = '{{uuid()}}';
+    const url = makeRequestURL(key, [], responseParams);
+
+    return induceRequest(url, t, 'location.reload')
+      .then(() => retrieve(key))
+      .then((headers) => {
+          assert_own_property(headers, 'sec-fetch-mode');
+          assert_equals(headers['sec-fetch-mode'], 'navigate');
+        });
+  }, 'sec-fetch-mode - location.reload');
+
+  promise_test((t) => {
+    const key = '{{uuid()}}';
+    const url = makeRequestURL(key, [], responseParams);
+
+    return induceRequest(url, t, 'location.search')
+      .then(() => retrieve(key))
+      .then((headers) => {
+          assert_own_property(headers, 'sec-fetch-mode');
+          assert_equals(headers['sec-fetch-mode'], 'navigate');
+        });
+  }, 'sec-fetch-mode - location.search');
+
+  promise_test((t) => {
+    const key = '{{uuid()}}';
+    const url = makeRequestURL(key, [], responseParams);
+
+    return induceRequest(url, t, 'location.host')
+      .then(() => retrieve(key))
+      .then((headers) => {
+          assert_own_property(headers, 'sec-fetch-dest');
+          assert_equals(headers['sec-fetch-dest'], 'document');
+        });
+  }, 'sec-fetch-dest - location.host');
+
+  promise_test((t) => {
+    const key = '{{uuid()}}';
+    const url = makeRequestURL(key, [], responseParams);
+
+    return induceRequest(url, t, 'location.hostname')
+      .then(() => retrieve(key))
+      .then((headers) => {
+          assert_own_property(headers, 'sec-fetch-dest');
+          assert_equals(headers['sec-fetch-dest'], 'document');
+        });
+  }, 'sec-fetch-dest - location.hostname');
+
+  promise_test((t) => {
+    const key = '{{uuid()}}';
+    const url = makeRequestURL(key, [], responseParams);
+
+    return induceRequest(url, t, 'location.pathname')
+      .then(() => retrieve(key))
+      .then((headers) => {
+          assert_own_property(headers, 'sec-fetch-dest');
+          assert_equals(headers['sec-fetch-dest'], 'document');
+        });
+  }, 'sec-fetch-dest - location.pathname');
+
+  promise_test((t) => {
+    const key = '{{uuid()}}';
+    const url = makeRequestURL(key, [], responseParams);
+
+    return induceRequest(url, t, 'location.port')
+      .then(() => retrieve(key))
+      .then((headers) => {
+          assert_own_property(headers, 'sec-fetch-dest');
+          assert_equals(headers['sec-fetch-dest'], 'document');
+        });
+  }, 'sec-fetch-dest - location.port');
+
+  promise_test((t) => {
+    const key = '{{uuid()}}';
+    const url = makeRequestURL(key, [], responseParams);
+
+    return induceRequest(url, t, 'location.protocol')
+      .then(() => retrieve(key))
+      .then((headers) => {
+          assert_own_property(headers, 'sec-fetch-dest');
+          assert_equals(headers['sec-fetch-dest'], 'document');
+        });
+  }, 'sec-fetch-dest - location.protocol');
+
+  promise_test((t) => {
+    const key = '{{uuid()}}';
+    const url = makeRequestURL(key, [], responseParams);
+
+    return induceRequest(url, t, 'location.reload')
+      .then(() => retrieve(key))
+      .then((headers) => {
+          assert_own_property(headers, 'sec-fetch-dest');
+          assert_equals(headers['sec-fetch-dest'], 'document');
+        });
+  }, 'sec-fetch-dest - location.reload');
+
+  promise_test((t) => {
+    const key = '{{uuid()}}';
+    const url = makeRequestURL(key, [], responseParams);
+
+    return induceRequest(url, t, 'location.search')
+      .then(() => retrieve(key))
+      .then((headers) => {
+          assert_own_property(headers, 'sec-fetch-dest');
+          assert_equals(headers['sec-fetch-dest'], 'document');
+        });
+  }, 'sec-fetch-dest - location.search');
+
+  promise_test((t) => {
+    const key = '{{uuid()}}';
+    const url = makeRequestURL(key, [], responseParams);
+
+    return induceRequest(url, t, 'location.host')
+      .then(() => retrieve(key))
+      .then((headers) => {
+          assert_not_own_property(headers, 'sec-fetch-user');
+        });
+  }, 'sec-fetch-user - location.host');
+
+  promise_test((t) => {
+    const key = '{{uuid()}}';
+    const url = makeRequestURL(key, [], responseParams);
+
+    return induceRequest(url, t, 'location.hostname')
+      .then(() => retrieve(key))
+      .then((headers) => {
+          assert_not_own_property(headers, 'sec-fetch-user');
+        });
+  }, 'sec-fetch-user - location.hostname');
+
+  promise_test((t) => {
+    const key = '{{uuid()}}';
+    const url = makeRequestURL(key, [], responseParams);
+
+    return induceRequest(url, t, 'location.pathname')
+      .then(() => retrieve(key))
+      .then((headers) => {
+          assert_not_own_property(headers, 'sec-fetch-user');
+        });
+  }, 'sec-fetch-user - location.pathname');
+
+  promise_test((t) => {
+    const key = '{{uuid()}}';
+    const url = makeRequestURL(key, [], responseParams);
+
+    return induceRequest(url, t, 'location.port')
+      .then(() => retrieve(key))
+      .then((headers) => {
+          assert_not_own_property(headers, 'sec-fetch-user');
+        });
+  }, 'sec-fetch-user - location.port');
+
+  promise_test((t) => {
+    const key = '{{uuid()}}';
+    const url = makeRequestURL(key, [], responseParams);
+
+    return induceRequest(url, t, 'location.protocol')
+      .then(() => retrieve(key))
+      .then((headers) => {
+          assert_not_own_property(headers, 'sec-fetch-user');
+        });
+  }, 'sec-fetch-user - location.protocol');
+
+  promise_test((t) => {
+    const key = '{{uuid()}}';
+    const url = makeRequestURL(key, [], responseParams);
+
+    return induceRequest(url, t, 'location.reload')
+      .then(() => retrieve(key))
+      .then((headers) => {
+          assert_not_own_property(headers, 'sec-fetch-user');
+        });
+  }, 'sec-fetch-user - location.reload');
+
+  promise_test((t) => {
+    const key = '{{uuid()}}';
+    const url = makeRequestURL(key, [], responseParams);
+
+    return induceRequest(url, t, 'location.search')
+      .then(() => retrieve(key))
+      .then((headers) => {
+          assert_not_own_property(headers, 'sec-fetch-user');
+        });
+  }, 'sec-fetch-user - location.search');
+  </script>
+  </body>
+</html>
