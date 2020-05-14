@@ -50,6 +50,7 @@ cases:
         - method: GET
         - method: POST
       header-refresh.optional.sub.html: [{}]
+      window-history.sub.html: [{}]
       window-location.sub.html:
         - api: location
         - api: location.href
@@ -127,6 +128,7 @@ cases:
         - method: GET
         - method: POST
       header-refresh.optional.sub.html: [{}]
+      window-history.sub.html: [{}]
       window-location.sub.html:
         - api: location
         - api: location.href
@@ -183,6 +185,7 @@ cases:
         - method: GET
         - method: POST
       header-refresh.optional.sub.html: [{}]
+      window-history.sub.html: [{}]
       window-location.sub.html:
         - api: location
         - api: location.href
@@ -279,6 +282,8 @@ cases:
           expected: navigate
       header-refresh.optional.sub.html:
         - expected: navigate
+      window-history.sub.html:
+        - expected: navigate
       window-location.sub.html:
         - api: location
           expected: navigate
@@ -348,6 +353,8 @@ cases:
         - method: POST
           expected: document
       header-refresh.optional.sub.html:
+        - expected: document
+      window-history.sub.html:
         - expected: document
       window-location.sub.html:
         - api: location
@@ -425,6 +432,8 @@ cases:
           userActivated: TRUE
           expected: ?1
       header-refresh.optional.sub.html:
+        - expected: NULL
+      window-history.sub.html:
         - expected: NULL
       window-location.sub.html:
         - api: location

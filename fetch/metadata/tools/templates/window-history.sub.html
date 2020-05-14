@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<!--
+[%provenance%]
+-->
+<html lang="en">
+  <meta charset="utf-8">
+  {%- if subtests|length > 10 %}
+  <meta name="timeout" content="long">
+  {%- endif %}
+  <title>[%title%]</title>
+  <script src="/resources/testharness.js"></script>
+  <script src="/resources/testharnessreport.js"></script>
+  {%- if subtests|selectattr('userActivated')|list %}
+  <script src="/resources/testdriver.js"></script>
+  {%- endif %}
+  <script src="/fetch/metadata/resources/helper.sub.js"></script>
+  <body>
+  <script>
+  'use strict';
+
+  function induceRequest(url, test, clear) {
+    const win = window.open(url);
+
+    test.add_cleanup(() => win.close());
+
+    const whenDone = () => {
+      return new Promise((resolve) => {
+        addEventListener('message', (event) => {
+          if (event.source === win) {
+            resolve();
+          }
+        });
+      })
+    };
+
+    return whenDone()
+      .then(clear)
+      .then(() => {
+        win.history.back();
+        return new Promise((resolve) => {
+          win.addEventListener('unload', resolve);
+        });
+      })
+      .then(whenDone);
+  }
+
+  const messageOpenerUrl = new URL(
+    '/fetch/metadata/resources/message-opener.html', location
+  );
+  // For these tests to function, replacement must *not* be enabled during
+  // navigation. Assignment must therefore take place after the document has
+  // completely loaded [1]. This event is not directly observable, but it is
+  // scheduled as a task immediately following the global object's `load`
+  // event [2]. By queuing a task during the dispatch of the `load` event,
+  // navigation can be consistently triggered without replacement.
+  //
+  // [1] https://html.spec.whatwg.org/multipage/history.html#location-object-setter-navigate
+  // [2] https://html.spec.whatwg.org/multipage/parsing.html#the-end
+  const responseParams = {
+    mime: 'text/html',
+    body: `<script>
+      window.addEventListener('load', () => {
+        setTimeout(() => location.assign('${messageOpenerUrl}'))
+      });
+    <`+`/script>`
+  };
+  {%- for subtest in subtests %}
+
+  promise_test((t) => {
+    const key = '{{uuid()}}';
+    const url = makeRequestURL(key, [% subtest.origins %], responseParams);
+
+    return induceRequest(url, t, () => retrieve(key))
+      .then(() => retrieve(key))
+      .then((headers) => {
+        {%- if subtest.expected == none %}
+          assert_not_own_property(headers, '[%subtest.headerName%]');
+        {%- else %}
+          assert_own_property(headers, '[%subtest.headerName%]');
+          assert_equals(headers['[%subtest.headerName%]'], '[%subtest.expected%]');
+        {%- endif %}
+        });
+  }, '[%subtest.headerName%] - [%subtest.description | pad("right", " - ")%][%subtest.api%][% " with user activation" if subtest.userActivated%]');
+
+  {%- endfor %}
+  </script>
+  </body>
+</html>
