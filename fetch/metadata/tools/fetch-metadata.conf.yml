@@ -37,7 +37,7 @@ cases:
       worker-dedicated-constructor.sub.html: []
 
       appcache-manifest.sub.https.html: [{}]
-      css-background-image.sub.html:
+      css-images.sub.html:
         - filename_flags: [tentative]
       css-font-face.sub.html:
         - filename_flags: [tentative]
@@ -125,7 +125,7 @@ cases:
 
       appcache-manifest.sub.https.html: [{}]
       audioworklet.https.sub.html: [{}]
-      css-background-image.sub.html:
+      css-images.sub.html:
         - filename_flags: [tentative]
       css-font-face.sub.html:
         - filename_flags: [tentative]
@@ -202,7 +202,7 @@ cases:
       worker-dedicated-importscripts.sub.html: []
 
       appcache-manifest.sub.https.html: [{}]
-      css-background-image.sub.html:
+      css-images.sub.html:
         - filename_flags: [tentative]
       element-a.sub.html: [{}]
       element-area.sub.html: [{}]
@@ -242,7 +242,7 @@ cases:
       audioworklet.https.sub.html:
         # https://html.spec.whatwg.org/multipage/webappapis.html#fetch-a-single-module-script
         - expected: cors
-      css-background-image.sub.html:
+      css-images.sub.html:
         - expected: no-cors
           filename_flags: [tentative]
       css-font-face.sub.html:
@@ -369,7 +369,7 @@ cases:
       audioworklet.https.sub.html:
         # https://github.com/WebAudio/web-audio-api/issues/2203
         - expected: audioworklet
-      css-background-image.sub.html:
+      css-images.sub.html:
         - expected: image
           filename_flags: [tentative]
       css-font-face.sub.html:
@@ -457,7 +457,7 @@ cases:
         - expected: NULL
       audioworklet.https.sub.html:
         - expected: NULL
-      css-background-image.sub.html:
+      css-images.sub.html:
         - expected: NULL
           filename_flags: [tentative]
       css-font-face.sub.html:
