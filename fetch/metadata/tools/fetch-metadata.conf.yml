@@ -52,6 +52,7 @@ cases:
         - sourceAttr: srcset
       element-link-icon.sub.html: [{}]
       element-meta-refresh.optional.sub.html: [{}]
+      element-picture.sub.html: [{}]
       element-script.sub.html:
         - {}
         - elementAttrs: { type: module }
@@ -142,6 +143,7 @@ cases:
         - sourceAttr: srcset
       element-link-icon.sub.html: [{}]
       element-meta-refresh.optional.sub.html: [{}]
+      element-picture.sub.html: [{}]
       element-script.sub.html:
         - {}
         - elementAttrs: { type: module }
@@ -195,6 +197,7 @@ cases:
       element-script.sub.html: []
       fetch.sub.html: []
       font.sub.html: []
+      element-picture.sub.html: []
       script-module-import-static.sub.html: []
       script-module-import-dynamic.sub.html: []
       cors-preflight.sub.html: []
@@ -314,6 +317,14 @@ cases:
           elementAttrs: { crossorigin: use-credentials }
       element-meta-refresh.optional.sub.html:
         - expected: navigate
+      element-picture.sub.html:
+        - expected: no-cors
+        - expected: cors
+          elementAttrs: { crossorigin: '' }
+        - expected: cors
+          elementAttrs: { crossorigin: anonymous }
+        - expected: cors
+          elementAttrs: { crossorigin: use-credentials }
       element-script.sub.html:
         - expected: no-cors
         - expected: cors
@@ -428,6 +439,8 @@ cases:
         - expected: empty
       element-meta-refresh.optional.sub.html:
         - expected: document
+      element-picture.sub.html:
+        - expected: image
       element-script.sub.html:
         - expected: script
       element-video.sub.html:
@@ -518,6 +531,8 @@ cases:
       element-link-icon.sub.html:
         - expected: NULL
       element-meta-refresh.optional.sub.html:
+        - expected: NULL
+      element-picture.sub.html:
         - expected: NULL
       element-script.sub.html:
         - expected: NULL
