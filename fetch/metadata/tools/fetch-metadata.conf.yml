@@ -47,7 +47,9 @@ cases:
       element-embed.sub.html: [{}]
       element-frame.sub.html: [{}]
       element-iframe.sub.html: [{}]
-      element-img.sub.html: [{}]
+      element-img.sub.html:
+        - sourceAttr: src
+        - sourceAttr: srcset
       element-link-icon.sub.html: [{}]
       element-meta-refresh.optional.sub.html: [{}]
       element-script.sub.html:
@@ -135,7 +137,9 @@ cases:
       element-embed.sub.html: [{}]
       element-frame.sub.html: [{}]
       element-iframe.sub.html: [{}]
-      element-img.sub.html: [{}]
+      element-img.sub.html:
+        - sourceAttr: src
+        - sourceAttr: srcset
       element-link-icon.sub.html: [{}]
       element-meta-refresh.optional.sub.html: [{}]
       element-script.sub.html:
@@ -207,7 +211,10 @@ cases:
       element-a.sub.html: [{}]
       element-area.sub.html: [{}]
       element-audio.sub.html: [{}]
-      element-img.sub.html: [{}]
+      element-img.sub.html:
+        # srcset omitted because it is not "optionally-blockable"
+        # https://w3c.github.io/webappsec-mixed-content/#category-optionally-blockable
+        - sourceAttr: src
       element-meta-refresh.optional.sub.html: [{}]
       element-video.sub.html: [{}]
       element-video-poster.sub.html: [{}]
@@ -275,12 +282,27 @@ cases:
       element-iframe.sub.html:
         - expected: navigate
       element-img.sub.html:
-        - expected: no-cors
-        - expected: cors
+        - sourceAttr: src
+          expected: no-cors
+        - sourceAttr: src
+          expected: cors
           elementAttrs: { crossorigin: '' }
-        - expected: cors
+        - sourceAttr: src
+          expected: cors
           elementAttrs: { crossorigin: anonymous }
-        - expected: cors
+        - sourceAttr: src
+          expected: cors
+          elementAttrs: { crossorigin: use-credentials }
+        - sourceAttr: srcset
+          expected: no-cors
+        - sourceAttr: srcset
+          expected: cors
+          elementAttrs: { crossorigin: '' }
+        - sourceAttr: srcset
+          expected: cors
+          elementAttrs: { crossorigin: anonymous }
+        - sourceAttr: srcset
+          expected: cors
           elementAttrs: { crossorigin: use-credentials }
       element-link-icon.sub.html:
         - expected: no-cors
@@ -398,7 +420,10 @@ cases:
         # https://github.com/whatwg/html/pull/4976
         - expected: iframe
       element-img.sub.html:
-        - expected: image
+        - sourceAttr: src
+          expected: image
+        - sourceAttr: srcset
+          expected: image
       element-link-icon.sub.html:
         - expected: empty
       element-meta-refresh.optional.sub.html:
@@ -486,7 +511,10 @@ cases:
         - userActivated: TRUE
           expected: ?1
       element-img.sub.html:
-        - expected: NULL
+        - sourceAttr: src
+          expected: NULL
+        - sourceAttr: srcset
+          expected: NULL
       element-link-icon.sub.html:
         - expected: NULL
       element-meta-refresh.optional.sub.html:

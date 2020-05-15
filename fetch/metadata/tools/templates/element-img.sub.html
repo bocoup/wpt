@@ -12,7 +12,7 @@
   <script>
   'use strict';
 
-  function induceRequest(url, attributes) {
+  function induceRequest(url, sourceAttr, attributes) {
     const image = document.createElement('img');
 
     for (const [ name, value ] of Object.entries(attributes)) {
@@ -20,7 +20,7 @@
     }
 
     return new Promise((resolve) => {
-        image.setAttribute('src', url);
+        image.setAttribute(sourceAttr, url);
         image.onload = image.onerror = resolve;
       });
   }
@@ -32,6 +32,7 @@
 
     return induceRequest(
         makeRequestURL(key, [% subtest.origins %]),
+        '[%subtest.sourceAttr%]',
         [%subtest.elementAttrs | default({}) | tojson%]
       )
       .then(() => retrieve(key))
@@ -43,7 +44,7 @@
           assert_equals(headers['[%subtest.headerName%]'], '[%subtest.expected%]');
         {%- endif %}
         });
-  }, '[%subtest.headerName%] - [%subtest.description | pad("end", ", ")%][%subtest.elementAttrs | collection("attributes")%]');
+  }, '[%subtest.headerName%] - [%subtest.sourceAttr%] - [%subtest.description | pad("end", ", ")%][%subtest.elementAttrs | collection("attributes")%]');
 
   {%- endfor %}
   </script>
