@@ -44,7 +44,7 @@ cases:
       element-embed.sub.html: [{}]
       element-frame.sub.html: [{}]
       element-iframe.sub.html: [{}]
-      element-image.sub.html: [{}]
+      element-img.sub.html: [{}]
       element-link-icon.sub.html: [{}]
       element-meta-refresh.optional.sub.html: [{}]
       element-script.sub.html:
@@ -129,7 +129,7 @@ cases:
       element-embed.sub.html: [{}]
       element-frame.sub.html: [{}]
       element-iframe.sub.html: [{}]
-      element-image.sub.html: [{}]
+      element-img.sub.html: [{}]
       element-link-icon.sub.html: [{}]
       element-meta-refresh.optional.sub.html: [{}]
       element-script.sub.html:
@@ -199,7 +199,7 @@ cases:
       element-a.sub.html: [{}]
       element-area.sub.html: [{}]
       element-audio.sub.html: [{}]
-      element-image.sub.html: [{}]
+      element-img.sub.html: [{}]
       element-meta-refresh.optional.sub.html: [{}]
       element-video.sub.html: [{}]
       element-video-poster.sub.html: [{}]
@@ -262,7 +262,7 @@ cases:
         - expected: navigate
       element-iframe.sub.html:
         - expected: navigate
-      element-image.sub.html:
+      element-img.sub.html:
         - expected: no-cors
         - expected: cors
           elementAttrs: { crossorigin: '' }
@@ -381,7 +381,7 @@ cases:
       element-iframe.sub.html:
         # https://github.com/whatwg/html/pull/4976
         - expected: iframe
-      element-image.sub.html:
+      element-img.sub.html:
         - expected: image
       element-link-icon.sub.html:
         - expected: empty
@@ -465,7 +465,7 @@ cases:
         - expected: NULL
         - userActivated: TRUE
           expected: ?1
-      element-image.sub.html:
+      element-img.sub.html:
         - expected: NULL
       element-link-icon.sub.html:
         - expected: NULL
