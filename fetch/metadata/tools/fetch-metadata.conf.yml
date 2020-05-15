@@ -45,6 +45,7 @@ cases:
       element-frame.sub.html: [{}]
       element-iframe.sub.html: [{}]
       element-image.sub.html: [{}]
+      element-link-icon.sub.html: [{}]
       element-meta-refresh.optional.sub.html: [{}]
       element-script.sub.html:
         - {}
@@ -128,6 +129,7 @@ cases:
       element-frame.sub.html: [{}]
       element-iframe.sub.html: [{}]
       element-image.sub.html: [{}]
+      element-link-icon.sub.html: [{}]
       element-meta-refresh.optional.sub.html: [{}]
       element-script.sub.html:
         - {}
@@ -177,6 +179,7 @@ cases:
       element-embed.sub.html: []
       element-frame.sub.html: []
       element-iframe.sub.html: []
+      element-link-icon.sub.html: []
       element-script.sub.html: []
       fetch.sub.html: []
       font.sub.html: []
@@ -257,6 +260,14 @@ cases:
       element-iframe.sub.html:
         - expected: navigate
       element-image.sub.html:
+        - expected: no-cors
+        - expected: cors
+          elementAttrs: { crossorigin: '' }
+        - expected: cors
+          elementAttrs: { crossorigin: anonymous }
+        - expected: cors
+          elementAttrs: { crossorigin: use-credentials }
+      element-link-icon.sub.html:
         - expected: no-cors
         - expected: cors
           elementAttrs: { crossorigin: '' }
@@ -360,6 +371,8 @@ cases:
         - expected: iframe
       element-image.sub.html:
         - expected: image
+      element-link-icon.sub.html:
+        - expected: empty
       element-meta-refresh.optional.sub.html:
         - expected: document
       element-script.sub.html:
@@ -436,6 +449,8 @@ cases:
         - userActivated: TRUE
           expected: ?1
       element-image.sub.html:
+        - expected: NULL
+      element-link-icon.sub.html:
         - expected: NULL
       element-meta-refresh.optional.sub.html:
         - expected: NULL
