@@ -50,6 +50,7 @@ cases:
       element-img.sub.html:
         - sourceAttr: src
         - sourceAttr: srcset
+      element-input-image.sub.html: [{}]
       element-link-icon.sub.html: [{}]
       element-meta-refresh.optional.sub.html: [{}]
       element-picture.sub.html: [{}]
@@ -141,6 +142,7 @@ cases:
       element-img.sub.html:
         - sourceAttr: src
         - sourceAttr: srcset
+      element-input-image.sub.html: [{}]
       element-link-icon.sub.html: [{}]
       element-meta-refresh.optional.sub.html: [{}]
       element-picture.sub.html: [{}]
@@ -218,6 +220,7 @@ cases:
         # srcset omitted because it is not "optionally-blockable"
         # https://w3c.github.io/webappsec-mixed-content/#category-optionally-blockable
         - sourceAttr: src
+      element-input-image.sub.html: [{}]
       element-meta-refresh.optional.sub.html: [{}]
       element-video.sub.html: [{}]
       element-video-poster.sub.html: [{}]
@@ -307,6 +310,8 @@ cases:
         - sourceAttr: srcset
           expected: cors
           elementAttrs: { crossorigin: use-credentials }
+      element-input-image.sub.html:
+        - expected: no-cors
       element-link-icon.sub.html:
         - expected: no-cors
         - expected: cors
@@ -435,6 +440,8 @@ cases:
           expected: image
         - sourceAttr: srcset
           expected: image
+      element-input-image.sub.html:
+        - expected: image
       element-link-icon.sub.html:
         - expected: empty
       element-meta-refresh.optional.sub.html:
@@ -528,6 +535,8 @@ cases:
           expected: NULL
         - sourceAttr: srcset
           expected: NULL
+      element-input-image.sub.html:
+        - expected: NULL
       element-link-icon.sub.html:
         - expected: NULL
       element-meta-refresh.optional.sub.html:
