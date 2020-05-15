@@ -80,12 +80,14 @@ def product(a, b):
            [{'c': 3}, {'d': 4}]
        )
 
-    returns a generator which yields the following values:
+    returns the following list:
 
-        {'a': 1, 'c': 3}
-        {'a': 1, 'd': 4}
-        {'b': 2, 'c': 3}
-        {'b': 2, 'd': 4}
+        [
+            {'a': 1, 'c': 3},
+            {'a': 1, 'd': 4},
+            {'b': 2, 'c': 3},
+            {'b': 2, 'd': 4}
+        ]
     '''
     result = []
 
