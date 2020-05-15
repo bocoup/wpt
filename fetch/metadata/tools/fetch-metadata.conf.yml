@@ -37,8 +37,10 @@ cases:
       worker-dedicated-constructor.sub.html: []
 
       appcache-manifest.sub.https.html: [{}]
-      css-background-image.sub.tentative.html: [{}]
-      css-font-face.sub.tentative.html: [{}]
+      css-background-image.sub.html:
+        - filename_flags: [tentative]
+      css-font-face.sub.html:
+        - filename_flags: [tentative]
       element-a.sub.html: [{}]
       element-area.sub.html: [{}]
       element-audio.sub.html: [{}]
@@ -123,8 +125,10 @@ cases:
 
       appcache-manifest.sub.https.html: [{}]
       audioworklet.https.sub.html: [{}]
-      css-background-image.sub.tentative.html: [{}]
-      css-font-face.sub.tentative.html: [{}]
+      css-background-image.sub.html:
+        - filename_flags: [tentative]
+      css-font-face.sub.html:
+        - filename_flags: [tentative]
       element-a.sub.html: [{}]
       element-area.sub.html: [{}]
       element-audio.sub.html: [{}]
@@ -179,7 +183,7 @@ cases:
       # for the "downgrade-upgrade" scenario, so all other templates must be
       # explicitly ignored.
       audioworklet.https.sub.html: []
-      css-font-face.sub.tentative.html: []
+      css-font-face.sub.html: []
       element-embed.sub.html: []
       element-frame.sub.html: []
       element-iframe.sub.html: []
@@ -198,7 +202,8 @@ cases:
       worker-dedicated-importscripts.sub.html: []
 
       appcache-manifest.sub.https.html: [{}]
-      css-background-image.sub.tentative.html: [{}]
+      css-background-image.sub.html:
+        - filename_flags: [tentative]
       element-a.sub.html: [{}]
       element-area.sub.html: [{}]
       element-audio.sub.html: [{}]
@@ -237,10 +242,12 @@ cases:
       audioworklet.https.sub.html:
         # https://html.spec.whatwg.org/multipage/webappapis.html#fetch-a-single-module-script
         - expected: cors
-      css-background-image.sub.tentative.html:
+      css-background-image.sub.html:
         - expected: no-cors
-      css-font-face.sub.tentative.html:
+          filename_flags: [tentative]
+      css-font-face.sub.html:
         - expected: cors
+          filename_flags: [tentative]
       cors-preflight.sub.html:
         - expected: cors
       element-a.sub.html:
@@ -362,10 +369,12 @@ cases:
       audioworklet.https.sub.html:
         # https://github.com/WebAudio/web-audio-api/issues/2203
         - expected: audioworklet
-      css-background-image.sub.tentative.html:
+      css-background-image.sub.html:
         - expected: image
-      css-font-face.sub.tentative.html:
+          filename_flags: [tentative]
+      css-font-face.sub.html:
         - expected: font
+          filename_flags: [tentative]
       cors-preflight.sub.html:
         - expected: empty
       element-a.sub.html:
@@ -448,10 +457,12 @@ cases:
         - expected: NULL
       audioworklet.https.sub.html:
         - expected: NULL
-      css-background-image.sub.tentative.html:
+      css-background-image.sub.html:
         - expected: NULL
-      css-font-face.sub.tentative.html:
+          filename_flags: [tentative]
+      css-font-face.sub.html:
         - expected: NULL
+          filename_flags: [tentative]
       cors-preflight.sub.html:
         - expected: NULL
       element-a.sub.html:

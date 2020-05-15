@@ -48,6 +48,28 @@ def test_name(directory, template_name, subtest_flags):
     ]
     return os.path.join(directory, '.'.join(test_name_parts))
 
+def merge(a, b):
+    if type(a) != type(b):
+        raise Exception('Cannot merge disparate types')
+    if type(a) == list:
+        return [*a, *b]
+    if type(a) == dict:
+        merged = {}
+
+        for key in a:
+            if key in b:
+                merged[key] = merge(a[key], b[key])
+            else:
+                merged[key] = a[key]
+
+        for key in b:
+            if not key in a:
+                merged[key] = b[key]
+
+        return merged
+
+    raise Exception('Cannot merge {} type'.format(type(a).__name__))
+
 def product(a, b):
     '''
     Given two lists of objects, compute their Cartesian product by merging the
@@ -69,11 +91,7 @@ def product(a, b):
 
     for a_object in a:
         for b_object in b:
-            merged = {}
-            merged.update(a_object)
-            merged.update(b_object)
-
-            result.append(merged)
+            result.append(merge(a_object, b_object))
 
     return result
 
