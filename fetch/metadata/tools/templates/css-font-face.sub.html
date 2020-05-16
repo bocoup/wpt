@@ -12,9 +12,6 @@
   <script>
   'use strict';
 
-  const params = {
-  };
-
   let count = 0;
 
   function induceRequest(t, url) {
@@ -45,7 +42,7 @@
   promise_test((t) => {
     const key = '{{uuid()}}';
 
-    return induceRequest(t, makeRequestURL(key, [% subtest.origins %], params))
+    return induceRequest(t, makeRequestURL(key, [% subtest.origins %]))
       .then(() => retrieve(key))
       .then((headers) => {
         {%- if subtest.expected == none %}

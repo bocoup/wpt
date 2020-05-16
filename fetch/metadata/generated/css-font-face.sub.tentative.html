@@ -15,9 +15,6 @@ Sources:
   <script>
   'use strict';
 
-  const params = {
-  };
-
   let count = 0;
 
   function induceRequest(t, url) {
@@ -46,7 +43,7 @@ Sources:
   promise_test((t) => {
     const key = '{{uuid()}}';
 
-    return induceRequest(t, makeRequestURL(key, ['sameOrigin', 'httpOrigin'], params))
+    return induceRequest(t, makeRequestURL(key, ['sameOrigin', 'httpOrigin']))
       .then(() => retrieve(key))
       .then((headers) => {
           assert_not_own_property(headers, 'sec-fetch-site');
@@ -56,7 +53,7 @@ Sources:
   promise_test((t) => {
     const key = '{{uuid()}}';
 
-    return induceRequest(t, makeRequestURL(key, ['httpOrigin', 'sameOrigin'], params))
+    return induceRequest(t, makeRequestURL(key, ['httpOrigin', 'sameOrigin']))
       .then(() => retrieve(key))
       .then((headers) => {
           assert_own_property(headers, 'sec-fetch-site');
@@ -67,7 +64,7 @@ Sources:
   promise_test((t) => {
     const key = '{{uuid()}}';
 
-    return induceRequest(t, makeRequestURL(key, ['sameOrigin', 'httpOrigin', 'sameOrigin'], params))
+    return induceRequest(t, makeRequestURL(key, ['sameOrigin', 'httpOrigin', 'sameOrigin']))
       .then(() => retrieve(key))
       .then((headers) => {
           assert_own_property(headers, 'sec-fetch-site');

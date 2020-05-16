@@ -15,9 +15,6 @@ Sources:
   <script>
   'use strict';
 
-  const params = {
-  };
-
   let count = 0;
 
   function induceRequest(t, url) {
@@ -46,7 +43,7 @@ Sources:
   promise_test((t) => {
     const key = '{{uuid()}}';
 
-    return induceRequest(t, makeRequestURL(key, ['sameOrigin', 'crossSite', 'sameOrigin'], params))
+    return induceRequest(t, makeRequestURL(key, ['sameOrigin', 'crossSite', 'sameOrigin']))
       .then(() => retrieve(key))
       .then((headers) => {
           assert_own_property(headers, 'sec-fetch-site');
@@ -57,7 +54,7 @@ Sources:
   promise_test((t) => {
     const key = '{{uuid()}}';
 
-    return induceRequest(t, makeRequestURL(key, ['crossSite', 'sameOrigin'], params))
+    return induceRequest(t, makeRequestURL(key, ['crossSite', 'sameOrigin']))
       .then(() => retrieve(key))
       .then((headers) => {
           assert_own_property(headers, 'sec-fetch-site');
@@ -68,7 +65,7 @@ Sources:
   promise_test((t) => {
     const key = '{{uuid()}}';
 
-    return induceRequest(t, makeRequestURL(key, ['crossSite', 'sameSite'], params))
+    return induceRequest(t, makeRequestURL(key, ['crossSite', 'sameSite']))
       .then(() => retrieve(key))
       .then((headers) => {
           assert_own_property(headers, 'sec-fetch-site');
@@ -79,7 +76,7 @@ Sources:
   promise_test((t) => {
     const key = '{{uuid()}}';
 
-    return induceRequest(t, makeRequestURL(key, ['crossSite', 'crossSite'], params))
+    return induceRequest(t, makeRequestURL(key, ['crossSite', 'crossSite']))
       .then(() => retrieve(key))
       .then((headers) => {
           assert_own_property(headers, 'sec-fetch-site');
@@ -90,7 +87,7 @@ Sources:
   promise_test((t) => {
     const key = '{{uuid()}}';
 
-    return induceRequest(t, makeRequestURL(key, ['sameOrigin', 'sameOrigin'], params))
+    return induceRequest(t, makeRequestURL(key, ['sameOrigin', 'sameOrigin']))
       .then(() => retrieve(key))
       .then((headers) => {
           assert_own_property(headers, 'sec-fetch-site');
@@ -101,7 +98,7 @@ Sources:
   promise_test((t) => {
     const key = '{{uuid()}}';
 
-    return induceRequest(t, makeRequestURL(key, ['sameOrigin', 'sameSite'], params))
+    return induceRequest(t, makeRequestURL(key, ['sameOrigin', 'sameSite']))
       .then(() => retrieve(key))
       .then((headers) => {
           assert_own_property(headers, 'sec-fetch-site');
@@ -112,7 +109,7 @@ Sources:
   promise_test((t) => {
     const key = '{{uuid()}}';
 
-    return induceRequest(t, makeRequestURL(key, ['sameOrigin', 'crossSite'], params))
+    return induceRequest(t, makeRequestURL(key, ['sameOrigin', 'crossSite']))
       .then(() => retrieve(key))
       .then((headers) => {
           assert_own_property(headers, 'sec-fetch-site');
@@ -123,7 +120,7 @@ Sources:
   promise_test((t) => {
     const key = '{{uuid()}}';
 
-    return induceRequest(t, makeRequestURL(key, ['sameSite', 'sameOrigin'], params))
+    return induceRequest(t, makeRequestURL(key, ['sameSite', 'sameOrigin']))
       .then(() => retrieve(key))
       .then((headers) => {
           assert_own_property(headers, 'sec-fetch-site');
@@ -134,7 +131,7 @@ Sources:
   promise_test((t) => {
     const key = '{{uuid()}}';
 
-    return induceRequest(t, makeRequestURL(key, ['sameSite', 'sameSite'], params))
+    return induceRequest(t, makeRequestURL(key, ['sameSite', 'sameSite']))
       .then(() => retrieve(key))
       .then((headers) => {
           assert_own_property(headers, 'sec-fetch-site');
@@ -145,7 +142,7 @@ Sources:
   promise_test((t) => {
     const key = '{{uuid()}}';
 
-    return induceRequest(t, makeRequestURL(key, ['sameSite', 'crossSite'], params))
+    return induceRequest(t, makeRequestURL(key, ['sameSite', 'crossSite']))
       .then(() => retrieve(key))
       .then((headers) => {
           assert_own_property(headers, 'sec-fetch-site');
@@ -156,7 +153,7 @@ Sources:
   promise_test((t) => {
     const key = '{{uuid()}}';
 
-    return induceRequest(t, makeRequestURL(key, [], params))
+    return induceRequest(t, makeRequestURL(key, []))
       .then(() => retrieve(key))
       .then((headers) => {
           assert_own_property(headers, 'sec-fetch-mode');
@@ -167,7 +164,7 @@ Sources:
   promise_test((t) => {
     const key = '{{uuid()}}';
 
-    return induceRequest(t, makeRequestURL(key, [], params))
+    return induceRequest(t, makeRequestURL(key, []))
       .then(() => retrieve(key))
       .then((headers) => {
           assert_own_property(headers, 'sec-fetch-dest');
@@ -178,7 +175,7 @@ Sources:
   promise_test((t) => {
     const key = '{{uuid()}}';
 
-    return induceRequest(t, makeRequestURL(key, [], params))
+    return induceRequest(t, makeRequestURL(key, []))
       .then(() => retrieve(key))
       .then((headers) => {
           assert_not_own_property(headers, 'sec-fetch-user');
