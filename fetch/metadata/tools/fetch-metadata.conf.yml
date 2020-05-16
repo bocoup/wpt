@@ -63,7 +63,9 @@ cases:
       form-submission.sub.html:
         - method: GET
         - method: POST
-      header-link-icon.sub.html: [{}]
+      header-link.sub.html:
+        - rel: icon
+        - rel: stylesheet
       header-refresh.optional.sub.html: [{}]
       window-location.sub.html:
         - api: location
@@ -155,7 +157,9 @@ cases:
       form-submission.sub.html:
         - method: GET
         - method: POST
-      header-link-icon.sub.html: [{}]
+      header-link.sub.html:
+        - rel: icon
+        - rel: stylesheet
       header-refresh.optional.sub.html: [{}]
       window-location.sub.html:
         - api: location
@@ -199,7 +203,7 @@ cases:
       element-picture.sub.html: []
       element-script.sub.html: []
       fetch.sub.html: []
-      header-link-icon.sub.html: []
+      header-link.sub.html: []
       script-module-import-static.sub.html: []
       script-module-import-dynamic.sub.html: []
       cors-preflight.sub.html: []
@@ -363,8 +367,11 @@ cases:
           expected: navigate
         - method: POST
           expected: navigate
-      header-link-icon.sub.html:
-        - expected: no-cors
+      header-link.sub.html:
+        - rel: icon
+          expected: no-cors
+        - rel: stylesheet
+          expected: no-cors
       header-refresh.optional.sub.html:
         - expected: navigate
       window-history.sub.html:
@@ -461,8 +468,12 @@ cases:
           expected: document
         - method: POST
           expected: document
-      header-link-icon.sub.html:
-        - expected: empty
+      header-link.sub.html:
+        - rel: icon
+          expected: empty
+        - rel: stylesheet
+          filename_flags: [tentative]
+          expected: style
       header-refresh.optional.sub.html:
         - expected: document
       window-history.sub.html:
@@ -562,8 +573,11 @@ cases:
         - method: POST
           userActivated: TRUE
           expected: ?1
-      header-link-icon.sub.html:
-        - expected: NULL
+      header-link.sub.html:
+        - rel: icon
+          expected: NULL
+        - rel: stylesheet
+          expected: NULL
       header-refresh.optional.sub.html:
         - expected: NULL
       window-history.sub.html:
