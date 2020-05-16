@@ -67,11 +67,7 @@ cases:
         - rel: icon
         - rel: stylesheet
       header-refresh.optional.sub.html: [{}]
-      window-location.sub.html:
-        - api: location
-        - api: location.href
-        - api: location.assign
-        - api: location.replace
+      window-location.sub.html: [{}]
       script-module-import-dynamic.sub.html: [{}]
       script-module-import-static.sub.html: [{}]
       svg-image.sub.html: [{}]
@@ -161,11 +157,7 @@ cases:
         - rel: icon
         - rel: stylesheet
       header-refresh.optional.sub.html: [{}]
-      window-location.sub.html:
-        - api: location
-        - api: location.href
-        - api: location.assign
-        - api: location.replace
+      window-location.sub.html: [{}]
       script-module-import-dynamic.sub.html: [{}]
       script-module-import-static.sub.html: [{}]
       svg-image.sub.html: [{}]
@@ -233,11 +225,7 @@ cases:
         - method: POST
       header-refresh.optional.sub.html: [{}]
       svg-image.sub.html: [{}]
-      window-location.sub.html:
-        - api: location
-        - api: location.href
-        - api: location.assign
-        - api: location.replace
+      window-location.sub.html: [{}]
 
   # Sec-Fetch-Mode
   # These tests are served over HTTPS so the induced requests will be both
@@ -377,14 +365,7 @@ cases:
       window-history.sub.html:
         - expected: navigate
       window-location.sub.html:
-        - api: location
-          expected: navigate
-        - api: location.href
-          expected: navigate
-        - api: location.assign
-          expected: navigate
-        - api: location.replace
-          expected: navigate
+        - expected: navigate
       script-module-import-dynamic.sub.html:
         - expected: cors
       script-module-import-static.sub.html:
@@ -479,14 +460,7 @@ cases:
       window-history.sub.html:
         - expected: document
       window-location.sub.html:
-        - api: location
-          expected: document
-        - api: location.href
-          expected: document
-        - api: location.assign
-          expected: document
-        - api: location.replace
-          expected: document
+        - expected: document
       script-module-import-dynamic.sub.html:
         - expected: script
       script-module-import-static.sub.html:
@@ -583,25 +557,8 @@ cases:
       window-history.sub.html:
         - expected: NULL
       window-location.sub.html:
-        - api: location
-          expected: NULL
-        - api: location
-          userActivated: TRUE
-          expected: ?1
-        - api: location.href
-          expected: NULL
-        - api: location.href
-          userActivated: TRUE
-          expected: ?1
-        - api: location.assign
-          expected: NULL
-        - api: location.assign
-          userActivated: TRUE
-          expected: ?1
-        - api: location.replace
-          expected: NULL
-        - api: location.replace
-          userActivated: TRUE
+        - expected: NULL
+        - userActivated: TRUE
           expected: ?1
       script-module-import-dynamic.sub.html:
         - expected: NULL

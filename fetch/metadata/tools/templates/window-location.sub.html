@@ -50,11 +50,7 @@
     const url = makeRequestURL(key, [% subtest.origins %], responseParams);
 
     const navigate = (win, path) => {
-      {%- if subtest.api in ['location', 'location.href'] %}
-      win.[%subtest.api%] = path;
-      {%- else %}
-      win.[%subtest.api%](path);
-      {%- endif %}
+      win.location = path;
     };
     return induceRequest(url, navigate, [% 'true' if subtest.userActivated else 'false' %])
       .then(() => retrieve(key))
@@ -66,7 +62,64 @@
           assert_equals(headers['[%subtest.headerName%]'], '[%subtest.expected%]');
         {%- endif %}
         });
-  }, '[%subtest.headerName%] - [%subtest.description | pad("right", " - ")%][%subtest.api%][% " with user activation" if subtest.userActivated%]');
+  }, '[%subtest.headerName%] - [%subtest.description | pad("end", " - ")%]location[% " with user activation" if subtest.userActivated%]');
+
+  promise_test(() => {
+    const key = '{{uuid()}}';
+    const url = makeRequestURL(key, [% subtest.origins %], responseParams);
+
+    const navigate = (win, path) => {
+      win.location.href = path;
+    };
+    return induceRequest(url, navigate, [% 'true' if subtest.userActivated else 'false' %])
+      .then(() => retrieve(key))
+      .then((headers) => {
+        {%- if subtest.expected == none %}
+          assert_not_own_property(headers, '[%subtest.headerName%]');
+        {%- else %}
+          assert_own_property(headers, '[%subtest.headerName%]');
+          assert_equals(headers['[%subtest.headerName%]'], '[%subtest.expected%]');
+        {%- endif %}
+        });
+  }, '[%subtest.headerName%] - [%subtest.description | pad("end", " - ")%]location.href[% " with user activation" if subtest.userActivated%]');
+
+  promise_test(() => {
+    const key = '{{uuid()}}';
+    const url = makeRequestURL(key, [% subtest.origins %], responseParams);
+
+    const navigate = (win, path) => {
+      win.location.assign(path);
+    };
+    return induceRequest(url, navigate, [% 'true' if subtest.userActivated else 'false' %])
+      .then(() => retrieve(key))
+      .then((headers) => {
+        {%- if subtest.expected == none %}
+          assert_not_own_property(headers, '[%subtest.headerName%]');
+        {%- else %}
+          assert_own_property(headers, '[%subtest.headerName%]');
+          assert_equals(headers['[%subtest.headerName%]'], '[%subtest.expected%]');
+        {%- endif %}
+        });
+  }, '[%subtest.headerName%] - [%subtest.description | pad("end", " - ")%]location.assign[% " with user activation" if subtest.userActivated%]');
+
+  promise_test(() => {
+    const key = '{{uuid()}}';
+    const url = makeRequestURL(key, [% subtest.origins %], responseParams);
+
+    const navigate = (win, path) => {
+      win.location.replace(path);
+    };
+    return induceRequest(url, navigate, [% 'true' if subtest.userActivated else 'false' %])
+      .then(() => retrieve(key))
+      .then((headers) => {
+        {%- if subtest.expected == none %}
+          assert_not_own_property(headers, '[%subtest.headerName%]');
+        {%- else %}
+          assert_own_property(headers, '[%subtest.headerName%]');
+          assert_equals(headers['[%subtest.headerName%]'], '[%subtest.expected%]');
+        {%- endif %}
+        });
+  }, '[%subtest.headerName%] - [%subtest.description | pad("end", " - ")%]location.replace[% " with user activation" if subtest.userActivated%]');
 
   {%- endfor %}
   </script>
