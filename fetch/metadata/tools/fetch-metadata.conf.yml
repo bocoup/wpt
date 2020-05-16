@@ -60,7 +60,6 @@ cases:
       element-video.sub.html: [{}]
       element-video-poster.sub.html: [{}]
       fetch.sub.html: [{}]
-      font.sub.html: [{}]
       form-submission.sub.html:
         - method: GET
         - method: POST
@@ -153,7 +152,6 @@ cases:
       element-video.sub.html: [{}]
       element-video-poster.sub.html: [{}]
       fetch.sub.html: [{ init: { mode: no-cors } }]
-      font.sub.html: [{}]
       form-submission.sub.html:
         - method: GET
         - method: POST
@@ -201,7 +199,6 @@ cases:
       element-picture.sub.html: []
       element-script.sub.html: []
       fetch.sub.html: []
-      font.sub.html: []
       header-link-icon.sub.html: []
       script-module-import-static.sub.html: []
       script-module-import-dynamic.sub.html: []
@@ -361,8 +358,6 @@ cases:
           init: { mode: no-cors }
         - expected: same-origin
           init: { mode: same-origin }
-      font.sub.html:
-        - expected: cors
       form-submission.sub.html:
         - method: GET
           expected: navigate
@@ -461,8 +456,6 @@ cases:
         - expected: image
       fetch.sub.html:
         - expected: empty
-      font.sub.html:
-        - expected: font
       form-submission.sub.html:
         - method: GET
           expected: document
@@ -557,8 +550,6 @@ cases:
       element-video-poster.sub.html:
         - expected: NULL
       fetch.sub.html:
-        - expected: NULL
-      font.sub.html:
         - expected: NULL
       form-submission.sub.html:
         - method: GET
