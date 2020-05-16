@@ -64,6 +64,7 @@ cases:
       form-submission.sub.html:
         - method: GET
         - method: POST
+      header-link-icon.sub.html: [{}]
       header-refresh.optional.sub.html: [{}]
       window-location.sub.html:
         - api: location
@@ -156,6 +157,7 @@ cases:
       form-submission.sub.html:
         - method: GET
         - method: POST
+      header-link-icon.sub.html: [{}]
       header-refresh.optional.sub.html: [{}]
       window-location.sub.html:
         - api: location
@@ -200,6 +202,7 @@ cases:
       element-script.sub.html: []
       fetch.sub.html: []
       font.sub.html: []
+      header-link-icon.sub.html: []
       script-module-import-static.sub.html: []
       script-module-import-dynamic.sub.html: []
       cors-preflight.sub.html: []
@@ -365,6 +368,8 @@ cases:
           expected: navigate
         - method: POST
           expected: navigate
+      header-link-icon.sub.html:
+        - expected: no-cors
       header-refresh.optional.sub.html:
         - expected: navigate
       window-history.sub.html:
@@ -463,6 +468,8 @@ cases:
           expected: document
         - method: POST
           expected: document
+      header-link-icon.sub.html:
+        - expected: empty
       header-refresh.optional.sub.html:
         - expected: document
       window-history.sub.html:
@@ -564,6 +571,8 @@ cases:
         - method: POST
           userActivated: TRUE
           expected: ?1
+      header-link-icon.sub.html:
+        - expected: NULL
       header-refresh.optional.sub.html:
         - expected: NULL
       window-history.sub.html:
