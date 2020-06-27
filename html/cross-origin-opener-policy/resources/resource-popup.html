@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<script>
+  'use strict';
+  const params = new URL(location).searchParams;
+  const bc = new BroadcastChannel(params.get('channel_name'));
+  const win = open(params.get('resource'), params.get('resource_name'));
+  const start = Date.now();
+
+  bc.onmessage = () => {
+    win.close();
+    close();
+  };
+  setInterval(() => {
+    if (win.location.href !== 'about:blank') {
+      bc.postMessage({name: win.name || null, closed: win.closed});
+    } else if (Date.now() - start > 1000) {
+      bc.postMessage({name: 'FAIL', closed: 'FAIL'});
+    }
+  }, 100);
+</script>
