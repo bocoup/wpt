@@ -44,8 +44,6 @@ Policy](https://github.com/w3c/ServiceWorker/pull/1516).
 This section is based on the changes introduced to HTML via [gh-5454: Introduce
 COEP](https://github.com/whatwg/html/pull/5454).
 
-:exclamation: This section is incomplete. :exclamation:
-
 - "create a new browsing context"
   - - condition: creator's COEP is `require-corp`
     - effect: new document's COEP becomes `require-corp` (verify using conditions described in this document's "Fetch" section)
@@ -54,5 +52,30 @@ COEP](https://github.com/whatwg/html/pull/5454).
   - - condition: window's associated document has a COEP of `require-corp`
     - effect: new environment settings object receives a COEP of `require-corp` (verify using conditions described in this document's "Fetch" section)
     - tests: :question:
-
-:exclamation: This section is incomplete. :exclamation:
+- "process a navigate fetch"
+  - - condition: destination fails a CORP check with the parent context
+    - effect: network error
+    - tests: :question:
+- "process a navigate response"
+  - - condition: COEP reporting is enabled by parent browsing context and parent browsing context's COEP is "require corp" and response's COEP is "unsafe-none"
+    - effect: notifies reporting observers and sends  areport to the specified URL
+    - tests: :question:
+  - - condition: COEP "report only" reporting is enabled by parent browsing context and parent browsing context's "report only" COEP is "require corp" and response's COEP is "unsafe-none"
+    - effect: notifies reporting observers and sends  areport to the specified "report only" URL
+    - tests: :question:
+  - - condition: parent browsing context's COEP is "require corp" and response's COEP is "unsafe-none"
+    - effect: network error
+    - tests: :question:
+- "create and initialize a Document object"
+  - - condition: response enables COEP
+    - effect: new document's COEP becomes `require-corp` (this is implicitly verified by almost all other tests)
+- "run a worker"
+  - - condition: worker URL is a local scheme and owner's COEP is "require-corp"
+    - effect: worker's COEP becomes "require-corp"
+    - tests: :x:
+  - - condition: worker URL is not a local scheme and response's COEP is "require-corp"
+    - effect: worker's COEP becomes "require-corp"
+    - tests: :question:
+  - - condition: worker URL is not a local scheme and response's COEP is "unsafe-none" and owner's COEP is "require-corp"
+    - effect: network error
+    - tests: :question:
