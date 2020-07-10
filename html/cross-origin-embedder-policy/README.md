@@ -33,11 +33,22 @@ Policy](https://github.com/w3c/ServiceWorker/pull/1516).
 - `matchAll`
   - - condition: at least one matched response is of type "opaque" and is blocked by CORP check
     - effect: promise is rejected
-    - tests: :question:
+    - tests: :heavy_check_mark:
+      - `cache-storage-reporting-dedicated-worker.https.html`
+      - `cache-storage-reporting-document.https.html`
+      - `cache-storage-reporting-service-worker.https.html`
+      - `cache-storage-reporting-shared-worker.https.html`
+      - `dedicated-worker-cache-storage.https.html`
+      - `none-load-from-cache-storage.https.html`
+      - `require-corp-load-from-cache-storage.https.html`
+      - `service-worker-cache-storage.https.html`
 - "Update" algorithm
   - - condition: Service Worker's script is served with COEP of `require-corp`
     - effect: worker's COEP becomes `require-corp` (verify using conditions described in this document's "Fetch" section)
-    - tests: :question:
+    - tests: :heavy_check_mark:
+      - `require-corp-sw-from-none.https.html`
+      - `require-corp-sw-from-require-corp.https.html`
+      - `require-corp-sw.https.html`
 
 ## HTML
 
