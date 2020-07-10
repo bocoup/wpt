@@ -23,6 +23,11 @@ sections.
     - effect: CORP becomes `same-origin` (instead of `cross-origin`)
   - - condition: `require-corp` and CORP is invalid
     - effect: CORP becomes `same-origin` (instead of `cross-origin`)
+- "serialize a response URL for reporting"
+  - - condition: a coep or corp report for which the response was redirected
+    - effect: the reported URL is pre-redirect URL
+  - - condition: a coep or corp report for which url's username/password are non-empty
+    - effect: serialized URL have no username/password
 
 ## Service Worker
 
