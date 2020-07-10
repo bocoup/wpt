@@ -25,24 +25,21 @@ cross-origin opener policy](https://github.com/whatwg/html/pull/5334).
   - - condition: COOP is enabled in parent and parent is cross-origin with new browsing context
     - effect: "name" is ignored and "noopener" is set
     - tests: :question:
-
-TODO: reformat the following items to match the structure of the items above
-
 - "navigate"
-  - - condition:
-    - effect: navigating to a response derives sandboxing flags from browsing context *and* resource; COOP is unconditionally set to "unsafe-none"
+  - - condition: resource is a response
+    - effect: sandboxing flags from browsing context *and* resource; COOP is unconditionally set to "unsafe-none"
     - tests: :question:
-  - - condition:
-    - effect: navigating to a `javascript:` URL derives sandboxing flags from browsing context *and* request; COOP is set to match the active document
+  - - condition: resource is a `javascript:` URL
+    - effect: sandboxing flags from browsing context *and* request; COOP is set to match the active document
     - tests: :question:
 - "process a navigate fetch"
-  - - condition:
-    - effect: blocks navigation of top-level browsing context from sandboxed context when coop is set (and `allow-popups-to-escape-sandbox` is not)
+  - - condition: browsing context is top-level, sandboxing flags are set, and the COOP of any response in a redirect chain is "unsafe-none"
+    - effect: navigation blocked
     - tests: :heavy_check_mark:
       - `coop-sandbox.https.html`
       - https://github.com/web-platform-tests/wpt/pull/24351
-  - - condition:
-    - effect: creates new browsing context groups for popups according to COOP
+  - - condition: any response in a redirect chain warrents a new browsing context according to COOP
+    - effect: a new browsing context group is created
     - tests: :heavy_check_mark:
       - `iframe-popup-same-origin-allow-popups-to-same-origin-allow-popups.https.html`
       - `iframe-popup-same-origin-allow-popups-to-same-origin.https.html`
@@ -52,36 +49,36 @@ TODO: reformat the following items to match the structure of the items above
       - `iframe-popup-unsafe-none-to-same-origin.https.html`
       - `iframe-popup-unsafe-none-to-unsafe-none.https.html`
       - `iframe-sandbox-popup.https.html`
-  - - condition:
-    - effect: forwards sandbox flags, incumbent origin, and active origin to redirect requests
-    - tests: :question:
-  - - condition:
-    - effect: forwards a number of new variables to "process a navigate response"
+  - - condition: response is a `data:` URL
+    - effect: forwards sandbox flags, incumbent origin, and active origin
     - tests: :question:
 - "create and initialize a Document object"
-  - - condition:
-    - effect: creates a new browsing context when the new "browsingContextSwitchNeeded" is true
+  - - condition: "browsingContextSwitchNeeded" is true
+    - effect: creates a new browsing context
     - tests: :question:
-  - - condition:
-    - effect: sets the COOP of the navigation to match the COOP of the navigation
+  - - condition: navigation's COOP is "same-origin"
+    - effect: document's COOP becomes "same-origin"
+    - tests: :question:
+  - - condition: navigation's COOP is "same-origin-allow-popups"
+    - effect: document's COOP becomes "same-origin-allow-popups"
     - tests: :question:
 - "page load processing model for HTML files"
-  - - condition:
+  - - condition: (unconditional)
     - effect: forwards new parameters to "creating and initializing a Document object"
     - tests: :question:
 - "page load processing model for XML files"
-  - - condition:
+  - - condition: (unconditional)
     - effect: forwards new parameters to "creating and initializing a Document object"
     - tests: :question:
 - "page load processing model for text files"
-  - - condition:
+  - - condition: (unconditional)
     - effect: forwards new parameters to "creating and initializing a Document object"
     - tests: :question:
 - "page load processing model for media"
-  - - condition:
+  - - condition: (unconditional)
     - effect: forwards new parameters to "creating and initializing a Document object"
     - tests: :question:
 - "page load processing model for content that uses plugins"
-  - - condition:
+  - - condition: (unconditional)
     - effect: forwards new parameters to "creating and initializing a Document object"
     - tests: :question:
