@@ -55,30 +55,25 @@ cross-origin opener policy](https://github.com/whatwg/html/pull/5334).
 - "create and initialize a Document object"
   - - condition: "browsingContextSwitchNeeded" is true
     - effect: creates a new browsing context
-    - tests: :question:
+    - tests: (observable only through "page load processing model" algorithms)
   - - condition: navigation's COOP is "same-origin"
-    - effect: document's COOP becomes "same-origin"
-    - tests: :question:
+    - effect: new document's COOP is set to "same-origin"
+    - tests: (observable only through "page load processing model" algorithms)
   - - condition: navigation's COOP is "same-origin-allow-popups"
-    - effect: document's COOP becomes "same-origin-allow-popups"
-    - tests: :question:
+    - effect: new document's COOP is set to "same-origin-allow-popups"
+    - tests: (observable only through "page load processing model" algorithms)
 - "page load processing model for HTML files"
-  - - condition: (unconditional)
-    - effect: forwards new parameters to "creating and initializing a Document object"
-    - tests: :question:
+  - - (validate all expectations for "create and initialize a Document object" algorithm)
+    - tests: :construction: (@jugglinmike)
 - "page load processing model for XML files"
-  - - condition: (unconditional)
-    - effect: forwards new parameters to "creating and initializing a Document object"
-    - tests: :question:
+  - - (validate all expectations for "create and initialize a Document object" algorithm)
+    - tests: :construction: (@jugglinmike)
 - "page load processing model for text files"
-  - - condition: (unconditional)
-    - effect: forwards new parameters to "creating and initializing a Document object"
-    - tests: :question:
+  - - (validate all expectations for "create and initialize a Document object" algorithm)
+    - tests: :construction: (@jugglinmike)
 - "page load processing model for media"
-  - - condition: (unconditional)
-    - effect: forwards new parameters to "creating and initializing a Document object"
-    - tests: :question:
+  - - (validate all expectations for "create and initialize a Document object" algorithm)
+    - tests: :construction: (@jugglinmike)
 - "page load processing model for content that uses plugins"
-  - - condition: (unconditional)
-    - effect: forwards new parameters to "creating and initializing a Document object"
-    - tests: :question:
+  - - (validate all expectations for "create and initialize a Document object" algorithm)
+    - tests: :construction: (@jugglinmike)
