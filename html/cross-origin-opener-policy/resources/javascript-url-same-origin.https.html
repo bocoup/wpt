@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<script>
+'use strict';
+const params = new URLSearchParams(location.search);
+const childURL = encodeURIComponent(params.get('childURL'));
+const childName = params.get('childName');
+const subject = open(`javascript:\`<script>
+window.child = window.open(${JSON.stringify(childURL)}, ${JSON.stringify(childName)});
+<\/script>\``);
+addEventListener('message', ({data}) => {
+  if (data === 'close') {
+    subject.close();
+    return;
+  }
+  parent.postMessage({
+    channelName: childName,
+    childClosed: subject.child.closed,
+    childURL: (() => {
+      try {
+        return subject.child.document.URL;
+      } catch ({}) {
+        return null;
+      }
+    })()
+  }, '*');
+});
+</script>
