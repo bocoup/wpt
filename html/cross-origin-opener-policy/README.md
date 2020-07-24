@@ -24,11 +24,11 @@ cross-origin opener policy](https://github.com/whatwg/html/pull/5334).
 - "rules for choosing a browsing context"
   - - condition: COOP is enabled in parent and parent is cross-origin with new browsing context
     - effect: "name" is ignored and "noopener" is set
-    - tests: :question:
+    - tests: `popup-same-origin-with-cross-origin.https.html`
 - "navigate"
   - - condition: resource is a response
     - effect: sandboxing flags from browsing context *and* resource; COOP is unconditionally set to "unsafe-none"
-    - tests: :question:
+    - tests: `coop-sandbox.https.html`
   - - condition: resource is a `javascript:` URL
     - effect: sandboxing flags from browsing context *and* request; COOP is set to match the active document
     - tests: :question:
