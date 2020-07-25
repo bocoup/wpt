@@ -1,33 +1,29 @@
-<!doctype html>
-<title>Cross-Origin-Opener-Policy and a JavaScript URL popup</title>
-<script src=/resources/testharness.js></script>
-<script src=/resources/testharnessreport.js></script>
-<script src=/common/get-host-info.sub.js></script>
+<!DOCTYPE html>
+<title>Cross-Origin-Opener-Policy and a "javascript:" URL popup</title>
+<script src="/resources/testharness.js"></script>
+<script src="/resources/testharnessreport.js"></script>
+<script src="/common/get-host-info.sub.js"></script>
 <script src="/common/utils.js"></script>
 <script>
 'use strict';
 
 function setup(t, coop, origin, name) {
-  window.furtherPopup = null;
-
   const bc = new BroadcastChannel(name);
+  const grandchildUrl = `${origin}/html/cross-origin-opener-policy/resources/coop-coep.py?coop=${coop}&coep=&channel=${bc.name}`;
+  window.grandchild = null;
 
-  const popup = window.open(`javascript:\`<script>
-console.log('hi', document.domain, location.href);
-const w = window.open("${origin}/html/cross-origin-opener-policy/resources/coop-coep.py?coop=${coop}&coep=x&channel=${bc.name}", "${bc.name}");
-window.opener.furtherPopup = w;
+  const child = window.open(`javascript:\`<script>
+window.opener.grandchild = window.open("${grandchildUrl}", "${bc.name}");
 <\/script>\``);
+
   t.add_cleanup(() => {
-    // Close the popups once the test is complete.
-    // The browsing context of the second popup is closed hence use the
-    // broadcast channel to trigger the closure.
     bc.postMessage('close');
-    popup.close();
-    window.furtherPopup = null;
+    child.close();
+    window.grandchild = null;
   });
 
   return new Promise((resolve) => {
-    bc.onmessage = ({data}) => resolve({data, popup, furtherPopup});
+    bc.onmessage = ({data}) => resolve({data, child, grandchild, grandchildUrl});
   });
 }
 const { HTTPS_ORIGIN, HTTPS_REMOTE_ORIGIN } = get_host_info();
@@ -35,78 +31,84 @@ const { HTTPS_ORIGIN, HTTPS_REMOTE_ORIGIN } = get_host_info();
 promise_test(t => {
   const name = token();
   return setup(t, 'unsafe-none', HTTPS_ORIGIN, name)
-    .then(({data, popup, furtherPopup}) => {
-      assert_equals(popup.opener, window);
-      assert_equals(popup.origin, window.origin);
-      assert_equals(data.name, '');
-      assert_false(data.opener);
-      assert_true(furtherPopup.closed);
-      assert_equals(furtherPopup.document.URL, 'about:blank');
+    .then(({data, child, grandchild}) => {
+      assert_equals(child.opener, window, 'child opener');
+      assert_equals(child.origin, window.origin, 'child origin');
+      assert_equals(data.name, '', 'grandchild name');
+      assert_false(data.opener, 'grandchild opener');
+      assert_true(grandchild.closed, 'grandchild closed');
+      assert_true(!!grandchild.document, 'grandchild document');
+      assert_equals(grandchild.document.URL, 'about:blank');
     });
 }, 'navigation: same origin, COOP: unsafe-none');
 
 promise_test(t => {
   const name = token();
   return setup(t, 'same-origin', HTTPS_ORIGIN, name)
-    .then(({data, popup, furtherPopup}) => {
-      assert_equals(popup.opener, window);
-      assert_equals(popup.origin, window.origin);
-      assert_equals(data.name, name);
-      assert_true(data.opener);
-      assert_true(furtherPopup.closed);
-      assert_equals(furtherPopup.document.URL, 'about:blank');
+    .then(({data, child, grandchild, grandchildUrl}) => {
+      assert_equals(child.opener, window, 'child opener');
+      assert_equals(child.origin, window.origin, 'child origin');
+      assert_equals(data.name, name, 'grandchild name');
+      assert_true(data.opener, 'grandchild opener');
+      assert_false(grandchild.closed, 'grandchild closed');
+      assert_true(!!grandchild.document, 'grandchild document');
+      assert_equals(grandchild.document.URL, grandchildUrl);
     });
 }, 'navigation: same origin, COOP: same-origin');
 
 promise_test(t => {
   const name = token();
   return setup(t, 'same-origin-allow-popups', HTTPS_ORIGIN, name)
-    .then(({data, popup, furtherPopup}) => {
-      assert_equals(popup.opener, window);
-      assert_equals(popup.origin, window.origin);
-      assert_equals(data.name, '');
-      assert_false(data.opener);
-      assert_true(furtherPopup.closed);
-      assert_equals(furtherPopup.document.URL, 'about:blank');
+    .then(({data, child, grandchild}) => {
+      assert_equals(child.opener, window, 'child opener');
+      assert_equals(child.origin, window.origin, 'child origin');
+      assert_equals(data.name, '', 'grandchild name');
+      assert_false(data.opener, 'grandchild opener');
+      assert_true(grandchild.closed, 'grandchild closed');
+      assert_true(!!grandchild.document, 'grandchild document');
+      assert_equals(grandchild.document.URL, 'about:blank');
     });
 }, 'navigation: same origin, COOP: same-origin-allow-popups');
 
 promise_test(t => {
   const name = token();
   return setup(t, 'unsafe-none', HTTPS_REMOTE_ORIGIN, name)
-    .then(({data, popup, furtherPopup}) => {
-      assert_equals(popup.opener, window);
-      assert_equals(popup.origin, window.origin);
-      assert_equals(data.name, '');
-      assert_false(data.opener);
-      assert_true(furtherPopup.closed);
-      assert_equals(furtherPopup.document.URL, 'about:blank');
+    .then(({data, child, grandchild}) => {
+      assert_equals(child.opener, window, 'child opener');
+      assert_equals(child.origin, window.origin, 'child origin');
+      assert_equals(data.name, '', 'grandchild name');
+      assert_false(data.opener, 'grandchild opener');
+      assert_true(grandchild.closed, 'grandchild closed');
+      assert_true(!!grandchild.document, 'grandchild document');
+      assert_equals(grandchild.document.URL, 'about:blank');
     });
 }, 'navigation: remote origin, COOP: unsafe-none');
 
 promise_test(t => {
   const name = token();
   return setup(t, 'same-origin', HTTPS_REMOTE_ORIGIN, name)
-    .then(({data, popup, furtherPopup}) => {
-      assert_equals(popup.opener, window);
-      assert_equals(popup.origin, window.origin);
-      assert_equals(data.name, '');
-      assert_false(data.opener);
-      assert_true(furtherPopup.closed);
-      assert_equals(furtherPopup.document.URL, 'about:blank');
+    .then(({data, child, grandchild}) => {
+      assert_equals(child.opener, window, 'child opener');
+      assert_equals(child.origin, window.origin, 'child origin');
+      assert_equals(data.name, '', 'grandchild name');
+      assert_false(data.opener, 'grandchild opener');
+      assert_true(grandchild.closed, 'grandchild closed');
+      assert_true(!!grandchild.document, 'grandchild document');
+      assert_equals(grandchild.document.URL, 'about:blank');
     });
 }, 'navigation: remote origin, COOP: same-origin');
 
 promise_test(t => {
   const name = token();
   return setup(t, 'same-origin-allow-popups', HTTPS_REMOTE_ORIGIN, name)
-    .then(({data, popup, furtherPopup}) => {
-      assert_equals(popup.opener, window);
-      assert_equals(popup.origin, window.origin);
-      assert_equals(data.name, '');
-      assert_false(data.opener);
-      assert_true(furtherPopup.closed);
-      assert_equals(furtherPopup.document.URL, 'about:blank');
+    .then(({data, child, grandchild}) => {
+      assert_equals(child.opener, window, 'child opener');
+      assert_equals(child.origin, window.origin, 'child origin');
+      assert_equals(data.name, '', 'grandchild name');
+      assert_false(data.opener, 'grandchild opener');
+      assert_true(grandchild.closed, 'grandchild closed');
+      assert_true(!!grandchild.document, 'grandchild document');
+      assert_equals(grandchild.document.URL, 'about:blank');
     });
 }, 'navigation: remote origin, COOP: same-origin-allow-popups');
 </script>
