@@ -11,61 +11,79 @@ URLs should inherit the cross-origin opener policy of the active document. To
 observe this, each subtest uses the following procedure.</p>
 
 <ol>
-  <li>create an iframe with a given COOP (the <code>parentCOOP</code>)</li>
-  <li>from the iframe, create a popup window using a <code>javascript:</code>
-  URL (the new document is expected to inherit the COOP from the iframe)</li>
+  <li>create popup with a given COOP (the <code>parentCOOP</code>)</li>
+  <li>navigate the popup to a <code>javascript:</code> URL (the new document is
+  expected to inherit the <code>parentCOOP</code>)</li>
   <li>from the popup, create a second popup window with a given COOP (the
   <code>childCOOP</code>)</li>
 </ol>
 
 <p>Both popup windows inspect state and report back to the test context using
-window postMessaging and BroadcastChannels.</p>
+BroadcastChannels.</p>
 
 <pre>
-    .--------------.
-    |    https:    |
-    |.------------.|  .-------------------.   .-----------.
-    ||   https:   |-->|    javascript:    |-->|  https:   |
-    || parentCOOP ||  | (COOP under test) |   | childCOOP |
-    |'------------'|  '-------------------'   '-----------'
+    .---- test ----.
+    | open(https:) |
+    |  parentCOOP  |   .----- subject -------.
+    |      '---------> | --------.           |
+    |              |   |         v           |
+    |              |   | assign(javascript:) |
+    |              |   |  (COOP under test)  |
+    |              |   |         |           |
+    |              |   |    open(https:)     |
+    |              |   |     childCOOP       |    .- observer -.
+    |              |   |         '--------------> |            |
+    |              |   '---------------------'    '------------'
+    |              |             |                      |
+    |  validate    | <--status---+----------------------'
     '--------------'
 </pre>
 
 <script>
 'use strict';
 
+function sendTo(t, channelName, payload) {
+  const iframe = document.createElement('iframe');
+  iframe.onload = () => {
+    iframe.contentWindow.postMessage(payload, '*');
+  };
+  iframe.src = `/html/cross-origin-opener-policy/resources/postback.html?channel=${channelName}`;
+  document.body.appendChild(iframe);
+  t.add_cleanup(() => iframe.remove());
+}
+
 function setup(t, parentCOOP, childCOOP, origin, name) {
   const bc = new BroadcastChannel(name);
   const childURL = encodeURIComponent(`${origin}/html/cross-origin-opener-policy/resources/coop-coep.py?coop=${childCOOP}&coep=&channel=${name}`);
 
-  const subjectParent = document.createElement('iframe');
-  subjectParent.src =
+  open(
     `/html/cross-origin-opener-policy/resources/javascript-url-same-origin.https.html` +
     `?pipe=header(cross-origin-opener-policy,${parentCOOP})` +
     `&childURL=${childURL}` +
-    `&childName=${name}`;
-  document.body.appendChild(subjectParent);
+    `&childName=${name}`
+  );
 
   t.add_cleanup(() => {
     bc.postMessage('close');
-    subjectParent.contentWindow.postMessage('close', '*');
   });
 
   return new Promise((resolve) => {
-    bc.onmessage = ({data}) => resolve(data);
+    bc.addEventListener('message', ({data}) => {
+      resolve(data);
+    }, {once: true});
   }).then(({name: childName, opener: childOpener}) => {
     return new Promise((resolve) => {
-      subjectParent.contentWindow.postMessage('query', '*');
-      addEventListener('message', function handle({data}) {
-        if (data.channelName !== name) {
-          return;
-        }
-        removeEventListener('message', handle);
+      sendTo(t, name, 'parent');
+
+      bc.addEventListener('message', function handle({data}) {
+        if (typeof data !== 'object' || !('childClosed' in data)) { return; }
+
+        bc.removeEventListener('message', handle);
+
         resolve({
           childName,
           childOpener,
-          childClosed: data.childClosed,
-          childURL: data.childURL
+          childClosed: data.childClosed
         });
       });
     });
@@ -77,14 +95,12 @@ function assert_isolated(results) {
   assert_equals(results.childName, '', 'child name');
   assert_false(results.childOpener, 'child opener');
   assert_true(results.childClosed, 'child closed');
-  assert_equals(results.childURL, 'about:blank');
 }
 
 function assert_not_isolated(results, expectedName) {
   assert_equals(results.childName, expectedName, 'child name');
   assert_true(results.childOpener, 'child opener');
   assert_false(results.childClosed, 'child closed');
-  assert_not_equals(results.childURL, 'about:blank');
 }
 
 async_test((t) => {
