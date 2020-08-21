@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Recognizes origin following navigation to a javascript: URL</title>
+  <script src="/resources/testharness.js"></script>
+  <script src="/resources/testharnessreport.js"></script>
+  <script src="/common/utils.js"></script>
+</head>
+<body>
+
+<p>A document's origin does not change following navigation to a
+<code>javascript:</code> URL. MessageChannel instances created under this
+condition should be able to transmit messages to instances running on the same
+origin, and they should receive messages sent by instances running on the same
+origin.</p>
+
+<script>
+'use strict';
+function createIframe(t) {
+  const iframe = document.createElement('iframe');
+  iframe.src = '/common/blank.html';
+  document.body.appendChild(iframe);
+  t.add_cleanup(() => iframe.remove());
+  return iframe;
+}
+
+async_test((t) => {
+  const bc = new BroadcastChannel(token());
+  const iframe = createIframe(t);
+
+  iframe.addEventListener('load', t.step_func(() => {
+    iframe.contentWindow.location = `javascript:\`<script>
+      const bc = new BroadcastChannel(${JSON.stringify(bc.name)});
+      bc.postMessage(null);
+    <\/script>\``;
+  }), {once: true});
+
+  bc.addEventListener('message', t.step_func_done());
+}, 'messages originating from javascript: URL document');
+
+async_test((t) => {
+  const bc = new BroadcastChannel(token());
+  const iframe = createIframe(t);
+
+  iframe.addEventListener('load', t.step_func(() => {
+    iframe.contentWindow.location = `javascript:\`<script>
+      const bc = new BroadcastChannel(${JSON.stringify(bc.name)});
+      bc.addEventListener('message', () => {
+        parent.postMessage('received');
+      });
+      parent.postMessage('ready');
+    <\/script>\``;
+  }), {once: true});
+
+  addEventListener('message', t.step_func(({data}) => {
+    if (data === 'ready') {
+      bc.postMessage(null);
+    } else if (data === 'received') {
+      t.done();
+    }
+  }));
+}, 'messages destined for javascript: URL document');
+</script>
+</body>
+</html>
