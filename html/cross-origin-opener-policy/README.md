@@ -31,7 +31,7 @@ cross-origin opener policy](https://github.com/whatwg/html/pull/5334).
     - tests: `coop-sandbox.https.html`
   - - condition: resource is a `javascript:` URL
     - effect: sandboxing flags from browsing context *and* request; COOP is set to match the active document
-    - tests: :construction: (@jugglinmike)
+    - tests: [gh-25189: [html] Add tests for COOP with javascript: URLs](https://github.com/web-platform-tests/wpt/pull/25189)
 - "process a navigate fetch"
   - - condition: browsing context is top-level, sandboxing flags are set, and the COOP of any response in a redirect chain is "unsafe-none"
     - effect: navigation blocked
