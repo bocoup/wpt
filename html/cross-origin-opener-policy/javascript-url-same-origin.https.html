@@ -42,16 +42,6 @@ BroadcastChannels.</p>
 <script>
 'use strict';
 
-function sendTo(t, channelName, payload) {
-  const iframe = document.createElement('iframe');
-  iframe.onload = () => {
-    iframe.contentWindow.postMessage(payload, '*');
-  };
-  iframe.src = `/html/cross-origin-opener-policy/resources/postback.html?channel=${channelName}`;
-  document.body.appendChild(iframe);
-  t.add_cleanup(() => iframe.remove());
-}
-
 function run(t, parentCOOP, childCOOP, origin, name) {
   const bc = new BroadcastChannel(name);
   const childURL = encodeURIComponent(`${origin}/html/cross-origin-opener-policy/resources/coop-coep.py?coop=${childCOOP}&coep=&channel=${name}`);
@@ -73,7 +63,7 @@ function run(t, parentCOOP, childCOOP, origin, name) {
     }, {once: true});
   }).then(({name: childName, opener: childOpener}) => {
     return new Promise((resolve) => {
-      sendTo(t, name, 'parent');
+      bc.postMessage('inspectChild');
 
       bc.addEventListener('message', function handle({data}) {
         if (typeof data !== 'object' || !('childClosed' in data)) { return; }

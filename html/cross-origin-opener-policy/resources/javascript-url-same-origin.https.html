@@ -16,7 +16,7 @@ bc.addEventListener('message', ({data}) => {
     close();
     return;
   }
-  if (data === 'parent') {
+  if (data === 'inspectChild') {
     const iframe = document.createElement('iframe');
     iframe.onload = () => {
       const payload = {
