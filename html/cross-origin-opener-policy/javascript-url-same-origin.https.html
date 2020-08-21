@@ -52,15 +52,15 @@ function sendTo(t, channelName, payload) {
   t.add_cleanup(() => iframe.remove());
 }
 
-function setup(t, parentCOOP, childCOOP, origin, name) {
+function run(t, parentCOOP, childCOOP, origin, name) {
   const bc = new BroadcastChannel(name);
   const childURL = encodeURIComponent(`${origin}/html/cross-origin-opener-policy/resources/coop-coep.py?coop=${childCOOP}&coep=&channel=${name}`);
 
   open(
     `/html/cross-origin-opener-policy/resources/javascript-url-same-origin.https.html` +
-    `?pipe=header(cross-origin-opener-policy,${parentCOOP})` +
-    `&childURL=${childURL}` +
-    `&childName=${name}`
+      `?pipe=header(cross-origin-opener-policy,${parentCOOP})` +
+      `&childURL=${childURL}` +
+      `&childName=${name}`
   );
 
   t.add_cleanup(() => {
@@ -105,7 +105,7 @@ function assert_not_isolated(results, expectedName) {
 
 async_test((t) => {
   const name = token();
-  setup(t, 'unsafe-none', 'unsafe-none', HTTPS_ORIGIN, name)
+  run(t, 'unsafe-none', 'unsafe-none', HTTPS_ORIGIN, name)
     .then((results) => {
       assert_not_isolated(results, name);
     })
@@ -114,7 +114,7 @@ async_test((t) => {
 
 async_test((t) => {
   const name = token();
-  setup(t, 'unsafe-none', 'unsafe-none', HTTPS_REMOTE_ORIGIN, name)
+  run(t, 'unsafe-none', 'unsafe-none', HTTPS_REMOTE_ORIGIN, name)
     .then((results) => {
       assert_not_isolated(results, name);
     })
@@ -123,7 +123,7 @@ async_test((t) => {
 
 async_test((t) => {
   const name = token();
-  setup(t, 'unsafe-none', 'same-origin-allow-popups', HTTPS_ORIGIN, name)
+  run(t, 'unsafe-none', 'same-origin-allow-popups', HTTPS_ORIGIN, name)
     .then((results) => {
       assert_isolated(results);
     })
@@ -132,7 +132,7 @@ async_test((t) => {
 
 async_test((t) => {
   const name = token();
-  setup(t, 'unsafe-none', 'same-origin-allow-popups', HTTPS_REMOTE_ORIGIN, name)
+  run(t, 'unsafe-none', 'same-origin-allow-popups', HTTPS_REMOTE_ORIGIN, name)
     .then((results) => {
       assert_isolated(results);
     })
@@ -141,7 +141,7 @@ async_test((t) => {
 
 async_test((t) => {
   const name = token();
-  setup(t, 'unsafe-none', 'same-origin', HTTPS_ORIGIN, name)
+  run(t, 'unsafe-none', 'same-origin', HTTPS_ORIGIN, name)
     .then((results) => {
       assert_isolated(results);
     })
@@ -150,7 +150,7 @@ async_test((t) => {
 
 async_test((t) => {
   const name = token();
-  setup(t, 'unsafe-none', 'same-origin', HTTPS_REMOTE_ORIGIN, name)
+  run(t, 'unsafe-none', 'same-origin', HTTPS_REMOTE_ORIGIN, name)
     .then((results) => {
       assert_isolated(results);
     })
@@ -159,7 +159,7 @@ async_test((t) => {
 
 async_test((t) => {
   const name = token();
-  setup(t, 'same-origin-allow-popups', 'unsafe-none', HTTPS_ORIGIN, name)
+  run(t, 'same-origin-allow-popups', 'unsafe-none', HTTPS_ORIGIN, name)
     .then((results) => {
       assert_not_isolated(results, name);
     })
@@ -168,7 +168,7 @@ async_test((t) => {
 
 async_test((t) => {
   const name = token();
-  setup(t, 'same-origin-allow-popups', 'unsafe-none', HTTPS_REMOTE_ORIGIN, name)
+  run(t, 'same-origin-allow-popups', 'unsafe-none', HTTPS_REMOTE_ORIGIN, name)
     .then((results) => {
       assert_not_isolated(results, name);
     })
@@ -177,7 +177,7 @@ async_test((t) => {
 
 async_test((t) => {
   const name = token();
-  setup(t, 'same-origin-allow-popups', 'same-origin-allow-popups', HTTPS_ORIGIN, name)
+  run(t, 'same-origin-allow-popups', 'same-origin-allow-popups', HTTPS_ORIGIN, name)
     .then((results) => {
       assert_not_isolated(results, name);
     })
@@ -186,7 +186,7 @@ async_test((t) => {
 
 async_test((t) => {
   const name = token();
-  setup(t, 'same-origin-allow-popups', 'same-origin-allow-popups', HTTPS_REMOTE_ORIGIN, name)
+  run(t, 'same-origin-allow-popups', 'same-origin-allow-popups', HTTPS_REMOTE_ORIGIN, name)
     .then((results) => {
       assert_isolated(results);
     })
@@ -195,7 +195,7 @@ async_test((t) => {
 
 async_test((t) => {
   const name = token();
-  setup(t, 'same-origin-allow-popups', 'same-origin', HTTPS_ORIGIN, name)
+  run(t, 'same-origin-allow-popups', 'same-origin', HTTPS_ORIGIN, name)
     .then((results) => {
       assert_not_isolated(results, name);
     })
@@ -204,7 +204,7 @@ async_test((t) => {
 
 async_test((t) => {
   const name = token();
-  setup(t, 'same-origin-allow-popups', 'same-origin', HTTPS_REMOTE_ORIGIN, name)
+  run(t, 'same-origin-allow-popups', 'same-origin', HTTPS_REMOTE_ORIGIN, name)
     .then((results) => {
       assert_isolated(results);
     })
@@ -213,7 +213,7 @@ async_test((t) => {
 
 async_test((t) => {
   const name = token();
-  setup(t, 'same-origin', 'unsafe-none', HTTPS_ORIGIN, name)
+  run(t, 'same-origin', 'unsafe-none', HTTPS_ORIGIN, name)
     .then((results) => {
       assert_isolated(results);
     })
@@ -222,7 +222,7 @@ async_test((t) => {
 
 async_test((t) => {
   const name = token();
-  setup(t, 'same-origin', 'unsafe-none', HTTPS_REMOTE_ORIGIN, name)
+  run(t, 'same-origin', 'unsafe-none', HTTPS_REMOTE_ORIGIN, name)
     .then((results) => {
       assert_isolated(results);
     })
@@ -231,7 +231,7 @@ async_test((t) => {
 
 async_test((t) => {
   const name = token();
-  setup(t, 'same-origin', 'same-origin-allow-popups', HTTPS_ORIGIN, name)
+  run(t, 'same-origin', 'same-origin-allow-popups', HTTPS_ORIGIN, name)
     .then((results) => {
       assert_not_isolated(results, name);
     })
@@ -240,7 +240,7 @@ async_test((t) => {
 
 async_test((t) => {
   const name = token();
-  setup(t, 'same-origin', 'same-origin-allow-popups', HTTPS_REMOTE_ORIGIN, name)
+  run(t, 'same-origin', 'same-origin-allow-popups', HTTPS_REMOTE_ORIGIN, name)
     .then((results) => {
       assert_isolated(results);
     })
@@ -249,7 +249,7 @@ async_test((t) => {
 
 async_test((t) => {
   const name = token();
-  setup(t, 'same-origin', 'same-origin', HTTPS_ORIGIN, name)
+  run(t, 'same-origin', 'same-origin', HTTPS_ORIGIN, name)
     .then((results) => {
       assert_not_isolated(results, name);
     })
@@ -258,7 +258,7 @@ async_test((t) => {
 
 async_test((t) => {
   const name = token();
-  setup(t, 'same-origin', 'same-origin', HTTPS_REMOTE_ORIGIN, name)
+  run(t, 'same-origin', 'same-origin', HTTPS_REMOTE_ORIGIN, name)
     .then((results) => {
       assert_isolated(results);
     })
