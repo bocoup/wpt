@@ -1,32 +1,30 @@
 # Fetch Metadata test generation framework
 
 This directory defines a command-line tool for procedurally generating WPT
-tests. It is currently under development, so documentation is minimal.
+tests.
 
 ## Motivation
 
 Many features of the web platform involve the browser making one or more HTTP
-requests to remote servers.
-
-Only some aspects of these requests are specified within the standard that
-defines the relevant feature. Other aspects are specified by external standards
-which span the entire platform (e.g. [Fetch Metadata Request
-Headers](https://w3c.github.io/webappsec-fetch-metadata/)).
+requests to remote servers. Only some aspects of these requests are specified
+within the standard that defines the relevant feature. Other aspects are
+specified by external standards which span the entire platform (e.g. [Fetch
+Metadata Request Headers](https://w3c.github.io/webappsec-fetch-metadata/)).
 
 This state of affairs makes it difficult to maintain test coverage for two
 reasons:
 
-- When a new feature introduces a new request, it must be verified to integrate
-  with every cross-cutting standard.
+- When a new feature introduces a new kind of web request, it must be verified
+  to integrate with every cross-cutting standard.
 - When a new cross-cutting standard is introduced, it must be verified to
-  integrate with every request.
+  integrate with every kind of web request.
 
-This tool attempts to reduce this tension. It allows maintainers to share
-instructions for making requests in an abstract sense. These generic
-instructions can be reused by to produce a different suite of tests for each
-cross-cutting feature.
+The tool in this directory attempts to reduce this tension. It allows
+maintainers to express instructions for making web requests in an abstract
+sense. These generic instructions can be reused by to produce a different suite
+of tests for each cross-cutting feature.
 
-When a new type of request is proposed, a single generic template can be
+When a new kind of request is proposed, a single generic template can be
 defined here. This will provide the maintainers of all cross-cutting features
 with clear instruction on how to extend their test suite with the new feature.
 
@@ -59,16 +57,18 @@ input. The file should define a dictionary with the following keys:
 - `output_directory` - a string describing the filesystem path where the
   generated test files should be written
 - `cases` - a list of dictionaries describing how the test templates should be
-  expanded with individual subtests; each disctionary should have the following
+  expanded with individual subtests; each dictionary should have the following
   keys:
   - `all_subtests` - properties which should be defined for every expansion
   - `common_axis` - a list of dictionaries
-  - `template_axes`
+  - `template_axes` - a dictionary relating template names to properties that
+    should be used when expanding that particular template
 
 Internally, the tool creates a set of "subtests" for each template. This set is
 the Cartesian product of the `common_axis` and the given template's entry in
 the `template_axes` dictionary. It uses this set of subtests to expand the
-template, creating an output file.
+template, creating an output file. Refer to the next section for a concrete
+example of how the expansion is performed.
 
 In general, the tool will output a single file for each template. However, the
 `filename_flags` attribute has special semantics. It is used to separate
@@ -76,10 +76,19 @@ subtests for the same template file. This is intended to accommodate [the
 web-platform-test's filename-based
 conventions](https://web-platform-tests.org/writing-tests/file-names.html).
 
-For instance, when `.https` is present in a test file's name, the test harness
-will load that test using the HTTPS protocol. Subtests which include the value
-`https` in the `filename_flags` property will be expanded using the appropriate
-template but written to a distinct file whose name includes `.https`.
+For instance, when `.https` is present in a test file's name, the WPT test
+harness will load that test using the HTTPS protocol. Subtests which include
+the value `https` in the `filename_flags` property will be expanded using the
+appropriate template but written to a distinct file whose name includes
+`.https`.
+
+The generation tool requires that the configuration file references every
+template in the `templates` directory. Because templates and configuration
+files may be contributed by different people, this requirement ensures that
+configuration authors are aware of all available templates. Some templates may
+not be relevant for some features; in those cases, the configuration file can
+include an empty array for the template's entry in the `template_axes`
+dictionary (as in `template3.html` in the example which follows).
 
 ## Expansion example
 
@@ -115,13 +124,14 @@ resources to complete. The tool has been designed to help authors structure the
 generated output to reduce these resource requirements.
 
 **Literalness of generated output** Because the generated output is how most
-people will interact with the tests, it is important that it be logical and
-approachable. This tool avoids outputting abstractions which would frustrate
-attempts to read the source code or step through its execution environment.
+people will interact with the tests, it is important that it be approachable.
+This tool avoids outputting abstractions which would frustrate attempts to read
+the source code or step through its execution environment.
 
 **Simplicity** The test generation logic itself was written to be approachable.
 This makes it easier to anticipate how the tool will behave with new input, and
-it also lowers the bar for others to contribute improvements.
+it lowers the bar for others to contribute improvements.
 
-Non-goals include conciseness of template files, conciseness of generated
-output
+Non-goals include conciseness of template files (verbosity makes the potential
+expansions more predictable) and conciseness of generated output (verbosity
+aids in the interpretation of results).
