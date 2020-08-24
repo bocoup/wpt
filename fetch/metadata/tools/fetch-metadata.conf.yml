@@ -242,10 +242,6 @@ cases:
         filename_flags: [https]
         origins: []
     template_axes:
-      # Unused
-      # TODO(jugglinmike) document rationale
-      worker-dedicated-importscripts.sub.html: []
-
       appcache-manifest.sub.https.html:
         - expected: no-cors
       audioworklet.https.sub.html:
@@ -387,6 +383,8 @@ cases:
         - expected: same-origin
         - options: { type: module }
           expected: same-origin
+      worker-dedicated-importscripts.sub.html:
+        - expected: no-cors
 
   # Sec-Fetch-Dest
   - common_axis:

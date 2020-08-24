@@ -177,6 +177,20 @@ Sources:
     return induceRequest(url)
       .then(() => retrieve(key))
       .then((headers) => {
+          assert_own_property(headers, 'sec-fetch-mode');
+          assert_equals(headers['sec-fetch-mode'], 'no-cors');
+        });
+  }, 'sec-fetch-mode');
+
+  promise_test(() => {
+    const key = '{{uuid()}}';
+    const url = makeRequestURL(
+      key, [], { mime: 'application/javascript' }
+    );
+
+    return induceRequest(url)
+      .then(() => retrieve(key))
+      .then((headers) => {
           assert_own_property(headers, 'sec-fetch-dest');
           assert_equals(headers['sec-fetch-dest'], 'script');
         });
