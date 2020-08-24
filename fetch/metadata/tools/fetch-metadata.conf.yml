@@ -52,6 +52,7 @@ cases:
       element-img.sub.html:
         - sourceAttr: src
         - sourceAttr: srcset
+      element-img-environment-change.sub.html: [{}]
       element-input-image.sub.html: [{}]
       element-link-icon.sub.html: [{}]
       element-meta-refresh.optional.sub.html: [{}]
@@ -144,6 +145,7 @@ cases:
       element-img.sub.html:
         - sourceAttr: src
         - sourceAttr: srcset
+      element-img-environment-change.sub.html: [{}]
       element-input-image.sub.html: [{}]
       element-link-icon.sub.html: [{}]
       element-meta-refresh.optional.sub.html: [{}]
@@ -195,6 +197,7 @@ cases:
       element-embed.sub.html: []
       element-frame.sub.html: []
       element-iframe.sub.html: []
+      element-img-environment-change.sub.html: []
       element-link-icon.sub.html: []
       element-picture.sub.html: []
       element-script.sub.html: []
@@ -301,6 +304,14 @@ cases:
           elementAttrs: { crossorigin: anonymous }
         - sourceAttr: srcset
           expected: cors
+          elementAttrs: { crossorigin: use-credentials }
+      element-img-environment-change.sub.html:
+        - expected: no-cors
+        - expected: cors
+          elementAttrs: { crossorigin: '' }
+        - expected: cors
+          elementAttrs: { crossorigin: anonymous }
+        - expected: cors
           elementAttrs: { crossorigin: use-credentials }
       element-input-image.sub.html:
         - expected: no-cors
@@ -430,6 +441,8 @@ cases:
           expected: image
         - sourceAttr: srcset
           expected: image
+      element-img-environment-change.sub.html:
+        - expected: image
       element-input-image.sub.html:
         - expected: image
       element-link-icon.sub.html:
@@ -522,6 +535,8 @@ cases:
           expected: NULL
         - sourceAttr: srcset
           expected: NULL
+      element-img-environment-change.sub.html:
+        - expected: NULL
       element-input-image.sub.html:
         - expected: NULL
       element-link-icon.sub.html:
