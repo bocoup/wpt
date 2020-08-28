@@ -86,7 +86,7 @@ Sources:
     mime: 'text/html',
     body: `<script>
       window.addEventListener('load', () => {
-        setTimeout(() => location.assign('${messageOpenerUrl}'))
+        set`+`Timeout(() => location.assign('${messageOpenerUrl}'));
       });
     <`+`/script>`
   };
