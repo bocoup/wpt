@@ -31,7 +31,7 @@
         return;
       }
 
-      return new Promise((resolve) => setTimeout(resolve, 0))
+      return new Promise((resolve) => t.step_timeout(resolve, 0))
         .then(poll);
     };
     t.add_cleanup(() => video.remove());
