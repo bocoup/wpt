@@ -49,6 +49,8 @@ cases:
       # https://webaudio.github.io/web-audio-api/#BaseAudioContext
       audioworklet.https.sub.html: []
       cors-preflight.sub.html: []
+      # `window.location.reload` operates on the 
+      window-location-reload.sub.html: []
 
       css-images.sub.html:
         - filename_flags: [tentative]
@@ -83,6 +85,7 @@ cases:
         - rel: stylesheet
       header-refresh.optional.sub.html: [{}]
       window-location.sub.html: [{}]
+      window-open.sub.html: [{}]
       script-module-import-dynamic.sub.html: [{}]
       script-module-import-static.sub.html: [{}]
       svg-image.sub.html: [{}]
@@ -113,6 +116,7 @@ cases:
       #   "same-origin":
       #   https://html.spec.whatwg.org/#fetch-a-single-module-script
       worker-dedicated-constructor.sub.html: []
+      window-location-reload.sub.html: []
 
       appcache-manifest.sub.https.html: [{}]
       audioworklet.https.sub.html: [{}]
@@ -150,6 +154,7 @@ cases:
         - rel: stylesheet
       header-refresh.optional.sub.html: [{}]
       window-location.sub.html: [{}]
+      window-open.sub.html: [{}]
       script-module-import-dynamic.sub.html: [{}]
       script-module-import-static.sub.html: [{}]
       svg-image.sub.html: [{}]
@@ -183,6 +188,7 @@ cases:
       # session history, so these requests cannot be initiated using the
       # History API.
       window-history.sub.html: []
+      window-location-reload.sub.html: []
       # Unused
       # - the request mode of all "classic" worker scripts is set to
       #   "same-origin"
@@ -226,6 +232,7 @@ cases:
         - rel: stylesheet
       header-refresh.optional.sub.html: [{}]
       window-location.sub.html: [{}]
+      window-open.sub.html: [{}]
       script-module-import-dynamic.sub.html: [{}]
       script-module-import-static.sub.html: [{}]
       svg-image.sub.html: [{}]
@@ -279,6 +286,7 @@ cases:
       # session history, so these requests cannot be initiated using the
       # History API.
       window-history.sub.html: []
+      window-location-reload.sub.html: []
       # Unused
       # - the request mode of all "classic" worker scripts is set to
       #   "same-origin"
@@ -323,6 +331,7 @@ cases:
         - rel: stylesheet
       header-refresh.optional.sub.html: [{}]
       window-location.sub.html: [{}]
+      window-open.sub.html: [{}]
       script-module-import-dynamic.sub.html: [{}]
       script-module-import-static.sub.html: [{}]
       svg-image.sub.html: [{}]
@@ -370,6 +379,7 @@ cases:
       # session history, so these requests cannot be initiated using the
       # History API.
       window-history.sub.html: []
+      window-location-reload.sub.html: []
       worker-dedicated-constructor.sub.html: []
       worker-dedicated-importscripts.sub.html: []
 
@@ -393,6 +403,7 @@ cases:
       header-refresh.optional.sub.html: [{}]
       svg-image.sub.html: [{}]
       window-location.sub.html: [{}]
+      window-open.sub.html: [{}]
 
   # Sec-Fetch-Mode
   # These tests are served over HTTPS so the induced requests will be both
@@ -545,6 +556,10 @@ cases:
         - expected: navigate
       window-location.sub.html:
         - expected: navigate
+      window-location-reload.sub.html:
+        - expected: navigate
+      window-open.sub.html:
+        - expected: navigate
       script-module-import-dynamic.sub.html:
         - expected: cors
       script-module-import-static.sub.html:
@@ -670,6 +685,10 @@ cases:
         - expected: document
       window-location.sub.html:
         - expected: document
+      window-location-reload.sub.html:
+        - expected: document
+      window-open.sub.html:
+        - expected: document
       script-module-import-dynamic.sub.html:
         - expected: script
       script-module-import-static.sub.html:
@@ -770,6 +789,14 @@ cases:
       window-history.sub.html:
         - expected: NULL
       window-location.sub.html:
+        - expected: NULL
+        - userActivated: TRUE
+          expected: ?1
+      window-location-reload.sub.html:
+        - expected: NULL
+        - userActivated: TRUE
+          expected: ?1
+      window-open.sub.html:
         - expected: NULL
         - userActivated: TRUE
           expected: ?1

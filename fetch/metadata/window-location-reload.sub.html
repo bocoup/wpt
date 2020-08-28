@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+  <meta charset="utf-8">
+  <meta name="timeout" content="long">
+  <title>HTTP headers on request for navigation via window.location.reload</title>
+  <script src="/resources/testharness.js"></script>
+  <script src="/resources/testharnessreport.js"></script>
+  <script src="/fetch/metadata/resources/helper.sub.js"></script>
+  <body>
+  <script>
+  'use strict';
+
+  function induceRequest(url) {
+    const win = window.open();
+
+    return new Promise((resolve) => {
+        addEventListener('message', function(event) {
+          if (event.source === win) {
+            resolve();
+          }
+        });
+
+        win.location = url;
+      })
+      .then(() => win.close());
+  }
+
+  const responseParams = {
+    mime: 'text/html',
+    body: `<script>
+      if (location.hash === '#first') {
+        opener.postMessage('done', '*');
+      } else {
+        // First, clear the stash entry that was created by the initial
+        // navigation
+        fetch(location + '&retrieve')
+          .then(() => {
+            // Set the hash so following the reload, this same script can
+            // recognize that it is executing a second time
+            location.hash = 'first';
+            // Trigger the navigation under test
+            location.reload();
+          });
+      }
+    </${''}script>`
+  };
+
+  promise_test(() => {
+    const key = '{{uuid()}}';
+    const url = makeRequestURL(key, ['httpOrigin'], responseParams);
+
+    return induceRequest(url)
+      .then(() => retrieve(key))
+      .then((headers) => {
+          assert_not_own_property(headers, 'sec-fetch-site');
+        });
+  }, 'sec-fetch-site - Not sent to non-trustworthy same-origin destination');
+
+  promise_test(() => {
+    const key = '{{uuid()}}';
+    const url = makeRequestURL(key, ['httpSameSite'], responseParams);
+
+    return induceRequest(url)
+      .then(() => retrieve(key))
+      .then((headers) => {
+          assert_not_own_property(headers, 'sec-fetch-site');
+        });
+  }, 'sec-fetch-site - Not sent to non-trustworthy same-site destination');
+
+  promise_test(() => {
+    const key = '{{uuid()}}';
+    const url = makeRequestURL(key, ['httpCrossSite'], responseParams);
+
+    return induceRequest(url)
+      .then(() => retrieve(key))
+      .then((headers) => {
+          assert_not_own_property(headers, 'sec-fetch-site');
+        });
+  }, 'sec-fetch-site - Not sent to non-trustworthy cross-site destination');
+
+  promise_test(() => {
+    const key = '{{uuid()}}';
+    const url = makeRequestURL(key, ['httpOrigin'], responseParams);
+
+    return induceRequest(url)
+      .then(() => retrieve(key))
+      .then((headers) => {
+          assert_not_own_property(headers, 'sec-fetch-mode');
+        });
+  }, 'sec-fetch-mode - Not sent to non-trustworthy same-origin destination');
+
+  promise_test(() => {
+    const key = '{{uuid()}}';
+    const url = makeRequestURL(key, ['httpSameSite'], responseParams);
+
+    return induceRequest(url)
+      .then(() => retrieve(key))
+      .then((headers) => {
+          assert_not_own_property(headers, 'sec-fetch-mode');
+        });
+  }, 'sec-fetch-mode - Not sent to non-trustworthy same-site destination');
+
+  promise_test(() => {
+    const key = '{{uuid()}}';
+    const url = makeRequestURL(key, ['httpCrossSite'], responseParams);
+
+    return induceRequest(url)
+      .then(() => retrieve(key))
+      .then((headers) => {
+          assert_not_own_property(headers, 'sec-fetch-mode');
+        });
+  }, 'sec-fetch-mode - Not sent to non-trustworthy cross-site destination');
+
+  promise_test(() => {
+    const key = '{{uuid()}}';
+    const url = makeRequestURL(key, ['httpOrigin'], responseParams);
+
+    return induceRequest(url)
+      .then(() => retrieve(key))
+      .then((headers) => {
+          assert_not_own_property(headers, 'sec-fetch-dest');
+        });
+  }, 'sec-fetch-dest - Not sent to non-trustworthy same-origin destination');
+
+  promise_test(() => {
+    const key = '{{uuid()}}';
+    const url = makeRequestURL(key, ['httpSameSite'], responseParams);
+
+    return induceRequest(url)
+      .then(() => retrieve(key))
+      .then((headers) => {
+          assert_not_own_property(headers, 'sec-fetch-dest');
+        });
+  }, 'sec-fetch-dest - Not sent to non-trustworthy same-site destination');
+
+  promise_test(() => {
+    const key = '{{uuid()}}';
+    const url = makeRequestURL(key, ['httpCrossSite'], responseParams);
+
+    return induceRequest(url)
+      .then(() => retrieve(key))
+      .then((headers) => {
+          assert_not_own_property(headers, 'sec-fetch-dest');
+        });
+  }, 'sec-fetch-dest - Not sent to non-trustworthy cross-site destination');
+
+  promise_test(() => {
+    const key = '{{uuid()}}';
+    const url = makeRequestURL(key, ['httpOrigin'], responseParams);
+
+    return induceRequest(url)
+      .then(() => retrieve(key))
+      .then((headers) => {
+          assert_not_own_property(headers, 'sec-fetch-user');
+        });
+  }, 'sec-fetch-user - Not sent to non-trustworthy same-origin destination');
+
+  promise_test(() => {
+    const key = '{{uuid()}}';
+    const url = makeRequestURL(key, ['httpSameSite'], responseParams);
+
+    return induceRequest(url)
+      .then(() => retrieve(key))
+      .then((headers) => {
+          assert_not_own_property(headers, 'sec-fetch-user');
+        });
+  }, 'sec-fetch-user - Not sent to non-trustworthy same-site destination');
+
+  promise_test(() => {
+    const key = '{{uuid()}}';
+    const url = makeRequestURL(key, ['httpCrossSite'], responseParams);
+
+    return induceRequest(url)
+      .then(() => retrieve(key))
+      .then((headers) => {
+          assert_not_own_property(headers, 'sec-fetch-user');
+        });
+  }, 'sec-fetch-user - Not sent to non-trustworthy cross-site destination');
+
+  promise_test(() => {
+    const key = '{{uuid()}}';
+    const url = makeRequestURL(key, ['httpsOrigin', 'httpOrigin'], responseParams);
+
+    return induceRequest(url)
+      .then(() => retrieve(key))
+      .then((headers) => {
+          assert_not_own_property(headers, 'sec-fetch-site');
+        });
+  }, 'sec-fetch-site - HTTPS downgrade (header not sent)');
+
+  promise_test(() => {
+    const key = '{{uuid()}}';
+    const url = makeRequestURL(key, ['httpOrigin', 'httpsOrigin'], responseParams);
+
+    return induceRequest(url)
+      .then(() => retrieve(key))
+      .then((headers) => {
+          assert_own_property(headers, 'sec-fetch-site');
+          assert_equals(headers['sec-fetch-site'], 'same-origin');
+        });
+  }, 'sec-fetch-site - HTTPS upgrade');
+
+  promise_test(() => {
+    const key = '{{uuid()}}';
+    const url = makeRequestURL(key, ['httpsOrigin', 'httpOrigin', 'httpsOrigin'], responseParams);
+
+    return induceRequest(url)
+      .then(() => retrieve(key))
+      .then((headers) => {
+          assert_own_property(headers, 'sec-fetch-site');
+          assert_equals(headers['sec-fetch-site'], 'same-origin');
+        });
+  }, 'sec-fetch-site - HTTPS downgrade-upgrade');
+  </script>
+  </body>
+</html>

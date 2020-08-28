@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<!--
+[%provenance%]
+-->
+<html lang="en">
+  <meta charset="utf-8">
+  {%- if subtests|length > 10 %}
+  <meta name="timeout" content="long">
+  {%- endif %}
+  <title>HTTP headers on request for navigation via the global "open" function</title>
+  <script src="/resources/testharness.js"></script>
+  <script src="/resources/testharnessreport.js"></script>
+  {%- if subtests|selectattr('userActivated')|list %}
+  <script src="/resources/testdriver.js"></script>
+  <script src="/resources/testdriver-vendor.js"></script>
+  {%- endif %}
+  <script src="/fetch/metadata/resources/helper.sub.js"></script>
+  <body>
+  <script>
+  'use strict';
+
+  function induceRequest(t, url, userActivated) {
+    const start = userActivated ?
+      test_driver.bless('enable user activation', () => open(url)) :
+      Promise.resolve(open(url));
+
+    return start.then((win) => {
+      t.add_cleanup(() => win.close());
+
+      return new Promise((resolve) => {
+        addEventListener('message', function f(event) {
+          if (event.source === win) {
+            resolve();
+            removeEventListener('message', f);
+          }
+        });
+      });
+    });
+  }
+
+  const responseParams = {
+    mime: 'text/html',
+    body: `<script>opener.postMessage('done', '*')</${''}script>`
+  };
+  {%- for subtest in subtests %}
+
+  async_test((t) => {
+    const key = '{{uuid()}}';
+    const url = makeRequestURL(key, [% subtest.origins %], responseParams);
+
+    induceRequest(t, url, [% 'true' if subtest.userActivated else 'false' %])
+      .then(() => retrieve(key))
+      .then((headers) => {
+        {%- if subtest.expected == none %}
+          assert_not_own_property(headers, '[%subtest.headerName%]');
+        {%- else %}
+          assert_own_property(headers, '[%subtest.headerName%]');
+          assert_equals(headers['[%subtest.headerName%]'], '[%subtest.expected%]');
+        {%- endif %}
+        })
+      .then(() => t.done(), t.step_func((error) => { throw error; }))
+  }, '[%subtest.headerName%] - [%subtest.description | pad("end", " - ")%][% " with user activation" if subtest.userActivated%]');
+  {%- endfor %}
+  </script>
+  </body>
+</html>

@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<!--
+[%provenance%]
+-->
+<html lang="en">
+  <meta charset="utf-8">
+  {%- if subtests|length > 10 %}
+  <meta name="timeout" content="long">
+  {%- endif %}
+  <title>HTTP headers on request for navigation via window.location.reload</title>
+  <script src="/resources/testharness.js"></script>
+  <script src="/resources/testharnessreport.js"></script>
+  {%- if subtests|selectattr('userActivated')|list %}
+  <script src="/resources/testdriver.js"></script>
+  <script src="/resources/testdriver-vendor.js"></script>
+  {%- endif %}
+  <script src="/fetch/metadata/resources/helper.sub.js"></script>
+  <body>
+  <script>
+  'use strict';
+
+  function induceRequest(url, userActivated) {
+    const win = window.open();
+
+    return new Promise((resolve) => {
+        addEventListener('message', function(event) {
+          if (event.source === win) {
+            resolve();
+          }
+        });
+
+        if (userActivated) {
+          test_driver.bless('enable user activation', () => {
+            win.location = url;
+          });
+        } else {
+          win.location = url;
+        }
+      })
+      .then(() => win.close());
+  }
+
+  const responseParams = {
+    mime: 'text/html',
+    body: `<script>
+      if (location.hash === '#first') {
+        opener.postMessage('done', '*');
+      } else {
+        // First, clear the stash entry that was created by the initial
+        // navigation
+        fetch(location + '&retrieve')
+          .then(() => {
+            // Set the hash so following the reload, this same script can
+            // recognize that it is executing a second time
+            location.hash = 'first';
+            // Trigger the navigation under test
+            location.reload();
+          });
+      }
+    </${''}script>`
+  };
+  {%- for subtest in subtests %}
+
+  promise_test(() => {
+    const key = '{{uuid()}}';
+    const url = makeRequestURL(key, [% subtest.origins %], reloadResponseParams);
+
+    return induceRequest(url, [% 'true' if subtest.userActivated else 'false' %])
+      .then(() => retrieve(key))
+      .then((headers) => {
+        {%- if subtest.expected == none %}
+          assert_not_own_property(headers, '[%subtest.headerName%]');
+        {%- else %}
+          assert_own_property(headers, '[%subtest.headerName%]');
+          assert_equals(headers['[%subtest.headerName%]'], '[%subtest.expected%]');
+        {%- endif %}
+        });
+  }, '[%subtest.headerName%] - [%subtest.description | pad("end", " - ")%][% " with user activation" if subtest.userActivated%]');
+  {%- endfor %}
+  </script>
+  </body>
+</html>
+
