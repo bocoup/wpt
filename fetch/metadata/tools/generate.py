@@ -41,18 +41,18 @@ def test_name(directory, template_name, subtest_flags):
     '''
     template_name_parts = template_name.split('.')
     flags = set(subtest_flags) | set(template_name_parts[1:-1])
-    test_name_parts = [
-        template_name_parts[0],
-        *sorted(flags),
-        template_name_parts[-1]
-    ]
+    test_name_parts = (
+        [template_name_parts[0]] +
+        sorted(flags) +
+        [template_name_parts[-1]]
+    )
     return os.path.join(directory, '.'.join(test_name_parts))
 
 def merge(a, b):
     if type(a) != type(b):
         raise Exception('Cannot merge disparate types')
     if type(a) == list:
-        return [*a, *b]
+        return a + b
     if type(a) == dict:
         merged = {}
 
@@ -129,7 +129,7 @@ def pad_filter(value, side, padding):
     return value + padding
 
 def main(config_file):
-    with open(config_file) as handle:
+    with open(config_file, 'r') as handle:
         config = yaml.safe_load(handle.read())
 
     templates_directory = os.path.normpath(
