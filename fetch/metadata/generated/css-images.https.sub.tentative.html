@@ -41,7 +41,7 @@ Sources:
           assert_own_property(headers, 'sec-fetch-site');
           assert_equals(headers['sec-fetch-site'], 'same-origin');
         })
-        .then(t.step_func_done(), (error) => console.log(error))//t.unreached_func());
+        .then(t.step_func_done(), (error) => t.unreached_func());
   }, 'background-image sec-fetch-site - Same origin');
 
   async_test((t) => {
@@ -116,7 +116,7 @@ Sources:
           assert_own_property(headers, 'sec-fetch-site');
           assert_equals(headers['sec-fetch-site'], 'cross-site');
         })
-        .then(t.step_func_done(), (error) => console.log(error))//t.unreached_func());
+        .then(t.step_func_done(), (error) => t.unreached_func());
   }, 'background-image sec-fetch-site - Cross-site');
 
   async_test((t) => {
@@ -191,7 +191,7 @@ Sources:
           assert_own_property(headers, 'sec-fetch-site');
           assert_equals(headers['sec-fetch-site'], 'same-site');
         })
-        .then(t.step_func_done(), (error) => console.log(error))//t.unreached_func());
+        .then(t.step_func_done(), (error) => t.unreached_func());
   }, 'background-image sec-fetch-site - Same site');
 
   async_test((t) => {
@@ -266,7 +266,7 @@ Sources:
           assert_own_property(headers, 'sec-fetch-site');
           assert_equals(headers['sec-fetch-site'], 'cross-site');
         })
-        .then(t.step_func_done(), (error) => console.log(error))//t.unreached_func());
+        .then(t.step_func_done(), (error) => t.unreached_func());
   }, 'background-image sec-fetch-site - Same-Origin -> Cross-Site -> Same-Origin redirect');
 
   async_test((t) => {
@@ -341,7 +341,7 @@ Sources:
           assert_own_property(headers, 'sec-fetch-site');
           assert_equals(headers['sec-fetch-site'], 'same-site');
         })
-        .then(t.step_func_done(), (error) => console.log(error))//t.unreached_func());
+        .then(t.step_func_done(), (error) => t.unreached_func());
   }, 'background-image sec-fetch-site - Same-Origin -> Same-Site -> Same-Origin redirect');
 
   async_test((t) => {
@@ -416,7 +416,7 @@ Sources:
           assert_own_property(headers, 'sec-fetch-site');
           assert_equals(headers['sec-fetch-site'], 'cross-site');
         })
-        .then(t.step_func_done(), (error) => console.log(error))//t.unreached_func());
+        .then(t.step_func_done(), (error) => t.unreached_func());
   }, 'background-image sec-fetch-site - Cross-Site -> Same Origin');
 
   async_test((t) => {
@@ -491,7 +491,7 @@ Sources:
           assert_own_property(headers, 'sec-fetch-site');
           assert_equals(headers['sec-fetch-site'], 'cross-site');
         })
-        .then(t.step_func_done(), (error) => console.log(error))//t.unreached_func());
+        .then(t.step_func_done(), (error) => t.unreached_func());
   }, 'background-image sec-fetch-site - Cross-Site -> Same-Site');
 
   async_test((t) => {
@@ -566,7 +566,7 @@ Sources:
           assert_own_property(headers, 'sec-fetch-site');
           assert_equals(headers['sec-fetch-site'], 'cross-site');
         })
-        .then(t.step_func_done(), (error) => console.log(error))//t.unreached_func());
+        .then(t.step_func_done(), (error) => t.unreached_func());
   }, 'background-image sec-fetch-site - Cross-Site -> Cross-Site');
 
   async_test((t) => {
@@ -641,7 +641,7 @@ Sources:
           assert_own_property(headers, 'sec-fetch-site');
           assert_equals(headers['sec-fetch-site'], 'same-origin');
         })
-        .then(t.step_func_done(), (error) => console.log(error))//t.unreached_func());
+        .then(t.step_func_done(), (error) => t.unreached_func());
   }, 'background-image sec-fetch-site - Same-Origin -> Same Origin');
 
   async_test((t) => {
@@ -716,7 +716,7 @@ Sources:
           assert_own_property(headers, 'sec-fetch-site');
           assert_equals(headers['sec-fetch-site'], 'same-site');
         })
-        .then(t.step_func_done(), (error) => console.log(error))//t.unreached_func());
+        .then(t.step_func_done(), (error) => t.unreached_func());
   }, 'background-image sec-fetch-site - Same-Origin -> Same-Site');
 
   async_test((t) => {
@@ -791,7 +791,7 @@ Sources:
           assert_own_property(headers, 'sec-fetch-site');
           assert_equals(headers['sec-fetch-site'], 'cross-site');
         })
-        .then(t.step_func_done(), (error) => console.log(error))//t.unreached_func());
+        .then(t.step_func_done(), (error) => t.unreached_func());
   }, 'background-image sec-fetch-site - Same-Origin -> Cross-Site');
 
   async_test((t) => {
@@ -866,7 +866,7 @@ Sources:
           assert_own_property(headers, 'sec-fetch-site');
           assert_equals(headers['sec-fetch-site'], 'same-site');
         })
-        .then(t.step_func_done(), (error) => console.log(error))//t.unreached_func());
+        .then(t.step_func_done(), (error) => t.unreached_func());
   }, 'background-image sec-fetch-site - Same-Site -> Same Origin');
 
   async_test((t) => {
@@ -941,7 +941,7 @@ Sources:
           assert_own_property(headers, 'sec-fetch-site');
           assert_equals(headers['sec-fetch-site'], 'same-site');
         })
-        .then(t.step_func_done(), (error) => console.log(error))//t.unreached_func());
+        .then(t.step_func_done(), (error) => t.unreached_func());
   }, 'background-image sec-fetch-site - Same-Site -> Same-Site');
 
   async_test((t) => {
@@ -1016,7 +1016,7 @@ Sources:
           assert_own_property(headers, 'sec-fetch-site');
           assert_equals(headers['sec-fetch-site'], 'cross-site');
         })
-        .then(t.step_func_done(), (error) => console.log(error))//t.unreached_func());
+        .then(t.step_func_done(), (error) => t.unreached_func());
   }, 'background-image sec-fetch-site - Same-Site -> Cross-Site');
 
   async_test((t) => {
@@ -1091,7 +1091,7 @@ Sources:
           assert_own_property(headers, 'sec-fetch-site');
           assert_equals(headers['sec-fetch-site'], 'cross-site');
         })
-        .then(t.step_func_done(), (error) => console.log(error))//t.unreached_func());
+        .then(t.step_func_done(), (error) => t.unreached_func());
   }, 'background-image sec-fetch-site - HTTPS downgrade-upgrade');
 
   async_test((t) => {
@@ -1166,7 +1166,7 @@ Sources:
           assert_own_property(headers, 'sec-fetch-mode');
           assert_equals(headers['sec-fetch-mode'], 'no-cors');
         })
-        .then(t.step_func_done(), (error) => console.log(error))//t.unreached_func());
+        .then(t.step_func_done(), (error) => t.unreached_func());
   }, 'background-image sec-fetch-mode');
 
   async_test((t) => {
@@ -1241,7 +1241,7 @@ Sources:
           assert_own_property(headers, 'sec-fetch-dest');
           assert_equals(headers['sec-fetch-dest'], 'image');
         })
-        .then(t.step_func_done(), (error) => console.log(error))//t.unreached_func());
+        .then(t.step_func_done(), (error) => t.unreached_func());
   }, 'background-image sec-fetch-dest');
 
   async_test((t) => {
@@ -1315,7 +1315,7 @@ Sources:
       .then((headers) => {
           assert_not_own_property(headers, 'sec-fetch-user');
         })
-        .then(t.step_func_done(), (error) => console.log(error))//t.unreached_func());
+        .then(t.step_func_done(), (error) => t.unreached_func());
   }, 'background-image sec-fetch-user');
 
   async_test((t) => {

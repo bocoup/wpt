@@ -40,7 +40,7 @@ Sources:
       .then((headers) => {
           assert_not_own_property(headers, 'sec-fetch-site');
         })
-        .then(t.step_func_done(), (error) => console.log(error))//t.unreached_func());
+        .then(t.step_func_done(), (error) => t.unreached_func());
   }, 'background-image sec-fetch-site - Not sent to non-trustworthy same-origin destination');
 
   async_test((t) => {
@@ -110,7 +110,7 @@ Sources:
       .then((headers) => {
           assert_not_own_property(headers, 'sec-fetch-site');
         })
-        .then(t.step_func_done(), (error) => console.log(error))//t.unreached_func());
+        .then(t.step_func_done(), (error) => t.unreached_func());
   }, 'background-image sec-fetch-site - Not sent to non-trustworthy same-site destination');
 
   async_test((t) => {
@@ -180,7 +180,7 @@ Sources:
       .then((headers) => {
           assert_not_own_property(headers, 'sec-fetch-site');
         })
-        .then(t.step_func_done(), (error) => console.log(error))//t.unreached_func());
+        .then(t.step_func_done(), (error) => t.unreached_func());
   }, 'background-image sec-fetch-site - Not sent to non-trustworthy cross-site destination');
 
   async_test((t) => {
@@ -250,7 +250,7 @@ Sources:
       .then((headers) => {
           assert_not_own_property(headers, 'sec-fetch-mode');
         })
-        .then(t.step_func_done(), (error) => console.log(error))//t.unreached_func());
+        .then(t.step_func_done(), (error) => t.unreached_func());
   }, 'background-image sec-fetch-mode - Not sent to non-trustworthy same-origin destination');
 
   async_test((t) => {
@@ -320,7 +320,7 @@ Sources:
       .then((headers) => {
           assert_not_own_property(headers, 'sec-fetch-mode');
         })
-        .then(t.step_func_done(), (error) => console.log(error))//t.unreached_func());
+        .then(t.step_func_done(), (error) => t.unreached_func());
   }, 'background-image sec-fetch-mode - Not sent to non-trustworthy same-site destination');
 
   async_test((t) => {
@@ -390,7 +390,7 @@ Sources:
       .then((headers) => {
           assert_not_own_property(headers, 'sec-fetch-mode');
         })
-        .then(t.step_func_done(), (error) => console.log(error))//t.unreached_func());
+        .then(t.step_func_done(), (error) => t.unreached_func());
   }, 'background-image sec-fetch-mode - Not sent to non-trustworthy cross-site destination');
 
   async_test((t) => {
@@ -460,7 +460,7 @@ Sources:
       .then((headers) => {
           assert_not_own_property(headers, 'sec-fetch-dest');
         })
-        .then(t.step_func_done(), (error) => console.log(error))//t.unreached_func());
+        .then(t.step_func_done(), (error) => t.unreached_func());
   }, 'background-image sec-fetch-dest - Not sent to non-trustworthy same-origin destination');
 
   async_test((t) => {
@@ -530,7 +530,7 @@ Sources:
       .then((headers) => {
           assert_not_own_property(headers, 'sec-fetch-dest');
         })
-        .then(t.step_func_done(), (error) => console.log(error))//t.unreached_func());
+        .then(t.step_func_done(), (error) => t.unreached_func());
   }, 'background-image sec-fetch-dest - Not sent to non-trustworthy same-site destination');
 
   async_test((t) => {
@@ -600,7 +600,7 @@ Sources:
       .then((headers) => {
           assert_not_own_property(headers, 'sec-fetch-dest');
         })
-        .then(t.step_func_done(), (error) => console.log(error))//t.unreached_func());
+        .then(t.step_func_done(), (error) => t.unreached_func());
   }, 'background-image sec-fetch-dest - Not sent to non-trustworthy cross-site destination');
 
   async_test((t) => {
@@ -670,7 +670,7 @@ Sources:
       .then((headers) => {
           assert_not_own_property(headers, 'sec-fetch-user');
         })
-        .then(t.step_func_done(), (error) => console.log(error))//t.unreached_func());
+        .then(t.step_func_done(), (error) => t.unreached_func());
   }, 'background-image sec-fetch-user - Not sent to non-trustworthy same-origin destination');
 
   async_test((t) => {
@@ -740,7 +740,7 @@ Sources:
       .then((headers) => {
           assert_not_own_property(headers, 'sec-fetch-user');
         })
-        .then(t.step_func_done(), (error) => console.log(error))//t.unreached_func());
+        .then(t.step_func_done(), (error) => t.unreached_func());
   }, 'background-image sec-fetch-user - Not sent to non-trustworthy same-site destination');
 
   async_test((t) => {
@@ -810,7 +810,7 @@ Sources:
       .then((headers) => {
           assert_not_own_property(headers, 'sec-fetch-user');
         })
-        .then(t.step_func_done(), (error) => console.log(error))//t.unreached_func());
+        .then(t.step_func_done(), (error) => t.unreached_func());
   }, 'background-image sec-fetch-user - Not sent to non-trustworthy cross-site destination');
 
   async_test((t) => {
@@ -880,7 +880,7 @@ Sources:
       .then((headers) => {
           assert_not_own_property(headers, 'sec-fetch-site');
         })
-        .then(t.step_func_done(), (error) => console.log(error))//t.unreached_func());
+        .then(t.step_func_done(), (error) => t.unreached_func());
   }, 'background-image sec-fetch-site - HTTPS downgrade (header not sent)');
 
   async_test((t) => {
@@ -951,7 +951,7 @@ Sources:
           assert_own_property(headers, 'sec-fetch-site');
           assert_equals(headers['sec-fetch-site'], 'cross-site');
         })
-        .then(t.step_func_done(), (error) => console.log(error))//t.unreached_func());
+        .then(t.step_func_done(), (error) => t.unreached_func());
   }, 'background-image sec-fetch-site - HTTPS upgrade');
 
   async_test((t) => {
@@ -1026,7 +1026,7 @@ Sources:
           assert_own_property(headers, 'sec-fetch-site');
           assert_equals(headers['sec-fetch-site'], 'cross-site');
         })
-        .then(t.step_func_done(), (error) => console.log(error))//t.unreached_func());
+        .then(t.step_func_done(), (error) => t.unreached_func());
   }, 'background-image sec-fetch-site - HTTPS downgrade-upgrade');
 
   async_test((t) => {

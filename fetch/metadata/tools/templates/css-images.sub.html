@@ -46,7 +46,7 @@
           assert_equals(headers['[%subtest.headerName%]'], '[%subtest.expected%]');
         {%- endif %}
         })
-        .then(t.step_func_done(), (error) => console.log(error))//t.unreached_func());
+        .then(t.step_func_done(), (error) => t.unreached_func());
   }, 'background-image [%subtest.headerName%][%subtest.description | pad("start", " - ")%]');
 
   async_test((t) => {
