@@ -31,6 +31,16 @@ with clear instruction on how to extend their test suite with the new feature.
 Similarly, when a new cross-cutting feature is proposed, the authors can use
 this tool to build a test suite which spans the entire platform.
 
+## Build script
+
+To generate the Fetch Metadata tests, use the `build.sh` script, which installs
+the dependencies and runs `generate.py` with the Fetch Metadata tests
+configuration file `fetch-metadata.conf.yml`, in a virtualenv.
+
+    $ build.sh
+
+If you don't want to use virtualenv, see the next two sections.
+
 ## Setup instructions
 
 - [Install Python 3](https://www.python.org/download/releases/3.0/)
