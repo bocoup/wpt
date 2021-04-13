@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<script src="/resources/testharness.js"></script>
+		<script src="/resources/testharnessreport.js"></script>
+	</head>
+	<body>
+<script>
+'use strict';
+const createMeta = (t, name, content) => {
+	const meta = document.createElement('meta');
+
+	meta.setAttribute('name', name);
+	meta.setAttribute('content', content);
+	document.head.appendChild(meta);
+	t.add_cleanup(() => meta.remove());
+
+	return meta;
+};
+
+const createIframe = async (t, attributes) => {
+	const iframe = document.createElement('iframe');
+
+	for (const [name, value] of Object.entries(attributes)) {
+		iframe.setAttribute(name, value);
+	}
+
+	await new Promise((resolve, reject) => {
+		iframe.addEventListener('load', resolve);
+		iframe.addEventListener('error', reject);
+		document.body.appendChild(iframe);
+		t.add_cleanup(() => iframe.remove());
+	});
+	return iframe;
+};
+
+const createObjectUrl = (t, content, mimeType) => {
+	const encoder = new TextEncoder();
+	const url = URL.createObjectURL(new Blob([encoder.encode(content)], {type: mimeType}));
+
+	t.add_cleanup(() => URL.revokeObjectURL(url));
+
+	return url;
+};
+
+promise_test(async () => {
+	const response = await fetch('/tmp/ref.py');
+	assert_equals(await response.text(), location.href);
+}, 'things');
+
+promise_test(async () => {
+	const response = await fetch('/tmp/ref.py', { referrerPolicy: 'origin' });
+	assert_equals(await response.text(), location.origin + '/');
+}, '"origin" via fetch');
+
+promise_test(async (t) => {
+	const meta = createMeta(t, 'referrer', 'origin');
+
+	{
+		const response = await fetch('/tmp/ref.py');
+		assert_equals(await response.text(), location.origin + '/');
+	}
+
+	meta.setAttribute('content', 'unsafe-url');
+
+	{
+		const response = await fetch('/tmp/ref.py');
+		assert_equals(await response.text(), location.href);
+	}
+}, '"origin" via meta tag');
+
+promise_test(async (t) => {
+	const meta = createMeta(t, 'referrer', 'origin');
+	const iframe = await createIframe(t, {src: 'about:blank'});
+
+	{
+		const response = await iframe.contentWindow.fetch('/tmp/ref.py');
+		assert_equals(await response.text(), location.origin + '/');
+	}
+
+	meta.setAttribute('content', 'unsafe-url');
+
+	{
+		const response = await iframe.contentWindow.fetch('/tmp/ref.py');
+		assert_equals(await response.text(), new URL('/common/blank.html', location).href);
+	}
+}, '"origin" and inside iframe');
+
+promise_test(async (t) => {
+	const meta = createMeta(t, 'referrer', 'origin');
+	const iframe = await createIframe(t, {srcdoc: ''});
+
+	{
+		const response = await iframe.contentWindow.fetch('/tmp/ref.py');
+		assert_equals(await response.text(), location.origin + '/');
+	}
+
+	meta.setAttribute('content', 'unsafe-url');
+
+	{
+		const response = await iframe.contentWindow.fetch('/tmp/ref.py');
+		assert_equals(await response.text(), location.origin + '/');
+	}
+}, '"origin" and inside iframe with srcdoc');
+
+promise_test(async (t) => {
+	const meta = createMeta(t, 'referrer', 'origin');
+	const iframe = await createIframe(t, {src: createObjectUrl(t, 'hi', 'text/html')});
+		console.log(iframe.contentWindow.location);
+		console.log(iframe.contentWindow.location.origin);
+
+	{
+		const response = await iframe.contentWindow.fetch(location.origin + '/tmp/ref.py');
+		assert_equals(await response.text(), location.origin + '/');
+	}
+
+	meta.setAttribute('content', 'unsafe-url');
+
+	{
+		const response = await iframe.contentWindow.fetch(location.origin + '/tmp/ref.py');
+		assert_equals(await response.text(), location.href);
+	}
+}, '"origin" and inside iframe with object URL');
+</script>
+	</body>
+</html>
