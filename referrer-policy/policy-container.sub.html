@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<script src="/resources/testharness.js"></script>
+		<script src="/resources/testharnessreport.js"></script>
+		<script src="./resources/utils.sub.js"></script>
+	</head>
+	<body>
+		Skipped tests:
+		<ul id="skipped"></ul>
+<script>
+'use strict';
+const URL_COMPLETE = new URL('/referrer-policy/resources/test-frame.html', location).href;
+const URL_DOMAIN = location.origin + '/';
+
+const skip = (name) => {
+	const li = document.createElement('li');
+	li.appendChild(document.createTextNode(name));
+	document.getElementById('skipped').appendChild(li);
+}
+
+const createIframe = async (t, policy) => {
+	const iframe = document.createElement('iframe');
+	const pipe = policy ? `?pipe=header(Referrer-Policy,${policy})` : '';
+	iframe.src = `${URL_DOMAIN}referrer-policy/resources/test-frame.html${pipe}`;
+
+	await new Promise((resolve, reject) => {
+		addEventListener('message', function handler (event) {
+			if (event.source !== iframe.contentWindow) {
+				return;
+			}
+
+			removeEventListener('message', handler);
+			resolve();
+		});
+		document.body.appendChild(iframe);
+		t.add_cleanup(() => iframe.remove());
+	});
+
+	return iframe.contentWindow;
+};
+
+let counter = 0;
+async function send(win, name, values) {
+	return new Promise((resolve) => {
+		const id = ++counter;
+		addEventListener('message', function handle(event) {
+			if (!event.data) {
+				return;
+			}
+			const isTraversalResponse = ['back', 'navigate'].includes(name) &&
+				event.data === 'child running';
+
+			if (isTraversalResponse || event.data.id === id) {
+				resolve(event.data.value);
+				removeEventListener('message', handle);
+			}
+		});
+		win.postMessage({id, name, values}, '*');
+	});
+}
+
+const dataUrl = () => `data:text/html,<meta charset="utf-8">
+	<script src="${URL_DOMAIN}referrer-policy/resources/utils.sub.js"><${''}/script>
+	<script src="${URL_DOMAIN}referrer-policy/resources/test-frame.js"><${''}/script>
+	${Math.random()}`;
+
+const blobUrl = (t) => {
+	const encoder = new TextEncoder();
+	const content = `<meta charset="utf-8">
+	<script src="${URL_DOMAIN}referrer-policy/resources/utils.sub.js"><${''}/script>
+	<script src="${URL_DOMAIN}referrer-policy/resources/test-frame.js"><${''}/script>
+	${Math.random()}`;
+	const url = URL.createObjectURL(
+		new Blob([encoder.encode(content)], {type: 'text/html'})
+	);
+
+	t.add_cleanup(() => URL.revokeObjectURL(url));
+
+	return url;
+};
+
+function navigate(win, url) {
+	return new Promise((resolve) => {
+		addEventListener('message', function handler(event) {
+			if (event.data !== 'child running') {
+				return;
+			}
+
+			removeEventListener('message', handler);
+			resolve();
+		});
+		win.location.assign(url);
+	});
+}
+
+/**
+ * Create a promise that will be fulfilled when a given iframe fires the "load"
+ * event. Accept a function to trigger loading so that this function can be
+ * used in cases where the event is fired synchronously.
+ */
+function waitForLoad(frame, triggerLoad) {
+	return new Promise((resolve, reject) => {
+		frame.addEventListener('load', resolve, {once: true});
+		frame.addEventListener('error', reject, {once: true});
+		triggerLoad();
+	});
+}
+
+promise_test(async (t) => {
+	const subject = await createIframe(t, 'origin');
+	const iframe = subject.frameElement;
+
+	await waitForLoad(
+		iframe, () => subject.location = '/referrer-policy/resources/test-frame.html'
+	);
+
+	assert_equals(await readPolicy(subject), 'unsafe-url', 'does not adopt');
+}, 'http: - navigation - adoption');
+
+skip('http: - navigation - change to creator');
+
+promise_test(async (t) => {
+	const subject = await createIframe(t);
+	const iframe = subject.frameElement;
+
+	// TODO(jugglinmike): find the specific conditions which necessitate this
+	// delay
+	// https://github.com/web-platform-tests/wpt/pull/28632
+	await new Promise((resolve) => setTimeout(resolve, 1));
+
+	await waitForLoad(
+		iframe, () => subject.location = URL_COMPLETE + '?1'
+	);
+
+	createMeta(subject, 'referrer', 'origin');
+
+	assert_equals(await readPolicy(subject), 'origin', 'subject policy successfully strengthened');
+
+	await waitForLoad(
+		iframe, () => subject.history.back()
+	);
+
+	assert_equals(await readPolicy(subject), 'unsafe-url', 'creator not affected');
+}, 'http: - navigation - strengthening');
+
+promise_test(async (t) => {
+	const subject = await createIframe(t, 'origin');
+	const iframe = subject.frameElement;
+
+	// TODO(jugglinmike): find the specific conditions which necessitate this
+	// delay
+	// https://github.com/web-platform-tests/wpt/pull/28632
+	await new Promise((resolve) => setTimeout(resolve, 1));
+
+	await waitForLoad(
+		iframe, () => subject.location = URL_COMPLETE + '?1'
+	);
+
+	assert_equals(await readPolicy(subject), 'unsafe-url', 'subject policy successfully weakened');
+
+	await waitForLoad(
+		iframe, () => subject.history.back()
+	);
+
+	assert_equals(await readPolicy(subject), 'origin', 'creator not affected');
+}, 'http: - navigation - weakening');
+
+promise_test(async (t) => {
+	const subject = await createIframe(t);
+	const iframe = subject.frameElement;
+
+	await waitForLoad(
+		iframe, () => subject.location = '/referrer-policy/resources/test-frame.html'
+	);
+
+	await waitForLoad(
+		iframe, () => send(subject, 'navigate', [`${URL_COMPLETE}?${Math.random()}`])
+	);
+
+	await waitForLoad(
+		iframe, () => send(subject, 'back')
+	);
+	assert_equals(await readPolicy(subject), 'unsafe-url', 'does not adopt');
+}, 'http: - history - adoption');
+
+skip('http: - history - change to creator');
+
+promise_test(async (t) => {
+	const subject = await createIframe(t);
+	const iframe = subject.frameElement;
+
+	// TODO(jugglinmike): find the specific conditions which necessitate this
+	// delay
+	// https://github.com/web-platform-tests/wpt/pull/28632
+	await new Promise((resolve) => setTimeout(resolve, 1));
+
+	await waitForLoad(
+		iframe, () => subject.location = URL_COMPLETE + '?1'
+	);
+
+	await waitForLoad(
+		iframe, () => send(subject, 'back')
+	);
+	createMeta(subject, 'referrer', 'origin');
+
+	assert_equals(await readPolicy(subject), 'origin', 'subject policy successfully strengthened');
+
+	await waitForLoad(
+		iframe, () => subject.history.forward()
+	);
+
+	assert_equals(await readPolicy(subject), 'unsafe-url', 'creator not affected');
+}, 'http: - history - strengthening');
+
+promise_test(async (t) => {
+	const subject = await createIframe(t, 'origin');
+	const iframe = subject.frameElement;
+
+	// TODO(jugglinmike): find the specific conditions which necessitate this
+	// delay
+	// https://github.com/web-platform-tests/wpt/pull/28632
+	await new Promise((resolve) => setTimeout(resolve, 1));
+
+	await waitForLoad(
+		iframe, () => subject.location = `${URL_COMPLETE}?pipe=header(Referrer-Policy,origin)&1`
+	);
+
+	await waitForLoad(
+		iframe, () => send(subject, 'back')
+	);
+	createMeta(subject, 'referrer', 'unsafe-url');
+
+	assert_equals(await readPolicy(subject), 'unsafe-url', 'subject policy successfully weakened');
+
+	await waitForLoad(
+		iframe, () => subject.history.forward()
+	);
+
+	assert_equals(await readPolicy(subject), 'origin', 'creator not affected');
+}, 'http: - history - weakening');
+
+skip('about:blank - navigation - adoption');
+skip('about:blank - navigation - change to creator');
+skip('about:blank - navigation - strengthening');
+skip('about:blank - navigation - weakening');
+
+// This test is not relevant to behavior of "policy container" because
+// ReferrerPolicy's effect on the test subject (a document whose domain uses a
+// local scheme) cannot be observed.
+promise_test(async (t) => {
+	const subject = await createIframe(t);
+	const iframe = subject.frameElement;
+
+	await waitForLoad(
+		iframe, () => subject.location = 'about:blank'
+	);
+	// TODO(jugglinmike): find the specific conditions which necessitate this
+	// delay
+	// https://github.com/web-platform-tests/wpt/pull/28632
+	await new Promise((resolve) => setTimeout(resolve, 1));
+
+	await waitForLoad(
+		iframe, () => subject.location = `${URL_COMPLETE}?pipe=header(Referrer-Policy,origin)`
+	);
+
+	await waitForLoad(
+		iframe, () => send(subject, 'back')
+	);
+
+	assert_equals(await readPolicy(subject), null);
+}, 'about:blank - history - adoption');
+
+skip('about:blank - history - change to creator');
+
+promise_test(async (t) => {
+	const subject = await createIframe(t);
+	const iframe = subject.frameElement;
+
+	await waitForLoad(
+		iframe, () => subject.location = 'about:blank'
+	);
+	// TODO(jugglinmike): find the specific conditions which necessitate this
+	// delay
+	// https://github.com/web-platform-tests/wpt/pull/28632
+	await new Promise((resolve) => setTimeout(resolve, 1));
+
+	await waitForLoad(
+		iframe, () => subject.location = URL_COMPLETE
+	);
+
+	await waitForLoad(
+		iframe, () => send(subject, 'back')
+	);
+	createMeta(subject, 'referrer', 'origin');
+
+	assert_equals(await readPolicy(subject), null, 'the effect on the policy of subject is not observable');
+
+	await waitForLoad(
+		iframe, () => subject.history.forward()
+	);
+
+	assert_equals(await readPolicy(subject), 'unsafe-url', 'creator not affected');
+}, 'about:blank - history - strengthening');
+
+promise_test(async (t) => {
+	const subject = await createIframe(t);
+	const iframe = subject.frameElement;
+
+	await waitForLoad(
+		iframe, () => subject.location = 'about:blank'
+	);
+	// TODO(jugglinmike): find the specific conditions which necessitate this
+	// delay
+	// https://github.com/web-platform-tests/wpt/pull/28632
+	await new Promise((resolve) => setTimeout(resolve, 1));
+
+	await waitForLoad(
+		iframe, () => subject.location = `${URL_COMPLETE}?pipe=header(Referrer-Policy,origin)`
+	);
+
+	await waitForLoad(
+		iframe, () => send(subject, 'back')
+	);
+	createMeta(subject, 'referrer', 'unsafe-url');
+
+	assert_equals(await readPolicy(subject), null, 'the effect on the policy of subject is not observable');
+
+	await waitForLoad(
+		iframe, () => subject.history.forward()
+	);
+
+	assert_equals(await readPolicy(subject), 'origin', 'creator not affected');
+}, 'about:blank - history - weakening');
+
+// This test is not relevant to behavior of "policy container" because
+// ReferrerPolicy's effect on the test subject (a document whose domain uses a
+// local scheme) cannot be observed.
+promise_test(async (t) => {
+	const creator = await createIframe(t, 'origin');
+	const subject = creator.document.createElement('iframe');
+
+	creator.document.body.appendChild(subject);
+
+	assert_equals(await readPolicy(subject.contentWindow), null);
+}, 'about:blank - nested - adoption');
+
+// This test is not relevant to behavior of "policy container" because
+// ReferrerPolicy's effect on the test subject (a document whose domain uses a
+// local scheme) cannot be observed.
+promise_test(async (t) => {
+	const creator = await createIframe(t);
+	const subject = creator.document.createElement('iframe');
+
+	creator.document.body.appendChild(subject);
+	createMeta(creator, 'referrer', 'origin');
+
+	assert_equals(await readPolicy(subject.contentWindow), null);
+	assert_equals(await readPolicy(creator), 'origin');
+}, 'about:blank - nested - change to creator');
+
+promise_test(async (t) => {
+	const creator = await createIframe(t);
+	const subject = creator.document.createElement('iframe');
+
+	creator.document.body.appendChild(subject);
+	createMeta(subject.contentWindow, 'referrer', 'origin');
+
+	assert_equals(await readPolicy(subject.contentWindow), null);
+	assert_equals(await readPolicy(creator), 'unsafe-url');
+}, 'about:blank - nested - strengthening');
+
+promise_test(async (t) => {
+	const creator = await createIframe(t, 'origin');
+	const subject = creator.document.createElement('iframe');
+
+	creator.document.body.appendChild(subject);
+	createMeta(subject.contentWindow, 'referrer', 'unsafe-url');
+
+	assert_equals(await readPolicy(subject.contentWindow), null);
+	assert_equals(await readPolicy(creator), 'origin');
+}, 'about:blank - nested - weakening');
+
+// This test is not relevant to behavior of "policy container" because
+// ReferrerPolicy's effect on the test subject (a document whose domain uses a
+// local scheme) cannot be observed.
+promise_test(async (t) => {
+	const creator = await createIframe(t, 'origin');
+
+	const subject = creator.open('about:blank');
+	t.add_cleanup(() => subject.close());
+
+	assert_equals(await readPolicy(subject), null);
+}, 'about:blank - auxiliary - adoption');
+
+// This test is not relevant to behavior of "policy container" because
+// ReferrerPolicy's effect on the test subject (a document whose domain uses a
+// local scheme) cannot be observed.
+promise_test(async (t) => {
+	const creator = await createIframe(t);
+	const subject = creator.open('about:blank');
+	t.add_cleanup(() => subject.close());
+
+	createMeta(creator, 'referrer', 'origin');
+
+	assert_equals(await readPolicy(subject), null);
+	assert_equals(await readPolicy(creator), 'origin');
+}, 'about:blank - auxiliary - change to creator');
+
+promise_test(async (t) => {
+	const creator = await createIframe(t);
+	const subject = creator.open('about:blank');
+	t.add_cleanup(() => subject.close());
+
+	createMeta(subject, 'referrer', 'origin');
+
+	assert_equals(await readPolicy(subject), null);
+	assert_equals(await readPolicy(creator), 'unsafe-url');
+}, 'about:blank - auxiliary - strengthening');
+
+promise_test(async (t) => {
+	const creator = await createIframe(t, 'origin');
+	const subject = creator.open('about:blank');
+	t.add_cleanup(() => subject.close());
+
+	createMeta(subject, 'referrer', 'unsafe-url');
+
+	assert_equals(await readPolicy(subject), null);
+	assert_equals(await readPolicy(creator), 'origin');
+}, 'about:blank - auxiliary - weakening');
+
+// This test is not relevant to behavior of "policy container" because
+// ReferrerPolicy's effect on the test subject (a document whose domain uses a
+// local scheme) cannot be observed.
+promise_test(async (t) => {
+	const subject = await createIframe(t, 'origin');
+
+	await navigate(subject, dataUrl());
+
+	assert_equals(await send(subject, 'readPolicy'), null);
+}, 'data: - navigation - adoption');
+
+skip('data: - navigation - change to creator');
+
+promise_test(async (t) => {
+	const subject = await createIframe(t);
+
+	await navigate(subject, dataUrl());
+	await send(subject, 'createMeta', ['referrer', 'origin']);
+	assert_equals(await send(subject, 'readPolicy'), null);
+
+	await send(subject, 'back');
+
+	assert_equals(await readPolicy(subject), 'unsafe-url');
+}, 'data: - navigation - strengthening');
+
+promise_test(async (t) => {
+	const subject = await createIframe(t, 'origin');
+
+	await navigate(subject, dataUrl());
+	await send(subject, 'createMeta', ['referrer', 'unsafe-url']);
+	assert_equals(await send(subject, 'readPolicy'), null);
+	await send(subject, 'back');
+
+	assert_equals(await readPolicy(subject), 'origin');
+}, 'data: - navigation - weakening');
+
+// This test is not relevant to behavior of "policy container" because
+// ReferrerPolicy's effect on the test subject (a document whose domain uses a
+// local scheme) cannot be observed.
+promise_test(async (t) => {
+	const subject = await createIframe(t, 'origin');
+
+	await navigate(subject, blobUrl(t));
+
+	assert_equals(await send(subject, 'readPolicy'), null);
+}, 'blob: - navigation - adoption');
+
+// This test is not relevant to behavior of "policy container" because
+// ReferrerPolicy's effect on the test subject (a document whose domain uses a
+// local scheme) cannot be observed.
+promise_test(async (t) => {
+	const subject = await createIframe(t, 'origin');
+	const url = blobUrl(t);
+	await send(subject, 'createMeta', ['referrer', 'unsafe-url']);
+
+	await navigate(subject, url);
+
+	assert_equals(await send(subject, 'readPolicy'), null);
+}, 'blob: - navigation - change to creator');
+
+promise_test(async (t) => {
+	const subject = await createIframe(t);
+
+	await navigate(subject, blobUrl(t));
+	await send(subject, 'createMeta', ['referrer', 'origin']);
+	assert_equals(await send(subject, 'readPolicy'), null);
+	await send(subject, 'back');
+
+	assert_equals(await readPolicy(subject), 'unsafe-url');
+}, 'blob: - navigation - stengthening');
+
+promise_test(async (t) => {
+	const subject = await createIframe(t, 'origin');
+
+	await navigate(subject, blobUrl(t));
+	await send(subject, 'createMeta', ['referrer', 'unsafe-url']);
+	assert_equals(await send(subject, 'readPolicy'), null);
+	await send(subject, 'back');
+
+	assert_equals(await readPolicy(subject), 'origin');
+}, 'blob: - navigation - weakening');
+</script>
+	</body>
+</html>
