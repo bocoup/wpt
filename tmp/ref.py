@@ -1,2 +1,5 @@
 def main(req, res):
-    return req.headers.get('Referer')
+    return (
+        (('Access-Control-Allow-Origin', '*'),),
+        req.headers.get('Referer', '')
+    )

@@ -4,37 +4,11 @@
 		<meta charset="utf-8">
 		<script src="/resources/testharness.js"></script>
 		<script src="/resources/testharnessreport.js"></script>
+		<script src="./help.sub.js"></script>
 	</head>
 	<body>
 <script>
 'use strict';
-const createMeta = (t, name, content) => {
-	const meta = document.createElement('meta');
-
-	meta.setAttribute('name', name);
-	meta.setAttribute('content', content);
-	document.head.appendChild(meta);
-	t.add_cleanup(() => meta.remove());
-
-	return meta;
-};
-
-const createIframe = async (t, attributes) => {
-	const iframe = document.createElement('iframe');
-
-	for (const [name, value] of Object.entries(attributes)) {
-		iframe.setAttribute(name, value);
-	}
-
-	await new Promise((resolve, reject) => {
-		iframe.addEventListener('load', resolve);
-		iframe.addEventListener('error', reject);
-		document.body.appendChild(iframe);
-		t.add_cleanup(() => iframe.remove());
-	});
-	return iframe;
-};
-
 const createObjectUrl = (t, content, mimeType) => {
 	const encoder = new TextEncoder();
 	const url = URL.createObjectURL(new Blob([encoder.encode(content)], {type: mimeType}));
@@ -44,84 +18,129 @@ const createObjectUrl = (t, content, mimeType) => {
 	return url;
 };
 
-promise_test(async () => {
-	const response = await fetch('/tmp/ref.py');
-	assert_equals(await response.text(), location.href);
-}, 'things');
-
-promise_test(async () => {
-	const response = await fetch('/tmp/ref.py', { referrerPolicy: 'origin' });
-	assert_equals(await response.text(), location.origin + '/');
-}, '"origin" via fetch');
+const URL_COMPLETE = new URL('/tmp/child.html', location).href;
+const URL_DOMAIN = location.origin + '/';
 
 promise_test(async (t) => {
-	const meta = createMeta(t, 'referrer', 'origin');
+	const parent = await createIframe(t);
+	const child = document.createElement('iframe');
 
-	{
-		const response = await fetch('/tmp/ref.py');
-		assert_equals(await response.text(), location.origin + '/');
-	}
+	createMeta(parent, 'referrer', 'origin');
+	parent.document.body.appendChild(child);
 
-	meta.setAttribute('content', 'unsafe-url');
-
-	{
-		const response = await fetch('/tmp/ref.py');
-		assert_equals(await response.text(), location.href);
-	}
-}, '"origin" via meta tag');
+	assert_equals(await readReferer(child.contentWindow), URL_DOMAIN);
+}, 'src-less iframe: inheritance');
 
 promise_test(async (t) => {
-	const meta = createMeta(t, 'referrer', 'origin');
-	const iframe = await createIframe(t, {src: 'about:blank'});
+	const parent = await createIframe(t);
+	const child = document.createElement('iframe');
 
-	{
-		const response = await iframe.contentWindow.fetch('/tmp/ref.py');
-		assert_equals(await response.text(), location.origin + '/');
-	}
+	parent.document.body.appendChild(child);
+	createMeta(parent, 'referrer', 'origin');
 
-	meta.setAttribute('content', 'unsafe-url');
-
-	{
-		const response = await iframe.contentWindow.fetch('/tmp/ref.py');
-		assert_equals(await response.text(), new URL('/common/blank.html', location).href);
-	}
-}, '"origin" and inside iframe');
+	assert_equals(await readReferer(child.contentWindow), URL_COMPLETE);
+	assert_equals(await readReferer(parent), URL_DOMAIN);
+}, 'src-less iframe: child independence from parent');
 
 promise_test(async (t) => {
-	const meta = createMeta(t, 'referrer', 'origin');
-	const iframe = await createIframe(t, {srcdoc: ''});
+	const parent = await createIframe(t);
+	const child = document.createElement('iframe');
 
-	{
-		const response = await iframe.contentWindow.fetch('/tmp/ref.py');
-		assert_equals(await response.text(), location.origin + '/');
-	}
+	parent.document.body.appendChild(child);
+	createMeta(child.contentWindow, 'referrer', 'origin');
 
-	meta.setAttribute('content', 'unsafe-url');
-
-	{
-		const response = await iframe.contentWindow.fetch('/tmp/ref.py');
-		assert_equals(await response.text(), location.origin + '/');
-	}
-}, '"origin" and inside iframe with srcdoc');
+	assert_equals(await readReferer(child.contentWindow), URL_DOMAIN);
+	assert_equals(await readReferer(parent), URL_COMPLETE);
+}, 'src-less iframe: parent independence from child (child escalates)');
 
 promise_test(async (t) => {
-	const meta = createMeta(t, 'referrer', 'origin');
-	const iframe = await createIframe(t, {src: createObjectUrl(t, 'hi', 'text/html')});
-		console.log(iframe.contentWindow.location);
-		console.log(iframe.contentWindow.location.origin);
+	const parent = await createIframe(t);
+	const child = document.createElement('iframe');
 
-	{
-		const response = await iframe.contentWindow.fetch(location.origin + '/tmp/ref.py');
-		assert_equals(await response.text(), location.origin + '/');
-	}
+	createMeta(parent, 'referrer', 'origin');
+	parent.document.body.appendChild(child);
+	createMeta(child.contentWindow, 'referrer', 'unsafe-url');
 
-	meta.setAttribute('content', 'unsafe-url');
+	assert_equals(await readReferer(child.contentWindow), URL_COMPLETE);
+	assert_equals(await readReferer(parent), URL_DOMAIN);
+}, 'src-less iframe: parent independence from child (child de-escalates)');
 
-	{
-		const response = await iframe.contentWindow.fetch(location.origin + '/tmp/ref.py');
-		assert_equals(await response.text(), location.href);
-	}
-}, '"origin" and inside iframe with object URL');
+promise_test(async (t) => {
+	const parent = await createIframe(t);
+	createMeta(parent, 'referrer', 'origin');
+
+	const child = await createIframe(t, parent);
+
+	assert_equals(await readReferer(child), URL_DOMAIN);
+}, 'popup: inheritance');
+
+promise_test(async (t) => {
+	const parent = await createIframe(t);
+	const child = await createPopup(t, parent);
+
+	createMeta(parent, 'referrer', 'origin');
+
+	assert_equals(await readReferer(child), URL_COMPLETE);
+	assert_equals(await readReferer(parent), URL_DOMAIN);
+}, 'popup: child independence from parent');
+
+promise_test(async (t) => {
+	const parent = await createIframe(t);
+	const child = await createPopup(t, parent);
+
+	createMeta(child, 'referrer', 'origin');
+
+	assert_equals(await readReferer(child), URL_DOMAIN);
+	assert_equals(await readReferer(parent), URL_COMPLETE);
+}, 'popup: parent independence from child (child escalates)');
+
+promise_test(async (t) => {
+	const parent = await createIframe(t);
+	createMeta(parent, 'referrer', 'origin');
+	const child = await createPopup(t, parent);
+
+	createMeta(child, 'referrer', 'unsafe-url');
+
+	assert_equals(await readReferer(child), URL_COMPLETE);
+	assert_equals(await readReferer(parent), URL_DOMAIN);
+}, 'popup: parent independence from child (child de-escalates)');
+
+async function send(win, message) {
+	return new Promise((resolve) => {
+		addEventListener('message', (event) => {
+			resolve(event.data);
+		});
+		win.postMessage(message, '*');
+	});
+}
+
+promise_test(async (t) => {
+	const parent = await createIframe(t, 'origin');
+
+	await dataNav(parent);
+
+	assert_equals(await send(parent, 'readReferer'), URL_DOMAIN);
+}, 'data: URL: inheritance');
+
+promise_test(async (t) => {
+	const parent = await createIframe(t);
+
+	await dataNav(parent);
+	await send(parent, ['createMeta', 'referrer', 'origin']);
+	await send(parent, 'back');
+
+	assert_equals(await readReferer(parent), URL_COMPLETE);
+}, 'data: URL: parent independence from child (child escalates)');
+
+promise_test(async (t) => {
+	const parent = await createIframe(t, 'origin');
+
+	await dataNav(parent);
+	await send(parent, ['createMeta', 'referrer', 'unsafe-url']);
+	await send(parent, 'back');
+
+	assert_equals(await readReferer(parent), URL_DOMAIN);
+}, 'data: URL: parent independence from child (child de-escalates)');
 </script>
 	</body>
 </html>
