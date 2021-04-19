@@ -13,7 +13,7 @@ const createMeta = (win, name, content) => {
 const createIframe = async (t, policy) => {
 	const iframe = document.createElement('iframe');
 	const pipe = policy ? `?pipe=header(Referrer-Policy,${policy})` : '';
-	iframe.src = `${HERE}/tmp/child.html${pipe}`;
+	iframe.src = `${HERE}/tmp/resources/test-frame.html${pipe}`;
 
 	await new Promise((resolve, reject) => {
 		addEventListener('message', function handler (event) {
@@ -32,7 +32,7 @@ const createIframe = async (t, policy) => {
 };
 
 const createPopup = async (t, win) => {
-	const child = win.open(`${HERE}/tmp/child.html`);
+	const child = win.open(`${HERE}/tmp/resources/test-frame.html`);
 
 	await new Promise((resolve,reject) => {
 		child.addEventListener('load', resolve);
@@ -49,7 +49,7 @@ const dataNav = async (win) => {
 			removeEventListener('message', handler);
 			resolve();
 		});
-		win.location.assign(`data:text/html,<meta charset="utf-8"><script src="${HERE}/tmp/help.sub.js"></script><script src="${HERE}/tmp/child.js"></script>${Math.random()}`);
+		win.location.assign(`data:text/html,<meta charset="utf-8"><script src="${HERE}/tmp/resources/utils.sub.js"></script><script src="${HERE}/tmp/resources/test-frame.js"></script>${Math.random()}`);
 	});
 };
 
@@ -74,6 +74,6 @@ const readReferer = async (win) => {
 	//});
 	//return win.document.body.innerText.trim();
 
-	const response = await win.fetch(`${HERE}/tmp/ref.py`);
+	const response = await win.fetch(`${HERE}/tmp/resources/read-header.py`);
 	return response.text();
 };

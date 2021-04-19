@@ -4,7 +4,7 @@
 		<meta charset="utf-8">
 		<script src="/resources/testharness.js"></script>
 		<script src="/resources/testharnessreport.js"></script>
-		<script src="./help.sub.js"></script>
+		<script src="./resources/utils.sub.js"></script>
 	</head>
 	<body>
 <script>
@@ -18,7 +18,7 @@ const createObjectUrl = (t, content, mimeType) => {
 	return url;
 };
 
-const URL_COMPLETE = new URL('/tmp/child.html', location).href;
+const URL_COMPLETE = new URL('/tmp/resources/test-frame.html', location).href;
 const URL_DOMAIN = location.origin + '/';
 
 promise_test(async (t) => {
