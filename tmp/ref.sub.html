@@ -12,6 +12,39 @@
 const URL_COMPLETE = new URL('/tmp/resources/test-frame.html', location).href;
 const URL_DOMAIN = location.origin + '/';
 
+const createIframe = async (t, policy) => {
+	const iframe = document.createElement('iframe');
+	const pipe = policy ? `?pipe=header(Referrer-Policy,${policy})` : '';
+	iframe.src = `${URL_DOMAIN}tmp/resources/test-frame.html${pipe}`;
+
+	await new Promise((resolve, reject) => {
+		addEventListener('message', function handler (event) {
+			if (event.source !== iframe.contentWindow) {
+				return;
+			}
+
+			removeEventListener('message', handler);
+			resolve();
+		});
+		document.body.appendChild(iframe);
+		t.add_cleanup(() => iframe.remove());
+	});
+
+	return iframe.contentWindow;
+};
+
+const createPopup = async (t, win) => {
+	const child = win.open(`${URL_DOMAIN}tmp/resources/test-frame.html`);
+
+	await new Promise((resolve,reject) => {
+		child.addEventListener('load', resolve);
+		child.addEventListener('error', reject);
+		t.add_cleanup(() => child.close());
+	});
+
+	return child;
+};
+
 async function send(win, message) {
 	return new Promise((resolve) => {
 		addEventListener('message', (event) => {
