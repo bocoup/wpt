@@ -92,7 +92,7 @@ promise_test(async (t) => {
 	parent.document.body.appendChild(child);
 
 	assert_equals(await readReferer(child.contentWindow), URL_DOMAIN);
-}, 'src-less iframe: inheritance');
+}, 'local - about:blank - nested - adoption');
 
 promise_test(async (t) => {
 	const parent = await createIframe(t);
@@ -103,7 +103,7 @@ promise_test(async (t) => {
 
 	assert_equals(await readReferer(child.contentWindow), URL_COMPLETE);
 	assert_equals(await readReferer(parent), URL_DOMAIN);
-}, 'src-less iframe: child independence from parent');
+}, 'local - about:blank - nested - change to creator');
 
 promise_test(async (t) => {
 	const parent = await createIframe(t);
@@ -114,7 +114,7 @@ promise_test(async (t) => {
 
 	assert_equals(await readReferer(child.contentWindow), URL_DOMAIN);
 	assert_equals(await readReferer(parent), URL_COMPLETE);
-}, 'src-less iframe: parent independence from child (child escalates)');
+}, 'local - about:blank - nested - strengthening');
 
 promise_test(async (t) => {
 	const parent = await createIframe(t);
@@ -126,7 +126,7 @@ promise_test(async (t) => {
 
 	assert_equals(await readReferer(child.contentWindow), URL_COMPLETE);
 	assert_equals(await readReferer(parent), URL_DOMAIN);
-}, 'src-less iframe: parent independence from child (child de-escalates)');
+}, 'local - about:blank - nested - weakening');
 
 promise_test(async (t) => {
 	const parent = await createIframe(t);
@@ -135,7 +135,7 @@ promise_test(async (t) => {
 	const child = await createPopup(t, parent);
 
 	assert_equals(await readReferer(child), URL_DOMAIN);
-}, 'popup: inheritance');
+}, 'local - about:blank - auxiliary - adoption');
 
 promise_test(async (t) => {
 	const parent = await createIframe(t);
@@ -145,7 +145,7 @@ promise_test(async (t) => {
 
 	assert_equals(await readReferer(child), URL_COMPLETE);
 	assert_equals(await readReferer(parent), URL_DOMAIN);
-}, 'popup: child independence from parent');
+}, 'local - about:blank - auxiliary - change to creator');
 
 promise_test(async (t) => {
 	const parent = await createIframe(t);
@@ -155,7 +155,7 @@ promise_test(async (t) => {
 
 	assert_equals(await readReferer(child), URL_DOMAIN);
 	assert_equals(await readReferer(parent), URL_COMPLETE);
-}, 'popup: parent independence from child (child escalates)');
+}, 'local - about:blank - auxiliary - strengthening');
 
 promise_test(async (t) => {
 	const parent = await createIframe(t);
@@ -166,7 +166,7 @@ promise_test(async (t) => {
 
 	assert_equals(await readReferer(child), URL_COMPLETE);
 	assert_equals(await readReferer(parent), URL_DOMAIN);
-}, 'popup: parent independence from child (child de-escalates)');
+}, 'local - about:blank - auxiliary - weakening');
 
 promise_test(async (t) => {
 	const parent = await createIframe(t, 'origin');
@@ -174,7 +174,7 @@ promise_test(async (t) => {
 	await navigate(parent, dataUrl());
 
 	assert_equals(await send(parent, 'readReferer'), URL_DOMAIN);
-}, 'data: URL: inheritance');
+}, 'local - data: - navigation - adoption');
 
 promise_test(async (t) => {
 	const parent = await createIframe(t);
@@ -184,7 +184,7 @@ promise_test(async (t) => {
 	await send(parent, 'back');
 
 	assert_equals(await readReferer(parent), URL_COMPLETE);
-}, 'data: URL: parent independence from child (child escalates)');
+}, 'local - data: - navigation - strengthening');
 
 promise_test(async (t) => {
 	const parent = await createIframe(t, 'origin');
@@ -194,7 +194,7 @@ promise_test(async (t) => {
 	await send(parent, 'back');
 
 	assert_equals(await readReferer(parent), URL_DOMAIN);
-}, 'data: URL: parent independence from child (child de-escalates)');
+}, 'local - data: - navigation - weakening');
 
 promise_test(async (t) => {
 	const parent = await createIframe(t, 'origin');
@@ -202,7 +202,7 @@ promise_test(async (t) => {
 	await navigate(parent, objectUrl(t));
 
 	assert_equals(await send(parent, 'readReferer'), URL_DOMAIN);
-}, 'blob: URL: inheritance');
+}, 'local - blob: - navigation - adoption');
 
 promise_test(async (t) => {
 	const parent = await createIframe(t);
@@ -212,7 +212,7 @@ promise_test(async (t) => {
 	await send(parent, 'back');
 
 	assert_equals(await readReferer(parent), URL_COMPLETE);
-}, 'blob: URL: parent independence from child (child escalates)');
+}, 'local - blob: - navigation - stengthening');
 
 promise_test(async (t) => {
 	const parent = await createIframe(t, 'origin');
@@ -222,7 +222,7 @@ promise_test(async (t) => {
 	await send(parent, 'back');
 
 	assert_equals(await readReferer(parent), URL_DOMAIN);
-}, 'blob: URL: parent independence from child (child de-escalates)');
+}, 'local - blob: - navigation - weakening');
 </script>
 	</body>
 </html>
