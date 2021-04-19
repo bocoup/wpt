@@ -9,15 +9,6 @@
 	<body>
 <script>
 'use strict';
-const createObjectUrl = (t, content, mimeType) => {
-	const encoder = new TextEncoder();
-	const url = URL.createObjectURL(new Blob([encoder.encode(content)], {type: mimeType}));
-
-	t.add_cleanup(() => URL.revokeObjectURL(url));
-
-	return url;
-};
-
 const URL_COMPLETE = new URL('/tmp/resources/test-frame.html', location).href;
 const URL_DOMAIN = location.origin + '/';
 
@@ -34,6 +25,21 @@ const dataUrl = () => `data:text/html,<meta charset="utf-8">
 	<script src="${URL_DOMAIN}tmp/resources/utils.sub.js"><${''}/script>
 	<script src="${URL_DOMAIN}tmp/resources/test-frame.js"><${''}/script>
 	${Math.random()}`;
+
+const objectUrl = (t) => {
+	const encoder = new TextEncoder();
+	const content = `<meta charset="utf-8">
+	<script src="${URL_DOMAIN}tmp/resources/utils.sub.js"><${''}/script>
+	<script src="${URL_DOMAIN}tmp/resources/test-frame.js"><${''}/script>
+	${Math.random()}`;
+	const url = URL.createObjectURL(
+		new Blob([encoder.encode(content)], {type: 'text/html'})
+	);
+
+	t.add_cleanup(() => URL.revokeObjectURL(url));
+
+	return url;
+};
 
 async function navigate(win, url) {
 	return new Promise((resolve) => {
@@ -156,6 +162,34 @@ promise_test(async (t) => {
 
 	assert_equals(await readReferer(parent), URL_DOMAIN);
 }, 'data: URL: parent independence from child (child de-escalates)');
+
+promise_test(async (t) => {
+	const parent = await createIframe(t, 'origin');
+
+	await navigate(parent, objectUrl(t));
+
+	assert_equals(await send(parent, 'readReferer'), URL_DOMAIN);
+}, 'blob: URL: inheritance');
+
+promise_test(async (t) => {
+	const parent = await createIframe(t);
+
+	await navigate(parent, objectUrl(t));
+	await send(parent, ['createMeta', 'referrer', 'origin']);
+	await send(parent, 'back');
+
+	assert_equals(await readReferer(parent), URL_COMPLETE);
+}, 'blob: URL: parent independence from child (child escalates)');
+
+promise_test(async (t) => {
+	const parent = await createIframe(t, 'origin');
+
+	await navigate(parent, objectUrl(t));
+	await send(parent, ['createMeta', 'referrer', 'unsafe-url']);
+	await send(parent, 'back');
+
+	assert_equals(await readReferer(parent), URL_DOMAIN);
+}, 'blob: URL: parent independence from child (child de-escalates)');
 </script>
 	</body>
 </html>
