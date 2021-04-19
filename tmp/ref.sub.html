@@ -21,6 +21,30 @@ const createObjectUrl = (t, content, mimeType) => {
 const URL_COMPLETE = new URL('/tmp/resources/test-frame.html', location).href;
 const URL_DOMAIN = location.origin + '/';
 
+async function send(win, message) {
+	return new Promise((resolve) => {
+		addEventListener('message', (event) => {
+			resolve(event.data);
+		});
+		win.postMessage(message, '*');
+	});
+}
+
+const dataUrl = () => `data:text/html,<meta charset="utf-8">
+	<script src="${URL_DOMAIN}tmp/resources/utils.sub.js"><${''}/script>
+	<script src="${URL_DOMAIN}tmp/resources/test-frame.js"><${''}/script>
+	${Math.random()}`;
+
+async function navigate(win, url) {
+	return new Promise((resolve) => {
+		addEventListener('message', function handler(event) {
+			removeEventListener('message', handler);
+			resolve();
+		});
+		win.location.assign(url);
+	});
+}
+
 promise_test(async (t) => {
 	const parent = await createIframe(t);
 	const child = document.createElement('iframe');
@@ -105,19 +129,10 @@ promise_test(async (t) => {
 	assert_equals(await readReferer(parent), URL_DOMAIN);
 }, 'popup: parent independence from child (child de-escalates)');
 
-async function send(win, message) {
-	return new Promise((resolve) => {
-		addEventListener('message', (event) => {
-			resolve(event.data);
-		});
-		win.postMessage(message, '*');
-	});
-}
-
 promise_test(async (t) => {
 	const parent = await createIframe(t, 'origin');
 
-	await dataNav(parent);
+	await navigate(parent, dataUrl());
 
 	assert_equals(await send(parent, 'readReferer'), URL_DOMAIN);
 }, 'data: URL: inheritance');
@@ -125,7 +140,7 @@ promise_test(async (t) => {
 promise_test(async (t) => {
 	const parent = await createIframe(t);
 
-	await dataNav(parent);
+	await navigate(parent, dataUrl());
 	await send(parent, ['createMeta', 'referrer', 'origin']);
 	await send(parent, 'back');
 
@@ -135,7 +150,7 @@ promise_test(async (t) => {
 promise_test(async (t) => {
 	const parent = await createIframe(t, 'origin');
 
-	await dataNav(parent);
+	await navigate(parent, dataUrl());
 	await send(parent, ['createMeta', 'referrer', 'unsafe-url']);
 	await send(parent, 'back');
 

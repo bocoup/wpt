@@ -43,16 +43,6 @@ const createPopup = async (t, win) => {
 	return child;
 };
 
-const dataNav = async (win) => {
-	return new Promise((resolve) => {
-		addEventListener('message', function handler(event) {
-			removeEventListener('message', handler);
-			resolve();
-		});
-		win.location.assign(`data:text/html,<meta charset="utf-8"><script src="${HERE}/tmp/resources/utils.sub.js"></script><script src="${HERE}/tmp/resources/test-frame.js"></script>${Math.random()}`);
-	});
-};
-
 const readReferer = async (win) => {
 	//const script = win.document.createElement('script');
 	//const name = `fn${Math.round(Math.random() * 1000)}`;
