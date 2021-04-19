@@ -132,7 +132,7 @@ promise_test(async (t) => {
 	const parent = await createIframe(t);
 	createMeta(parent, 'referrer', 'origin');
 
-	const child = await createIframe(t, parent);
+	const child = await createPopup(t, parent);
 
 	assert_equals(await readReferer(child), URL_DOMAIN);
 }, 'popup: inheritance');
