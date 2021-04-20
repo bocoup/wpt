@@ -118,10 +118,9 @@ promise_test(async (t) => {
 }, 'local - about:blank - nested - strengthening');
 
 promise_test(async (t) => {
-	const creator = await createIframe(t);
+	const creator = await createIframe(t, 'origin');
 	const subject = document.createElement('iframe');
 
-	createMeta(creator, 'referrer', 'origin');
 	creator.document.body.appendChild(subject);
 	createMeta(subject.contentWindow, 'referrer', 'unsafe-url');
 
@@ -131,8 +130,7 @@ promise_test(async (t) => {
 
 // This test is not interesting.
 promise_test(async (t) => {
-	const creator = await createIframe(t);
-	createMeta(creator, 'referrer', 'origin');
+	const creator = await createIframe(t, 'origin');
 
 	const subject = open('about:blank');
 	t.add_cleanup(() => subject.close());
@@ -164,8 +162,7 @@ promise_test(async (t) => {
 }, 'local - about:blank - auxiliary - strengthening');
 
 promise_test(async (t) => {
-	const creator = await createIframe(t);
-	createMeta(creator, 'referrer', 'origin');
+	const creator = await createIframe(t, 'origin');
 	const subject = open('about:blank');
 	t.add_cleanup(() => subject.close());
 
