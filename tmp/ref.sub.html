@@ -207,6 +207,18 @@ promise_test(async (t) => {
 	assert_equals(await send(subject, 'readReferer'), '');
 }, 'local - blob: - navigation - adoption');
 
+// This test is not relevant to behavior of "policy container" because
+// ReferrerPolicy's effect on the test subject cannot be observed.
+promise_test(async (t) => {
+	const subject = await createIframe(t, 'origin');
+	const url = objectUrl(t);
+	await send(subject, ['createMeta', 'referrer', 'unsafe-url']);
+
+	await navigate(subject, url);
+
+	assert_equals(await send(subject, 'readReferer'), '');
+}, 'local - blob: - navigation - change to creator');
+
 promise_test(async (t) => {
 	const subject = await createIframe(t);
 
