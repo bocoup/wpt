@@ -73,7 +73,8 @@ async function navigate(win, url) {
 }
 
 // This test is not relevant to behavior of "policy container" because
-// ReferrerPolicy's effect on the test subject cannot be observed.
+// ReferrerPolicy's effect on the test subject (a document whose domain uses a
+// local scheme) cannot be observed.
 promise_test(async (t) => {
 	const creator = await createIframe(t, 'origin');
 	const subject = creator.document.createElement('iframe');
@@ -84,7 +85,8 @@ promise_test(async (t) => {
 }, 'local - about:blank - nested - adoption');
 
 // This test is not relevant to behavior of "policy container" because
-// ReferrerPolicy's effect on the test subject cannot be observed.
+// ReferrerPolicy's effect on the test subject (a document whose domain uses a
+// local scheme) cannot be observed.
 promise_test(async (t) => {
 	const creator = await createIframe(t);
 	const subject = creator.document.createElement('iframe');
@@ -119,7 +121,8 @@ promise_test(async (t) => {
 }, 'local - about:blank - nested - weakening');
 
 // This test is not relevant to behavior of "policy container" because
-// ReferrerPolicy's effect on the test subject cannot be observed.
+// ReferrerPolicy's effect on the test subject (a document whose domain uses a
+// local scheme) cannot be observed.
 promise_test(async (t) => {
 	const creator = await createIframe(t, 'origin');
 
@@ -130,7 +133,8 @@ promise_test(async (t) => {
 }, 'local - about:blank - auxiliary - adoption');
 
 // This test is not relevant to behavior of "policy container" because
-// ReferrerPolicy's effect on the test subject cannot be observed.
+// ReferrerPolicy's effect on the test subject (a document whose domain uses a
+// local scheme) cannot be observed.
 promise_test(async (t) => {
 	const creator = await createIframe(t);
 	const subject = creator.open('about:blank');
@@ -165,7 +169,8 @@ promise_test(async (t) => {
 }, 'local - about:blank - auxiliary - weakening');
 
 // This test is not relevant to behavior of "policy container" because
-// ReferrerPolicy's effect on the test subject cannot be observed.
+// ReferrerPolicy's effect on the test subject (a document whose domain uses a
+// local scheme) cannot be observed.
 promise_test(async (t) => {
 	const subject = await createIframe(t, 'origin');
 
@@ -198,7 +203,8 @@ promise_test(async (t) => {
 }, 'local - data: - navigation - weakening');
 
 // This test is not relevant to behavior of "policy container" because
-// ReferrerPolicy's effect on the test subject cannot be observed.
+// ReferrerPolicy's effect on the test subject (a document whose domain uses a
+// local scheme) cannot be observed.
 promise_test(async (t) => {
 	const subject = await createIframe(t, 'origin');
 
@@ -208,7 +214,8 @@ promise_test(async (t) => {
 }, 'local - blob: - navigation - adoption');
 
 // This test is not relevant to behavior of "policy container" because
-// ReferrerPolicy's effect on the test subject cannot be observed.
+// ReferrerPolicy's effect on the test subject (a document whose domain uses a
+// local scheme) cannot be observed.
 promise_test(async (t) => {
 	const subject = await createIframe(t, 'origin');
 	const url = objectUrl(t);
