@@ -86,155 +86,154 @@ async function navigate(win, url) {
 
 // This test is not interesting.
 promise_test(async (t) => {
-	const parent = await createIframe(t);
-	const child = document.createElement('iframe');
+	const creator = await createIframe(t, 'origin');
+	const subject = creator.document.createElement('iframe');
 
-	createMeta(parent, 'referrer', 'origin');
-	parent.document.body.appendChild(child);
+	creator.document.body.appendChild(subject);
 
-	assert_equals(await readReferer(child.contentWindow), '');
+	assert_equals(await readReferer(subject.contentWindow), '');
 }, 'local - about:blank - nested - adoption');
 
 // This test is not interesting.
 promise_test(async (t) => {
-	const parent = await createIframe(t);
-	const child = document.createElement('iframe');
+	const creator = await createIframe(t);
+	const subject = document.createElement('iframe');
 
-	parent.document.body.appendChild(child);
-	createMeta(parent, 'referrer', 'origin');
+	creator.document.body.appendChild(subject);
+	createMeta(creator, 'referrer', 'origin');
 
-	assert_equals(await readReferer(child.contentWindow), '');
-	assert_equals(await readReferer(parent), URL_DOMAIN);
+	assert_equals(await readReferer(subject.contentWindow), '');
+	assert_equals(await readReferer(creator), URL_DOMAIN);
 }, 'local - about:blank - nested - change to creator');
 
 promise_test(async (t) => {
-	const parent = await createIframe(t);
-	const child = document.createElement('iframe');
+	const creator = await createIframe(t);
+	const subject = document.createElement('iframe');
 
-	parent.document.body.appendChild(child);
-	createMeta(child.contentWindow, 'referrer', 'origin');
+	creator.document.body.appendChild(subject);
+	createMeta(subject.contentWindow, 'referrer', 'origin');
 
-	assert_equals(await readReferer(child.contentWindow), '');
-	assert_equals(await readReferer(parent), URL_COMPLETE);
+	assert_equals(await readReferer(subject.contentWindow), '');
+	assert_equals(await readReferer(creator), URL_COMPLETE);
 }, 'local - about:blank - nested - strengthening');
 
 promise_test(async (t) => {
-	const parent = await createIframe(t);
-	const child = document.createElement('iframe');
+	const creator = await createIframe(t);
+	const subject = document.createElement('iframe');
 
-	createMeta(parent, 'referrer', 'origin');
-	parent.document.body.appendChild(child);
-	createMeta(child.contentWindow, 'referrer', 'unsafe-url');
+	createMeta(creator, 'referrer', 'origin');
+	creator.document.body.appendChild(subject);
+	createMeta(subject.contentWindow, 'referrer', 'unsafe-url');
 
-	assert_equals(await readReferer(child.contentWindow), '');
-	assert_equals(await readReferer(parent), URL_DOMAIN);
+	assert_equals(await readReferer(subject.contentWindow), '');
+	assert_equals(await readReferer(creator), URL_DOMAIN);
 }, 'local - about:blank - nested - weakening');
 
 // This test is not interesting.
 promise_test(async (t) => {
-	const parent = await createIframe(t);
-	createMeta(parent, 'referrer', 'origin');
+	const creator = await createIframe(t);
+	createMeta(creator, 'referrer', 'origin');
 
-	const child = open('about:blank');
-	t.add_cleanup(() => child.close());
+	const subject = open('about:blank');
+	t.add_cleanup(() => subject.close());
 
-	assert_equals(await readReferer(child), '');
+	assert_equals(await readReferer(subject), '');
 }, 'local - about:blank - auxiliary - adoption');
 
 // This test is not interesting.
 promise_test(async (t) => {
-	const parent = await createIframe(t);
-	const child = open('about:blank');
-	t.add_cleanup(() => child.close());
+	const creator = await createIframe(t);
+	const subject = open('about:blank');
+	t.add_cleanup(() => subject.close());
 
-	createMeta(parent, 'referrer', 'origin');
+	createMeta(creator, 'referrer', 'origin');
 
-	assert_equals(await readReferer(child), '');
-	assert_equals(await readReferer(parent), URL_DOMAIN);
+	assert_equals(await readReferer(subject), '');
+	assert_equals(await readReferer(creator), URL_DOMAIN);
 }, 'local - about:blank - auxiliary - change to creator');
 
 promise_test(async (t) => {
-	const parent = await createIframe(t);
-	const child = open('about:blank');
-	t.add_cleanup(() => child.close());
+	const creator = await createIframe(t);
+	const subject = open('about:blank');
+	t.add_cleanup(() => subject.close());
 
-	createMeta(child, 'referrer', 'origin');
+	createMeta(subject, 'referrer', 'origin');
 
-	assert_equals(await readReferer(child), '');
-	assert_equals(await readReferer(parent), URL_COMPLETE);
+	assert_equals(await readReferer(subject), '');
+	assert_equals(await readReferer(creator), URL_COMPLETE);
 }, 'local - about:blank - auxiliary - strengthening');
 
 promise_test(async (t) => {
-	const parent = await createIframe(t);
-	createMeta(parent, 'referrer', 'origin');
-	const child = open('about:blank');
-	t.add_cleanup(() => child.close());
+	const creator = await createIframe(t);
+	createMeta(creator, 'referrer', 'origin');
+	const subject = open('about:blank');
+	t.add_cleanup(() => subject.close());
 
-	createMeta(child, 'referrer', 'unsafe-url');
+	createMeta(subject, 'referrer', 'unsafe-url');
 
-	assert_equals(await readReferer(child), '');
-	assert_equals(await readReferer(parent), URL_DOMAIN);
+	assert_equals(await readReferer(subject), '');
+	assert_equals(await readReferer(creator), URL_DOMAIN);
 }, 'local - about:blank - auxiliary - weakening');
 
 promise_test(async (t) => {
-	const parent = await createIframe(t, 'origin');
+	const subject = await createIframe(t, 'origin');
 
-	await navigate(parent, dataUrl());
+	await navigate(subject, dataUrl());
 
-	assert_equals(await send(parent, 'readReferer'), '');
+	assert_equals(await send(subject, 'readReferer'), '');
 }, 'local - data: - navigation - adoption');
 
 promise_test(async (t) => {
-	const parent = await createIframe(t);
+	const subject = await createIframe(t);
 
-	await navigate(parent, dataUrl());
-	await send(parent, ['createMeta', 'referrer', 'origin']);
-	assert_equals(await send(parent, 'readReferer'), '');
+	await navigate(subject, dataUrl());
+	await send(subject, ['createMeta', 'referrer', 'origin']);
+	assert_equals(await send(subject, 'readReferer'), '');
 
-	await send(parent, 'back');
+	await send(subject, 'back');
 
-	assert_equals(await readReferer(parent), URL_COMPLETE);
+	assert_equals(await readReferer(subject), URL_COMPLETE);
 }, 'local - data: - navigation - strengthening');
 
 promise_test(async (t) => {
-	const parent = await createIframe(t, 'origin');
+	const subject = await createIframe(t, 'origin');
 
-	await navigate(parent, dataUrl());
-	await send(parent, ['createMeta', 'referrer', 'unsafe-url']);
-	assert_equals(await send(parent, 'readReferer'), '');
-	await send(parent, 'back');
+	await navigate(subject, dataUrl());
+	await send(subject, ['createMeta', 'referrer', 'unsafe-url']);
+	assert_equals(await send(subject, 'readReferer'), '');
+	await send(subject, 'back');
 
-	assert_equals(await readReferer(parent), URL_DOMAIN);
+	assert_equals(await readReferer(subject), URL_DOMAIN);
 }, 'local - data: - navigation - weakening');
 
 promise_test(async (t) => {
-	const parent = await createIframe(t, 'origin');
+	const subject = await createIframe(t, 'origin');
 
-	await navigate(parent, objectUrl(t));
+	await navigate(subject, objectUrl(t));
 
-	assert_equals(await send(parent, 'readReferer'), '');
+	assert_equals(await send(subject, 'readReferer'), '');
 }, 'local - blob: - navigation - adoption');
 
 promise_test(async (t) => {
-	const parent = await createIframe(t);
+	const subject = await createIframe(t);
 
-	await navigate(parent, objectUrl(t));
-	await send(parent, ['createMeta', 'referrer', 'origin']);
-	assert_equals(await send(parent, 'readReferer'), '');
-	await send(parent, 'back');
+	await navigate(subject, objectUrl(t));
+	await send(subject, ['createMeta', 'referrer', 'origin']);
+	assert_equals(await send(subject, 'readReferer'), '');
+	await send(subject, 'back');
 
-	assert_equals(await readReferer(parent), URL_COMPLETE);
+	assert_equals(await readReferer(subject), URL_COMPLETE);
 }, 'local - blob: - navigation - stengthening');
 
 promise_test(async (t) => {
-	const parent = await createIframe(t, 'origin');
+	const subject = await createIframe(t, 'origin');
 
-	await navigate(parent, objectUrl(t));
-	await send(parent, ['createMeta', 'referrer', 'unsafe-url']);
-	assert_equals(await send(parent, 'readReferer'), '');
-	await send(parent, 'back');
+	await navigate(subject, objectUrl(t));
+	await send(subject, ['createMeta', 'referrer', 'unsafe-url']);
+	assert_equals(await send(subject, 'readReferer'), '');
+	await send(subject, 'back');
 
-	assert_equals(await readReferer(parent), URL_DOMAIN);
+	assert_equals(await readReferer(subject), URL_DOMAIN);
 }, 'local - blob: - navigation - weakening');
 </script>
 	</body>
