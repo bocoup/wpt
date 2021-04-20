@@ -72,7 +72,8 @@ async function navigate(win, url) {
 	});
 }
 
-// This test is not relevant to behavior of "policy container."
+// This test is not relevant to behavior of "policy container" because
+// ReferrerPolicy's effect on the test subject cannot be observed.
 promise_test(async (t) => {
 	const creator = await createIframe(t, 'origin');
 	const subject = creator.document.createElement('iframe');
@@ -82,7 +83,8 @@ promise_test(async (t) => {
 	assert_equals(await readReferer(subject.contentWindow), '');
 }, 'local - about:blank - nested - adoption');
 
-// This test is not relevant to behavior of "policy container."
+// This test is not relevant to behavior of "policy container" because
+// ReferrerPolicy's effect on the test subject cannot be observed.
 promise_test(async (t) => {
 	const creator = await createIframe(t);
 	const subject = creator.document.createElement('iframe');
@@ -116,7 +118,8 @@ promise_test(async (t) => {
 	assert_equals(await readReferer(creator), URL_DOMAIN);
 }, 'local - about:blank - nested - weakening');
 
-// This test is not relevant to behavior of "policy container."
+// This test is not relevant to behavior of "policy container" because
+// ReferrerPolicy's effect on the test subject cannot be observed.
 promise_test(async (t) => {
 	const creator = await createIframe(t, 'origin');
 
@@ -126,7 +129,8 @@ promise_test(async (t) => {
 	assert_equals(await readReferer(subject), '');
 }, 'local - about:blank - auxiliary - adoption');
 
-// This test is not relevant to behavior of "policy container."
+// This test is not relevant to behavior of "policy container" because
+// ReferrerPolicy's effect on the test subject cannot be observed.
 promise_test(async (t) => {
 	const creator = await createIframe(t);
 	const subject = creator.open('about:blank');
