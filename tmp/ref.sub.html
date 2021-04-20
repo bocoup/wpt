@@ -164,6 +164,8 @@ promise_test(async (t) => {
 	assert_equals(await readReferer(creator), URL_DOMAIN);
 }, 'local - about:blank - auxiliary - weakening');
 
+// This test is not relevant to behavior of "policy container" because
+// ReferrerPolicy's effect on the test subject cannot be observed.
 promise_test(async (t) => {
 	const subject = await createIframe(t, 'origin');
 
@@ -195,6 +197,8 @@ promise_test(async (t) => {
 	assert_equals(await readReferer(subject), URL_DOMAIN);
 }, 'local - data: - navigation - weakening');
 
+// This test is not relevant to behavior of "policy container" because
+// ReferrerPolicy's effect on the test subject cannot be observed.
 promise_test(async (t) => {
 	const subject = await createIframe(t, 'origin');
 
