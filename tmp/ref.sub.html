@@ -97,7 +97,7 @@ promise_test(async (t) => {
 // This test is not relevant to behavior of "policy container."
 promise_test(async (t) => {
 	const creator = await createIframe(t);
-	const subject = document.createElement('iframe');
+	const subject = creator.document.createElement('iframe');
 
 	creator.document.body.appendChild(subject);
 	createMeta(creator, 'referrer', 'origin');
@@ -108,7 +108,7 @@ promise_test(async (t) => {
 
 promise_test(async (t) => {
 	const creator = await createIframe(t);
-	const subject = document.createElement('iframe');
+	const subject = creator.document.createElement('iframe');
 
 	creator.document.body.appendChild(subject);
 	createMeta(subject.contentWindow, 'referrer', 'origin');
@@ -119,7 +119,7 @@ promise_test(async (t) => {
 
 promise_test(async (t) => {
 	const creator = await createIframe(t, 'origin');
-	const subject = document.createElement('iframe');
+	const subject = creator.document.createElement('iframe');
 
 	creator.document.body.appendChild(subject);
 	createMeta(subject.contentWindow, 'referrer', 'unsafe-url');
@@ -132,7 +132,7 @@ promise_test(async (t) => {
 promise_test(async (t) => {
 	const creator = await createIframe(t, 'origin');
 
-	const subject = open('about:blank');
+	const subject = creator.open('about:blank');
 	t.add_cleanup(() => subject.close());
 
 	assert_equals(await readReferer(subject), '');
@@ -141,7 +141,7 @@ promise_test(async (t) => {
 // This test is not relevant to behavior of "policy container."
 promise_test(async (t) => {
 	const creator = await createIframe(t);
-	const subject = open('about:blank');
+	const subject = creator.open('about:blank');
 	t.add_cleanup(() => subject.close());
 
 	createMeta(creator, 'referrer', 'origin');
@@ -152,7 +152,7 @@ promise_test(async (t) => {
 
 promise_test(async (t) => {
 	const creator = await createIframe(t);
-	const subject = open('about:blank');
+	const subject = creator.open('about:blank');
 	t.add_cleanup(() => subject.close());
 
 	createMeta(subject, 'referrer', 'origin');
@@ -163,7 +163,7 @@ promise_test(async (t) => {
 
 promise_test(async (t) => {
 	const creator = await createIframe(t, 'origin');
-	const subject = open('about:blank');
+	const subject = creator.open('about:blank');
 	t.add_cleanup(() => subject.close());
 
 	createMeta(subject, 'referrer', 'unsafe-url');
