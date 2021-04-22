@@ -7,15 +7,23 @@
 		<script src="./resources/utils.sub.js"></script>
 	</head>
 	<body>
+		Skipped tests:
+		<ul id="skipped"></ul>
 <script>
 'use strict';
 const URL_COMPLETE = new URL('/tmp/resources/test-frame.html', location).href;
 const URL_DOMAIN = location.origin + '/';
 
+const skip = (name) => {
+	const li = document.createElement('li');
+	li.appendChild(document.createTextNode(name));
+	document.getElementById('skipped').appendChild(li);
+}
+
 const createIframe = async (t, policy) => {
 	const iframe = document.createElement('iframe');
-	const pipe = policy ? `&pipe=header(Referrer-Policy,${policy})` : '';
-	iframe.src = `${URL_DOMAIN}tmp/resources/test-frame.html?${Math.random()}${pipe}`;
+	const pipe = policy ? `?pipe=header(Referrer-Policy,${policy})` : '';
+	iframe.src = `${URL_DOMAIN}tmp/resources/test-frame.html${pipe}`;
 
 	await new Promise((resolve, reject) => {
 		addEventListener('message', function handler (event) {
@@ -27,7 +35,7 @@ const createIframe = async (t, policy) => {
 			resolve();
 		});
 		document.body.appendChild(iframe);
-		//t.add_cleanup(() => iframe.remove());
+		t.add_cleanup(() => iframe.remove());
 	});
 
 	return iframe.contentWindow;
@@ -86,8 +94,6 @@ async function navigate(win, url) {
 /**
  */
 function pollForDocumentChange(frame, fn) {
-	fn();
-	return new Promise((resolve) => setTimeout(resolve, 1000));
 	return new Promise((resolve, reject) => {
 		const initialDocument = frame.contentDocument;
 
@@ -97,50 +103,13 @@ function pollForDocumentChange(frame, fn) {
 	});
 }
 
-// This test is not relevant to behavior of "policy container" because
-// ReferrerPolicy's effect on the test subject (a document whose domain uses a
-// local scheme) cannot be observed.
 promise_test(async (t) => {
-	//const subject = await createIframe(t);
-	//const iframe = subject.frameElement;
-	const subject = open(`${URL_DOMAIN}tmp/resources/test-frame.html?${Math.random()}`);
-	t.add_cleanup(() => subject.close());
-	await new Promise((resolve) => addEventListener('message', resolve));
-	const iframe = null;
-
-	console.log(subject.history.length, subject.document.readyState, subject.location.href);
-	await pollForDocumentChange(
-		iframe, () => subject.location = 'about:blank'
-	);
-
-	console.log(subject.history.length, subject.document.readyState, subject.location.href);
-	await pollForDocumentChange(
-		iframe, () => subject.location = `${URL_COMPLETE}?${Math.random()}`
-	);
-
-	console.log(subject.history.length, subject.document.readyState, subject.location.href);
-	await pollForDocumentChange(
-		iframe, () => send(subject, 'back')
-	);
-	console.log(subject.history.length, subject.document.readyState, subject.location.href);
-
-	assert_equals(await readReferer(subject), '');
-}, 'local - about:blank - history - adoption');
-
-0 && promise_test(async (t) => {
 	const subject = await createIframe(t);
 	const iframe = subject.frameElement;
-	const initialLength = subject.history.length;
-
-	const url =
-		//objectUrl(t);
-		//dataUrl();
-		'http://{{hosts[alt][]}}:{{ports[http][0]}}/tmp/resources/test-frame.html';
 
 	await pollForDocumentChange(
-		iframe, () => subject.location = url
+		iframe, () => subject.location = '/tmp/resources/test-frame.html'
 	);
-
 
 	await pollForDocumentChange(
 		iframe, () => send(subject, 'navigate', [`${URL_COMPLETE}?${Math.random()}`])
@@ -149,220 +118,335 @@ promise_test(async (t) => {
 	await pollForDocumentChange(
 		iframe, () => send(subject, 'back')
 	);
-	assert_equals(await send(subject, 'readReferer'), '');
+	assert_equals(await send(subject, 'readReferer'), URL_COMPLETE, 'does not adopt');
+}, 'non-local - history - adoption');
+
+skip('non-local - history - change to creator');
+
+promise_test(async (t) => {
+	const subject = await createIframe(t);
+	const iframe = subject.frameElement;
+
+	// TODO(jugglinmike): find the specific conditions which necessitate this
+	// delay
+	// https://github.com/web-platform-tests/wpt/pull/28632
+	await new Promise((resolve) => setTimeout(resolve, 1));
+
+	await pollForDocumentChange(
+		iframe, () => subject.location = URL_COMPLETE + '?1'
+	);
+
+	await pollForDocumentChange(
+		iframe, () => send(subject, 'back')
+	);
+	createMeta(subject, 'referrer', 'origin');
+
+	assert_equals(await readReferer(subject), URL_DOMAIN, 'subject policy successfully strengthened');
+
+	await pollForDocumentChange(
+		iframe, () => subject.history.forward()
+	);
+
+	assert_equals(await readReferer(subject), URL_COMPLETE + '?1', 'creator not affected');
+}, 'non-local - history - strengthening');
+
+promise_test(async (t) => {
+	const subject = await createIframe(t, 'origin');
+	const iframe = subject.frameElement;
+
+	// TODO(jugglinmike): find the specific conditions which necessitate this
+	// delay
+	// https://github.com/web-platform-tests/wpt/pull/28632
+	await new Promise((resolve) => setTimeout(resolve, 1));
+
+	await pollForDocumentChange(
+		iframe, () => subject.location = `${URL_COMPLETE}?pipe=header(Referrer-Policy,origin)&1`
+	);
+
+	await pollForDocumentChange(
+		iframe, () => send(subject, 'back')
+	);
+	createMeta(subject, 'referrer', 'unsafe-url');
+
+	assert_equals(await readReferer(subject), `${URL_COMPLETE}?pipe=header(Referrer-Policy,origin)`, 'subject policy successfully weakened');
+
+	await pollForDocumentChange(
+		iframe, () => subject.history.forward()
+	);
+
+	assert_equals(await readReferer(subject), URL_DOMAIN, 'creator not affected');
+}, 'non-local - history - weakening');
+
+skip('local - about:blank - navigation - adoption');
+skip('local - about:blank - navigation - change to creator');
+skip('local - about:blank - navigation - strengthening');
+skip('local - about:blank - navigation - weakening');
+
+// This test is not relevant to behavior of "policy container" because
+// ReferrerPolicy's effect on the test subject (a document whose domain uses a
+// local scheme) cannot be observed.
+promise_test(async (t) => {
+	const subject = await createIframe(t);
+	const iframe = subject.frameElement;
+
+	await pollForDocumentChange(
+		iframe, () => subject.location = 'about:blank'
+	);
+	// TODO(jugglinmike): find the specific conditions which necessitate this
+	// delay
+	// https://github.com/web-platform-tests/wpt/pull/28632
+	await new Promise((resolve) => setTimeout(resolve, 1));
+
+	await pollForDocumentChange(
+		iframe, () => subject.location = `${URL_COMPLETE}?pipe=header(Referrer-Policy,origin)`
+	);
+
+	await pollForDocumentChange(
+		iframe, () => send(subject, 'back')
+	);
+
+	assert_equals(await readReferer(subject), '');
 }, 'local - about:blank - history - adoption');
 
-//// This test is not relevant to behavior of "policy container" because
-//// ReferrerPolicy's effect on the test subject (a document whose domain uses a
-//// local scheme) cannot be observed.
-//promise_test(async (t) => {
-//	const creator = await createIframe(t);
-//	const subject = creator.document.createElement('iframe');
-//
-//	creator.document.body.appendChild(subject);
-//	createMeta(creator, 'referrer', 'origin');
-//
-//	assert_equals(await readReferer(subject.contentWindow), '');
-//	assert_equals(await readReferer(creator), URL_DOMAIN);
-//}, 'local - about:blank - history - change to creator');
-//
-//promise_test(async (t) => {
-//	const creator = await createIframe(t);
-//	const subject = creator.document.createElement('iframe');
-//
-//	creator.document.body.appendChild(subject);
-//	createMeta(subject.contentWindow, 'referrer', 'origin');
-//
-//	assert_equals(await readReferer(subject.contentWindow), '');
-//	assert_equals(await readReferer(creator), URL_COMPLETE);
-//}, 'local - about:blank - history - strengthening');
-//
-//promise_test(async (t) => {
-//	const creator = await createIframe(t, 'origin');
-//	const subject = creator.document.createElement('iframe');
-//
-//	creator.document.body.appendChild(subject);
-//	createMeta(subject.contentWindow, 'referrer', 'unsafe-url');
-//
-//	assert_equals(await readReferer(subject.contentWindow), '');
-//	assert_equals(await readReferer(creator), URL_DOMAIN);
-//}, 'local - about:blank - history - weakening');
-//
-//// This test is not relevant to behavior of "policy container" because
-//// ReferrerPolicy's effect on the test subject (a document whose domain uses a
-//// local scheme) cannot be observed.
-//promise_test(async (t) => {
-//	const creator = await createIframe(t, 'origin');
-//	const subject = creator.document.createElement('iframe');
-//
-//	creator.document.body.appendChild(subject);
-//
-//	assert_equals(await readReferer(subject.contentWindow), '');
-//}, 'local - about:blank - nested - adoption');
-//
-//// This test is not relevant to behavior of "policy container" because
-//// ReferrerPolicy's effect on the test subject (a document whose domain uses a
-//// local scheme) cannot be observed.
-//promise_test(async (t) => {
-//	const creator = await createIframe(t);
-//	const subject = creator.document.createElement('iframe');
-//
-//	creator.document.body.appendChild(subject);
-//	createMeta(creator, 'referrer', 'origin');
-//
-//	assert_equals(await readReferer(subject.contentWindow), '');
-//	assert_equals(await readReferer(creator), URL_DOMAIN);
-//}, 'local - about:blank - nested - change to creator');
-//
-//promise_test(async (t) => {
-//	const creator = await createIframe(t);
-//	const subject = creator.document.createElement('iframe');
-//
-//	creator.document.body.appendChild(subject);
-//	createMeta(subject.contentWindow, 'referrer', 'origin');
-//
-//	assert_equals(await readReferer(subject.contentWindow), '');
-//	assert_equals(await readReferer(creator), URL_COMPLETE);
-//}, 'local - about:blank - nested - strengthening');
-//
-//promise_test(async (t) => {
-//	const creator = await createIframe(t, 'origin');
-//	const subject = creator.document.createElement('iframe');
-//
-//	creator.document.body.appendChild(subject);
-//	createMeta(subject.contentWindow, 'referrer', 'unsafe-url');
-//
-//	assert_equals(await readReferer(subject.contentWindow), '');
-//	assert_equals(await readReferer(creator), URL_DOMAIN);
-//}, 'local - about:blank - nested - weakening');
-//
-//// This test is not relevant to behavior of "policy container" because
-//// ReferrerPolicy's effect on the test subject (a document whose domain uses a
-//// local scheme) cannot be observed.
-//promise_test(async (t) => {
-//	const creator = await createIframe(t, 'origin');
-//
-//	const subject = creator.open('about:blank');
-//	t.add_cleanup(() => subject.close());
-//
-//	assert_equals(await readReferer(subject), '');
-//}, 'local - about:blank - auxiliary - adoption');
-//
-//// This test is not relevant to behavior of "policy container" because
-//// ReferrerPolicy's effect on the test subject (a document whose domain uses a
-//// local scheme) cannot be observed.
-//promise_test(async (t) => {
-//	const creator = await createIframe(t);
-//	const subject = creator.open('about:blank');
-//	t.add_cleanup(() => subject.close());
-//
-//	createMeta(creator, 'referrer', 'origin');
-//
-//	assert_equals(await readReferer(subject), '');
-//	assert_equals(await readReferer(creator), URL_DOMAIN);
-//}, 'local - about:blank - auxiliary - change to creator');
-//
-//promise_test(async (t) => {
-//	const creator = await createIframe(t);
-//	const subject = creator.open('about:blank');
-//	t.add_cleanup(() => subject.close());
-//
-//	createMeta(subject, 'referrer', 'origin');
-//
-//	assert_equals(await readReferer(subject), '');
-//	assert_equals(await readReferer(creator), URL_COMPLETE);
-//}, 'local - about:blank - auxiliary - strengthening');
-//
-//promise_test(async (t) => {
-//	const creator = await createIframe(t, 'origin');
-//	const subject = creator.open('about:blank');
-//	t.add_cleanup(() => subject.close());
-//
-//	createMeta(subject, 'referrer', 'unsafe-url');
-//
-//	assert_equals(await readReferer(subject), '');
-//	assert_equals(await readReferer(creator), URL_DOMAIN);
-//}, 'local - about:blank - auxiliary - weakening');
-//
-//// This test is not relevant to behavior of "policy container" because
-//// ReferrerPolicy's effect on the test subject (a document whose domain uses a
-//// local scheme) cannot be observed.
-//promise_test(async (t) => {
-//	const subject = await createIframe(t, 'origin');
-//
-//	await navigate(subject, dataUrl());
-//
-//	assert_equals(await send(subject, 'readReferer'), '');
-//}, 'local - data: - navigation - adoption');
-//
-//promise_test(async (t) => {
-//	const subject = await createIframe(t);
-//
-//	await navigate(subject, dataUrl());
-//	await send(subject, ['createMeta', 'referrer', 'origin']);
-//	assert_equals(await send(subject, 'readReferer'), '');
-//
-//	await send(subject, 'back');
-//
-//	assert_equals(await readReferer(subject), URL_COMPLETE);
-//}, 'local - data: - navigation - strengthening');
-//
-//promise_test(async (t) => {
-//	const subject = await createIframe(t, 'origin');
-//
-//	await navigate(subject, dataUrl());
-//	await send(subject, ['createMeta', 'referrer', 'unsafe-url']);
-//	assert_equals(await send(subject, 'readReferer'), '');
-//	await send(subject, 'back');
-//
-//	assert_equals(await readReferer(subject), URL_DOMAIN);
-//}, 'local - data: - navigation - weakening');
-//
-//// This test is not relevant to behavior of "policy container" because
-//// ReferrerPolicy's effect on the test subject (a document whose domain uses a
-//// local scheme) cannot be observed.
-//promise_test(async (t) => {
-//	const subject = await createIframe(t, 'origin');
-//
-//	await navigate(subject, objectUrl(t));
-//
-//	assert_equals(await send(subject, 'readReferer'), '');
-//}, 'local - blob: - navigation - adoption');
-//
-//// This test is not relevant to behavior of "policy container" because
-//// ReferrerPolicy's effect on the test subject (a document whose domain uses a
-//// local scheme) cannot be observed.
-//promise_test(async (t) => {
-//	const subject = await createIframe(t, 'origin');
-//	const url = objectUrl(t);
-//	await send(subject, ['createMeta', 'referrer', 'unsafe-url']);
-//
-//	await navigate(subject, url);
-//
-//	assert_equals(await send(subject, 'readReferer'), '');
-//}, 'local - blob: - navigation - change to creator');
-//
-//promise_test(async (t) => {
-//	const subject = await createIframe(t);
-//
-//	await navigate(subject, objectUrl(t));
-//	await send(subject, ['createMeta', 'referrer', 'origin']);
-//	assert_equals(await send(subject, 'readReferer'), '');
-//	await send(subject, 'back');
-//
-//	assert_equals(await readReferer(subject), URL_COMPLETE);
-//}, 'local - blob: - navigation - stengthening');
-//
-//promise_test(async (t) => {
-//	const subject = await createIframe(t, 'origin');
-//
-//	await navigate(subject, objectUrl(t));
-//	await send(subject, ['createMeta', 'referrer', 'unsafe-url']);
-//	assert_equals(await send(subject, 'readReferer'), '');
-//	await send(subject, 'back');
-//
-//	assert_equals(await readReferer(subject), URL_DOMAIN);
-//}, 'local - blob: - navigation - weakening');
+skip('local - about:blank - history - change to creator');
+
+promise_test(async (t) => {
+	const subject = await createIframe(t);
+	const iframe = subject.frameElement;
+
+	await pollForDocumentChange(
+		iframe, () => subject.location = 'about:blank'
+	);
+	// TODO(jugglinmike): find the specific conditions which necessitate this
+	// delay
+	// https://github.com/web-platform-tests/wpt/pull/28632
+	await new Promise((resolve) => setTimeout(resolve, 1));
+
+	await pollForDocumentChange(
+		iframe, () => subject.location = URL_COMPLETE
+	);
+
+	await pollForDocumentChange(
+		iframe, () => send(subject, 'back')
+	);
+	createMeta(subject, 'referrer', 'origin');
+
+	assert_equals(await readReferer(subject), '', 'the effect on the policy of subject is not observable');
+
+	await pollForDocumentChange(
+		iframe, () => subject.history.forward()
+	);
+
+	assert_equals(await readReferer(subject), URL_COMPLETE, 'creator not affected');
+}, 'local - about:blank - history - strengthening');
+
+promise_test(async (t) => {
+	const subject = await createIframe(t);
+	const iframe = subject.frameElement;
+
+	await pollForDocumentChange(
+		iframe, () => subject.location = 'about:blank'
+	);
+	// TODO(jugglinmike): find the specific conditions which necessitate this
+	// delay
+	// https://github.com/web-platform-tests/wpt/pull/28632
+	await new Promise((resolve) => setTimeout(resolve, 1));
+
+	await pollForDocumentChange(
+		iframe, () => subject.location = `${URL_COMPLETE}?pipe=header(Referrer-Policy,origin)`
+	);
+
+	await pollForDocumentChange(
+		iframe, () => send(subject, 'back')
+	);
+	createMeta(subject, 'referrer', 'unsafe-url');
+
+	assert_equals(await readReferer(subject), '', 'the effect on the policy of subject is not observable');
+
+	await pollForDocumentChange(
+		iframe, () => subject.history.forward()
+	);
+
+	assert_equals(await readReferer(subject), URL_DOMAIN, 'creator not affected');
+}, 'local - about:blank - history - weakening');
+
+// This test is not relevant to behavior of "policy container" because
+// ReferrerPolicy's effect on the test subject (a document whose domain uses a
+// local scheme) cannot be observed.
+promise_test(async (t) => {
+	const creator = await createIframe(t, 'origin');
+	const subject = creator.document.createElement('iframe');
+
+	creator.document.body.appendChild(subject);
+
+	assert_equals(await readReferer(subject.contentWindow), '');
+}, 'local - about:blank - nested - adoption');
+
+// This test is not relevant to behavior of "policy container" because
+// ReferrerPolicy's effect on the test subject (a document whose domain uses a
+// local scheme) cannot be observed.
+promise_test(async (t) => {
+	const creator = await createIframe(t);
+	const subject = creator.document.createElement('iframe');
+
+	creator.document.body.appendChild(subject);
+	createMeta(creator, 'referrer', 'origin');
+
+	assert_equals(await readReferer(subject.contentWindow), '');
+	assert_equals(await readReferer(creator), URL_DOMAIN);
+}, 'local - about:blank - nested - change to creator');
+
+promise_test(async (t) => {
+	const creator = await createIframe(t);
+	const subject = creator.document.createElement('iframe');
+
+	creator.document.body.appendChild(subject);
+	createMeta(subject.contentWindow, 'referrer', 'origin');
+
+	assert_equals(await readReferer(subject.contentWindow), '');
+	assert_equals(await readReferer(creator), URL_COMPLETE);
+}, 'local - about:blank - nested - strengthening');
+
+promise_test(async (t) => {
+	const creator = await createIframe(t, 'origin');
+	const subject = creator.document.createElement('iframe');
+
+	creator.document.body.appendChild(subject);
+	createMeta(subject.contentWindow, 'referrer', 'unsafe-url');
+
+	assert_equals(await readReferer(subject.contentWindow), '');
+	assert_equals(await readReferer(creator), URL_DOMAIN);
+}, 'local - about:blank - nested - weakening');
+
+// This test is not relevant to behavior of "policy container" because
+// ReferrerPolicy's effect on the test subject (a document whose domain uses a
+// local scheme) cannot be observed.
+promise_test(async (t) => {
+	const creator = await createIframe(t, 'origin');
+
+	const subject = creator.open('about:blank');
+	t.add_cleanup(() => subject.close());
+
+	assert_equals(await readReferer(subject), '');
+}, 'local - about:blank - auxiliary - adoption');
+
+// This test is not relevant to behavior of "policy container" because
+// ReferrerPolicy's effect on the test subject (a document whose domain uses a
+// local scheme) cannot be observed.
+promise_test(async (t) => {
+	const creator = await createIframe(t);
+	const subject = creator.open('about:blank');
+	t.add_cleanup(() => subject.close());
+
+	createMeta(creator, 'referrer', 'origin');
+
+	assert_equals(await readReferer(subject), '');
+	assert_equals(await readReferer(creator), URL_DOMAIN);
+}, 'local - about:blank - auxiliary - change to creator');
+
+promise_test(async (t) => {
+	const creator = await createIframe(t);
+	const subject = creator.open('about:blank');
+	t.add_cleanup(() => subject.close());
+
+	createMeta(subject, 'referrer', 'origin');
+
+	assert_equals(await readReferer(subject), '');
+	assert_equals(await readReferer(creator), URL_COMPLETE);
+}, 'local - about:blank - auxiliary - strengthening');
+
+promise_test(async (t) => {
+	const creator = await createIframe(t, 'origin');
+	const subject = creator.open('about:blank');
+	t.add_cleanup(() => subject.close());
+
+	createMeta(subject, 'referrer', 'unsafe-url');
+
+	assert_equals(await readReferer(subject), '');
+	assert_equals(await readReferer(creator), URL_DOMAIN);
+}, 'local - about:blank - auxiliary - weakening');
+
+// This test is not relevant to behavior of "policy container" because
+// ReferrerPolicy's effect on the test subject (a document whose domain uses a
+// local scheme) cannot be observed.
+promise_test(async (t) => {
+	const subject = await createIframe(t, 'origin');
+
+	await navigate(subject, dataUrl());
+
+	assert_equals(await send(subject, 'readReferer'), '');
+}, 'local - data: - navigation - adoption');
+
+skip('local - data: - navigation - change to creator');
+
+promise_test(async (t) => {
+	const subject = await createIframe(t);
+
+	await navigate(subject, dataUrl());
+	await send(subject, 'createMeta', ['referrer', 'origin']);
+	assert_equals(await send(subject, 'readReferer'), '');
+
+	await send(subject, 'back');
+
+	assert_equals(await readReferer(subject), URL_COMPLETE);
+}, 'local - data: - navigation - strengthening');
+
+promise_test(async (t) => {
+	const subject = await createIframe(t, 'origin');
+
+	await navigate(subject, dataUrl());
+	await send(subject, 'createMeta', ['referrer', 'unsafe-url']);
+	assert_equals(await send(subject, 'readReferer'), '');
+	await send(subject, 'back');
+
+	assert_equals(await readReferer(subject), URL_DOMAIN);
+}, 'local - data: - navigation - weakening');
+
+// This test is not relevant to behavior of "policy container" because
+// ReferrerPolicy's effect on the test subject (a document whose domain uses a
+// local scheme) cannot be observed.
+promise_test(async (t) => {
+	const subject = await createIframe(t, 'origin');
+
+	await navigate(subject, objectUrl(t));
+
+	assert_equals(await send(subject, 'readReferer'), '');
+}, 'local - blob: - navigation - adoption');
+
+// This test is not relevant to behavior of "policy container" because
+// ReferrerPolicy's effect on the test subject (a document whose domain uses a
+// local scheme) cannot be observed.
+promise_test(async (t) => {
+	const subject = await createIframe(t, 'origin');
+	const url = objectUrl(t);
+	await send(subject, 'createMeta', ['referrer', 'unsafe-url']);
+
+	await navigate(subject, url);
+
+	assert_equals(await send(subject, 'readReferer'), '');
+}, 'local - blob: - navigation - change to creator');
+
+promise_test(async (t) => {
+	const subject = await createIframe(t);
+
+	await navigate(subject, objectUrl(t));
+	await send(subject, 'createMeta', ['referrer', 'origin']);
+	assert_equals(await send(subject, 'readReferer'), '');
+	await send(subject, 'back');
+
+	assert_equals(await readReferer(subject), URL_COMPLETE);
+}, 'local - blob: - navigation - stengthening');
+
+promise_test(async (t) => {
+	const subject = await createIframe(t, 'origin');
+
+	await navigate(subject, objectUrl(t));
+	await send(subject, 'createMeta', ['referrer', 'unsafe-url']);
+	assert_equals(await send(subject, 'readReferer'), '');
+	await send(subject, 'back');
+
+	assert_equals(await readReferer(subject), URL_DOMAIN);
+}, 'local - blob: - navigation - weakening');
 </script>
 	</body>
 </html>

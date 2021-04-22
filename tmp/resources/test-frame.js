@@ -1,13 +1,12 @@
 'use strict';
 
-(opener || parent).postMessage('child running', '*');
+parent.postMessage('child running', '*');
 
 addEventListener('message', async (event) => {
 	if (!event.data) {
 		return;
 	}
 	if (event.data.name === 'back') {
-		console.log('going back');
 		history.back();
 	} else if (event.data.name === 'readReferer') {
 		parent.postMessage({
