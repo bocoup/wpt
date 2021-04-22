@@ -92,14 +92,15 @@ async function navigate(win, url) {
 }
 
 /**
+ * Create a promise that will be fulfilled when a given iframe fires the "load"
+ * event. Accept a function to trigger loading so that this function can be
+ * used in cases where the event is fired synchronously.
  */
-function pollForDocumentChange(frame, fn) {
+function waitForLoad(frame, triggerLoad) {
 	return new Promise((resolve, reject) => {
-		const initialDocument = frame.contentDocument;
-
-
-	frame.addEventListener('load', resolve);
-		fn();
+		frame.addEventListener('load', resolve, {once: true});
+		frame.addEventListener('error', reject, {once: true});
+		triggerLoad();
 	});
 }
 
@@ -107,15 +108,15 @@ promise_test(async (t) => {
 	const subject = await createIframe(t);
 	const iframe = subject.frameElement;
 
-	await pollForDocumentChange(
+	await waitForLoad(
 		iframe, () => subject.location = '/tmp/resources/test-frame.html'
 	);
 
-	await pollForDocumentChange(
+	await waitForLoad(
 		iframe, () => send(subject, 'navigate', [`${URL_COMPLETE}?${Math.random()}`])
 	);
 
-	await pollForDocumentChange(
+	await waitForLoad(
 		iframe, () => send(subject, 'back')
 	);
 	assert_equals(await send(subject, 'readReferer'), URL_COMPLETE, 'does not adopt');
@@ -132,18 +133,18 @@ promise_test(async (t) => {
 	// https://github.com/web-platform-tests/wpt/pull/28632
 	await new Promise((resolve) => setTimeout(resolve, 1));
 
-	await pollForDocumentChange(
+	await waitForLoad(
 		iframe, () => subject.location = URL_COMPLETE + '?1'
 	);
 
-	await pollForDocumentChange(
+	await waitForLoad(
 		iframe, () => send(subject, 'back')
 	);
 	createMeta(subject, 'referrer', 'origin');
 
 	assert_equals(await readReferer(subject), URL_DOMAIN, 'subject policy successfully strengthened');
 
-	await pollForDocumentChange(
+	await waitForLoad(
 		iframe, () => subject.history.forward()
 	);
 
@@ -159,18 +160,18 @@ promise_test(async (t) => {
 	// https://github.com/web-platform-tests/wpt/pull/28632
 	await new Promise((resolve) => setTimeout(resolve, 1));
 
-	await pollForDocumentChange(
+	await waitForLoad(
 		iframe, () => subject.location = `${URL_COMPLETE}?pipe=header(Referrer-Policy,origin)&1`
 	);
 
-	await pollForDocumentChange(
+	await waitForLoad(
 		iframe, () => send(subject, 'back')
 	);
 	createMeta(subject, 'referrer', 'unsafe-url');
 
 	assert_equals(await readReferer(subject), `${URL_COMPLETE}?pipe=header(Referrer-Policy,origin)`, 'subject policy successfully weakened');
 
-	await pollForDocumentChange(
+	await waitForLoad(
 		iframe, () => subject.history.forward()
 	);
 
@@ -189,7 +190,7 @@ promise_test(async (t) => {
 	const subject = await createIframe(t);
 	const iframe = subject.frameElement;
 
-	await pollForDocumentChange(
+	await waitForLoad(
 		iframe, () => subject.location = 'about:blank'
 	);
 	// TODO(jugglinmike): find the specific conditions which necessitate this
@@ -197,11 +198,11 @@ promise_test(async (t) => {
 	// https://github.com/web-platform-tests/wpt/pull/28632
 	await new Promise((resolve) => setTimeout(resolve, 1));
 
-	await pollForDocumentChange(
+	await waitForLoad(
 		iframe, () => subject.location = `${URL_COMPLETE}?pipe=header(Referrer-Policy,origin)`
 	);
 
-	await pollForDocumentChange(
+	await waitForLoad(
 		iframe, () => send(subject, 'back')
 	);
 
@@ -214,7 +215,7 @@ promise_test(async (t) => {
 	const subject = await createIframe(t);
 	const iframe = subject.frameElement;
 
-	await pollForDocumentChange(
+	await waitForLoad(
 		iframe, () => subject.location = 'about:blank'
 	);
 	// TODO(jugglinmike): find the specific conditions which necessitate this
@@ -222,18 +223,18 @@ promise_test(async (t) => {
 	// https://github.com/web-platform-tests/wpt/pull/28632
 	await new Promise((resolve) => setTimeout(resolve, 1));
 
-	await pollForDocumentChange(
+	await waitForLoad(
 		iframe, () => subject.location = URL_COMPLETE
 	);
 
-	await pollForDocumentChange(
+	await waitForLoad(
 		iframe, () => send(subject, 'back')
 	);
 	createMeta(subject, 'referrer', 'origin');
 
 	assert_equals(await readReferer(subject), '', 'the effect on the policy of subject is not observable');
 
-	await pollForDocumentChange(
+	await waitForLoad(
 		iframe, () => subject.history.forward()
 	);
 
@@ -244,7 +245,7 @@ promise_test(async (t) => {
 	const subject = await createIframe(t);
 	const iframe = subject.frameElement;
 
-	await pollForDocumentChange(
+	await waitForLoad(
 		iframe, () => subject.location = 'about:blank'
 	);
 	// TODO(jugglinmike): find the specific conditions which necessitate this
@@ -252,18 +253,18 @@ promise_test(async (t) => {
 	// https://github.com/web-platform-tests/wpt/pull/28632
 	await new Promise((resolve) => setTimeout(resolve, 1));
 
-	await pollForDocumentChange(
+	await waitForLoad(
 		iframe, () => subject.location = `${URL_COMPLETE}?pipe=header(Referrer-Policy,origin)`
 	);
 
-	await pollForDocumentChange(
+	await waitForLoad(
 		iframe, () => send(subject, 'back')
 	);
 	createMeta(subject, 'referrer', 'unsafe-url');
 
 	assert_equals(await readReferer(subject), '', 'the effect on the policy of subject is not observable');
 
-	await pollForDocumentChange(
+	await waitForLoad(
 		iframe, () => subject.history.forward()
 	);
 
