@@ -14,19 +14,6 @@
 const URL_COMPLETE = new URL('/tmp/resources/test-frame.html', location).href;
 const URL_DOMAIN = location.origin + '/';
 
-const assert_policy = (referer, expectedPolicy, message) => {
-	let actualPolicy;
-	if (referer === URL_DOMAIN) {
-		actualPolicy = 'origin';
-	} else if (referer === '') {
-		actualPolicy = null;
-	} else {
-		actualPolicy = 'unsafe-url';
-	}
-
-	assert_equals(actualPolicy, expectedPolicy, message);
-};
-
 const skip = (name) => {
 	const li = document.createElement('li');
 	li.appendChild(document.createTextNode(name));
@@ -129,7 +116,7 @@ promise_test(async (t) => {
 		iframe, () => subject.location = '/tmp/resources/test-frame.html'
 	);
 
-	assert_policy(await readReferer(subject), 'unsafe-url', 'does not adopt');
+	assert_equals(await readPolicy(subject), 'unsafe-url', 'does not adopt');
 }, 'non-local - navigation - adoption');
 
 skip('non-local - navigation - change to creator');
@@ -149,13 +136,13 @@ promise_test(async (t) => {
 
 	createMeta(subject, 'referrer', 'origin');
 
-	assert_policy(await readReferer(subject), 'origin', 'subject policy successfully strengthened');
+	assert_equals(await readPolicy(subject), 'origin', 'subject policy successfully strengthened');
 
 	await waitForLoad(
 		iframe, () => subject.history.back()
 	);
 
-	assert_policy(await readReferer(subject), 'unsafe-url', 'creator not affected');
+	assert_equals(await readPolicy(subject), 'unsafe-url', 'creator not affected');
 }, 'non-local - navigation - strengthening');
 
 promise_test(async (t) => {
@@ -171,13 +158,13 @@ promise_test(async (t) => {
 		iframe, () => subject.location = URL_COMPLETE + '?1'
 	);
 
-	assert_policy(await readReferer(subject), 'unsafe-url', 'subject policy successfully weakened');
+	assert_equals(await readPolicy(subject), 'unsafe-url', 'subject policy successfully weakened');
 
 	await waitForLoad(
 		iframe, () => subject.history.back()
 	);
 
-	assert_policy(await readReferer(subject), 'origin', 'creator not affected');
+	assert_equals(await readPolicy(subject), 'origin', 'creator not affected');
 }, 'non-local - navigation - weakening');
 
 promise_test(async (t) => {
@@ -195,7 +182,7 @@ promise_test(async (t) => {
 	await waitForLoad(
 		iframe, () => send(subject, 'back')
 	);
-	assert_policy(await readReferer(subject), 'unsafe-url', 'does not adopt');
+	assert_equals(await readPolicy(subject), 'unsafe-url', 'does not adopt');
 }, 'non-local - history - adoption');
 
 skip('non-local - history - change to creator');
@@ -218,13 +205,13 @@ promise_test(async (t) => {
 	);
 	createMeta(subject, 'referrer', 'origin');
 
-	assert_policy(await readReferer(subject), 'origin', 'subject policy successfully strengthened');
+	assert_equals(await readPolicy(subject), 'origin', 'subject policy successfully strengthened');
 
 	await waitForLoad(
 		iframe, () => subject.history.forward()
 	);
 
-	assert_policy(await readReferer(subject), 'unsafe-url', 'creator not affected');
+	assert_equals(await readPolicy(subject), 'unsafe-url', 'creator not affected');
 }, 'non-local - history - strengthening');
 
 promise_test(async (t) => {
@@ -245,13 +232,13 @@ promise_test(async (t) => {
 	);
 	createMeta(subject, 'referrer', 'unsafe-url');
 
-	assert_policy(await readReferer(subject), 'unsafe-url', 'subject policy successfully weakened');
+	assert_equals(await readPolicy(subject), 'unsafe-url', 'subject policy successfully weakened');
 
 	await waitForLoad(
 		iframe, () => subject.history.forward()
 	);
 
-	assert_policy(await readReferer(subject), 'origin', 'creator not affected');
+	assert_equals(await readPolicy(subject), 'origin', 'creator not affected');
 }, 'non-local - history - weakening');
 
 skip('local - about:blank - navigation - adoption');
@@ -282,7 +269,7 @@ promise_test(async (t) => {
 		iframe, () => send(subject, 'back')
 	);
 
-	assert_policy(await readReferer(subject), null);
+	assert_equals(await readPolicy(subject), null);
 }, 'local - about:blank - history - adoption');
 
 skip('local - about:blank - history - change to creator');
@@ -308,13 +295,13 @@ promise_test(async (t) => {
 	);
 	createMeta(subject, 'referrer', 'origin');
 
-	assert_policy(await readReferer(subject), null, 'the effect on the policy of subject is not observable');
+	assert_equals(await readPolicy(subject), null, 'the effect on the policy of subject is not observable');
 
 	await waitForLoad(
 		iframe, () => subject.history.forward()
 	);
 
-	assert_policy(await readReferer(subject), 'unsafe-url', 'creator not affected');
+	assert_equals(await readPolicy(subject), 'unsafe-url', 'creator not affected');
 }, 'local - about:blank - history - strengthening');
 
 promise_test(async (t) => {
@@ -338,13 +325,13 @@ promise_test(async (t) => {
 	);
 	createMeta(subject, 'referrer', 'unsafe-url');
 
-	assert_policy(await readReferer(subject), null, 'the effect on the policy of subject is not observable');
+	assert_equals(await readPolicy(subject), null, 'the effect on the policy of subject is not observable');
 
 	await waitForLoad(
 		iframe, () => subject.history.forward()
 	);
 
-	assert_policy(await readReferer(subject), 'origin', 'creator not affected');
+	assert_equals(await readPolicy(subject), 'origin', 'creator not affected');
 }, 'local - about:blank - history - weakening');
 
 // This test is not relevant to behavior of "policy container" because
@@ -356,7 +343,7 @@ promise_test(async (t) => {
 
 	creator.document.body.appendChild(subject);
 
-	assert_policy(await readReferer(subject.contentWindow), null);
+	assert_equals(await readPolicy(subject.contentWindow), null);
 }, 'local - about:blank - nested - adoption');
 
 // This test is not relevant to behavior of "policy container" because
@@ -369,8 +356,8 @@ promise_test(async (t) => {
 	creator.document.body.appendChild(subject);
 	createMeta(creator, 'referrer', 'origin');
 
-	assert_policy(await readReferer(subject.contentWindow), null);
-	assert_policy(await readReferer(creator), 'origin');
+	assert_equals(await readPolicy(subject.contentWindow), null);
+	assert_equals(await readPolicy(creator), 'origin');
 }, 'local - about:blank - nested - change to creator');
 
 promise_test(async (t) => {
@@ -380,8 +367,8 @@ promise_test(async (t) => {
 	creator.document.body.appendChild(subject);
 	createMeta(subject.contentWindow, 'referrer', 'origin');
 
-	assert_policy(await readReferer(subject.contentWindow), null);
-	assert_policy(await readReferer(creator), 'unsafe-url');
+	assert_equals(await readPolicy(subject.contentWindow), null);
+	assert_equals(await readPolicy(creator), 'unsafe-url');
 }, 'local - about:blank - nested - strengthening');
 
 promise_test(async (t) => {
@@ -391,8 +378,8 @@ promise_test(async (t) => {
 	creator.document.body.appendChild(subject);
 	createMeta(subject.contentWindow, 'referrer', 'unsafe-url');
 
-	assert_policy(await readReferer(subject.contentWindow), null);
-	assert_policy(await readReferer(creator), 'origin');
+	assert_equals(await readPolicy(subject.contentWindow), null);
+	assert_equals(await readPolicy(creator), 'origin');
 }, 'local - about:blank - nested - weakening');
 
 // This test is not relevant to behavior of "policy container" because
@@ -404,7 +391,7 @@ promise_test(async (t) => {
 	const subject = creator.open('about:blank');
 	t.add_cleanup(() => subject.close());
 
-	assert_policy(await readReferer(subject), null);
+	assert_equals(await readPolicy(subject), null);
 }, 'local - about:blank - auxiliary - adoption');
 
 // This test is not relevant to behavior of "policy container" because
@@ -417,8 +404,8 @@ promise_test(async (t) => {
 
 	createMeta(creator, 'referrer', 'origin');
 
-	assert_policy(await readReferer(subject), null);
-	assert_policy(await readReferer(creator), 'origin');
+	assert_equals(await readPolicy(subject), null);
+	assert_equals(await readPolicy(creator), 'origin');
 }, 'local - about:blank - auxiliary - change to creator');
 
 promise_test(async (t) => {
@@ -428,8 +415,8 @@ promise_test(async (t) => {
 
 	createMeta(subject, 'referrer', 'origin');
 
-	assert_policy(await readReferer(subject), null);
-	assert_policy(await readReferer(creator), 'unsafe-url');
+	assert_equals(await readPolicy(subject), null);
+	assert_equals(await readPolicy(creator), 'unsafe-url');
 }, 'local - about:blank - auxiliary - strengthening');
 
 promise_test(async (t) => {
@@ -439,8 +426,8 @@ promise_test(async (t) => {
 
 	createMeta(subject, 'referrer', 'unsafe-url');
 
-	assert_policy(await readReferer(subject), null);
-	assert_policy(await readReferer(creator), 'origin');
+	assert_equals(await readPolicy(subject), null);
+	assert_equals(await readPolicy(creator), 'origin');
 }, 'local - about:blank - auxiliary - weakening');
 
 // This test is not relevant to behavior of "policy container" because
@@ -451,7 +438,7 @@ promise_test(async (t) => {
 
 	await navigate(subject, dataUrl());
 
-	assert_policy(await send(subject, 'readReferer'), null);
+	assert_equals(await send(subject, 'readPolicy'), null);
 }, 'local - data: - navigation - adoption');
 
 skip('local - data: - navigation - change to creator');
@@ -461,11 +448,11 @@ promise_test(async (t) => {
 
 	await navigate(subject, dataUrl());
 	await send(subject, 'createMeta', ['referrer', 'origin']);
-	assert_policy(await send(subject, 'readReferer'), null);
+	assert_equals(await send(subject, 'readPolicy'), null);
 
 	await send(subject, 'back');
 
-	assert_policy(await readReferer(subject), 'unsafe-url');
+	assert_equals(await readPolicy(subject), 'unsafe-url');
 }, 'local - data: - navigation - strengthening');
 
 promise_test(async (t) => {
@@ -473,10 +460,10 @@ promise_test(async (t) => {
 
 	await navigate(subject, dataUrl());
 	await send(subject, 'createMeta', ['referrer', 'unsafe-url']);
-	assert_policy(await send(subject, 'readReferer'), null);
+	assert_equals(await send(subject, 'readPolicy'), null);
 	await send(subject, 'back');
 
-	assert_policy(await readReferer(subject), 'origin');
+	assert_equals(await readPolicy(subject), 'origin');
 }, 'local - data: - navigation - weakening');
 
 // This test is not relevant to behavior of "policy container" because
@@ -487,7 +474,7 @@ promise_test(async (t) => {
 
 	await navigate(subject, blobUrl(t));
 
-	assert_policy(await send(subject, 'readReferer'), null);
+	assert_equals(await send(subject, 'readPolicy'), null);
 }, 'local - blob: - navigation - adoption');
 
 // This test is not relevant to behavior of "policy container" because
@@ -500,7 +487,7 @@ promise_test(async (t) => {
 
 	await navigate(subject, url);
 
-	assert_policy(await send(subject, 'readReferer'), null);
+	assert_equals(await send(subject, 'readPolicy'), null);
 }, 'local - blob: - navigation - change to creator');
 
 promise_test(async (t) => {
@@ -508,10 +495,10 @@ promise_test(async (t) => {
 
 	await navigate(subject, blobUrl(t));
 	await send(subject, 'createMeta', ['referrer', 'origin']);
-	assert_policy(await send(subject, 'readReferer'), null);
+	assert_equals(await send(subject, 'readPolicy'), null);
 	await send(subject, 'back');
 
-	assert_policy(await readReferer(subject), 'unsafe-url');
+	assert_equals(await readPolicy(subject), 'unsafe-url');
 }, 'local - blob: - navigation - stengthening');
 
 promise_test(async (t) => {
@@ -519,10 +506,10 @@ promise_test(async (t) => {
 
 	await navigate(subject, blobUrl(t));
 	await send(subject, 'createMeta', ['referrer', 'unsafe-url']);
-	assert_policy(await send(subject, 'readReferer'), null);
+	assert_equals(await send(subject, 'readPolicy'), null);
 	await send(subject, 'back');
 
-	assert_policy(await readReferer(subject), 'origin');
+	assert_equals(await readPolicy(subject), 'origin');
 }, 'local - blob: - navigation - weakening');
 </script>
 	</body>
