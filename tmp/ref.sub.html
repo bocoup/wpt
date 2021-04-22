@@ -116,7 +116,7 @@ promise_test(async (t) => {
 		iframe, () => subject.location = '/tmp/resources/test-frame.html'
 	);
 
-	assert_equals(await send(subject, 'readReferer'), URL_COMPLETE, 'does not adopt');
+	assert_equals(await readReferer(subject), URL_COMPLETE, 'does not adopt');
 }, 'non-local - navigation - adoption');
 
 skip('non-local - navigation - change to creator');
@@ -182,7 +182,7 @@ promise_test(async (t) => {
 	await waitForLoad(
 		iframe, () => send(subject, 'back')
 	);
-	assert_equals(await send(subject, 'readReferer'), URL_COMPLETE, 'does not adopt');
+	assert_equals(await readReferer(subject), URL_COMPLETE, 'does not adopt');
 }, 'non-local - history - adoption');
 
 skip('non-local - history - change to creator');
