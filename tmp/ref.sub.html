@@ -81,9 +81,13 @@ const objectUrl = (t) => {
 	return url;
 };
 
-async function navigate(win, url) {
+function navigate(win, url) {
 	return new Promise((resolve) => {
 		addEventListener('message', function handler(event) {
+			if (event.data !== 'child running') {
+				return;
+			}
+
 			removeEventListener('message', handler);
 			resolve();
 		});
