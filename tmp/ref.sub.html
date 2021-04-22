@@ -66,7 +66,7 @@ const dataUrl = () => `data:text/html,<meta charset="utf-8">
 	<script src="${URL_DOMAIN}tmp/resources/test-frame.js"><${''}/script>
 	${Math.random()}`;
 
-const objectUrl = (t) => {
+const blobUrl = (t) => {
 	const encoder = new TextEncoder();
 	const content = `<meta charset="utf-8">
 	<script src="${URL_DOMAIN}tmp/resources/utils.sub.js"><${''}/script>
@@ -413,7 +413,7 @@ promise_test(async (t) => {
 promise_test(async (t) => {
 	const subject = await createIframe(t, 'origin');
 
-	await navigate(subject, objectUrl(t));
+	await navigate(subject, blobUrl(t));
 
 	assert_equals(await send(subject, 'readReferer'), '');
 }, 'local - blob: - navigation - adoption');
@@ -423,7 +423,7 @@ promise_test(async (t) => {
 // local scheme) cannot be observed.
 promise_test(async (t) => {
 	const subject = await createIframe(t, 'origin');
-	const url = objectUrl(t);
+	const url = blobUrl(t);
 	await send(subject, 'createMeta', ['referrer', 'unsafe-url']);
 
 	await navigate(subject, url);
@@ -434,7 +434,7 @@ promise_test(async (t) => {
 promise_test(async (t) => {
 	const subject = await createIframe(t);
 
-	await navigate(subject, objectUrl(t));
+	await navigate(subject, blobUrl(t));
 	await send(subject, 'createMeta', ['referrer', 'origin']);
 	assert_equals(await send(subject, 'readReferer'), '');
 	await send(subject, 'back');
@@ -445,7 +445,7 @@ promise_test(async (t) => {
 promise_test(async (t) => {
 	const subject = await createIframe(t, 'origin');
 
-	await navigate(subject, objectUrl(t));
+	await navigate(subject, blobUrl(t));
 	await send(subject, 'createMeta', ['referrer', 'unsafe-url']);
 	assert_equals(await send(subject, 'readReferer'), '');
 	await send(subject, 'back');
