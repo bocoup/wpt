@@ -109,6 +109,65 @@ function waitForLoad(frame, triggerLoad) {
 }
 
 promise_test(async (t) => {
+	const subject = await createIframe(t, 'origin');
+	const iframe = subject.frameElement;
+
+	await waitForLoad(
+		iframe, () => subject.location = '/tmp/resources/test-frame.html'
+	);
+
+	assert_equals(await send(subject, 'readReferer'), URL_COMPLETE, 'does not adopt');
+}, 'non-local - navigation - adoption');
+
+skip('non-local - navigation - change to creator');
+
+promise_test(async (t) => {
+	const subject = await createIframe(t);
+	const iframe = subject.frameElement;
+
+	// TODO(jugglinmike): find the specific conditions which necessitate this
+	// delay
+	// https://github.com/web-platform-tests/wpt/pull/28632
+	await new Promise((resolve) => setTimeout(resolve, 1));
+
+	await waitForLoad(
+		iframe, () => subject.location = URL_COMPLETE + '?1'
+	);
+
+	createMeta(subject, 'referrer', 'origin');
+
+	assert_equals(await readReferer(subject), URL_DOMAIN, 'subject policy successfully strengthened');
+
+	await waitForLoad(
+		iframe, () => subject.history.back()
+	);
+
+	assert_equals(await readReferer(subject), URL_COMPLETE, 'creator not affected');
+}, 'non-local - navigation - strengthening');
+
+promise_test(async (t) => {
+	const subject = await createIframe(t, 'origin');
+	const iframe = subject.frameElement;
+
+	// TODO(jugglinmike): find the specific conditions which necessitate this
+	// delay
+	// https://github.com/web-platform-tests/wpt/pull/28632
+	await new Promise((resolve) => setTimeout(resolve, 1));
+
+	await waitForLoad(
+		iframe, () => subject.location = URL_COMPLETE + '?1'
+	);
+
+	assert_equals(await readReferer(subject), `${URL_COMPLETE}?1`, 'subject policy successfully weakened');
+
+	await waitForLoad(
+		iframe, () => subject.history.back()
+	);
+
+	assert_equals(await readReferer(subject), URL_DOMAIN, 'creator not affected');
+}, 'non-local - navigation - weakening');
+
+promise_test(async (t) => {
 	const subject = await createIframe(t);
 	const iframe = subject.frameElement;
 
