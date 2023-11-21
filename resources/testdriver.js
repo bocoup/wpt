@@ -968,6 +968,13 @@
          */
         get_virtual_sensor_information: function(sensor_type, context=null) {
             return window.test_driver_internal.get_virtual_sensor_information(sensor_type, context);
+        },
+
+        /**
+         * @returns {Promise}
+         */
+        get_accessibility_tree: function(context=null) {
+            return window.test_driver_internal.get_accessibility_tree(context);
         }
     };
 
@@ -1140,6 +1147,10 @@
 
         async get_virtual_sensor_information(sensor_type, context=null) {
             throw new Error("get_virtual_sensor_information() is not implemented by testdriver-vendor.js");
+        },
+
+        async get_accessibility_tree(context=null) {
+            throw new Error("get_accessibility_tree() is not implemented by testdriver-vendor.js");
         }
     };
 })();
