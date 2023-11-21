@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>TestDriver get_accessibility_tree method</title>
+    <script src="/resources/testharness.js"></script>
+    <script src="/resources/testharnessreport.js"></script>
+    <script src="/resources/testdriver.js"></script>
+    <script src="/resources/testdriver-vendor.js"></script>
+    <style>
+    </style>
+</head>
+<body>
+
+<ol>
+    <li>a</li>
+    <li>b</li>
+</ol>
+
+<script>
+promise_test(async t => {
+    console.log(await test_driver
+    .get_accessibility_tree());
+    assert_tree(t, await test_driver
+    .get_accessibility_tree(), {});
+});
+
+function assert_tree(t, actual, expect) {
+    if (typeof actual === 'object') {
+        t.assert_equal(typeof expect, 'object');
+        for (const key in actual) {
+            t.assert_true(Object.hasOwn(expect));
+            assert_tree(t, actual[key], expect[key]);
+        }
+    } else {
+        t.assert_equal(actual, expect);
+    }
+}
+</script>
+
+</body>
+</html>
