@@ -477,7 +477,7 @@ function assert_tree(actual, expect) {
         assert_equals(typeof actual, "object");
         for (const key in expect) {
             assert_own_property(actual, key);
-            assert_tree(actual[key], expect[key], [...keyPath, key]);
+            assert_tree(actual[key], expect[key]);
         }
     } else {
         assert_equals(actual, expect);
