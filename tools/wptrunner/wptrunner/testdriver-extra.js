@@ -318,7 +318,6 @@
     };
 
     window.test_driver_internal.get_accessibility_tree = function(context=null) {
-        // assert_true(true, 'get_accessibility_tree');
         return create_action("get_accessibility_tree", {context});
     };
 })();
