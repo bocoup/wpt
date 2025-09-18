@@ -71,3 +71,10 @@ features:
   - attr-in-max.html
   - calc-in-max.html
   - clamp-*
+- name: viewport-units
+  files:
+  - vh-*
+  - viewport-units-*
+  # Tests for: vi, svi, lvi, dvi, vb, svb, lvb, dvb
+  # TODO: should the feature description include these additional units?
+  - "!viewport-units-writing-mode-*"
