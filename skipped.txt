@@ -1,0 +1,6 @@
+serializable-errors,bundled with other tests (see files that depend on html/webappapis/structured-clone/structured-clone-battery-of-tests.js)
+ext-texture-compression-rgtc,WebGL feature
+ext-texture-norm16,WebGL feature
+webgl-compressed-texture-pvrtc,WebGL feature
+webgl-multi-draw,WebGL feature
+webgpu,no tests
