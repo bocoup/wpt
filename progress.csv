@@ -127,7 +127,7 @@ dedicated-workers,Dedicated workers,
 del,<del>,
 description-list,Description list,
 device-queries,Device media queries,
-devicepixelratio,devicePixelRatio,
+devicepixelratio,devicePixelRatio,Not observable in isolation (?)
 dfn,<dfn>,
 digital-goods,Digital goods,
 display,Display,
@@ -574,7 +574,7 @@ webgl-draw-buffers,WEBGL_draw_buffers WebGL extension,
 webgl-lose-context,WEBGL_lose_context WebGL extension,
 webgl-multi-draw,WEBGL_multi_draw WebGL extension,WebGL feature
 webgl-oes-draw-buffers-indexed,OES_draw_buffers_indexed WebGL extension,
-webgl-sab,SharedArrayBuffer in WebGL,
+webgl-sab,SharedArrayBuffer in WebGL,no tests
 webgl2,WebGL2,
 webgl2-color-management,Color management for WebGL2,
 webgl2-desynchronized,Desynchronized WebGL2 canvas,
