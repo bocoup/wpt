@@ -81,7 +81,7 @@ clipboard-svg,SVG clipboard items,
 clipboard-unsanitized-formats,Read unsanitized clipboard data,
 code,<code>,
 color,Color,
-color-adjust,color-adjust,
+color-adjust,color-adjust,no tests in isolation (only alongside the print-color-adjust web feature)
 color-contrast,color-contrast(),
 color-gamut,color-gamut media query,
 colrv0,COLRv0,
@@ -173,8 +173,8 @@ ext-texture-compression-bptc,EXT_texture_compression_bptc WebGL extension,
 ext-texture-compression-rgtc,EXT_texture_compression_rgtc WebGL extension,WebGL feature
 ext-texture-filter-anisotropic,EXT_texture_filter_anisotropic WebGL extension,
 ext-texture-norm16,EXT_texture_norm16 WebGL extension,WebGL feature
-external,window.external,
-fast-seek,fastSeek(),
+external,window.external,no tests (spec'd to do nothing)
+fast-seek,fastSeek(),no tests
 federated-credentials,Federated credentials,
 fetch,Fetch,
 fetchlater,fetchLater,
@@ -214,7 +214,7 @@ font-width,font-width,
 form,<form>,
 form-validity-pseudos,Form validity pseudo-classes,
 gamepad-haptics,Gamepad haptic feedback,
-gamepad-touch,Gamepad touch buttons,
+gamepad-touch,Gamepad touch buttons,no tests (only tested as integrated with WebXR)
 gamepad-vr,Gamepad VR hands and poses,
 gap-decorations,Gap decorations,
 get-computed-style,getComputedStyle(),
