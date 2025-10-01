@@ -9,7 +9,7 @@ alerts,Alerts,
 all,all,
 alt-text-generated-content,Alt text for generated content,
 alternative-style-sheets,Alternative style sheets,
-angle-instanced-arrays,ANGLE_instanced_arrays WebGL extension,
+angle-instanced-arrays,ANGLE_instanced_arrays WebGL extension,WebGL feature
 animations-css,Animations (CSS),
 app-file-handlers,File handlers,
 app-launch-handler,Launch handler,
