@@ -4,7 +4,7 @@ abortable-fetch,Abortable fetch,
 absolute-positioning,Absolute positioning,
 accesskey,accesskey,
 accessor-methods,Accessor methods,Belongs in JavaScript group
-address,<address>,
+address,<address>,no tests
 alerts,Alerts,
 all,all,
 alt-text-generated-content,Alt text for generated content,
