@@ -1,9 +1,9 @@
 a,<a>,
-abbr,<abbr>,
+abbr,<abbr>,no tests
 abortable-fetch,Abortable fetch,
 absolute-positioning,Absolute positioning,
 accesskey,accesskey,
-accessor-methods,Accessor methods,
+accessor-methods,Accessor methods,Belongs in JavaScript group
 address,<address>,
 alerts,Alerts,
 all,all,
