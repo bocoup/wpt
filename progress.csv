@@ -12,7 +12,7 @@ alternative-style-sheets,Alternative style sheets,
 angle-instanced-arrays,ANGLE_instanced_arrays WebGL extension,WebGL feature
 animations-css,Animations (CSS),
 app-file-handlers,File handlers,
-app-launch-handler,Launch handler,
+app-launch-handler,Launch handler,No tests
 app-protocol-handlers,Protocol handlers,
 app-share-targets,Share targets,
 app-shortcuts,Application shortcuts,
