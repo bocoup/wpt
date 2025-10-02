@@ -16,7 +16,7 @@ app-launch-handler,Launch handler,No tests
 app-protocol-handlers,Protocol handlers,
 app-share-targets,Share targets,no tests
 app-shortcuts,Application shortcuts,
-article,<article>,
+article,<article>,minimal semantics not tested in isolation
 aside,<aside>,
 atomics-pause,Atomics.pause(),
 audio,<audio>,
