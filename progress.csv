@@ -14,7 +14,7 @@ animations-css,Animations (CSS),
 app-file-handlers,File handlers,
 app-launch-handler,Launch handler,No tests
 app-protocol-handlers,Protocol handlers,
-app-share-targets,Share targets,
+app-share-targets,Share targets,no tests
 app-shortcuts,Application shortcuts,
 article,<article>,
 aside,<aside>,
