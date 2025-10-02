@@ -17,8 +17,8 @@ app-protocol-handlers,Protocol handlers,
 app-share-targets,Share targets,no tests
 app-shortcuts,Application shortcuts,
 article,<article>,minimal semantics not tested in isolation
-aside,<aside>,
-atomics-pause,Atomics.pause(),
+aside,<aside>,minimal semantics not tested in isolation
+atomics-pause,Atomics.pause(),Belongs in JavaScript group
 audio,<audio>,
 audio-session,Audio session,
 audio-video-tracks,Audio and video tracks,
