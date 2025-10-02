@@ -1,0 +1,3 @@
+features:
+- name: protocol_handlers
+  files: "**"
