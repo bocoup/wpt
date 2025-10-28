@@ -5,3 +5,7 @@ features:
 - name: border-image
   files:
   - border-image-*
+- name: border-radius
+  files:
+  - border-radius-*
+  - webkit-border-radius-valid.html

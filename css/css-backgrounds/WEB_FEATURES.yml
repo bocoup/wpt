@@ -7,3 +7,9 @@ features:
   files:
   - border-image*
   - css3-border-image*
+- name: border-radius
+  files:
+  - border-*-radius-*
+  - border-radius-*
+  - "!border-radius-clip*"
+  - css-border-radius-001.html
