@@ -2,3 +2,8 @@ features:
 - name: text-indent-each-line
   files:
   - text-indent.html
+- name: borders
+  files:
+  - border-color.html
+  - border-style.html
+  - border-width.html

@@ -1,0 +1,6 @@
+features:
+- name: borders
+  files:
+  - border-conflict-*
+  - border-style-*
+  - column-border-*
