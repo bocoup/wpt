@@ -7,3 +7,6 @@ features:
   - border-color.html
   - border-style.html
   - border-width.html
+- name: box-shadow
+  files:
+  - box-shadow.html
