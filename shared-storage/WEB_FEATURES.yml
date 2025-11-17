@@ -1,0 +1,5 @@
+features:
+  - name: shared-storage-locks
+    files:
+      - "web-locks*.html"
+
