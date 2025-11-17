@@ -7,3 +7,8 @@ features:
   - WorkerNavigator_userAgentData.http.html
   - WorkerNavigator_userAgentData.https.html
   - WorkerNavigator_userAgentData.https.tentative.html
+- name: shared-workers
+  files:
+  - 'SharedWorker*'
+  - 'data-url-shared*'
+  - 'shared-worker-*'
