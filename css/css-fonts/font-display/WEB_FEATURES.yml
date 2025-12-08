@@ -1,0 +1,6 @@
+features:
+  - name: font-display
+    files:
+      - '*'
+      - '!font-display-failure-fallback.html'
+      - '!font-display-feature-*'
