@@ -8,3 +8,6 @@ features:
 - name: font-kerning
   files:
   - font-kerning.html
+- name: font-stretch
+  files:
+  - font-stretch.html
