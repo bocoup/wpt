@@ -9,3 +9,6 @@ features:
   - name: font-size
     files:
       - 'font-size-*'
+  - name: font-style
+    files:
+      - 'font-style-*'

@@ -14,3 +14,6 @@ features:
 - name: font-stretch
   files:
   - font-stretch-interpolation.html
+- name: font-style
+  files:
+  - font-style-interpolation.html

@@ -65,6 +65,12 @@ features:
   - font-face-stretch-*
   - font-shorthand-serialization-font-stretch.html
   - font-stretch-*
+- name: font-style
+  files:
+  - font-face-style-*
+  - font-style-*
+  - italic-oblique-fallback.html
+  - test-synthetic-italic*
 - name: font-face
   files:
   - crash-font-face-invalid-descriptor.html
@@ -72,6 +78,7 @@ features:
   - first-available-font-*
   - font-face-*
   - '!font-face-stretch-*'
+  - '!font-face-style-*'
   - font-family-src-quoted.html
   - idlharness.html
   - web-font-no-longer-accessible-when-stylesheet-removed.html

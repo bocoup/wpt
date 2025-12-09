@@ -11,3 +11,6 @@ features:
 - name: font-stretch
   files:
   - font-stretch.html
+- name: font-style
+  files:
+  - font-style.html
