@@ -50,3 +50,6 @@ features:
 - name: font-kerning
   files:
   - font-kerning-*
+- name: font-width
+  files:
+  - font-width-*
