@@ -96,3 +96,7 @@ features:
 - name: font-shorthand
   files:
   - font-shorthand-*
+- name: font-weight
+  files:
+  - font-face-weight-*
+  - font-weight-*
