@@ -5,3 +5,6 @@ features:
 - name: font-feature-settings
   files:
   - font-feature-settings.html
+- name: font-kerning
+  files:
+  - font-kerning.html

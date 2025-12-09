@@ -63,3 +63,8 @@ features:
   - font-default-04.html
   - font-feature-settings-*
   - variable-in-feature-crash.html
+- name: font-kerning
+  files:
+  - cjk-kerning.html
+  - font-kerning-*
+  - hiragana-katakana-kerning.html
