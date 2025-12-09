@@ -6,3 +6,6 @@ features:
     files:
       - 'font-0*'
       - 'font-1*'
+  - name: font-size
+    files:
+      - 'font-size-*'

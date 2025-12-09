@@ -9,6 +9,9 @@ features:
   files:
   - font-palette-*
   - font-palette-values-*
+- name: font-size
+  files:
+  - font-size-*
 - name: font-size-adjust
   files:
   - font-size-adjust-*
