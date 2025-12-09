@@ -68,3 +68,6 @@ features:
   - cjk-kerning.html
   - font-kerning-*
   - hiragana-katakana-kerning.html
+- name: font-shorthand
+  files:
+  - font-shorthand-*
