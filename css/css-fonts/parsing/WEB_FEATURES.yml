@@ -65,6 +65,9 @@ features:
 - name: font-variant-position
   files:
   - font-variant-position-*
+- name: font-variation-settings
+  files:
+  - font-variation-settings-*
 - name: font-feature-settings
   files:
   - font-feature-settings-*
