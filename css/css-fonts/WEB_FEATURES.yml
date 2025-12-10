@@ -36,15 +36,35 @@ features:
 - name: font-synthesis-weight
   files:
   - font-synthesis-weight*
+- name: font-variant
+  files:
+  - font-variant-01.html
+  - font-variant-02.html
+  - font-variant-03.html
+  - font-variant-04.html
 - name: font-variant-alternates
   files:
   - alternates-order.html
   - font-variant-alternates-*
+- name: font-variant-caps
+  files:
+  - font-variant-caps-*
+- name: font-variant-east-asian
+  files:
+  - font-variant-east-asian-*
 - name: font-variant-emoji
   files:
   - font-variant-emoji-*
+- name: font-variant-ligatures
+  files:
+  - font-variant-ligatures-*
+  - language-specific-01.html
+- name: font-variant-numeric
+  files:
+  - font-variant-numeric-*
 - name: font-variant-position
   files:
+  - font-synthesis-position-001.html
   - font-variant-position-*
 - name: font-metric-overrides
   files:
@@ -63,7 +83,6 @@ features:
 - name: font-stretch
   files:
   - font-face-stretch-*
-  - font-shorthand-serialization-font-stretch.html
   - font-stretch-*
 - name: font-style
   files:
