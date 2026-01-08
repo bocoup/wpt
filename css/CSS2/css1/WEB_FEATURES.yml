@@ -26,3 +26,6 @@ features:
 - name: font-size
   files:
   - c526-font-sz-*
+- name: vertical-align
+  files:
+  - c544-valgn-*
