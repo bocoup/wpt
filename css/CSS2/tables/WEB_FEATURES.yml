@@ -16,3 +16,7 @@ features:
   - border-conflict-*
   - border-style-*
   - column-border-*
+- name: vertical-align
+  files:
+  - table-valign-*
+  - table-vertical-*
