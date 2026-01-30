@@ -131,6 +131,8 @@ def test_returned_promise_fulfilled_over_callback(session):
 def test_returned_promise_rejected_over_callback(session):
     session.timeouts.script = 1
     response = execute_async_script(session, """
+        let resolve = arguments[0];
+        setTimeout(() => resolve('callback'), 200);
         return Promise.reject(new Error('my error'));
         """)
     assert_error(response, "javascript error")
