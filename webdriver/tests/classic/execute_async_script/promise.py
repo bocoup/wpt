@@ -118,6 +118,36 @@ def test_promise_reject_timeout(session):
     assert_error(response, "script timeout")
 
 
+def test_promise_resolve_timeout_none(session):
+    session.timeouts.script = None
+    response = execute_async_script(session, """
+        let resolve = arguments[0];
+        let promise = new Promise(
+            (resolve) => setTimeout(
+                () => resolve('foobar'),
+                200
+            )
+        );
+        resolve(promise);
+        """)
+    assert_success(response, "foobar")
+
+
+def test_promise_reject_timeout_none(session):
+    session.timeouts.script = None
+    response = execute_async_script(session, """
+        let resolve = arguments[0];
+        let promise = new Promise(
+            (resolve, reject) => setTimeout(
+                () => reject(new Error('my error')),
+                200
+            )
+        );
+        resolve(promise);
+        """)
+    assert_error(response, "javascript error")
+
+
 def test_returned_promise_fulfilled_over_callback(session):
     session.timeouts.script = 1
     response = execute_async_script(session, """
