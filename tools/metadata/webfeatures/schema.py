@@ -92,8 +92,11 @@ class FeatureEntry:
                 for inc in include_patterns:
                     # Check both directions: does the include pattern match a
                     # representative of the exclude, or vice versa.
+                    # If both patterns contain wildcards, conservatively
+                    # assume they could match the same files.
                     if (fnmatchcase(f.processed_filename, inc.processed_filename) or
-                            fnmatchcase(inc.processed_filename, f.processed_filename)):
+                            fnmatchcase(inc.processed_filename, f.processed_filename) or
+                            ("*" in f.processed_filename and "*" in inc.processed_filename)):
                         has_overlapping_include = True
                         break
                 if not has_overlapping_include:

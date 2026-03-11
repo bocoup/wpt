@@ -1216,6 +1216,28 @@ features:
 """,
         []
     ),
+    (
+        ["foobar.txt", "foo.txt", "bar.txt"],
+        b"""\
+features:
+- name: feature1
+  files:
+  - "*foo*"
+  - "!*bar*"
+""",
+        []
+    ),
+    (
+        ["foo-1.txt", "bar-1.txt"],
+        b"""\
+features:
+- name: feature1
+  files:
+  - foo-*
+  - "!bar-*"
+""",
+        []
+    ),
 ])
 def test_valid_web_features_file(monkeypatch, files, yml, expected_errors):
     def listdir(dir):
@@ -1267,7 +1289,7 @@ features:
 - name: feature1
   files:
   - foo-*
-  - "!bar-*"
+  - "!bar.txt"
 """,
         [
             ('INVALID-WEB-FEATURES-FILE',
