@@ -1155,6 +1155,17 @@ features:
 features:
 - name: feature1
   files:
+  - "*"
+  - "!file3.txt"
+""",
+        []
+    ),
+    (
+        ["file1.txt", "file2.txt", "file3.txt"],
+        b"""\
+features:
+- name: feature1
+  files:
   - file*.txt
   - foo.txt
 """,
@@ -1246,6 +1257,21 @@ features:
         [
             ('INVALID-WEB-FEATURES-FILE',
             'The WEB_FEATURES.yml file contains an invalid structure: Feature feature1 contains "**" in a list. It should be `files: "**"`',
+            "css/WEB_FEATURES.yml",
+            None),
+        ]
+    ),
+    (
+        b"""\
+features:
+- name: feature1
+  files:
+  - foo-*
+  - "!bar-*"
+""",
+        [
+            ('INVALID-WEB-FEATURES-FILE',
+            'The WEB_FEATURES.yml file contains an invalid structure: Feature feature1 contains an unnecessary exclusion pattern.',
             "css/WEB_FEATURES.yml",
             None),
         ]

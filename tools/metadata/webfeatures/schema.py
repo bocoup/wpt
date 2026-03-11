@@ -82,6 +82,23 @@ class FeatureEntry:
         # If "**" is used, it should be the only item. Not in a list.
         if isinstance(self.files, list) and SpecialFileEnum.RECURSIVE.value in self.files:
             raise ValueError(f'Feature {self.name} contains "**" in a list. It should be `files: "**"`')
+        # Exclusion patterns are only meaningful if an include pattern could match the same files.
+        if isinstance(self.files, list):
+            include_patterns = [f for f in self.files if f.matching_mode == FileMatchingMode.INCLUDE]
+            for f in self.files:
+                if f.matching_mode != FileMatchingMode.EXCLUDE:
+                    continue
+                has_overlapping_include = False
+                for inc in include_patterns:
+                    # Check both directions: does the include pattern match a
+                    # representative of the exclude, or vice versa.
+                    if (fnmatchcase(f.processed_filename, inc.processed_filename) or
+                            fnmatchcase(inc.processed_filename, f.processed_filename)):
+                        has_overlapping_include = True
+                        break
+                if not has_overlapping_include:
+                    raise ValueError(
+                        f"Feature {self.name} contains an unnecessary exclusion pattern.")
 
 
     def does_feature_apply_recursively(self) -> bool:
