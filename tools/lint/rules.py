@@ -386,6 +386,13 @@ class WebFeaturesFileInNonTestDirectory(Rule):
     """)
 
 
+class OverlappingWebFeaturesFile(Rule):
+    name = "OVERLAPPING-WEB-FEATURES-FILE"
+    description = collapse("""
+        The WEB_FEATURES.yml file maps the same file to multiple features: %s
+    """)
+
+
 EXTENSIONS = {
     "html": [".html", ".htm"],
     "xhtml": [".xht", ".xhtml"],

@@ -1401,6 +1401,149 @@ features:
 
     assert errors == []
 
+@pytest.mark.parametrize("files,yml,expected_errors", [
+    (
+        ["file-1.html", "file-2.html"],
+        b"""\
+features:
+- name: feature-a
+  files: "**"
+- name: feature-b
+  files:
+  - file-1.html
+""",
+        [
+            ("OVERLAPPING-WEB-FEATURES-FILE",
+             "The WEB_FEATURES.yml file maps the same file to multiple features: "
+             "Feature 'feature-b' maps files that are already covered "
+             "by 'feature-a' which uses '**'",
+             "css/WEB_FEATURES.yml",
+             None),
+        ]
+    ),
+    (
+        ["file-1.html", "file-2.html"],
+        b"""\
+features:
+- name: feature-a
+  files:
+  - file-1.html
+- name: feature-b
+  files: "**"
+""",
+        [
+            ("OVERLAPPING-WEB-FEATURES-FILE",
+             "The WEB_FEATURES.yml file maps the same file to multiple features: "
+             "Feature 'feature-b' uses '**' which covers all files "
+             "already mapped by 'feature-a'",
+             "css/WEB_FEATURES.yml",
+             None),
+        ]
+    ),
+    (
+        ["file-1.html", "file-2.html"],
+        b"""\
+features:
+- name: feature-a
+  files: "**"
+- name: feature-b
+  files:
+  - file-*
+""",
+        [
+            ("OVERLAPPING-WEB-FEATURES-FILE",
+             "The WEB_FEATURES.yml file maps the same file to multiple features: "
+             "Feature 'feature-b' maps files that are already covered "
+             "by 'feature-a' which uses '**'",
+             "css/WEB_FEATURES.yml",
+             None),
+        ]
+    ),
+    (
+        ["file-1.html", "file-2.html"],
+        b"""\
+features:
+- name: feature-a
+  files:
+  - file-1.html
+- name: feature-b
+  files:
+  - file-1.html
+""",
+        [
+            ("OVERLAPPING-WEB-FEATURES-FILE",
+             "The WEB_FEATURES.yml file maps the same file to multiple features: "
+             "Pattern 'file-1.html' is mapped to both "
+             "'feature-a' and 'feature-b'",
+             "css/WEB_FEATURES.yml",
+             None),
+        ]
+    ),
+    (
+        ["file-1.html", "file-2.html"],
+        b"""\
+features:
+- name: feature-a
+  files:
+  - file-*
+- name: feature-b
+  files:
+  - file-*
+""",
+        [
+            ("OVERLAPPING-WEB-FEATURES-FILE",
+             "The WEB_FEATURES.yml file maps the same file to multiple features: "
+             "Pattern 'file-*' is mapped to both "
+             "'feature-a' and 'feature-b'",
+             "css/WEB_FEATURES.yml",
+             None),
+        ]
+    ),
+    (
+        ["file-1.html", "file-2.html", "bar-1.html"],
+        b"""\
+features:
+- name: feature-a
+  files:
+  - file-*
+- name: feature-b
+  files:
+  - bar-*
+""",
+        []
+    ),
+    (
+        ["file-1.html", "file-2.html"],
+        b"""\
+features:
+- name: feature-a
+  files:
+  - file-1.html
+- name: feature-b
+  files:
+  - file-2.html
+""",
+        []
+    ),
+])
+def test_overlapping_web_features_file(monkeypatch, files, yml, expected_errors):
+    def listdir(dir):
+        if dir.endswith("css"):
+            return files
+
+    def is_file(file):
+        if os.path.basename(file) in files:
+            return True
+        return False
+
+    monkeypatch.setattr(os.path, "isfile", is_file)
+    monkeypatch.setattr(os, "listdir", listdir)
+    errors = check_file_contents("", "css/WEB_FEATURES.yml", io.BytesIO(yml))
+    check_errors(errors)
+
+    assert errors == expected_errors
+
+
 def test_css_missing_file_manual():
     errors = check_file_contents("", "css/foo/bar-manual.html", io.BytesIO(b""))
     check_errors(errors)
