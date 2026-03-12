@@ -1236,7 +1236,14 @@ features:
   - foo-*
   - "!bar-*"
 """,
-        []
+        [
+            ("UNNECESSARY-EXCLUSION-IN-WEB-FEATURES-FILE",
+             "The WEB_FEATURES.yml file contains an exclusion pattern "
+             "that does not exclude any included files: "
+             "'!bar-*' in feature 'feature1'",
+             "css/WEB_FEATURES.yml",
+             None),
+        ]
     ),
     (
         ["test.html", "META.yml"],
@@ -1343,21 +1350,6 @@ features:
             None),
         ]
     ),
-    (
-        b"""\
-features:
-- name: feature1
-  files:
-  - foo-*
-  - "!bar.txt"
-""",
-        [
-            ('INVALID-WEB-FEATURES-FILE',
-            'The WEB_FEATURES.yml file contains an invalid structure: Feature feature1 contains an unnecessary exclusion pattern.',
-            "css/WEB_FEATURES.yml",
-            None),
-        ]
-    ),
 ])
 def test_invalid_web_features_file(contents, expected_errors):
     # Check when the value is named correctly. It should find the error.
@@ -1415,8 +1407,8 @@ features:
         [
             ("OVERLAPPING-WEB-FEATURES-FILE",
              "The WEB_FEATURES.yml file maps the same file to multiple features: "
-             "Feature 'feature-b' maps files that are already covered "
-             "by 'feature-a' which uses '**'",
+             "'file-1.html' is mapped to both "
+             "'feature-a' and 'feature-b'",
              "css/WEB_FEATURES.yml",
              None),
         ]
@@ -1434,8 +1426,8 @@ features:
         [
             ("OVERLAPPING-WEB-FEATURES-FILE",
              "The WEB_FEATURES.yml file maps the same file to multiple features: "
-             "Feature 'feature-b' uses '**' which covers all files "
-             "already mapped by 'feature-a'",
+             "'file-1.html' is mapped to both "
+             "'feature-a' and 'feature-b'",
              "css/WEB_FEATURES.yml",
              None),
         ]
@@ -1453,8 +1445,14 @@ features:
         [
             ("OVERLAPPING-WEB-FEATURES-FILE",
              "The WEB_FEATURES.yml file maps the same file to multiple features: "
-             "Feature 'feature-b' maps files that are already covered "
-             "by 'feature-a' which uses '**'",
+             "'file-1.html' is mapped to both "
+             "'feature-a' and 'feature-b'",
+             "css/WEB_FEATURES.yml",
+             None),
+            ("OVERLAPPING-WEB-FEATURES-FILE",
+             "The WEB_FEATURES.yml file maps the same file to multiple features: "
+             "'file-2.html' is mapped to both "
+             "'feature-a' and 'feature-b'",
              "css/WEB_FEATURES.yml",
              None),
         ]
@@ -1473,7 +1471,7 @@ features:
         [
             ("OVERLAPPING-WEB-FEATURES-FILE",
              "The WEB_FEATURES.yml file maps the same file to multiple features: "
-             "Pattern 'file-1.html' is mapped to both "
+             "'file-1.html' is mapped to both "
              "'feature-a' and 'feature-b'",
              "css/WEB_FEATURES.yml",
              None),
@@ -1493,7 +1491,13 @@ features:
         [
             ("OVERLAPPING-WEB-FEATURES-FILE",
              "The WEB_FEATURES.yml file maps the same file to multiple features: "
-             "Pattern 'file-*' is mapped to both "
+             "'file-1.html' is mapped to both "
+             "'feature-a' and 'feature-b'",
+             "css/WEB_FEATURES.yml",
+             None),
+            ("OVERLAPPING-WEB-FEATURES-FILE",
+             "The WEB_FEATURES.yml file maps the same file to multiple features: "
+             "'file-2.html' is mapped to both "
              "'feature-a' and 'feature-b'",
              "css/WEB_FEATURES.yml",
              None),
@@ -1519,6 +1523,21 @@ features:
 - name: feature-a
   files:
   - file-1.html
+- name: feature-b
+  files:
+  - file-2.html
+""",
+        []
+    ),
+    # Overlapping wildcards with exclusions that prevent actual overlap
+    (
+        ["file-1.html", "file-2.html"],
+        b"""\
+features:
+- name: feature-a
+  files:
+  - file-*
+  - "!file-2.html"
 - name: feature-b
   files:
   - file-2.html

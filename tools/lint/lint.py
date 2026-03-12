@@ -796,33 +796,35 @@ def check_web_features_file(repo_root: Text, path: Text, f: IO[bytes]) -> List[r
     base_dir = os.path.join(repo_root, os.path.dirname(path))
     files_in_directory = [
         f for f in os.listdir(base_dir) if os.path.isfile(os.path.join(base_dir, f))]
-    recursive_feature_name: Optional[str] = None
-    seen_patterns: Dict[str, str] = {}
+    # Track which files are claimed by which feature.
+    file_to_feature: Dict[str, str] = {}
     for feature in web_features_file.features:
         if isinstance(feature.files, list):
+            # Resolve inclusion patterns to files, then subtract exclusions.
+            included: Set[str] = set()
             for file in feature.files:
-                if not file.match_files(files_in_directory):
-                    errors.append(rules.MissingTestInWebFeaturesFile.error(path, (file)))
-            if recursive_feature_name:
-                errors.append(rules.OverlappingWebFeaturesFile.error(path, (
-                    f"Feature '{feature.name}' maps files that are already covered "
-                    f"by '{recursive_feature_name}' which uses '**'",)))
-            for file in feature.files:
-                if file.matching_mode == FileMatchingMode.EXCLUDE:
-                    continue
-                pattern = file.processed_filename
-                if pattern in seen_patterns:
-                    errors.append(rules.OverlappingWebFeaturesFile.error(path, (
-                        f"Pattern '{file}' is mapped to both "
-                        f"'{seen_patterns[pattern]}' and '{feature.name}'",)))
-                seen_patterns[pattern] = feature.name
+                matched = file.match_files(files_in_directory)
+                if file.matching_mode == FileMatchingMode.INCLUDE:
+                    if not matched:
+                        errors.append(rules.MissingTestInWebFeaturesFile.error(path, (file)))
+                    included.update(matched)
+                elif file.matching_mode == FileMatchingMode.EXCLUDE:
+                    excluded = set(matched) & included
+                    if not excluded:
+                        errors.append(rules.UnnecessaryExclusionInWebFeaturesFile.error(path, (
+                            f"'{file}' in feature '{feature.name}'",)))
+                    included -= excluded
         elif feature.does_feature_apply_recursively():
-            if seen_patterns:
-                first_feature = next(iter(seen_patterns.values()))
+            included = set(files_in_directory)
+        else:
+            continue
+        for filename in sorted(included):
+            if filename in file_to_feature:
                 errors.append(rules.OverlappingWebFeaturesFile.error(path, (
-                    f"Feature '{feature.name}' uses '**' which covers all files "
-                    f"already mapped by '{first_feature}'",)))
-            recursive_feature_name = feature.name
+                    f"'{filename}' is mapped to both "
+                    f"'{file_to_feature[filename]}' and '{feature.name}'",)))
+            else:
+                file_to_feature[filename] = feature.name
 
     return errors
 
