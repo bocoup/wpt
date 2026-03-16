@@ -169,9 +169,6 @@ def test_unique_case_insensitive_paths(paths, errors):
     os.path.join("css", "support", "WEB_FEATURES.yml"),
     os.path.join("html", "tools", "WEB_FEATURES.yml"),
     os.path.join("common", "WEB_FEATURES.yml"),
-    os.path.join("css21", "archive", "WEB_FEATURES.yml"),
-    os.path.join("css", "CSS2", "archive", "WEB_FEATURES.yml"),
-    os.path.join("css", "common", "WEB_FEATURES.yml"),
     os.path.join("html", "semantics", "resources", "sub", "WEB_FEATURES.yml"),
 ])
 def test_web_features_file_in_non_test_directory(path):

@@ -758,22 +758,14 @@ def check_meta_file(repo_root: Text, path: Text, f: IO[bytes]) -> List[rules.Err
 
 # Non-test directory indicators, mirroring SourceFile in manifest/sourcefile.py.
 _NON_TEST_DIRS = {"resources", "support", "tools"}
-_ROOT_NON_TEST_DIRS = {"common"}
-_NON_TEST_DIR_PATHS = {("css21", "archive"),
-                       ("css", "CSS2", "archive"),
-                       ("css", "common")}
 
 
 def _path_in_non_test_dir(path: str) -> bool:
     """Check if a path is inside a non-test directory."""
-    parts = tuple(path.split(os.path.sep))
-    if parts[0] in _ROOT_NON_TEST_DIRS:
+    parts = path.split(os.path.sep)
+    if parts[0] == "common":
         return True
-    if any(part in _NON_TEST_DIRS for part in parts):
-        return True
-    if any(parts[:len(p)] == p for p in _NON_TEST_DIR_PATHS):
-        return True
-    return False
+    return bool(_NON_TEST_DIRS & set(parts))
 
 
 def check_web_features_file_path(repo_root: Text, path: Text) -> List[rules.Error]:
