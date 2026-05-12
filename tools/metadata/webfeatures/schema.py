@@ -2,7 +2,7 @@ from enum import Enum
 from dataclasses import dataclass
 from fnmatch import fnmatchcase
 from functools import cached_property
-from typing import Any, Dict, Sequence, Union
+from typing import Any, Dict, Sequence
 
 from ..schema import SchemaValue, validate_dict
 
@@ -61,27 +61,18 @@ class FeatureFile(str):
 
 @dataclass
 class FeatureEntry:
-    files: Union[Sequence[FeatureFile], SpecialFileEnum]
-    """The web-features key"""
-    name: str
-
-    _required_keys = {"files", "name"}
-
-    def __init__(self, obj: Dict[str, Any]):
+    def __init__(self, obj: Dict[str, str]):
         """
         Converts the provided dictionary to an instance of FeatureEntry
         :param obj: The object that will be converted to a FeatureEntry.
         :return: An instance of FeatureEntry
         :raises ValueError: If there are unexpected keys or missing required keys.
         """
-        validate_dict(obj, FeatureEntry._required_keys)
-        self.files = SchemaValue.from_union([
-            lambda x: SchemaValue.from_list(SchemaValue.from_class(FeatureFile), x),
-            SpecialFileEnum], obj.get("files"))
-        self.name = SchemaValue.from_str(obj.get("name"))
-        # If "**" is used, it should be the only item. Not in a list.
-        if isinstance(self.files, list) and SpecialFileEnum.RECURSIVE.value in self.files:
-            raise ValueError(f'Feature {self.name} contains "**" in a list. It should be `files: "**"`')
+        if len(obj) > 1:
+            raise ValueError(f"Input value {obj} contains more than one key")
+        key = list(obj)[0]
+        self.files = FeatureFile(key)
+        self.name = SchemaValue.from_union([SchemaValue.from_str, SchemaValue.from_none], obj.get(key))
 
 
     def does_feature_apply_recursively(self) -> bool:
