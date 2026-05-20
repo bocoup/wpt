@@ -6,7 +6,7 @@ from typing import Dict, List, Optional, Sequence, Set
 
 from ..manifest.item import ManifestItem, URLManifestItem
 from ..manifest.sourcefile import SourceFile
-from ..metadata.webfeatures.schema import FeatureEntry, FeatureFile, FileMatchingMode, WebFeaturesFile
+from ..metadata.webfeatures.schema import FeatureEntry, FeatureFile, WebFeaturesFile
 
 
 class WebFeaturesMap:
@@ -29,6 +29,8 @@ class WebFeaturesMap:
             feature: The web-features identifier.
             manifest_items: The ManifestItem objects representing the test paths.
         """
+        if feature is None:
+            return
         tests = self._feature_tests_map_.get(feature, set())
         self._feature_tests_map_[feature] = tests.union([
             manifest_item.url for manifest_item in manifest_items if isinstance(manifest_item, URLManifestItem)])
@@ -87,7 +89,7 @@ class WebFeatureToTestsDirMapper:
     def _process_non_recursive_feature(
             self,
             feature_name: str,
-            files: Sequence[FeatureFile],
+            test_file: FeatureFile,
             result: WebFeaturesMap) -> None:
         # If the feature does not apply recursively, look at the individual
         # files and match them against all_test_files_in_dir.
@@ -95,12 +97,10 @@ class WebFeatureToTestsDirMapper:
         test_file_paths: Set[str] = set()
         excluded_test_file_paths: Set[str] = set()
         base_test_file_names = [basename(f.path) for f in self.all_test_files_in_dir]
-        for test_file in files:
-            matched_base_file_names = test_file.match_files(base_test_file_names)
-            if test_file.matching_mode == FileMatchingMode.INCLUDE:
-                test_file_paths.update(matched_base_file_names)
-            elif test_file.matching_mode == FileMatchingMode.EXCLUDE:
-                excluded_test_file_paths.update(matched_base_file_names)
+
+        matched_base_file_names = test_file.match_files(base_test_file_names)
+        test_file_paths.update(matched_base_file_names)
+
         final_test_file_paths_set = test_file_paths - excluded_test_file_paths
         final_test_file_paths.extend(itertools.chain.from_iterable([
             self.test_path_to_manifest_items_map[f] for f in final_test_file_paths_set]))
@@ -120,7 +120,7 @@ class WebFeatureToTestsDirMapper:
                     self._process_recursive_feature(inherited_features, feature, result)
 
                 # Handle the non recursive case.
-                elif isinstance(feature.files, List) and feature.files:
-                    self._process_non_recursive_feature(feature.name, feature.files, result)
+                elif feature.file:
+                    self._process_non_recursive_feature(feature.name, feature.file, result)
         else:
             self._process_inherited_features(inherited_features, result)

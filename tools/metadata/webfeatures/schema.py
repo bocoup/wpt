@@ -2,7 +2,7 @@ from enum import Enum
 from dataclasses import dataclass
 from fnmatch import fnmatchcase
 from functools import cached_property
-from typing import Any, Dict, Sequence
+from typing import Any, Dict, Sequence, Union
 
 from ..schema import SchemaValue, validate_dict
 
@@ -11,32 +11,13 @@ YAML filename for meta files
 """
 WEB_FEATURES_YML_FILENAME = "WEB_FEATURES.yml"
 
-# File prefix to indicate that this FeatureFile should run in EXCLUDE mode.
-EXCLUSION_PREFIX = "!"
-
 
 class SpecialFileEnum(Enum):
     """All files recursively"""
     RECURSIVE = "**"
 
 
-class FileMatchingMode(Enum):
-    """Defines how a FeatureFile pattern is used for matching."""
-    INCLUDE = 1  # Include files that match the pattern
-    EXCLUDE = 2  # Exclude files that match the pattern
-
 class FeatureFile(str):
-    @cached_property
-    def matching_mode(self) -> FileMatchingMode:
-        """Determines if the pattern should include or exclude matches."""
-        return FileMatchingMode.EXCLUDE if self.startswith(EXCLUSION_PREFIX) else FileMatchingMode.INCLUDE
-
-    @cached_property
-    def processed_filename(self) -> str:
-        """Removes the exclusion prefix "!" from the pattern."""
-        # TODO. After moving to Python3.9, use: return self.removeprefix(EXCLUSION_PREFIX)
-        return self[len(EXCLUSION_PREFIX):] if self.startswith(EXCLUSION_PREFIX) else self
-
     def match_files(self, base_filenames: Sequence[str]) -> Sequence[str]:
         """
         Given the input base file names, returns the subset of base file names
@@ -52,15 +33,21 @@ class FeatureFile(str):
         # If our file name contains a wildcard, use fnmatch
         if "*" in self:
             for base_filename in base_filenames:
-                if fnmatchcase(base_filename, self.processed_filename):
+                if fnmatchcase(base_filename, self):
                     result.append(base_filename)
-        elif self.processed_filename in base_filenames:
-            result.append(self.processed_filename)
+        elif self in base_filenames:
+            result.append(self)
         return result
 
 
 @dataclass
 class FeatureEntry:
+    file: Union[FeatureFile, SpecialFileEnum]
+    """The web-features key"""
+    name: Union[str, None]
+ 
+    _required_keys = {"file", "name"}
+
     def __init__(self, obj: Dict[str, str]):
         """
         Converts the provided dictionary to an instance of FeatureEntry
@@ -71,12 +58,12 @@ class FeatureEntry:
         if len(obj) > 1:
             raise ValueError(f"Input value {obj} contains more than one key")
         key = list(obj)[0]
-        self.files = FeatureFile(key)
+        self.file = FeatureFile(key)
         self.name = SchemaValue.from_union([SchemaValue.from_str, SchemaValue.from_none], obj.get(key))
 
 
     def does_feature_apply_recursively(self) -> bool:
-        if isinstance(self.files, SpecialFileEnum) and self.files == SpecialFileEnum.RECURSIVE:
+        if isinstance(self.file, SpecialFileEnum) and self.file == SpecialFileEnum.RECURSIVE:
             return True
         return False
 
