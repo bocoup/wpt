@@ -2,7 +2,7 @@ import itertools
 
 from collections import OrderedDict
 from os.path import basename
-from typing import Dict, List, Optional, Sequence, Set
+from typing import Dict, List, Optional, Sequence, Set, Union
 
 from ..manifest.item import ManifestItem, URLManifestItem
 from ..manifest.sourcefile import SourceFile
@@ -18,10 +18,15 @@ class WebFeaturesMap:
         """
         Initializes the WebFeaturesMap with an OrderedDict to maintain feature order.
         """
-        self._feature_tests_map_: OrderedDict[str, Set[str]] = OrderedDict()
+        self._feature_tests_map_: OrderedDict[Union[str, None], Set[str]] = OrderedDict()
+        self._classified_urls: Set[str] = set()
 
 
-    def add(self, feature: str, manifest_items: List[ManifestItem]) -> None:
+    def _should_classify(self, manifest_item: ManifestItem):
+        return (isinstance(manifest_item, URLManifestItem) and
+            manifest_item.url not in self._classified_urls)
+
+    def add(self, feature: Union[str, None], manifest_items: List[ManifestItem]) -> None:
         """
         Adds a web feature and its associated test paths to the map.
 
@@ -29,11 +34,12 @@ class WebFeaturesMap:
             feature: The web-features identifier.
             manifest_items: The ManifestItem objects representing the test paths.
         """
-        if feature is None:
-            return
         tests = self._feature_tests_map_.get(feature, set())
-        self._feature_tests_map_[feature] = tests.union([
-            manifest_item.url for manifest_item in manifest_items if isinstance(manifest_item, URLManifestItem)])
+        urls = [
+            manifest_item.url for manifest_item in manifest_items if self._should_classify(manifest_item)
+        ]
+        self._classified_urls.update(urls)
+        self._feature_tests_map_[feature] = tests.union(urls)
 
 
     def to_dict(self) -> Dict[str, List[str]]:
@@ -43,6 +49,8 @@ class WebFeaturesMap:
         """
         rv: Dict[str, List[str]] = {}
         for feature, manifest_items in self._feature_tests_map_.items():
+            if feature is None:
+                continue
             # Sort the list to keep output stable
             rv[feature] = sorted(manifest_items)
         return rv
