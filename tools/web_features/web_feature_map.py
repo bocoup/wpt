@@ -26,20 +26,21 @@ class WebFeaturesMap:
         return (isinstance(manifest_item, URLManifestItem) and
             manifest_item.url not in self._classified_urls)
 
-    def add(self, feature: Union[str, None], manifest_items: List[ManifestItem]) -> None:
+    def add(self, feature_ids: List[Union[str, None]], manifest_items: List[ManifestItem]) -> None:
         """
         Adds a web feature and its associated test paths to the map.
 
         Args:
-            feature: The web-features identifier.
+            feature_ids: The web-features identifier(s).
             manifest_items: The ManifestItem objects representing the test paths.
         """
-        tests = self._feature_tests_map_.get(feature, set())
         urls = [
             manifest_item.url for manifest_item in manifest_items if self._should_classify(manifest_item)
         ]
         self._classified_urls.update(urls)
-        self._feature_tests_map_[feature] = tests.union(urls)
+        for feature_id in feature_ids:
+            tests = self._feature_tests_map_.get(feature_id, set())
+            self._feature_tests_map_[feature_id] = tests.union(urls)
 
 
     def to_dict(self) -> Dict[str, List[str]]:
@@ -91,8 +92,8 @@ class WebFeatureToTestsDirMapper:
             inherited_features: List[str],
             feature: FeatureEntry,
             result: WebFeaturesMap) -> None:
-        inherited_features.append(feature.name)
-        result.add(feature.name, self.get_all_manifest_items_for_dir)
+        inherited_features.append(feature.feature_ids)
+        result.add(feature.feature_ids, self.get_all_manifest_items_for_dir)
 
     def _process_non_recursive_feature(
             self,
@@ -129,6 +130,6 @@ class WebFeatureToTestsDirMapper:
 
                 # Handle the non recursive case.
                 elif feature.file:
-                    self._process_non_recursive_feature(feature.name, feature.file, result)
+                    self._process_non_recursive_feature(feature.feature_ids, feature.file, result)
         else:
             self._process_inherited_features(inherited_features, result)

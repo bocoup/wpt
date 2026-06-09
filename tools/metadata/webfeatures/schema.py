@@ -2,7 +2,7 @@ from enum import Enum
 from dataclasses import dataclass
 from fnmatch import fnmatchcase
 from functools import cached_property
-from typing import Any, Dict, Sequence, Union
+from typing import Any, Dict, List, Sequence, Union
 
 from ..schema import SchemaValue, validate_dict
 
@@ -44,11 +44,11 @@ class FeatureFile(str):
 class FeatureEntry:
     file: Union[FeatureFile, SpecialFileEnum]
     """The web-features key"""
-    name: Union[str, None]
- 
-    _required_keys = {"file", "name"}
+    feature_ids: List[Union[str, None]]
 
-    def __init__(self, obj: Dict[str, str]):
+    _required_keys = {"file", "feature_ids"}
+
+    def __init__(self, obj: Dict[str, Union[str, List[str], None]]):
         """
         Converts the provided dictionary to an instance of FeatureEntry
         :param obj: The object that will be converted to a FeatureEntry.
@@ -59,7 +59,11 @@ class FeatureEntry:
             raise ValueError(f"Input value {obj} contains more than one key")
         key = list(obj)[0]
         self.file = FeatureFile(key)
-        self.name = SchemaValue.from_union([SchemaValue.from_str, SchemaValue.from_none], obj.get(key))
+        value = obj.get(key)
+        if isinstance(value, list):
+            self.feature_ids = value
+        else:
+            self.feature_ids = [value]
 
 
     def does_feature_apply_recursively(self) -> bool:
