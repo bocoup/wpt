@@ -123,13 +123,13 @@ class WebFeatureToTestsDirMapper:
             inherited_features.clear()
 
             # Iterate over all the features in this new file
-            for feature in self.web_feature_file.features:
+            for rule in self.web_feature_file.rules:
                 # Handle the "**" case
-                if feature.does_feature_apply_recursively():
-                    self._process_recursive_feature(inherited_features, feature, result)
+                if rule.does_feature_apply_recursively():
+                    self._process_recursive_feature(inherited_features, rule, result)
 
                 # Handle the non recursive case.
-                elif feature.file:
-                    self._process_non_recursive_feature(feature.feature_ids, feature.file, result)
+                elif rule.file:
+                    self._process_non_recursive_feature(rule.feature_ids, rule.file, result)
         else:
             self._process_inherited_features(inherited_features, result)

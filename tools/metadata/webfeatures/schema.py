@@ -44,7 +44,7 @@ class FeatureFile(str):
 class FeatureEntry:
     file: Union[FeatureFile, SpecialFileEnum]
     """The web-features key"""
-    feature_ids: List[Union[str, None]]
+    feature_ids: List[str]
 
     _required_keys = {"file", "feature_ids"}
 
@@ -59,11 +59,7 @@ class FeatureEntry:
             raise ValueError(f"Input value {obj} contains more than one key")
         key = list(obj)[0]
         self.file = FeatureFile(key)
-        value = obj.get(key)
-        if isinstance(value, list):
-            self.feature_ids = value
-        else:
-            self.feature_ids = [value]
+        self.feature_ids = obj.get(key)
 
 
     def does_feature_apply_recursively(self) -> bool:
@@ -75,9 +71,9 @@ class FeatureEntry:
 @dataclass
 class WebFeaturesFile:
     """List of features"""
-    features: Sequence[FeatureEntry]
+    rules: Sequence[FeatureEntry]
 
-    _required_keys = {"features"}
+    _required_keys = {"rules"}
 
     def __init__(self, obj: Dict[str, Any]):
         """
@@ -87,5 +83,5 @@ class WebFeaturesFile:
         :raises ValueError: If there are unexpected keys or missing required keys.
         """
         validate_dict(obj, WebFeaturesFile._required_keys)
-        self.features = SchemaValue.from_list(
-            lambda raw_feature: FeatureEntry(SchemaValue.from_dict(raw_feature)), obj.get("features"))
+        self.rules = SchemaValue.from_list(
+            lambda raw_feature: FeatureEntry(SchemaValue.from_dict(raw_feature)), obj.get("rules"))
