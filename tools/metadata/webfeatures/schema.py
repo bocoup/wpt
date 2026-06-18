@@ -46,7 +46,7 @@ class FeatureEntry:
     """The web-features key"""
     feature_ids: List[str]
 
-    _required_keys = {"file", "feature_ids"}
+    _required_keys = {"ids"}
 
     def __init__(self, obj: Dict[str, Union[str, List[str], None]]):
         """
@@ -59,7 +59,12 @@ class FeatureEntry:
             raise ValueError(f"Input value {obj} contains more than one key")
         key = list(obj)[0]
         self.file = FeatureFile(key)
-        self.feature_ids = obj.get(key)
+        value = obj.get(key)
+        if isinstance(value, list):
+            self.feature_ids = value
+        else:
+            validate_dict(value, FeatureEntry._required_keys)
+            self.feature_ids = value.get("ids")
 
 
     def does_feature_apply_recursively(self) -> bool:
