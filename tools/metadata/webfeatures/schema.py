@@ -58,7 +58,11 @@ class FeatureEntry:
         if len(obj) > 1:
             raise ValueError(f"Input value {obj} contains more than one key")
         key = list(obj)[0]
-        self.file = FeatureFile(key)
+        self.file = SchemaValue.from_union([
+            SpecialFileEnum,
+            SchemaValue.from_class(FeatureFile)
+        ], key)
+
         value = obj.get(key)
         if isinstance(value, list):
             self.feature_ids = value
