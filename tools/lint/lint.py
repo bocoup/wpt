@@ -34,8 +34,7 @@ from ..manifest.sourcefile import SourceFile, js_meta_re, python_meta_re, space_
 
 from ..metadata.yaml.load import load_data_to_dict
 from ..metadata.meta.schema import META_YML_FILENAME, MetaFile
-from ..metadata.webfeatures.schema import (WEB_FEATURES_YML_FILENAME, WebFeaturesFile,
-                                          FileMatchingMode)
+from ..metadata.webfeatures.schema import WEB_FEATURES_YML_FILENAME, WebFeaturesFile
 
 # The Ignorelist is a two level dictionary. The top level is indexed by
 # error names (e.g. 'TRAILING WHITESPACE'). Each of those then has a map of
