@@ -70,6 +70,8 @@ class FeatureEntry:
             validate_dict(value, FeatureEntry._required_keys)
             self.feature_ids = value.get("ids")
 
+    def __str__(self):
+        return '{}: {}'.format(self.file, self.feature_ids)
 
     def does_feature_apply_recursively(self) -> bool:
         if isinstance(self.file, SpecialFileEnum) and self.file == SpecialFileEnum.RECURSIVE:
