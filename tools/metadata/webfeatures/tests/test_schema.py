@@ -11,18 +11,24 @@ import re
     [
         (
             {
-                "features": [
+                "rules": [
                     {
-                        "name": "feature1",
-                        "files": ["file1", "file2"],
+                        "file1": ["feature1"]
+                    },
+                    {
+                        "file2": ["feature1"]
                     }
                 ]
             },
             {
-                "features": [
+                "rules": [
                     {
-                        "name": "feature1",
-                        "files": ["file1", "file2"],
+                        "feature_ids": ["feature1"],
+                        "file": "file1"
+                    },
+                    {
+                        "feature_ids": ["feature1"],
+                        "file": "file2"
                     }
                 ]
             },
@@ -31,52 +37,38 @@ import re
         ),
         (
             {
-                "features": [
+                "rules": [
                     {
-                        "name": "feature1",
-                        "files": "**",
+                        "**": ["feature1"]
                     }
                 ]
             },
             {
-                "features": [
+                "rules": [
                     {
-                        "name": "feature1",
-                        "files": SpecialFileEnum.RECURSIVE,
+                        "feature_ids": ["feature1"],
+                        "file": SpecialFileEnum.RECURSIVE,
                     }
                 ]
             },
             None,
             None
-        ),
-        (
-            {
-                "features": [
-                    {
-                        "name": "feature1",
-                        "files": ["**"],
-                    }
-                ]
-            },
-            None,
-            ValueError,
-            "Feature feature1 contains \"**\" in a list. It should be `files: \"**\"`"
         ),
         (
             {},
             None,
             ValueError,
-            "Object missing required keys: ['features']"
+            "Object missing required keys: ['rules']"
         ),
         (
             {
-                "features": [
+                "rules": [
                     {}
                 ]
             },
             None,
             ValueError,
-            "Object missing required keys: ['files', 'name']"
+            "Input value {} contains zero keys"
         ),
     ])
 def test_web_features_file(input, expected_result, expected_exception_type, exception_message):
@@ -90,11 +82,11 @@ def test_web_features_file(input, expected_result, expected_exception_type, exce
     "input,expected_result",
     [
         (
-            FeatureEntry({"test1":["name"]}),
+            FeatureEntry({"file1": ["test1"]}),
             False
         ),
         (
-            FeatureEntry({"test1": [SpecialFileEnum.RECURSIVE]}),
+            FeatureEntry({SpecialFileEnum.RECURSIVE: ["test2"]}),
             True
         ),
     ])

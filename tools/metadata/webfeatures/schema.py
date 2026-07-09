@@ -55,6 +55,9 @@ class FeatureEntry:
         :return: An instance of FeatureEntry
         :raises ValueError: If there are unexpected keys or missing required keys.
         """
+        if len(obj) == 0:
+            raise ValueError(f"Input value {obj} contains zero keys")
+
         if len(obj) > 1:
             raise ValueError(f"Input value {obj} contains more than one key")
         key = list(obj)[0]

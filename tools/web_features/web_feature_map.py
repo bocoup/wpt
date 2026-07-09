@@ -92,12 +92,12 @@ class WebFeatureToTestsDirMapper:
             inherited_features: List[str],
             feature: FeatureEntry,
             result: WebFeaturesMap) -> None:
-        inherited_features.append(feature.feature_ids)
+        inherited_features.extend(feature.feature_ids)
         result.add(feature.feature_ids, self.get_all_manifest_items_for_dir)
 
     def _process_non_recursive_feature(
             self,
-            feature_name: str,
+            feature_name: List[str],
             test_file: FeatureFile,
             result: WebFeaturesMap) -> None:
         # If the feature does not apply recursively, look at the individual

@@ -38,7 +38,7 @@ def test_process_recursive_feature():
     inherited_features = []
 
     feature_entry = Mock()
-    feature_entry.name = "grid"
+    feature_entry.feature_ids = ['grid']
     mapper._process_recursive_feature(inherited_features, feature_entry, result)
 
     assert result.to_dict() == {
@@ -62,7 +62,8 @@ def test_process_non_recursive_feature():
     mapper = WebFeatureToTestsDirMapper(TEST_FILES, None)
     result = WebFeaturesMap()
 
-    mapper._process_non_recursive_feature(feature_name, feature_files, result)
+    mapper._process_non_recursive_feature([feature_name], feature_files[0], result)
+    mapper._process_non_recursive_feature([feature_name], feature_files[1], result)
 
     assert result.to_dict() == {
         "feature1": [
