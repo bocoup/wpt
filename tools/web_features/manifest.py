@@ -187,7 +187,7 @@ def write_manifest_file(path: str, web_features_map: WebFeaturesMap) -> None:
                 {
                     "version": 1,
                     "data": web_features_map
-                }, cls=WebFeatureManifestEncoder, sort_keys=True, indent=4))
+                }, cls=WebFeatureManifestEncoder, sort_keys=True))
 
 
 def main(venv: Any = None, **kwargs: Any) -> int:
@@ -201,7 +201,6 @@ def main(venv: Any = None, **kwargs: Any) -> int:
     cmd_cfg = CmdConfig(repo_root, url_base)
     feature_map = WebFeaturesMap()
     map_tests_to_web_features(cmd_cfg, "", feature_map)
-    #map_tests_to_web_features(cmd_cfg, "./css/css-lists", feature_map)
     write_manifest_file(path, feature_map)
 
     return 0
