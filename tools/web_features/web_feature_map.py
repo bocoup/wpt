@@ -26,7 +26,7 @@ class WebFeaturesMap:
         return (isinstance(manifest_item, URLManifestItem) and
             manifest_item.url not in self._classified_urls)
 
-    def add(self, feature_ids: List[Union[str, None]], manifest_items: List[ManifestItem]) -> None:
+    def add(self, feature_ids: List[str], manifest_items: List[ManifestItem]) -> None:
         """
         Adds a web feature and its associated test paths to the map.
 
@@ -84,8 +84,7 @@ class WebFeatureToTestsDirMapper:
             inherited_features: List[str],
             result: WebFeaturesMap) -> None:
         # No WEB_FEATURE.yml in this directory. Simply add the current features to the inherited features
-        for inherited_feature in inherited_features:
-            result.add(inherited_feature, self.get_all_manifest_items_for_dir)
+        result.add(inherited_features, self.get_all_manifest_items_for_dir)
 
     def _process_recursive_feature(
             self,
@@ -97,7 +96,7 @@ class WebFeatureToTestsDirMapper:
 
     def _process_non_recursive_feature(
             self,
-            feature_name: List[str],
+            feature_ids: List[str],
             test_file: FeatureFile,
             result: WebFeaturesMap) -> None:
         # If the feature does not apply recursively, look at the individual
@@ -114,7 +113,7 @@ class WebFeatureToTestsDirMapper:
         final_test_file_paths.extend(itertools.chain.from_iterable([
             self.test_path_to_manifest_items_map[f] for f in final_test_file_paths_set]))
 
-        result.add(feature_name, final_test_file_paths)
+        result.add(feature_ids, final_test_file_paths)
 
     def run(self, result: WebFeaturesMap, inherited_features: List[str]) -> None:
         if self.web_feature_file:
