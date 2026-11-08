@@ -16,6 +16,7 @@ defines:
   - getLocaleSupportInfo
   - getInvalidLanguageTags
   - isCanonicalizedStructurallyValidLanguageTag
+  - getLocaleBaseName
   - getInvalidLocaleArguments
   - testOption
   - testForUnwantedRegExpChanges
@@ -1814,6 +1815,28 @@ function isCanonicalizedStructurallyValidLanguageTag(locale) {
 
 
 /**
+ * Returns the given language tag without any extension or private use
+ * subtags, like Intl.Locale.prototype.baseName. Use this before appending a
+ * Unicode extension sequence to a locale obtained from resolvedOptions():
+ * some hosts report a default locale that already carries one, such as
+ * "en-US-u-va-posix" under the POSIX locale, and a language tag with two "-u-"
+ * singletons is not structurally valid.
+ * @param {string} locale a canonicalized language tag
+ * @return {string} the language, script, region and variant subtags of locale
+ */
+function getLocaleBaseName(locale) {
+  var subtags = locale.split("-");
+  // Every subtag after the language is at least two characters long, except
+  // for the singletons that introduce extension and private use sequences.
+  for (var i = 1; i < subtags.length; i++) {
+    if (subtags[i].length === 1) {
+      return subtags.slice(0, i).join("-");
+    }
+  }
+  return locale;
+}
+
+/**
  * Returns an array of error cases handled by CanonicalizeLocaleList().
  */
 function getInvalidLocaleArguments() {
@@ -2381,13 +2404,21 @@ function allSimpleSanctionedUnits() {
  *   pre- and post-decimal digits.
  * @param {Object} testData maps input data (in ES5 9.3.1 format) to expected output strings
  *   in unlocalized format with Western digits.
+ * @param {Object} [testOptions] optional settings for the test.
+ * @param {Function} [testOptions.makeInput] converts each input string in
+ *   testData to the value that is formatted, e.g. Number. By default the
+ *   string itself is formatted.
  */
 
-function testNumberFormat(locales, numberingSystems, options, testData) {
+function testNumberFormat(locales, numberingSystems, options, testData, testOptions) {
+  var makeInput = (testOptions && testOptions.makeInput) || function (input) {
+    return input;
+  };
+
   locales.forEach(function (locale) {
     numberingSystems.forEach(function (numbering) {
       var digits = numberingSystemDigits[numbering];
-      var format = new Intl.NumberFormat([locale + "-u-nu-" + numbering], options);
+      var format = new Intl.NumberFormat([getLocaleBaseName(locale) + "-u-nu-" + numbering], options);
 
       function getPatternParts(positive) {
         var n = positive ? 1.1 : -1.1;
@@ -2436,7 +2467,7 @@ function testNumberFormat(locales, numberingSystems, options, testData) {
             patternParts = posPatternParts;
           }
           var expected = buildExpected(rawExpected, patternParts);
-          var actual = format.format(input);
+          var actual = format.format(makeInput(input));
           if (actual !== expected) {
             throw new Test262Error("Formatted value for " + input + ", " +
             format.resolvedOptions().locale + " and options " +
@@ -2591,8 +2622,13 @@ function partitionDurationFormatPattern(durationFormat, duration) {
     }
     r = String(r).padStart(exponent, "0");
 
+    // Remove trailing zeros. The spec's ComputeFractionalDigits returns a
+    // mathematical value, which carries no trailing zeros, but NumberFormat
+    // may treat zeros spelled in a string as significant.
+    r = r.replace(/0+$/, "");
+
     // Return the result as a decimal string.
-    return `${q}.${r}`;
+    return r === "" ? `${q}` : `${q}.${r}`;
   }
 
   const units = [
